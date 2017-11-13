@@ -107,86 +107,101 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     int length = 0;
     switch (n)
     {
-        case SEND_AOPEN:
+    case SEND_AOPEN:
+    {
+        int u[2] = {0xFF,0x00};length = 2;
+        for(uint i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_NODE_TYPE:
+    {
+        int u[2] = {0xF0,0x00};length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_NODE_TYPE:
+    {
+        int u[10] = {0xEF,0x07,MODEM->SWITCH_MODE,0xE0,0x96,0xF8,0xA5,0xC9,0xDC,0x0C}; length = 10;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_RSSI:
+    {
+        int u[2] = {0xE5,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_SWITCH_TIMEOUT:
+    {
+        int u[3] = {0xE3,0x01,0x00};length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_RELOAD_DEVICE:
+    {
+        if (MODEM->RESET_DEVICE_TIMEOUT == 0)
         {
-            int u[2] = {0xFF,0x00};length = 2;
-            for(uint i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
-        }
-        case SEND_BF_03_00_AC_00:
-        {
-            int u[5] = {0xBF,0x03,0x00,0xAC,0x00};length = 5;
+            int u[3] = {0xE4,0x00};length = 2;
             for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
         }
-        case SEND_BF_03_21_88_00:
+        else
         {
-            int u[5] = {0xBF,0x03,0x21,0x88,0x00};length = 5;
+            int u[6] = {0xE4,0x04,((int)(MODEM->RESET_DEVICE_TIMEOUT >> 0)  & 0xFF),((int)(MODEM->RESET_DEVICE_TIMEOUT >> 8) & 0xFF),
+                                  ((int)(MODEM->RESET_DEVICE_TIMEOUT >> 16) & 0xFF),((int)(MODEM->RESET_DEVICE_TIMEOUT >> 24) & 0xFF)};length = 6;
             for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
         }
-        case SEND_READ_NODE_TYPE:
-        {
-            int u[2] = {0xF0,0x00};length = 2;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
-        }
-        case SEND_WRITE_NODE_TYPE:
-        {
-            int u[10] = {0xEF,0x07,MODEM->SWITCH_MODE,0xE0,0x96,0xF8,0xA5,0xC9,0xDC,0x0C}; length = 10;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
-        }
-        case SEND_READ_SWITCH_LEVEL:
-        {
-            int u[3] = {0xE0,0x01,0x00};length = 3;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
-        }
-        case SEND_WRITE_SWITCH_LEVEL:
-        {
-            int u[6] = {0xE0,0x04,((int)(MODEM->SWITCH_LEVEL >> 0)  & 0xFF),((int)(MODEM->SWITCH_LEVEL >> 8) & 0xFF),
-                                  ((int)(MODEM->SWITCH_LEVEL >> 16) & 0xFF),((int)(MODEM->SWITCH_LEVEL >> 24) & 0xFF)};length = 6;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
-        }
-        case SEND_READ_SWITCH_TIMEOUT:
-        {
-            int u[3] = {0xE3,0x01,0x00};length = 3;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
-        }
-        case SEND_WRITE_SWITCH_TIMEOUT:
-        {
-            int u[6] = {0xE3,0x04,((int)(MODEM->SWITCH_TIMEOUT >> 0)  & 0xFF),((int)(MODEM->SWITCH_TIMEOUT >> 8) & 0xFF),
-                                  ((int)(MODEM->SWITCH_TIMEOUT >> 16) & 0xFF),((int)(MODEM->SWITCH_TIMEOUT >> 24) & 0xFF)};length = 6;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
-        }
-        case SEND_READ_RX_TIMEOUT:
-        {
-            int u[3] = {0xE2,0x01,0x00};length = 3;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
-        }
-        case SEND_READ_TX_TIMEOUT:
-        {
-            int u[3] = {0xE1,0x01,0x00}; length = 3;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
-        }
-        case SEND_READ_RSSI_CURRENT:
-        {
-            int u[2] = {0xBB,0x00}; length = 2;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
-        }
-        case SEND_READ_RSSI:
-        {
-            int u[2] = {0xE5,0x00}; length = 2;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-            break;
-        }
+        break;
+    }
+    case SEND_WRITE_SWITCH_TIMEOUT:
+    {
+        int u[6] = {0xE3,0x04,((int)(MODEM->SWITCH_TIMEOUT >> 0)  & 0xFF),((int)(MODEM->SWITCH_TIMEOUT >> 8) & 0xFF),
+                              ((int)(MODEM->SWITCH_TIMEOUT >> 16) & 0xFF),((int)(MODEM->SWITCH_TIMEOUT >> 24) & 0xFF)};length = 6;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_RX_TIMEOUT:
+    {
+        int u[3] = {0xE2,0x01,0x00};length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_TX_TIMEOUT:
+    {
+        int u[3] = {0xE1,0x01,0x00}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_SWITCH_LEVEL:
+    {
+        int u[3] = {0xE0,0x01,0x00};length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_SWITCH_LEVEL:
+    {
+        int u[6] = {0xE0,0x04,((int)(MODEM->SWITCH_LEVEL >> 0)  & 0xFF),((int)(MODEM->SWITCH_LEVEL >> 8) & 0xFF),
+                              ((int)(MODEM->SWITCH_LEVEL >> 16) & 0xFF),((int)(MODEM->SWITCH_LEVEL >> 24) & 0xFF)};length = 6;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_BF_03_00_AC_00:
+    {
+        int u[5] = {0xBF,0x03,0x00,0xAC,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_BF_03_21_88_00:
+    {
+        int u[5] = {0xBF,0x03,0x21,0x88,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_RSSI_CURRENT:
+    {
+        int u[2] = {0xBB,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
     }
     CRC16->CRC16_Add_To_ByteArray(&data);
     emit SEND_DATA(data,m);
@@ -253,6 +268,34 @@ void DataLogic_Class::ParceData(uint n)
             emit outConnect(DataLogicMode);
             break;
         }
+        case 0xEE: // Считывание параметров частоты PLC Модедма
+        {
+            break;
+        }
+        case 0xED: // Записть параметров частоты PLC Модедма
+        {
+            break;
+        }
+        case 0xEC: // Cчитывание серийного адреса устройства
+        {
+            break;
+        }
+        case 0xEB: // Чтение Элемента таблицы ретрансляции
+        {
+            break;
+        }
+        case 0xEA: // Запись Элемента таблицы ретрансляции в буфер для записи
+        {
+            break;
+        }
+        case 0xE9: // Стирание таблицы ретрансляции из флэш памяти модема
+        {
+            break;
+        }
+        case 0xE8: // Запись таблицы ретрансляции во флэш память модема из буфера
+        {
+            break;
+        }
         case 0xE5: // Latch RSSI
         {
             signed short RSSI = 0;
@@ -302,6 +345,10 @@ void DataLogic_Class::ParceData(uint n)
             }
             break;
         }
+        case 0xE4: // Перезагрузка модема
+        {
+            break;
+        }
         case 0xE3: // Таймаут свича
         {
             if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
@@ -342,7 +389,7 @@ void DataLogic_Class::ParceData(uint n)
             emit outConnect(DataLogicMode);
             break;
         }
-        case 0xBF:
+        case 0xBF: // Чтение свойств SI4463 из памяти RF модэма v5+, или запись свойств во буфер
         {
              if (In_Data.length() >= 2)
              {
@@ -365,6 +412,18 @@ void DataLogic_Class::ParceData(uint n)
              emit outConnect(DataLogicMode);
              break;
         }
+        case 0xBE: // Запись свойств SI4463 в памяти RF модэма v5+
+        {
+            break;
+        }
+        case 0xBD: // Установка логики мигания светодиодов
+        {
+            break;
+        }
+        case 0xBC: // Отключение проверки CRC
+        {
+            break;
+        }
         case 0xBB: // Current RSSI
         {
             if (In_Data.length() >= 2)
@@ -375,6 +434,18 @@ void DataLogic_Class::ParceData(uint n)
                                       | (SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_0);
             }
             emit outCurrentRSSI(RSSI);
+            break;
+        }
+        case 0xDA: // Установить UP_Linc в 1 (только для снифера)
+        {
+            break;
+        }
+        case 0xD9: // Режим пропускания сообщений (только для снифера)
+        {
+            break;
+        }
+        case 0xD8: // Режим широковещания (только для снифера)
+        {
             break;
         }
     }

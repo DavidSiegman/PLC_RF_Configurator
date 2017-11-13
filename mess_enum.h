@@ -1,6 +1,8 @@
 #ifndef MESS_ENUM
 #define MESS_ENUM
-
+// ==================================================
+// Все возможные сообщения передаваемые между слотами
+// ==================================================
 enum
 {
     NONE = 0,
@@ -31,7 +33,8 @@ enum
     SEND_READ_TX_TIMEOUT,
     SEND_WRITE_TX_TIMEOUT,
     SEND_READ_RSSI,
-    SEND_READ_RSSI_CURRENT
+    SEND_READ_RSSI_CURRENT,
+    SEND_RELOAD_DEVICE
 };
 
 #endif // MESS_ENUM

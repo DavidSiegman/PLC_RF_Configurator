@@ -15,7 +15,6 @@ private:
     SI4463_PART_INFO_structur    SI4463_PART_INFO;
     SI4463_INTERUPTS_structur    SI4463_INTERUPTS;
     SI4463_GPIO_PIN_CFG_structur SI4463_GPIO_PIN_CFG;
-
 signals:
 
 public slots:

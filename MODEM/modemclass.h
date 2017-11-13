@@ -9,7 +9,8 @@ class MODEMClass : public QObject
 public:
     explicit MODEMClass(QObject *parent = 0);
     uchar    curr_ver, SWITCH_MODE;
-    uint     SWITCH_LEVEL, SWITCH_TIMEOUT, RX_TIMEOUT, TX_TIMEOUT, LED_LOGIC, CRC_CHECK_DISABLE, UP_LINC, DIRECT_RET, BROADCAST;
+    uint     SWITCH_LEVEL, SWITCH_TIMEOUT, RX_TIMEOUT, TX_TIMEOUT, LED_LOGIC, CRC_CHECK_DISABLE;
+    uint     RESET_DEVICE_TIMEOUT,UP_LINC, DIRECT_RET, BROADCAST;
     QString  boot_ver,fw_ver;
     double   BOOT_VERSION, FW_VERSION;
 private:
