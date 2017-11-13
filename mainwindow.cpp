@@ -74,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(DataLogic,SIGNAL(DataForPrint(QByteArray,uint)),this,SLOT(Print(QByteArray,uint)));
     connect(DataLogic,SIGNAL(outCurrentRSSI(signed short)),this,SLOT(out_Current_RSSI(signed short)));
-    connect(DataLogic,SIGNAL(outLRSSI_AFC(signed short, signed int)),this,SLOT(out_LRSSI_AFC(signed short, signed int)));
+    connect(DataLogic,SIGNAL(outLRSSI_AFC(signed short, double)),this,SLOT(out_LRSSI_AFC(signed short, double)));
 
     connect(timer_COMBufferClear,SIGNAL(timeout()), DataLogic, SLOT(ClearIn_DataBuffer()));
 
@@ -277,12 +277,13 @@ void MainWindow::out_Current_RSSI(signed short RSSI)
         pRSSICurrent->drawPolygon(&pfRSSICurrent, scene);
     }
 }
-void MainWindow::out_LRSSI_AFC(signed short RSSI, signed int AFC)
+void MainWindow::out_LRSSI_AFC(signed short RSSI, double AFC)
 {
     double r = (double)(RSSI);
     r/=10;
     ui->Latch_RSSI->setText(QString("%1").arg(r));
-    ui->AFC->setText(QString("%1").arg(AFC/1000));
+
+    ui->AFC->setText(QString("%1").arg(AFC));
 }
 
 bool MainWindow::eventFilter(QObject *target, QEvent *event)
@@ -458,10 +459,10 @@ void MainWindow::on_cBtnSend_clicked()
     if (ui->SN_ENABLE->isChecked())
     {
         sn = ui->SN_TEXT->text().toInt();
-        data_to_write.append((char)(sn << 0));
-        data_to_write.append((char)(sn << 8));
-        data_to_write.append((char)(sn << 16));
-        data_to_write.append((char)(sn << 24));
+        data_to_write.append((char)(sn >> 0));
+        data_to_write.append((char)(sn >> 8));
+        data_to_write.append((char)(sn >> 16));
+        data_to_write.append((char)(sn >> 24));
     }
 
     data_to_write.append(QString_To_QByteAray(ui->cEnterText->text(), ui->CRC_OUT->isChecked()));

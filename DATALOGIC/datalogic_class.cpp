@@ -22,34 +22,56 @@ void DataLogic_Class::setSerialNumberMode(QString S, bool Enable)
     this->SerialNumber    = S;
     this->addSerialNumber = Enable;
 }
-
+void DataLogic_Class::ClearIn_DataBuffer(void)
+{
+    InDataBuffer.clear();
+    this->timer->stop();
+                                                        // ====================================
+                                                        QString s = "Stop timer - Buff clear";
+                                                        qDebug() << s;
+                                                        // ====================================
+}
+void DataLogic_Class::ClearOut_DataBuffer(void)
+{
+    OutDataBuffer.clear();
+}
 void DataLogic_Class::In_DataBuffer(QByteArray data)
 {
     InDataBuffer.append(data);
     int length = InDataBuffer.length();
-    QString s = "Input bytes: "; s += QString("%1").arg(length);
-    qDebug() << s;
+                                                        // ====================================
+                                                        QString s = "Input bytes: "; s += QString("%1").arg(length);
+                                                        qDebug() << s;
+                                                        // ====================================
 
     this->timer->start(50);
-    s = "Start timer 50 ms";
-    qDebug() << s;
+                                                        // ====================================
+                                                        s = "Start timer 50 ms";
+                                                        qDebug() << s;
+                                                        // ====================================
 
     if(CRC16->Check_Byte_Stream_CRC16(&InDataBuffer) && (length > 4))
-    {
+                    {                                   // ====================================
+                                                        QString s = "Stop timer - CRC Correct";
+                                                        qDebug() << s;
+                                                        // ====================================
+
         this->timer->stop();
         Repeat_Counter = Repeat_Number;
         timerRepeat->stop();
-        QString s = "Stop timer - CRC Correct";
-        qDebug() << s;
+
+        ClearOut_DataBuffer();
         OutDataBuffer.append(InDataBuffer);
-        emit DataForPrint(OutDataBuffer,COM_RX);   // Вывод данных в консоль
         ClearIn_DataBuffer();
-        Parce_DataBuffer(OutDataBuffer,NONE);
+        emit DataForPrint(OutDataBuffer,COM_RX);        // Вывод данных в консоль
+        Parce_DataBuffer(OutDataBuffer,NONE);           // Парсинг данных
+
     }
 }
 
 void DataLogic_Class::Parce_DataBuffer(QByteArray data, uint n)
 {
+    ParceDataBuffer.clear();
     ParceDataBuffer.append(data);
     ClearOut_DataBuffer();
 
@@ -73,21 +95,6 @@ void DataLogic_Class::Parce_DataBuffer(QByteArray data, uint n)
             ParceData(IN_INTERFACE_RF_PLC);
         }
     }
-}
-
-void DataLogic_Class::ClearIn_DataBuffer(void)
-{
-
-    InDataBuffer.clear();
-
-    this->timer->stop();
-    QString s = "Stop timer - Buff clear";
-    qDebug() << s;
-}
-
-void DataLogic_Class::ClearOut_DataBuffer(void)
-{
-    OutDataBuffer.clear();
 }
 
 void DataLogic_Class::ComandHandling(uint n, uint m)
@@ -138,7 +145,8 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         }
         case SEND_WRITE_SWITCH_LEVEL:
         {
-            int u[6] = {0xE0,0x04,((int)(MODEM->SWITCH_LEVEL >> 0)  & 0xFF),((int)(MODEM->SWITCH_LEVEL >> 8) & 0xFF),((int)(MODEM->SWITCH_LEVEL >> 16) & 0xFF),((int)(MODEM->SWITCH_LEVEL >> 24) & 0xFF)};length = 6;
+            int u[6] = {0xE0,0x04,((int)(MODEM->SWITCH_LEVEL >> 0)  & 0xFF),((int)(MODEM->SWITCH_LEVEL >> 8) & 0xFF),
+                                  ((int)(MODEM->SWITCH_LEVEL >> 16) & 0xFF),((int)(MODEM->SWITCH_LEVEL >> 24) & 0xFF)};length = 6;
             for(int i = 0; i < length; i++){data.append((char)u[i]);}
             break;
         }
@@ -150,7 +158,8 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         }
         case SEND_WRITE_SWITCH_TIMEOUT:
         {
-            int u[6] = {0xE3,0x04,((int)(MODEM->SWITCH_TIMEOUT >> 0)  & 0xFF),((int)(MODEM->SWITCH_TIMEOUT >> 8) & 0xFF),((int)(MODEM->SWITCH_TIMEOUT >> 16) & 0xFF),((int)(MODEM->SWITCH_TIMEOUT >> 24) & 0xFF)};length = 6;
+            int u[6] = {0xE3,0x04,((int)(MODEM->SWITCH_TIMEOUT >> 0)  & 0xFF),((int)(MODEM->SWITCH_TIMEOUT >> 8) & 0xFF),
+                                  ((int)(MODEM->SWITCH_TIMEOUT >> 16) & 0xFF),((int)(MODEM->SWITCH_TIMEOUT >> 24) & 0xFF)};length = 6;
             for(int i = 0; i < length; i++){data.append((char)u[i]);}
             break;
         }
@@ -180,7 +189,6 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         }
     }
     CRC16->CRC16_Add_To_ByteArray(&data);
-
     emit SEND_DATA(data,m);
 }
 
@@ -195,169 +203,181 @@ void DataLogic_Class::ParceData(uint n)
 
     QByteArray AnswerHeader, In_Data;
     uchar NumbOfBytes, Comande, ComandState;
-    AnswerHeader.append(ParceDataBuffer.data(), 6);
+    if (ParceDataBuffer.length() >= 6)
+    {
+        AnswerHeader.append(ParceDataBuffer.data(), 6);
+    }
     if (n == IN_INTERFACE_USO)
     {
-       NumbOfBytes = ParceDataBuffer.at(6);
-       Comande     = ParceDataBuffer.at(7);
-       ComandState = ParceDataBuffer.at(8);
-       In_Data.append(ParceDataBuffer.data()+9,NumbOfBytes-2);
+        if (ParceDataBuffer.length() >= 9+NumbOfBytes-2)
+        {
+            NumbOfBytes = ParceDataBuffer.at(6);
+            Comande     = ParceDataBuffer.at(7);
+            ComandState = ParceDataBuffer.at(8);
+            In_Data.append(ParceDataBuffer.data()+9,NumbOfBytes-2);
+        }
     }
     else if (n == IN_INTERFACE_RF_PLC)
     {
-        NumbOfBytes = ParceDataBuffer.at(6+4);
-        Comande     = ParceDataBuffer.at(7+4);
-        ComandState = ParceDataBuffer.at(8+4);
-        In_Data.append(ParceDataBuffer.data()+9+4,NumbOfBytes-2);
+        if (ParceDataBuffer.length() >= 9+4+NumbOfBytes-2)
+        {
+            NumbOfBytes = ParceDataBuffer.at(6+4);
+            Comande     = ParceDataBuffer.at(7+4);
+            ComandState = ParceDataBuffer.at(8+4);
+            In_Data.append(ParceDataBuffer.data()+9+4,NumbOfBytes-2);
+        }
     }
-       switch (Comande)
-       {
-           case 0xFF:
-           {
-             MODEM->curr_ver     = ComandState;
-             MODEM->boot_ver     = QString::fromUtf8(In_Data.data(),4);
-             MODEM->fw_ver       = QString::fromUtf8(In_Data.data()+10,4);
-             MODEM->BOOT_VERSION = MODEM->boot_ver.toDouble();
-             MODEM->FW_VERSION   = MODEM->fw_ver.toDouble();
-
-             emit outConnect(DataLogicMode);
-
-             break;
-           }
-           case 0xF0:
-           {
-             MODEM->SWITCH_MODE     = ComandState;
-
-             emit outConnect(DataLogicMode);
-
-             break;
-           }
-           case 0xEF:
-           {
-             //if (ComandState == 1)
-             //{
-                 emit outConnect(DataLogicMode);
-             //}
-             break;
-           }
-           case 0xE5: // Latch RSSI
-           {
-
-               SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0 = In_Data.at(0);
-               SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1 = In_Data.at(1);
-
-               signed short RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1) << 8)
-                                                | (SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0);
-
-               signed int   AFC = 0;
-               if (NumbOfBytes == 6)
-               {
-                   SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
-                   SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
-                   if ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 & (1 << 7)))
-                   {
-                       SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0xFF;
-                       SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0xFF;
-                   }
-                   else
-                   {
-                       SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0x00;
-                       SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0x00;
-                   }
-               }
-               else if (NumbOfBytes == 8)
-               {
-                   SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
-                   SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
-                   SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = In_Data.at(4);
-                   SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = In_Data.at(5);
-               }
-               AFC = ((signed int)(SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3) << 24)
-                               | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2) << 16)
-                               | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
-                               | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0) << 0);
-
-               emit outLRSSI_AFC(RSSI, AFC);
-
-             break;
-           }
-           case 0xE3:
-           {
-             if (NumbOfBytes == 6)
-             {
-                 MODEM->SWITCH_TIMEOUT     = 0;
-                 MODEM->SWITCH_TIMEOUT    |= *((uint*)(In_Data.data()));;
-             }
-
-             emit outConnect(DataLogicMode);
-
-             break;
-           }
-           case 0xE2:
-           {
-             if (NumbOfBytes == 6)
-             {
-                 MODEM->RX_TIMEOUT       = 0;
-                 MODEM->RX_TIMEOUT      |= *((uint*)(In_Data.data()));;
-             }
-
-             emit outConnect(DataLogicMode);
-
-             break;
-           }
-           case 0xE1:
-           {
-             if (NumbOfBytes == 6)
-             {
-                 MODEM->TX_TIMEOUT       = 0;
-                 MODEM->TX_TIMEOUT      |= *((uint*)(In_Data.data()));;
-             }
-
-             emit outConnect(DataLogicMode);
-
-             break;
-           }
-           case 0xE0:
-           {
-             if (NumbOfBytes == 6)
-             {
-                 MODEM->SWITCH_LEVEL     = 0;
-                 MODEM->SWITCH_LEVEL     |= *((uint*)(In_Data.data()));
-             }
-             emit outConnect(DataLogicMode);
-
-             break;
-           }
-           case 0xBF:
-           {
-                uchar GROUP       = ComandState;
-                uchar NUM_PROPS   = In_Data.at(0);
-                uchar START_PROP  = In_Data.at(1);
-
-                uchar *group_adress = SI4463Conf->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP);
-
-                if ((NumbOfBytes - 4) == NUM_PROPS)
+    switch (Comande)
+    {
+        case 0xFF: // Запрос версий ПО
+        {
+            if (In_Data.length() >= 10+4)
+            {
+                MODEM->curr_ver     = ComandState;
+                MODEM->boot_ver     = QString::fromUtf8(In_Data.data(),4);
+                MODEM->fw_ver       = QString::fromUtf8(In_Data.data()+10,4);
+                MODEM->BOOT_VERSION = MODEM->boot_ver.toDouble();
+                MODEM->FW_VERSION   = MODEM->fw_ver.toDouble();
+            }
+            emit outConnect(DataLogicMode);
+            break;
+        }
+        case 0xF0: // Запрос режима ретрансляции
+        {
+            MODEM->SWITCH_MODE     = ComandState;
+            emit outConnect(DataLogicMode);
+            break;
+        }
+        case 0xEF:
+        {
+            emit outConnect(DataLogicMode);
+            break;
+        }
+        case 0xE5: // Latch RSSI
+        {
+            signed short RSSI = 0;
+            if (In_Data.length() >= 2)
+            {
+                SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0 = In_Data.at(0);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1 = In_Data.at(1);
+                RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1) << 8)
+                                       | (SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0);
+            }
+            signed int   AFC = 0;
+            if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
+            {
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
+                AFC = ((signed int)(SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1) << 8)
+                                 | (SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0);
+                if ((AFC & (1 << 15)))
                 {
-                    for (uint i = 0; i < NUM_PROPS; i++)
-                    {
-                        *(uchar*)(group_adress) = *(In_Data.data()+i+2);
-                        group_adress++;
-                    }
+                    SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0xFF;
+                    SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0xFF;
+                    AFC |= 0xFFFF0000;
                 }
-                emit outConnect(DataLogicMode);
-                break;
-           }
-           case 0xBB: // Current RSSI
-           {
-             SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_0 = In_Data.at(0);
-             SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_1 = In_Data.at(1);
-
-             signed short RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_1) << 8) | (SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_0);
-
-             emit outCurrentRSSI(RSSI);
+                else
+                {
+                    SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0x00;
+                    SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0x00;
+                    AFC &= ~0xFFFF0000;
+                }
+                emit outLRSSI_AFC(RSSI, (double)(AFC));
+            }
+            else if ((NumbOfBytes == 8)&(In_Data.length() >= 6))
+            {
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = In_Data.at(4);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = In_Data.at(5);
+                AFC = ((signed int)(SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3) << 24)
+                                | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2) << 16)
+                                | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
+                                | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0) << 0);
+                emit outLRSSI_AFC(RSSI, (double)(AFC)/1000);
+            }
+            else
+            {
+                emit outLRSSI_AFC(RSSI, (double)(AFC));
+            }
+            break;
+        }
+        case 0xE3: // Таймаут свича
+        {
+            if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
+            {
+                MODEM->SWITCH_TIMEOUT     = 0;
+                MODEM->SWITCH_TIMEOUT    |= *((uint*)(In_Data.data()));;
+            }
+            emit outConnect(DataLogicMode);
+            break;
+        }
+        case 0xE2: // Таймаут RX
+        {
+            if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
+            {
+                MODEM->RX_TIMEOUT       = 0;
+                MODEM->RX_TIMEOUT      |= *((uint*)(In_Data.data()));;
+            }
+            emit outConnect(DataLogicMode);
+            break;
+        }
+        case 0xE1: // Таймаут TX
+        {
+            if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
+            {
+                MODEM->TX_TIMEOUT       = 0;
+                MODEM->TX_TIMEOUT      |= *((uint*)(In_Data.data()));;
+            }
+            emit outConnect(DataLogicMode);
+            break;
+        }
+        case 0xE0: // Уровень свича
+        {
+            if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
+            {
+                MODEM->SWITCH_LEVEL     = 0;
+                MODEM->SWITCH_LEVEL     |= *((uint*)(In_Data.data()));
+            }
+            emit outConnect(DataLogicMode);
+            break;
+        }
+        case 0xBF:
+        {
+             if (In_Data.length() >= 2)
+             {
+                 uchar GROUP       = ComandState;
+                 uchar NUM_PROPS   = In_Data.at(0);
+                 uchar START_PROP  = In_Data.at(1);
+                 uchar *group_adress = SI4463Conf->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP);
+                 if ((NumbOfBytes - 4) == NUM_PROPS)
+                 {
+                     if (In_Data.length() >= NUM_PROPS+1)
+                     {
+                         for (uint i = 0; i < NUM_PROPS; i++)
+                         {
+                             *(uchar*)(group_adress) = *(In_Data.data()+i+2);
+                             group_adress++;
+                         }
+                     }
+                 }
+             }
+             emit outConnect(DataLogicMode);
              break;
-           }
-       }
+        }
+        case 0xBB: // Current RSSI
+        {
+            if (In_Data.length() >= 2)
+            {
+                SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_0 = In_Data.at(0);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_1 = In_Data.at(1);
+                signed short RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_1) << 8)
+                                      | (SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_0);
+            }
+            emit outCurrentRSSI(RSSI);
+            break;
+        }
+    }
     ParceDataBuffer.clear();
 }
 
@@ -382,10 +402,10 @@ void DataLogic_Class::SEND_DATA(QByteArray data, uint n)
                 if (addSerialNumber)
                 {
                     sn = this->SerialNumber.toInt();
-                    data_to_write.append((char)(sn << 0));
-                    data_to_write.append((char)(sn << 8));
-                    data_to_write.append((char)(sn << 16));
-                    data_to_write.append((char)(sn << 24));
+                    data_to_write.append((char)(sn >> 0));
+                    data_to_write.append((char)(sn >> 8));
+                    data_to_write.append((char)(sn >> 16));
+                    data_to_write.append((char)(sn >> 24));
                 }
 
                 data_to_write.append(data);
@@ -418,10 +438,10 @@ void DataLogic_Class::SEND_DATA(QByteArray data, uint n)
             if (addSerialNumber)
             {
                 sn = this->SerialNumber.toInt();
-                data_to_write.append((char)(sn << 0));
-                data_to_write.append((char)(sn << 8));
-                data_to_write.append((char)(sn << 16));
-                data_to_write.append((char)(sn << 24));
+                data_to_write.append((char)(sn >> 0));
+                data_to_write.append((char)(sn >> 8));
+                data_to_write.append((char)(sn >> 16));
+                data_to_write.append((char)(sn >> 24));
             }
 
             data_to_write.append(data);

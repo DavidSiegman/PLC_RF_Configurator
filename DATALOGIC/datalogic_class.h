@@ -44,7 +44,7 @@ signals:
     void DataForPrint(QByteArray data,uint n);
     void outConnect(uint n);
     void outCurrentRSSI(signed short RSSI);
-    void outLRSSI_AFC(signed short RSSI, signed int AFC);
+    void outLRSSI_AFC(signed short RSSI, double AFC);
     void noANSWER();
 
 public slots:
