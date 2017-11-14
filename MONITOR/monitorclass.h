@@ -10,7 +10,7 @@ class MonitorClass : public QThread
 {
     Q_OBJECT
 public:
-    explicit MonitorClass(uint Timeout, uint Parameter, QObject *parent = nullptr);
+    explicit MonitorClass(uint Timeout, uint Parameter, QObject *parent = 0);
     void run();
     QTimer *timer;
 private:

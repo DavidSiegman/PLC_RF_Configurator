@@ -85,7 +85,7 @@ private slots:
     void start_COM_Init(void);
     void on_CRC_OUT_toggled(bool checked);
     void out_Current_RSSI(signed short RSSI);
-    void out_LRSSI_AFC(signed short RSSI, double AFC);
+    void out_LRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,signed short ANT2_RSSI,double AFC);
     void on_SN_ENABLE_toggled(bool checked);
     void on_Connect_clicked();
     void on_cBtnSend_clicked();

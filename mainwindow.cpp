@@ -74,7 +74,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(DataLogic,SIGNAL(DataForPrint(QByteArray,uint)),this,SLOT(Print(QByteArray,uint)));
     connect(DataLogic,SIGNAL(outCurrentRSSI(signed short)),this,SLOT(out_Current_RSSI(signed short)));
-    connect(DataLogic,SIGNAL(outLRSSI_AFC(signed short, double)),this,SLOT(out_LRSSI_AFC(signed short, double)));
+    connect(DataLogic,SIGNAL(outLRSSI_AFC(signed short,signed short,signed short,double)),this,SLOT(out_LRSSI_AFC(signed short,signed short,signed short,double)));
 
     connect(timer_COMBufferClear,SIGNAL(timeout()), DataLogic, SLOT(ClearIn_DataBuffer()));
 
@@ -254,7 +254,6 @@ void MainWindow::Print_Log(QString data, uint n)
     }
 }
 
-
 void MainWindow::out_Current_RSSI(signed short RSSI)
 {
     double r = (double)(RSSI);
@@ -277,11 +276,19 @@ void MainWindow::out_Current_RSSI(signed short RSSI)
         pRSSICurrent->drawPolygon(&pfRSSICurrent, scene);
     }
 }
-void MainWindow::out_LRSSI_AFC(signed short RSSI, double AFC)
+void MainWindow::out_LRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,signed short ANT2_RSSI,double AFC)
 {
     double r = (double)(RSSI);
     r/=10;
     ui->Latch_RSSI->setText(QString("%1").arg(r));
+
+    r = (double)(ANT1_RSSI);
+    r/=10;
+    ui->RSSI_ANT1->setText(QString("%1").arg(r));
+
+    r = (double)(ANT2_RSSI);
+    r/=10;
+    ui->RSSI_ANT2->setText(QString("%1").arg(r));
 
     ui->AFC->setText(QString("%1").arg(AFC));
 }

@@ -2031,14 +2031,16 @@ typedef union SI4463_INTERUPTS_Type
         {
             struct
             {
-              volatile unsigned char ANT1_RSSI: 8;
+              volatile unsigned char ANT1_RSSI_1: 8;
+              volatile unsigned char ANT1_RSSI_0: 8;
             }Field;
         }ANT1_RSSI;
         union
         {
             struct
             {
-              volatile unsigned char ANT2_RSSI: 8;
+              volatile unsigned char ANT2_RSSI_1: 8;
+              volatile unsigned char ANT2_RSSI_0: 8;
             }Field;
         }ANT2_RSSI;
         union

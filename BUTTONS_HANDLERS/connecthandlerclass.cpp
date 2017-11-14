@@ -47,6 +47,9 @@ void ConnectHandlerClass::aOPEN()
         ui->MANUAL_ENTER->setEnabled(false);
         ui->tabWidget->setEnabled(false);
         ui->Connect->setText("Отключение");
+        if (ui->Interface->currentIndex() == 1)
+        {DataLogic->setSerialNumberMode(ui->SN->text(), true);}
+        else{DataLogic->setSerialNumberMode(ui->SN->text(), false);}
         ReadDataProgress = 0;
         emit SendLog(QString::fromUtf8(">> ======= Подключение к устройству\r"),NONE);
         ConnectHandling(CONNECT_HANDLING);
