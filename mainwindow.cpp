@@ -4,9 +4,6 @@
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QMessageBox>
-#include <QMetaEnum>
-#include <unistd.h>
-#include <errno.h>
 #include <QThread>
 #include <QFile>
 #include <QTextStream>
@@ -42,10 +39,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timer_COMBufferClear      = new QTimer();
     MODEM                     = new MODEMClass;
-    PortNew                   = new Port();                                                                    // Создаем Поток обработки портов
+    PortNew                   = new Port();                                                                   // Создаем Поток обработки портов
+    TCPNew                    = new TCP();
     oCRC16                    = new CRC16_Class();                                                             // Создаём Объект расчёта CRC
     SI4463Config              = new SI4463Class();
-    DataLogic                 = new DataLogic_Class(oCRC16,timer_COMBufferClear,SI4463Config,MODEM,PortNew);   // Создаём Объект обработки сообщений
+    DataLogic                 = new DataLogic_Class(oCRC16,timer_COMBufferClear,SI4463Config,MODEM,PortNew,TCPNew);   // Создаём Объект обработки сообщений
     ConnectHandler            = new ConnectHandlerClass(ui, DataLogic,MODEM);
     scene                     = new myGraphScene(this);
 
@@ -72,13 +70,17 @@ MainWindow::MainWindow(QWidget *parent) :
     DataLogic->Repeat_Counter = DataLogic->Repeat_Number;
     DataLogic->Delay_Time     = 2000;
 
-    connect(PortNew, SIGNAL(PortStartProcess()),           this, SLOT(start_COM_Init()));                        //Установка свойств порта при открытии
-    connect(PortNew, SIGNAL(error_(QString,uint)),         this, SLOT(Print_Log(QString,uint)));   //Лог ошибок
+    connect(PortNew, SIGNAL(COM_Started()),               this, SLOT(start_COM_Init()));          //Установка свойств порта при открытии
+    connect(PortNew, SIGNAL(COM_Error(QString,uint)),     this, SLOT(Print_Log(QString,uint)));   //Лог ошибок
+    //connect(TCPNew, SIGNAL(TCP_Started()),              this, SLOT(start_COM_Init()));          //Установка свойств порта при открытии
+    connect(TCPNew, SIGNAL(TCP_Error(QString,uint)),      this, SLOT(Print_Log(QString,uint)));   //Лог ошибок
 
-    connect(ConnectHandler, SIGNAL(SendLog(QString,uint)), this, SLOT(Print_Log(QString,uint)));
+    connect(ConnectHandler, SIGNAL(SendLog(QString,uint)),this, SLOT(Print_Log(QString,uint)));
 
-    connect(ui->COMConnect,    SIGNAL(clicked()),PortNew,SLOT(Connect()));
-    connect(ui->COMDisconnect, SIGNAL(clicked()),PortNew,SLOT(DisconnectPort()));
+    connect(ui->COMConnect,    SIGNAL(clicked()),PortNew,SLOT(COM_Connect()));
+    connect(ui->TCPConnect,    SIGNAL(clicked()),TCPNew,SLOT(TCP_Connect()));
+
+    connect(ui->COMDisconnect, SIGNAL(clicked()),PortNew,SLOT(COM_Disconnect()));
     connect(ui->COMDisconnect, SIGNAL(clicked()),ConnectHandler,SLOT(StopMonitor()));
 
     connect(this,SIGNAL(AOPEN()),            ConnectHandler,SLOT(aOPEN()));
@@ -99,6 +101,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer_COMBufferClear,SIGNAL(timeout()), DataLogic, SLOT(ClearIn_DataBuffer()));
 
     PortNew->start();
+    TCPNew ->start();
 }
 
 //++++++++[Процедура закрытия приложения]++++++++++++++++++++++++++++++++++++++++++++++++
@@ -317,7 +320,7 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 
 void MainWindow::on_PortNameBox_currentIndexChanged(const QString &arg1)
 {
-    PortNew->Set_PortName(arg1);
+    PortNew->COM_SetPortName(arg1);
 }
 
 void MainWindow::on_FileOpen_clicked()
@@ -343,85 +346,85 @@ void MainWindow::start_COM_Init(void)
 {
     if (ui->action9600->isChecked())
     {
-        PortNew->Set_BaudRate(QSerialPort::Baud9600);
+        PortNew->COM_SetBaudRate(QSerialPort::Baud9600);
     }
     else if (ui->action19200->isChecked())
     {
-        PortNew->Set_BaudRate(QSerialPort::Baud19200);
+        PortNew->COM_SetBaudRate(QSerialPort::Baud19200);
     }
     else if (ui->action38400->isChecked())
     {
-        PortNew->Set_BaudRate(QSerialPort::Baud38400);
+        PortNew->COM_SetBaudRate(QSerialPort::Baud38400);
     }
     else if (ui->action115200->isChecked())
     {
-        PortNew->Set_BaudRate(QSerialPort::Baud38400);
+        PortNew->COM_SetBaudRate(QSerialPort::Baud38400);
     }
     else if (ui->actionCustom->isChecked())
     {
         ui->actionCustom->setChecked(false);
         ui->action9600->setChecked(true);
-        PortNew->Set_BaudRate(QSerialPort::Baud9600);
+        PortNew->COM_SetBaudRate(QSerialPort::Baud9600);
     }
     if (ui->action5_bits->isChecked())
     {
-        PortNew->Set_DataBits(QSerialPort::Data5);
+        PortNew->COM_SetDataBits(QSerialPort::Data5);
     }
     else if (ui->action6_bits->isChecked())
     {
-        PortNew->Set_DataBits(QSerialPort::Data6);
+        PortNew->COM_SetDataBits(QSerialPort::Data6);
     }
     else if (ui->action7_bits->isChecked())
     {
-        PortNew->Set_DataBits(QSerialPort::Data7);
+        PortNew->COM_SetDataBits(QSerialPort::Data7);
     }
     else if (ui->action8_bits->isChecked())
     {
-        PortNew->Set_DataBits(QSerialPort::Data8);
+        PortNew->COM_SetDataBits(QSerialPort::Data8);
     }
     if (ui->actionNone->isChecked())
     {
-        PortNew->Set_Parity(QSerialPort::NoParity);
+        PortNew->COM_SetParity(QSerialPort::NoParity);
     }
     else if (ui->actionEven->isChecked())
     {
-        PortNew->Set_Parity(QSerialPort::EvenParity);
+        PortNew->COM_SetParity(QSerialPort::EvenParity);
     }
     else if (ui->actionOdd->isChecked())
     {
-        PortNew->Set_Parity(QSerialPort::OddParity);
+        PortNew->COM_SetParity(QSerialPort::OddParity);
     }
     else if (ui->actionMark->isChecked())
     {
-        PortNew->Set_Parity(QSerialPort::MarkParity);
+        PortNew->COM_SetParity(QSerialPort::MarkParity);
     }
     else if (ui->actionSpace->isChecked())
     {
-        PortNew->Set_Parity(QSerialPort::SpaceParity);
+        PortNew->COM_SetParity(QSerialPort::SpaceParity);
     }
     if (ui->action1_bit->isChecked())
     {
-        PortNew->Set_StopBits(QSerialPort::OneStop);
+        PortNew->COM_SetStopBits(QSerialPort::OneStop);
     }
     else if (ui->action1_5_bits->isChecked())
     {
-        PortNew->Set_StopBits(QSerialPort::OneAndHalfStop);
+        PortNew->COM_SetStopBits(QSerialPort::OneAndHalfStop);
     }
     else if (ui->action2_bits->isChecked())
     {
-        PortNew->Set_StopBits(QSerialPort::TwoStop);
+        PortNew->COM_SetStopBits(QSerialPort::TwoStop);
     }
     if (ui->actionNone_2->isChecked())
     {
-        PortNew->Set_FlowControl(QSerialPort::NoFlowControl);
+        PortNew->COM_SetFlowControl(QSerialPort::NoFlowControl);
     }
     else if (ui->actionRTS_CTS->isChecked())
     {
-        PortNew->Set_FlowControl(QSerialPort::HardwareControl);
+        PortNew->COM_SetFlowControl(QSerialPort::HardwareControl);
     }
     else if (ui->actionXON_XOFF->isChecked())
     {
-        PortNew->Set_FlowControl(QSerialPort::SoftwareControl);
+        PortNew->COM_SetFlowControl(QSerialPort::SoftwareControl);
     }
 }
 
@@ -626,7 +629,7 @@ void MainWindow::on_action9600_toggled(bool arg1)
         ui->action38400->setChecked(false);
         ui->action115200->setChecked(false);
         ui->actionCustom->setChecked(false);
-        PortNew->Set_BaudRate(QSerialPort::Baud9600);
+        PortNew->COM_SetBaudRate(QSerialPort::Baud9600);
     }
 }
 
@@ -639,7 +642,7 @@ void MainWindow::on_action19200_toggled(bool arg1)
         ui->action38400->setChecked(false);
         ui->action115200->setChecked(false);
         ui->actionCustom->setChecked(false);
-        PortNew->Set_BaudRate(QSerialPort::Baud19200);
+        PortNew->COM_SetBaudRate(QSerialPort::Baud19200);
     }
 }
 
@@ -652,7 +655,7 @@ void MainWindow::on_action38400_toggled(bool arg1)
         ui->action38400->setChecked(true);
         ui->action115200->setChecked(false);
         ui->actionCustom->setChecked(false);
-        PortNew->Set_BaudRate(QSerialPort::Baud38400);
+        PortNew->COM_SetBaudRate(QSerialPort::Baud38400);
     }
 }
 
@@ -665,7 +668,7 @@ void MainWindow::on_action115200_toggled(bool arg1)
         ui->action38400->setChecked(false);
         ui->action115200->setChecked(true);
         ui->actionCustom->setChecked(false);
-        PortNew->Set_BaudRate(QSerialPort::Baud115200);
+        PortNew->COM_SetBaudRate(QSerialPort::Baud115200);
     }
 }
 
@@ -679,7 +682,7 @@ void MainWindow::on_actionCustom_triggered()
             ui->action38400->setChecked(false);
             ui->action115200->setChecked(false);
             ui->actionCustom->setChecked(true);
-            PortNew->Set_BaudRate(i);
+            PortNew->COM_SetBaudRate(i);
         }
 }
 
@@ -691,7 +694,7 @@ void MainWindow::on_action5_bits_toggled(bool arg1)
         ui->action6_bits->setChecked(false);
         ui->action7_bits->setChecked(false);
         ui->action8_bits->setChecked(false);
-        PortNew->Set_DataBits(QSerialPort::Data5);
+        PortNew->COM_SetDataBits(QSerialPort::Data5);
     }
 }
 
@@ -703,7 +706,7 @@ void MainWindow::on_action6_bits_toggled(bool arg1)
         ui->action6_bits->setChecked(true);
         ui->action7_bits->setChecked(false);
         ui->action8_bits->setChecked(false);
-        PortNew->Set_DataBits(QSerialPort::Data6);
+        PortNew->COM_SetDataBits(QSerialPort::Data6);
     }
 }
 
@@ -715,7 +718,7 @@ void MainWindow::on_action7_bits_toggled(bool arg1)
         ui->action6_bits->setChecked(false);
         ui->action7_bits->setChecked(true);
         ui->action8_bits->setChecked(false);
-        PortNew->Set_DataBits(QSerialPort::Data7);
+        PortNew->COM_SetDataBits(QSerialPort::Data7);
     }
 }
 
@@ -727,7 +730,7 @@ void MainWindow::on_action8_bits_toggled(bool arg1)
         ui->action6_bits->setChecked(false);
         ui->action7_bits->setChecked(false);
         ui->action8_bits->setChecked(true);
-        PortNew->Set_DataBits(QSerialPort::Data8);
+        PortNew->COM_SetDataBits(QSerialPort::Data8);
     }
 }
 
@@ -740,7 +743,7 @@ void MainWindow::on_actionNone_toggled(bool arg1)
         ui->actionOdd->setChecked(false);
         ui->actionMark->setChecked(false);
         ui->actionSpace->setChecked(false);
-        PortNew->Set_Parity(QSerialPort::NoParity);
+        PortNew->COM_SetParity(QSerialPort::NoParity);
     }
 }
 
@@ -753,7 +756,7 @@ void MainWindow::on_actionEven_toggled(bool arg1)
         ui->actionOdd->setChecked(false);
         ui->actionMark->setChecked(false);
         ui->actionSpace->setChecked(false);
-        PortNew->Set_Parity(QSerialPort::EvenParity);
+        PortNew->COM_SetParity(QSerialPort::EvenParity);
     }
 }
 
@@ -766,7 +769,7 @@ void MainWindow::on_actionOdd_toggled(bool arg1)
         ui->actionOdd->setChecked(true);
         ui->actionMark->setChecked(false);
         ui->actionSpace->setChecked(false);
-        PortNew->Set_Parity(QSerialPort::OddParity);
+        PortNew->COM_SetParity(QSerialPort::OddParity);
     }
 }
 
@@ -779,7 +782,7 @@ void MainWindow::on_actionMark_toggled(bool arg1)
         ui->actionOdd->setChecked(false);
         ui->actionMark->setChecked(true);
         ui->actionSpace->setChecked(false);
-        PortNew->Set_Parity(QSerialPort::MarkParity);
+        PortNew->COM_SetParity(QSerialPort::MarkParity);
     }
 }
 
@@ -792,7 +795,7 @@ void MainWindow::on_actionSpace_toggled(bool arg1)
         ui->actionOdd->setChecked(false);
         ui->actionMark->setChecked(false);
         ui->actionSpace->setChecked(true);
-        PortNew->Set_Parity(QSerialPort::SpaceParity);
+        PortNew->COM_SetParity(QSerialPort::SpaceParity);
     }
 }
 
@@ -803,7 +806,7 @@ void MainWindow::on_action1_bit_toggled(bool arg1)
         ui->action1_bit->setChecked(true);
         ui->action1_5_bits->setChecked(false);
         ui->action2_bits->setChecked(false);
-        PortNew->Set_StopBits(QSerialPort::OneStop);
+        PortNew->COM_SetStopBits(QSerialPort::OneStop);
     }
 }
 
@@ -814,7 +817,7 @@ void MainWindow::on_action1_5_bits_toggled(bool arg1)
         ui->action1_bit->setChecked(false);
         ui->action1_5_bits->setChecked(true);
         ui->action2_bits->setChecked(false);
-        PortNew->Set_StopBits(QSerialPort::OneAndHalfStop);
+        PortNew->COM_SetStopBits(QSerialPort::OneAndHalfStop);
     }
 }
 
@@ -825,7 +828,7 @@ void MainWindow::on_action2_bits_toggled(bool arg1)
         ui->action1_bit->setChecked(false);
         ui->action1_5_bits->setChecked(false);
         ui->action2_bits->setChecked(true);
-        PortNew->Set_StopBits(QSerialPort::TwoStop);
+        PortNew->COM_SetStopBits(QSerialPort::TwoStop);
     }
 }
 
@@ -836,7 +839,7 @@ void MainWindow::on_actionNone_2_toggled(bool arg1)
         ui->actionNone_2->setChecked(true);
         ui->actionRTS_CTS->setChecked(false);
         ui->actionXON_XOFF->setChecked(false);
-        PortNew->Set_FlowControl(QSerialPort::NoFlowControl);
+        PortNew->COM_SetFlowControl(QSerialPort::NoFlowControl);
     }
 }
 
@@ -847,7 +850,7 @@ void MainWindow::on_actionRTS_CTS_toggled(bool arg1)
         ui->actionNone_2->setChecked(false);
         ui->actionRTS_CTS->setChecked(true);
         ui->actionXON_XOFF->setChecked(false);
-        PortNew->Set_FlowControl(QSerialPort::HardwareControl);
+        PortNew->COM_SetFlowControl(QSerialPort::HardwareControl);
     }
 }
 
@@ -858,7 +861,7 @@ void MainWindow::on_actionXON_XOFF_toggled(bool arg1)
         ui->actionNone_2->setChecked(false);
         ui->actionRTS_CTS->setChecked(false);
         ui->actionXON_XOFF->setChecked(true);
-        PortNew->Set_FlowControl(QSerialPort::SoftwareControl);
+        PortNew->COM_SetFlowControl(QSerialPort::SoftwareControl);
     }
 }
 

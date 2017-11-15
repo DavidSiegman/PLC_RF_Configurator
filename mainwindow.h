@@ -9,6 +9,8 @@
 #include <QInputDialog>
 #include <QTextCodec>
 #include <QTimer>
+#include "TCP/tcp.h"
+
 #include <QGraphicsLinearLayout>
 
 #include "BUTTONS_HANDLERS/connecthandlerclass.h"
@@ -35,6 +37,27 @@ public:
     explicit MainWindow(QWidget *parent = 0);
 
     ~MainWindow();
+
+private:
+    Ui::MainWindow *ui;
+
+    SI4463Class         *SI4463Config;                             //
+    QTimer              *timer_COMBufferClear;       //
+    Port                *PortNew;                                  //
+    DataLogic_Class     *DataLogic;                                //
+    CRC16_Class         *oCRC16;                                   //
+    ConnectHandlerClass *ConnectHandler;
+    MODEMClass          *MODEM;
+    TCP                 *TCPNew;
+    QString QByteAray_To_QString(QByteArray arr);
+    QByteArray QString_To_QByteAray(QString str, bool crc);
+
+    myGraphScene * scene;
+
+    myPoligon *pRSSICurrent, *pAFC ,*pRSSI;
+    QPolygonF pfRSSICurrent, pfAFC, pfRSSI;
+
+    double x;
 
 signals:
     void AOPEN();
@@ -124,28 +147,9 @@ private slots:
 
     void on_readLatchRSSI_clicked();
 
-private:
-    Ui::MainWindow *ui;
+    void on_TCPConnect_clicked();
 
-    SI4463Class         *SI4463Config;                             //
-    QTimer              *timer_COMBufferClear;       //
-    Port                *PortNew;                                  //
-    DataLogic_Class     *DataLogic;                                //
-    CRC16_Class         *oCRC16;                                   //
-    ConnectHandlerClass *ConnectHandler;
-    MODEMClass          *MODEM;
-
-    QString QByteAray_To_QString(QByteArray arr);
-    QByteArray QString_To_QByteAray(QString str, bool crc);
-
-    myGraphScene * scene;
-
-    myPoligon *pRSSICurrent, *pAFC ,*pRSSI;
-    QPolygonF pfRSSICurrent, pfAFC, pfRSSI;
-
-    double x;
-
- protected:
+protected:
     //virtual void mousePressEvent(QMouseEvent *);
     virtual bool eventFilter(QObject *target, QEvent *event);
     void showEvent ( QShowEvent * event );

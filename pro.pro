@@ -4,8 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT      += core gui
 QT      += serialport
+QT      += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
@@ -30,7 +31,8 @@ HEADERS += \
     GRAPH/mygraphscene.h \
     GRAPH/mypoligon.h \
     MONITOR/monitorclass.h \
-    SI4463/si4463_propertys_tablemodel.h
+    SI4463/si4463_propertys_tablemodel.h \
+    TCP/tcp.h
 
 SOURCES += \
     COM/port.cpp \
@@ -46,7 +48,8 @@ SOURCES += \
     GRAPH/mygraphscene.cpp \
     GRAPH/mypoligon.cpp \
     MONITOR/monitorclass.cpp \
-    SI4463/si4463_propertys_tablemodel.cpp
+    SI4463/si4463_propertys_tablemodel.cpp \
+    TCP/tcp.cpp
 
 FORMS += \
     mainwindow.ui

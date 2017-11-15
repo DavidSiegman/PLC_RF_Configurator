@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <qdebug.h>
 #include "COM/port.h"
+#include "TCP/tcp.h"
 #include "CRC/crc16_class.h"
 #include "SI4463/si4463class.h"
 #include "MODEM/modemclass.h"
@@ -14,7 +15,7 @@ class DataLogic_Class : public QObject
 {
     Q_OBJECT
 public:
-    explicit DataLogic_Class(CRC16_Class *oCRC16, QTimer *t, SI4463Class *SI4463Conf,MODEMClass *MODEM,Port *nPort,QObject *parent = 0);
+    explicit DataLogic_Class(CRC16_Class *oCRC16, QTimer *t, SI4463Class *SI4463Conf,MODEMClass *MODEM,Port *nPort,TCP *nTCP,QObject *parent = 0);
 
     uint         DataLogicMode;
     uint         Repeat_Number;
@@ -29,6 +30,7 @@ private:
     CRC16_Class *CRC16;
     MODEMClass  *MODEM;
     Port        *nPort;
+    TCP         *nTCP;
 
     QByteArray  InDataBuffer;
     QByteArray  OutDataBuffer;
@@ -40,8 +42,7 @@ private:
 
 
 signals:
-    void writeDataToCOM(QByteArray data);
-    void writeDataToTCP(QByteArray data);
+    void OutData(QByteArray data);
     void DataForPrint(QByteArray data,uint n);
     void outConnect(uint n);
     void outCurrentRSSI(signed short RSSI);

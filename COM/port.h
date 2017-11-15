@@ -8,7 +8,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <mess_enum.h>
 
-struct Settings {
+struct COMSettings {
     QString                  name;
     qint32                   baudRate;
     QSerialPort::DataBits    dataBits;
@@ -22,55 +22,35 @@ class Port : public QThread
     Q_OBJECT
 
 public:
-
     explicit Port(QObject *parent = 0);
-
+    void run();
     ~Port();
-    QSerialPort thisPort;
+
+    QSerialPort   *thisPort;
 
 private:
-    Settings    SettingsPort;
+    COMSettings    SettingsPort;
 
 signals:
-
-    void finished_Port(); //
-
-    void error_(QString err, uint n);
-
-    void outPort(QByteArray data);
-
-    void PortStartProcess();
+    void COM_Finished(); //
+    void COM_Error(QString err, uint n);
+    void COM_OutDATA(QByteArray data);
+    void COM_Started();
 
 public slots:
-
-    void DisconnectPort();
-
-    void Connect();
-
-    void Set_PortName(QString Name);
-
-    void Set_BaudRate(int baudrate);
-
-    void Set_DataBits(int DataBits);
-
-    void Set_Parity(int Parity);
-
-    void Set_StopBits(int StopBits);
-
-    void Set_FlowControl(int FlowControl);
-
-    //void process_Port();
-
-    void WriteToPort(QByteArray data);
-
-    void ReadInPort();
+    void COM_Disconnect();
+    void COM_Connect();
+    void COM_SetPortName(QString Name);
+    void COM_SetBaudRate(int baudrate);
+    void COM_SetDataBits(int DataBits);
+    void COM_SetParity(int Parity);
+    void COM_SetStopBits(int StopBits);
+    void COM_SetFlowControl(int FlowControl);
+    void COM_WriteDATA(QByteArray data);
+    void COM_ReadDATA();
 
 private slots:
-
-    void handleError(QSerialPort::SerialPortError error);//
-
-public:
-    void run();
+    void COM_ErrorHandler(QSerialPort::SerialPortError error);//
 
 };
 

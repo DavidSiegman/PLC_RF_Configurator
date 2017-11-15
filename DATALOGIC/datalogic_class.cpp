@@ -2,20 +2,23 @@
 
 //#include "mainwindow.h"
 
-DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16, QTimer *t,SI4463Class *SI4463Conf, MODEMClass *MODEM,Port *nPort,QObject *parent) : QObject(parent)
+DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16, QTimer *t,SI4463Class *SI4463Conf, MODEMClass *MODEM,Port *nPort,TCP *nTCP,QObject *parent) : QObject(parent)
 {
     this->CRC16           = oCRC16;
     this->timer           = t;
     this->SI4463Conf      = SI4463Conf;
     this->MODEM           = MODEM;
     this->nPort           = nPort;
+    this->nTCP            = nTCP;
     this->addSerialNumber = false;
 
     this->timerRepeat     = new QTimer();
 
-    connect(this,SIGNAL(writeDataToCOM(QByteArray)),this->nPort,SLOT(WriteToPort(QByteArray)));
-    connect(this->nPort, SIGNAL(outPort(QByteArray)),this, SLOT(In_DataBuffer(QByteArray)));
-    connect(timerRepeat,SIGNAL(timeout()), this, SLOT(REPEAT_SEND()));
+    connect(this,SIGNAL(OutData(QByteArray)),            this->nPort,SLOT(COM_WriteDATA(QByteArray)));
+    connect(this->nPort, SIGNAL(COM_OutDATA(QByteArray)),this, SLOT(In_DataBuffer(QByteArray)));
+    connect(this,SIGNAL(OutData(QByteArray)),            this->nTCP,SLOT(TCP_WriteDATA(QByteArray)));
+    connect(this->nTCP, SIGNAL(TCP_OutDATA(QByteArray)), this, SLOT(In_DataBuffer(QByteArray)));
+    connect(timerRepeat,SIGNAL(timeout()),               this, SLOT(REPEAT_SEND()));
 }
 
 void DataLogic_Class::setSerialNumberMode(QString S, bool Enable)
@@ -111,7 +114,7 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     case SEND_AOPEN:
     {
         int u[2] = {0xFF,0x00};length = 2;
-        for(uint i = 0; i < length; i++){data.append((char)u[i]);}
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
     case SEND_READ_NODE_TYPE:
@@ -225,9 +228,12 @@ void DataLogic_Class::ParceData(uint n)
     }
     if (n == IN_INTERFACE_USO)
     {
-        if (ParceDataBuffer.length() >= 9+NumbOfBytes-2)
+        if (ParceDataBuffer.length() >= 7)
         {
             NumbOfBytes = ParceDataBuffer.at(6);
+        }
+        if (ParceDataBuffer.length() >= 9+NumbOfBytes-2)
+        {
             Comande     = ParceDataBuffer.at(7);
             ComandState = ParceDataBuffer.at(8);
             In_Data.append(ParceDataBuffer.data()+9,NumbOfBytes-2);
@@ -235,9 +241,12 @@ void DataLogic_Class::ParceData(uint n)
     }
     else if (n == IN_INTERFACE_RF_PLC)
     {
-        if (ParceDataBuffer.length() >= 9+4+NumbOfBytes-2)
+        if (ParceDataBuffer.length() >= 7+4)
         {
             NumbOfBytes = ParceDataBuffer.at(6+4);
+        }
+        if (ParceDataBuffer.length() >= 9+4+NumbOfBytes-2)
+        {
             Comande     = ParceDataBuffer.at(7+4);
             ComandState = ParceDataBuffer.at(8+4);
             In_Data.append(ParceDataBuffer.data()+9+4,NumbOfBytes-2);
@@ -513,7 +522,7 @@ void DataLogic_Class::SEND_DATA(QByteArray data, uint n)
                 }
 
                 emit DataForPrint(data_to_write,COM_TX);
-                emit writeDataToCOM(data_to_write);     // Отправка данных в порт
+                emit OutData(data_to_write);     // Отправка данных в порт
 
                 timerRepeat->start(Delay_Time);
                 Repeat_Counter--;
@@ -549,13 +558,13 @@ void DataLogic_Class::SEND_DATA(QByteArray data, uint n)
             }
 
             emit DataForPrint(data_to_write,COM_TX);
-            emit writeDataToCOM(data_to_write);     // Отправка данных в порт
+            emit OutData(data_to_write);     // Отправка данных в порт
             break;
         }
         case MANUAL_SEND_CONTROL:
         {
             emit DataForPrint(data,COM_TX);   // Вывод данных в консоль
-            emit writeDataToCOM(data);        // Отправка данных в порт
+            emit OutData(data);        // Отправка данных в порт
             break;
         }
     }
