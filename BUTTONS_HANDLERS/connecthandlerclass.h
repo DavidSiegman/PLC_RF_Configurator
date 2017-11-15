@@ -19,7 +19,7 @@ private:
     MODEMClass      *MODEM;
     MonitorClass    *Monitor;
 
-    QWidget *NetTab, *PLCTab, *RFTab, *RFOldTab, *RFMonitorTab;
+    QWidget *NetTab, *PLCTab, *RFTab, *RFOldTab, *SniferTab, *RFMonitorTab;
 
     uint ReadDataProgress;
 

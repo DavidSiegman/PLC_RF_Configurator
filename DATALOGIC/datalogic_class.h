@@ -22,10 +22,11 @@ public:
     uint         Delay_Time;
 
     void setSerialNumberMode(QString S, bool Enable);
+
 private:
+    SI4463Class *SI4463Conf;
     QTimer      *timer, *timerRepeat;
     CRC16_Class *CRC16;
-    SI4463Class *SI4463Conf;
     MODEMClass  *MODEM;
     Port        *nPort;
 

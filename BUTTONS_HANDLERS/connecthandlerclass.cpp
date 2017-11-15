@@ -23,12 +23,14 @@ ConnectHandlerClass::ConnectHandlerClass(Ui::MainWindow *ui,DataLogic_Class *Dat
     connect(this->DataLogic,SIGNAL(outConnect(uint)),this,SLOT(ConnectHandling(uint)));
 
 
-    NetTab       = this->ui->tab_2;
-    PLCTab       = this->ui->tab_3;
-    RFTab        = this->ui->tab_4;
-    RFOldTab     = this->ui->tab_5;
-    RFMonitorTab = this->ui->tab_6;
+    NetTab       = this->ui->NetTab;
+    PLCTab       = this->ui->PLCTab;
+    RFTab        = this->ui->RFTab;
+    RFOldTab     = this->ui->RFOldTab;
+    SniferTab    = this->ui->SniferTab;
+    RFMonitorTab = this->ui->MonitorTab;
 
+    this->ui->tabWidget->removeTab(6);
     this->ui->tabWidget->removeTab(5);
     this->ui->tabWidget->removeTab(4);
     this->ui->tabWidget->removeTab(3);
@@ -68,6 +70,7 @@ void ConnectHandlerClass::aOPEN()
         {ui->SN->setEnabled(true);}
         ui->tabWidget->setEnabled(true);
         ui->Connect->setText("Соединение");
+        ui->tabWidget->removeTab(6);
         ui->tabWidget->removeTab(5);
         ui->tabWidget->removeTab(4);
         ui->tabWidget->removeTab(3);

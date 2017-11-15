@@ -18,45 +18,65 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    ui->centralWidget->setLayout(ui->CentralLayout);
-    ui->tab->setLayout(ui->tab_1_Layout);
-    ui->tab_2->setLayout(ui->tab_2_Layout);
-    ui->tab_6->setLayout(ui->tab_6_Layout);
-    ui->COMWidget->setLayout(ui->COMLayout);
-    ui->TCPWidget->setLayout(ui->TCPLayout);
-    ui->MANUAL_ENTER->setLayout(ui->MANUAL_ENTER_Layout);
-    ui->RSSIWidget->setLayout(ui->RSSILayout);
-    ui->SwitchPropWidget->setLayout(ui->SwitchPropLayout);
+    ui->centralWidget         ->setLayout(ui->CentralLayout);
+    ui->tab                   ->setLayout(ui->tab_1_Layout);
+    ui->NetTab                ->setLayout(ui->NetTab_Layout);
+    ui->RFTab                 ->setLayout(ui->RFTab_Layout);
+    ui->MonitorTab            ->setLayout(ui->MonitorTab_Layout);
+    ui->COMWidget             ->setLayout(ui->COMLayout);
+    ui->TCPWidget             ->setLayout(ui->TCPLayout);
+    ui->MANUAL_ENTER          ->setLayout(ui->MANUAL_ENTER_Layout);
+    ui->RSSIWidget            ->setLayout(ui->RSSILayout);
+    ui->SwitchPropWidget      ->setLayout(ui->SwitchPropLayout);
+    ui->SwTableWidget         ->setLayout(ui->SwTableLayout);
 
-    ui->RSSIWidget->setEnabled(false);
-    ui->tabWidget->setEnabled(false);
-    ui->MANUAL_ENTER->setEnabled(false);
+    ui->RSSIWidget            ->setEnabled(false);
+    ui->tabWidget             ->setEnabled(false);
+    ui->MANUAL_ENTER          ->setEnabled(false);
 
-    ui->PortNameBox->installEventFilter(this);
+    ui->PortNameBox           ->installEventFilter(this);
 
     #ifdef Q_OS_WIN
-    ui->action1_5_bits->setEnabled(true);
+    ui->action1_5_bits        ->setEnabled(true);
     #endif
 
-    timer_COMBufferClear = new QTimer();
+    timer_COMBufferClear      = new QTimer();
+    MODEM                     = new MODEMClass;
+    PortNew                   = new Port();                                                                    // Создаем Поток обработки портов
+    oCRC16                    = new CRC16_Class();                                                             // Создаём Объект расчёта CRC
+    SI4463Config              = new SI4463Class();
+    DataLogic                 = new DataLogic_Class(oCRC16,timer_COMBufferClear,SI4463Config,MODEM,PortNew);   // Создаём Объект обработки сообщений
+    ConnectHandler            = new ConnectHandlerClass(ui, DataLogic,MODEM);
+    scene                     = new myGraphScene(this);
 
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MODEM                = new MODEMClass;
-    PortNew              = new Port();                                                                    // Создаем Поток обработки портов
-    oCRC16               = new CRC16_Class();                                                             // Создаём Объект расчёта CRC
-    SI4463Config         = new SI4463Class();
-    DataLogic            = new DataLogic_Class(oCRC16,timer_COMBufferClear,SI4463Config,MODEM,PortNew);   // Создаём Объект обработки сообщений
-    ConnectHandler       = new ConnectHandlerClass(ui, DataLogic,MODEM);
+    ui->SI4436_PROPSView      ->setModel(SI4463Config->model);
+    ui->SI4436_PROPSView      ->resizeRowsToContents();
+    ui->SI4436_PROPSView      ->resizeColumnsToContents();
 
-    DataLogic->Repeat_Number = 2;
+    scene                     ->setGeometry(640,290);
+
+    x                         = -6;
+    pRSSICurrent              = new myPoligon(QString::fromUtf8("RSSI Current"),0,scene);
+    pRSSICurrent->BrushColor  = QColor::fromRgbF(0.9,0.9,0.3,1);
+    pRSSICurrent->CurveColor  = QColor::fromRgbF(0.5,0.0,0.3,1);
+    pAFC                      = new myPoligon(QString::fromUtf8("AFC"),1,scene);
+    pAFC->BrushColor          = QColor::fromRgbF(0.3,0.9,0.9,1);
+    pAFC->CurveColor          = QColor::fromRgbF(0.0,0.0,0.5,1);
+
+    pRSSI                     = new myPoligon(QString::fromUtf8("RSSI"),2,scene);
+    pRSSI->PointsVisible      = true;
+    pRSSI->BrushColor         = QColor::fromRgbF(1,0.6,1,1);
+    pRSSI->CurveColor         = QColor::fromRgbF(0.1,0.0,0.3,1);
+
+    DataLogic->Repeat_Number  = 2;
     DataLogic->Repeat_Counter = DataLogic->Repeat_Number;
-    DataLogic->Delay_Time = 2000;
+    DataLogic->Delay_Time     = 2000;
 
-    connect(PortNew, SIGNAL(PortStartProcess()),   this, SLOT(start_COM_Init()));                        //Установка свойств порта при открытии
-    connect(PortNew, SIGNAL(error_(QString,uint)), this, SLOT(Print_Log(QString,uint)));   //Лог ошибок
+    connect(PortNew, SIGNAL(PortStartProcess()),           this, SLOT(start_COM_Init()));                        //Установка свойств порта при открытии
+    connect(PortNew, SIGNAL(error_(QString,uint)),         this, SLOT(Print_Log(QString,uint)));   //Лог ошибок
 
     connect(ConnectHandler, SIGNAL(SendLog(QString,uint)), this, SLOT(Print_Log(QString,uint)));
-    // обработчики кнопок
+
     connect(ui->COMConnect,    SIGNAL(clicked()),PortNew,SLOT(Connect()));
     connect(ui->COMDisconnect, SIGNAL(clicked()),PortNew,SLOT(DisconnectPort()));
     connect(ui->COMDisconnect, SIGNAL(clicked()),ConnectHandler,SLOT(StopMonitor()));
@@ -69,30 +89,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this,SIGNAL(START_MONITOR()),    ConnectHandler,SLOT(StartMonitor()));
     connect(this,SIGNAL(STOP_MONITOR()),     ConnectHandler,SLOT(StopMonitor()));
 
-    connect(DataLogic,SIGNAL(noANSWER()),  ConnectHandler,SLOT(aOPEN()));
-    connect(DataLogic,SIGNAL(noANSWER()),  ConnectHandler,SLOT(StopMonitor()));
+    connect(DataLogic,SIGNAL(noANSWER()),    ConnectHandler,SLOT(aOPEN()));
+    connect(DataLogic,SIGNAL(noANSWER()),    ConnectHandler,SLOT(StopMonitor()));
 
     connect(DataLogic,SIGNAL(DataForPrint(QByteArray,uint)),this,SLOT(Print(QByteArray,uint)));
     connect(DataLogic,SIGNAL(outCurrentRSSI(signed short)),this,SLOT(out_Current_RSSI(signed short)));
     connect(DataLogic,SIGNAL(outLRSSI_AFC(signed short,signed short,signed short,double)),this,SLOT(out_LRSSI_AFC(signed short,signed short,signed short,double)));
 
     connect(timer_COMBufferClear,SIGNAL(timeout()), DataLogic, SLOT(ClearIn_DataBuffer()));
-
-    scene = new myGraphScene(this);
-    scene->setGeometry(640,290);
-
-    x = -6;
-    pRSSICurrent = new myPoligon(QString::fromUtf8("RSSI Current"),0,scene);
-    pRSSICurrent->BrushColor = QColor::fromRgbF(0.9,0.9,0.3,1);
-    pRSSICurrent->CurveColor = QColor::fromRgbF(0.5,0.0,0.3,1);
-    pAFC = new myPoligon(QString::fromUtf8("AFC"),1,scene);
-    pAFC->BrushColor = QColor::fromRgbF(0.3,0.9,0.9,1);
-    pAFC->CurveColor = QColor::fromRgbF(0.0,0.0,0.5,1);
-
-    pRSSI = new myPoligon(QString::fromUtf8("RSSI"),2,scene);
-    pRSSI->PointsVisible = true;
-    pRSSI->BrushColor = QColor::fromRgbF(1,0.6,1,1);
-    pRSSI->CurveColor = QColor::fromRgbF(0.1,0.0,0.3,1);
 
     PortNew->start();
 }
@@ -181,6 +185,7 @@ void MainWindow::on_MonitorTimeout_clicked()
 //+++++++++++++[Процедура вывода данных в консоль]++++++++++++++++++++++++++++++++++++++++
 void MainWindow::Print(QByteArray data, uint n)
 {
+    ui->SI4436_PROPSView      ->setModel(SI4463Config->model);
     QString s = "Print data";
     qDebug() << s;
 

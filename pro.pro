@@ -29,7 +29,8 @@ HEADERS += \
     GRAPH/mygraphlegend.h \
     GRAPH/mygraphscene.h \
     GRAPH/mypoligon.h \
-    MONITOR/monitorclass.h
+    MONITOR/monitorclass.h \
+    SI4463/si4463_propertys_tablemodel.h
 
 SOURCES += \
     COM/port.cpp \
@@ -44,7 +45,8 @@ SOURCES += \
     GRAPH/mygraphlegend.cpp \
     GRAPH/mygraphscene.cpp \
     GRAPH/mypoligon.cpp \
-    MONITOR/monitorclass.cpp
+    MONITOR/monitorclass.cpp \
+    SI4463/si4463_propertys_tablemodel.cpp
 
 FORMS += \
     mainwindow.ui

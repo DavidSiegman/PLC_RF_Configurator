@@ -1,7 +1,8 @@
 #include "DATALOGIC/datalogic_class.h"
-#include "mainwindow.h"
 
-DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16, QTimer *t,SI4463Class *SI4463Conf,MODEMClass *MODEM,Port *nPort,QObject *parent) : QObject(parent)
+//#include "mainwindow.h"
+
+DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16, QTimer *t,SI4463Class *SI4463Conf, MODEMClass *MODEM,Port *nPort,QObject *parent) : QObject(parent)
 {
     this->CRC16           = oCRC16;
     this->timer           = t;
@@ -417,15 +418,16 @@ void DataLogic_Class::ParceData(uint n)
                  uchar GROUP       = ComandState;
                  uchar NUM_PROPS   = In_Data.at(0);
                  uchar START_PROP  = In_Data.at(1);
-                 uchar *group_adress = SI4463Conf->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP);
+                 //uchar *group_adress = SI4463Conf->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP);
                  if ((NumbOfBytes - 4) == NUM_PROPS)
                  {
                      if (In_Data.length() >= NUM_PROPS+1)
                      {
                          for (uint i = 0; i < NUM_PROPS; i++)
                          {
-                             *(uchar*)(group_adress) = *(In_Data.data()+i+2);
-                             group_adress++;
+                             SI4463Conf->aSI4463_SET_CurrentPROPERTYS(GROUP, START_PROP, i, *(In_Data.data()+i+2));
+                             //*(uchar*)(group_adress) = *(In_Data.data()+i+2);
+                             //group_adress++;
                          }
                      }
                  }

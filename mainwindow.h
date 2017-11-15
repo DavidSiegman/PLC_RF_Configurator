@@ -14,11 +14,10 @@
 #include "BUTTONS_HANDLERS/connecthandlerclass.h"
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
+#include "SI4463/si4463_propertys_tablemodel.h"
 #include "COM/port.h"
-#include "DATALOGIC/datalogic_class.h"
 #include "MODEM/modemclass.h"
 #include "CRC/crc16_class.h"
-#include "SI4463/si4463class.h"
 #include "GRAPH/mygraphscene.h"
 #include "GRAPH/mypoligon.h"
 #include <mess_enum.h>

@@ -26,11 +26,11 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <property name="tabletTracking">
-    <bool>false</bool>
-   </property>
    <property name="autoFillBackground">
     <bool>true</bool>
+   </property>
+   <property name="tabletTracking" stdset="0">
+    <bool>false</bool>
    </property>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
@@ -446,7 +446,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">
@@ -775,7 +775,7 @@
            </layout>
           </widget>
          </widget>
-         <widget class="QWidget" name="tab_2">
+         <widget class="QWidget" name="NetTab">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -791,7 +791,7 @@
              <height>281</height>
             </rect>
            </property>
-           <layout class="QVBoxLayout" name="tab_2_Layout">
+           <layout class="QVBoxLayout" name="NetTab_Layout">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -848,7 +848,7 @@
               <item>
                <widget class="QLabel" name="label_30">
                 <property name="text">
-                 <string>    </string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -1030,7 +1030,7 @@
                  </sizepolicy>
                 </property>
                 <property name="text">
-                 <string>    </string>
+                 <string/>
                 </property>
                </widget>
               </item>
@@ -1048,7 +1048,7 @@
                    <x>0</x>
                    <y>2</y>
                    <width>451</width>
-                   <height>81</height>
+                   <height>113</height>
                   </rect>
                  </property>
                  <layout class="QVBoxLayout" name="SwTableLayout">
@@ -1118,33 +1118,15 @@
               </item>
              </layout>
             </item>
-            <item>
-             <spacer name="verticalSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
            </layout>
           </widget>
          </widget>
-         <widget class="QWidget" name="tab_5">
-          <attribute name="title">
-           <string>Настройки RF</string>
-          </attribute>
-         </widget>
-         <widget class="QWidget" name="tab_3">
+         <widget class="QWidget" name="PLCTab">
           <attribute name="title">
            <string>Настройки PLC</string>
           </attribute>
          </widget>
-         <widget class="QWidget" name="tab_4">
+         <widget class="QWidget" name="RFTab">
           <property name="enabled">
            <bool>true</bool>
           </property>
@@ -1160,7 +1142,7 @@
              <height>251</height>
             </rect>
            </property>
-           <layout class="QVBoxLayout" name="tab_4_Layout">
+           <layout class="QVBoxLayout" name="RFTab_Layout">
             <property name="spacing">
              <number>0</number>
             </property>
@@ -1232,7 +1214,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QColumnView" name="columnView"/>
+             <widget class="QTableView" name="SI4436_PROPSView"/>
             </item>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_18">
@@ -1348,12 +1330,17 @@
            </layout>
           </widget>
          </widget>
-         <widget class="QWidget" name="tab_7">
+         <widget class="QWidget" name="RFOldTab">
+          <attribute name="title">
+           <string>Настройки RF</string>
+          </attribute>
+         </widget>
+         <widget class="QWidget" name="SniferTab">
           <attribute name="title">
            <string>USB/RF Преобразователь</string>
           </attribute>
          </widget>
-         <widget class="QWidget" name="tab_6">
+         <widget class="QWidget" name="MonitorTab">
           <attribute name="title">
            <string>RF RSSI Монитор</string>
           </attribute>
@@ -1366,7 +1353,7 @@
              <height>251</height>
             </rect>
            </property>
-           <layout class="QVBoxLayout" name="tab_6_Layout">
+           <layout class="QVBoxLayout" name="MonitorTab_Layout">
             <property name="spacing">
              <number>2</number>
             </property>
