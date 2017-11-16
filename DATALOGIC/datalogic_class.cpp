@@ -434,7 +434,7 @@ void DataLogic_Class::ParceData(uint n)
                      {
                          for (uint i = 0; i < NUM_PROPS; i++)
                          {
-                             SI4463Conf->aSI4463_SET_CurrentPROPERTYS(GROUP, START_PROP, i, *(In_Data.data()+i+2));
+                             SI4463Conf->aSI4463_SET_PROPERTYS(GROUP, START_PROP, i, *(In_Data.data()+i+2),SI4463Conf->aSI4463_PROPERTYS());
                              //*(uchar*)(group_adress) = *(In_Data.data()+i+2);
                              //group_adress++;
                          }

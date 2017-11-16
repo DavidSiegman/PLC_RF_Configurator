@@ -41,7 +41,8 @@ MainWindow::MainWindow(QWidget *parent) :
     MODEM                     = new MODEMClass;
     PortNew                   = new Port();                                                                   // Создаем Поток обработки портов
     TCPNew                    = new TCP();
-    oCRC16                    = new CRC16_Class();                                                             // Создаём Объект расчёта CRC
+    oCRC16                    = new CRC16_Class();                                                            // Создаём Объект расчёта CRC
+    newParcer                 = new ParceClass();
     SI4463Config              = new SI4463Class();
     DataLogic                 = new DataLogic_Class(oCRC16,timer_COMBufferClear,SI4463Config,MODEM,PortNew,TCPNew);   // Создаём Объект обработки сообщений
     ConnectHandler            = new ConnectHandlerClass(ui, DataLogic,MODEM);
@@ -329,17 +330,7 @@ void MainWindow::on_FileOpen_clicked()
 
     ui->FileName->setText(str);
 
-    QFile f(ui->FileName->text());
-    QString s;
-    QTextStream inStream(&f);
-    inStream.setCodec(QTextCodec::codecForName("Windows-1251"));
-
-    if(f.open(QIODevice::ReadWrite | QIODevice::Text))
-    {
-        s = inStream.readAll();
-        ui->consol->textCursor().insertText(s);
-        f.close();
-    }
+    newParcer->PARCE_Start(ui->FileName->text(), SI4463Config);
 }
 
 void MainWindow::start_COM_Init(void)

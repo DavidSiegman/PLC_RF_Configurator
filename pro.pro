@@ -11,7 +11,7 @@ QT      += network
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 
-TARGET = my_shag
+TARGET   = RF_PLC_Configurator
 TEMPLATE = app
 
 FORMS
@@ -32,7 +32,8 @@ HEADERS += \
     GRAPH/mypoligon.h \
     MONITOR/monitorclass.h \
     SI4463/si4463_propertys_tablemodel.h \
-    TCP/tcp.h
+    TCP/tcp.h \
+    FILE/parceclass.h
 
 SOURCES += \
     COM/port.cpp \
@@ -49,7 +50,8 @@ SOURCES += \
     GRAPH/mypoligon.cpp \
     MONITOR/monitorclass.cpp \
     SI4463/si4463_propertys_tablemodel.cpp \
-    TCP/tcp.cpp
+    TCP/tcp.cpp \
+    FILE/parceclass.cpp
 
 FORMS += \
     mainwindow.ui

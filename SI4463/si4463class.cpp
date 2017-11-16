@@ -271,6 +271,7 @@ SI4463Class::SI4463Class(QObject *parent) : QObject(parent)
     horizontalHeader.append("Параметр");
     horizontalHeader.append("Значения");
     horizontalHeader.append("Для записи");
+    horizontalHeader.append("Для калибровки");
 
     model->setHorizontalHeaderLabels(horizontalHeader);
     //QStringList verticalHeader;
@@ -287,26 +288,55 @@ SI4463Class::SI4463Class(QObject *parent) : QObject(parent)
         else
         {
             item = new QStandardItem(this->SI4463_PROPERTYS_NAME.at(244) + "_" + QString::number(i-244));
+            item->setEnabled(false);
         }
         model->setItem(i, 0, item);
     }
 }
-void SI4463Class::aSI4463_SET_CurrentPROPERTYS(uchar GROUP, uchar START_PROP, uint PROP_COUNTER, uchar PROP_DATA)
+void SI4463Class::aSI4463_SET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP_COUNTER, uchar PROP_DATA, SI4463_PROPERTYS_structur* struc)
 {
     QString S;
     QByteArray hex_item;
-    uchar *group_adress = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP);
+    uchar *group_adress = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, struc);
     *(uchar*)(group_adress + PROP_COUNTER) = PROP_DATA;
-    uint index = (uint)(group_adress + PROP_COUNTER) - (uint)&(SI4463_PROPERTYS.Field.GROUP_00.Bytes[0]);
-    hex_item.append(PROP_DATA);
-    S = "0x" + hex_item.toHex().toUpper();
-    item = new QStandardItem(S);
-    model->setItem(index, 1, item);
+    uint index = (uint)(group_adress + PROP_COUNTER) - (uint)&(struc->Field.GROUP_00.Bytes[0]);
+    if (struc == aSI4463_PROPERTYS())
+    {
+        hex_item.append(PROP_DATA);
+        S = "0x" + hex_item.toHex().toUpper();
+        item = new QStandardItem(S);
+        item->setEnabled(false);
+        model->setItem(index, 1, item);
+    }
+    else if (struc == aSI4463_SI4463_PROPERTYS_FROM_FILE())
+    {
+        hex_item.append(PROP_DATA);
+        S = "0x" + hex_item.toHex().toUpper();
+        item = new QStandardItem(S);
+        item->setEnabled(false);
+        model->setItem(index, 2, item);
+    }
+    else if (struc == aSI4463_PROPERTYS_CALIB())
+    {
+        hex_item.append(PROP_DATA);
+        S = "0x" + hex_item.toHex().toUpper();
+        item = new QStandardItem(S);
+        item->setEnabled(false);
+        model->setItem(index, 3, item);
+    }
 }
 
-SI4463_PROPERTYS_structur* SI4463Class::aSI4463_PROPERTYS(void)
+SI4463_PROPERTYS_structur*        SI4463Class::aSI4463_PROPERTYS(void)
 {
     return &SI4463_PROPERTYS;
+}
+SI4463_PROPERTYS_structur*        SI4463Class::aSI4463_SI4463_PROPERTYS_FROM_FILE(void)
+{
+    return &SI4463_PROPERTYS_FROM_FILE;
+}
+SI4463_PROPERTYS_structur*        SI4463Class::aSI4463_PROPERTYS_CALIB(void)
+{
+    return &SI4463_PROPERTYS_CALIB;
 }
 SI4463_PART_INFO_structur*        SI4463Class::aSI4463_PART_INFO(void)
 {
@@ -322,130 +352,130 @@ SI4463_GPIO_PIN_CFG_structur*     SI4463Class::aSI4463_GPIO_PIN_CFG(void)
 }
 
 
-uchar* SI4463Class::SI4463_Get_Group_Adress_From_RAM(uchar GROUP, uchar START_PROP)
+uchar* SI4463Class::SI4463_Get_Group_Adress_From_RAM(uchar GROUP, uchar START_PROP, SI4463_PROPERTYS_structur* struc)
 {
     uchar *group_adress = 0;
     switch (GROUP)
     {
         case 0x00: // GLOBAL (0x00)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_00() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_00(struc) + START_PROP);
             break;
         }
         case 0x01: // INT_CTL (0x01)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_01() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_01(struc) + START_PROP);
             break;
         }
         case 0x02: // FRR_CTL (0x02)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_02() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_02(struc) + START_PROP);
             break;
         }
         case 0x10: // PREAMBLE (0x10)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_10() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_10(struc) + START_PROP);
             break;
         }
         case 0x11: // SYNC (0x11)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_11() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_11(struc) + START_PROP);
             break;
         }
         case 0x12: // PKT (0x12)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_12() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_12(struc) + START_PROP);
             break;
         }
         case 0x20: // MODEM (0x20)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_20() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_20(struc) + START_PROP);
             break;
         }
         case 0x21: // MODEM_CHFLT (0x21)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_21() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_21(struc) + START_PROP);
             break;
         }
         case 0x22: // PA (0x22)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_22() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_22(struc) + START_PROP);
             break;
         }
         case 0x23: // SYNTH (0x23)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_23() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_23(struc) + START_PROP);
             break;
         }
         case 0x30: // MATCH (0x30)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_30() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_30(struc) + START_PROP);
             break;
         }
         case 0x40: // FREQ_CONTROL (0x40)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_40() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_40(struc) + START_PROP);
             break;
         }
         case 0x50: // RX_HOP (0x50)
         {
-            group_adress = (this->SI4463_PROPS_GROUP_50() + START_PROP);
+            group_adress = (this->SI4463_PROPS_GROUP_50(struc) + START_PROP);
             break;
         }
     }
     return (uchar *)(group_adress);
 }
 
-uchar* SI4463Class::SI4463_PROPS_GROUP_00(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_00(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_00.Bytes);
+    return (uchar *)(struc->Field.GROUP_00.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_01(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_01(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_01.Bytes);
+    return (uchar *)(struc->Field.GROUP_01.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_02(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_02(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_02.Bytes);
+    return (uchar *)(struc->Field.GROUP_02.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_10(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_10(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_10.Bytes);
+    return (uchar *)(struc->Field.GROUP_10.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_11(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_11(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_11.Bytes);
+    return (uchar *)(struc->Field.GROUP_11.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_12(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_12(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_12.Bytes);
+    return (uchar *)(struc->Field.GROUP_12.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_20(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_20(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_20.Bytes);
+    return (uchar *)(struc->Field.GROUP_20.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_21(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_21(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_21.Bytes);
+    return (uchar *)(struc->Field.GROUP_21.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_22(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_22(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_22.Bytes);
+    return (uchar *)(struc->Field.GROUP_22.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_23(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_23(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_23.Bytes);
+    return (uchar *)(struc->Field.GROUP_23.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_30(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_30(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_30.Bytes);
+    return (uchar *)(struc->Field.GROUP_30.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_40(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_40(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_40.Bytes);
+    return (uchar *)(struc->Field.GROUP_40.Bytes);
 }
-uchar* SI4463Class::SI4463_PROPS_GROUP_50(void)
+uchar* SI4463Class::SI4463_PROPS_GROUP_50(SI4463_PROPERTYS_structur* struc)
 {
-    return (uchar *)(aSI4463_PROPERTYS()->Field.GROUP_50.Bytes);
+    return (uchar *)(struc->Field.GROUP_50.Bytes);
 }
 

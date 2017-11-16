@@ -10,13 +10,13 @@
 #include <QTextCodec>
 #include <QTimer>
 #include "TCP/tcp.h"
-
+#include <QtSerialPort/QSerialPort>
+#include <QtSerialPort/QSerialPortInfo>
 #include <QGraphicsLinearLayout>
 
 #include "BUTTONS_HANDLERS/connecthandlerclass.h"
-#include <QtSerialPort/QSerialPort>
-#include <QtSerialPort/QSerialPortInfo>
 #include "SI4463/si4463_propertys_tablemodel.h"
+#include "FILE/parceclass.h"
 #include "COM/port.h"
 #include "MODEM/modemclass.h"
 #include "CRC/crc16_class.h"
@@ -49,6 +49,7 @@ private:
     ConnectHandlerClass *ConnectHandler;
     MODEMClass          *MODEM;
     TCP                 *TCPNew;
+    ParceClass          *newParcer;
     QString QByteAray_To_QString(QByteArray arr);
     QByteArray QString_To_QByteAray(QString str, bool crc);
 
@@ -73,8 +74,6 @@ private slots:
     void Print_Log(QString data, uint n);
 
     void on_PortNameBox_currentIndexChanged(const QString &arg1);
-
-    // COM Настройки
     void on_action9600_toggled(bool arg1);
     void on_action19200_toggled(bool arg1);
     void on_action38400_toggled(bool arg1);
@@ -102,7 +101,6 @@ private slots:
     void on_action2000_toggled(bool arg1);
     void on_action1000_toggled(bool arg1);
     void on_action_Pm_triggered();
-
     void on_FileOpen_clicked();
     void start_COM_Init(void);
     void on_CRC_OUT_toggled(bool checked);
@@ -112,42 +110,23 @@ private slots:
     void on_Connect_clicked();
     void on_cBtnSend_clicked();
     void on_Interface_currentIndexChanged(int index);
-
     void on_action10_toggled(bool arg1);
-
     void on_action8_toggled(bool arg1);
-
     void on_action6_toggled(bool arg1);
-
     void on_action4_toggled(bool arg1);
-
     void on_action2_toggled(bool arg1);
-
     void on_action1_toggled(bool arg1);
-
     void on_action_Nm_triggered();
-
     void on_SWITCH_stateChanged(int arg1);
-
     void on_SWITCH_PROPS_clicked();
-
     void on_MonitorStart_clicked();
-
     void on_MonitorStop_clicked();
-
     void on_MonitorTimeout_clicked();
-
     void on_pushButton_clicked();
-
     void on_logHidden_clicked();
-
     void on_LogShow_clicked();
-
     void on_readCurrentRSSI_clicked();
-
     void on_readLatchRSSI_clicked();
-
-    void on_TCPConnect_clicked();
 
 protected:
     //virtual void mousePressEvent(QMouseEvent *);
