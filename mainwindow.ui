@@ -19,6 +19,9 @@
   <property name="windowTitle">
    <string>Конфигуратор PLC/RF v3.01</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <widget class="QWidget" name="centralWidget">
    <property name="sizePolicy">
     <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
@@ -26,11 +29,11 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <property name="tabletTracking">
+    <bool>false</bool>
+   </property>
    <property name="autoFillBackground">
     <bool>true</bool>
-   </property>
-   <property name="tabletTracking" stdset="0">
-    <bool>false</bool>
    </property>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
@@ -446,7 +449,7 @@
           </sizepolicy>
          </property>
          <property name="currentIndex">
-          <number>3</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">

@@ -8,13 +8,16 @@
 #include <QFile>
 #include <QTextStream>
 #include "ui_mainwindow.h"
+#include "STYLE/style.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
 
+    QString s = Style::ToolTip_StyleSheet + Style::Widget1_StyleSheet;
+
+    ui->setupUi(this);
     ui->centralWidget         ->setLayout(ui->CentralLayout);
     ui->tab                   ->setLayout(ui->tab_1_Layout);
     ui->NetTab                ->setLayout(ui->NetTab_Layout);

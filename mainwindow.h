@@ -35,14 +35,13 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
-
     ~MainWindow();
 
 private:
     Ui::MainWindow *ui;
 
     SI4463Class         *SI4463Config;                             //
-    QTimer              *timer_COMBufferClear;       //
+    QTimer              *timer_COMBufferClear;                     //
     Port                *PortNew;                                  //
     DataLogic_Class     *DataLogic;                                //
     CRC16_Class         *oCRC16;                                   //

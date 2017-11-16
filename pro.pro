@@ -33,7 +33,8 @@ HEADERS += \
     MONITOR/monitorclass.h \
     SI4463/si4463_propertys_tablemodel.h \
     TCP/tcp.h \
-    FILE/parceclass.h
+    FILE/parceclass.h \
+    STYLE/style.h
 
 SOURCES += \
     COM/port.cpp \
@@ -51,7 +52,8 @@ SOURCES += \
     MONITOR/monitorclass.cpp \
     SI4463/si4463_propertys_tablemodel.cpp \
     TCP/tcp.cpp \
-    FILE/parceclass.cpp
+    FILE/parceclass.cpp \
+    STYLE/style.cpp
 
 FORMS += \
     mainwindow.ui
