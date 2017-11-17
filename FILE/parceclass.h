@@ -16,7 +16,8 @@ private:
     SI4463Class *SI4463;
     QRegExp RegDECDouble, RegHEX, RegParams, RegParamsAndValue,RegSET_PROPERTY;
 signals:
-    void currentLine(uint Line);
+    void PARCE_currentLine(int Line);
+    void PARCE_End();
 public slots:
     void PARCE_Start(QString Patch, SI4463Class *SI4463);
 };

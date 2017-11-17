@@ -17,7 +17,7 @@ void ParceClass::run()
     QFile file(this->Patch);
     QString Text, text_buffer;
     Params s;
-    uint numb_of_lines, calibration_parameters = 1;
+    uint numb_of_lines = 0, calibration_parameters = 1;
 
     QRegExp temp;
     if(file.exists())
@@ -34,7 +34,8 @@ void ParceClass::run()
                 qDebug() << "Batch-file for Si4463 identifie";
                 while(!file.atEnd())
                 {
-                    emit currentLine(numb_of_lines++);
+                    emit PARCE_currentLine((int)(numb_of_lines/3));
+                    numb_of_lines++;
                     Text.clear();
                     Text.append(file.readLine());
                     int pos = 0, pos_2 = 0;
@@ -70,7 +71,6 @@ void ParceClass::run()
                         pos+=RegSET_PROPERTY.matchedLength();
                         pos = RegSET_PROPERTY.indexIn(Text,pos);
                         PropertyValue = RegSET_PROPERTY.cap(0);
-                        //SI4463_PROPERTYS_NAME.append
 
                         qDebug() << (PropertyName + " " + PropertyValue);
 
@@ -114,8 +114,8 @@ void ParceClass::run()
                             SI4463->Parameters.append(s);
                         }
                     }
-
                 }
+                emit PARCE_currentLine(100);
             }
             else
             {
@@ -127,6 +127,7 @@ void ParceClass::run()
             qDebug() << "File open error";
         }
     }
+    emit PARCE_End();
 }
 
 void ParceClass::PARCE_Start(QString Patch, SI4463Class *SI4463)

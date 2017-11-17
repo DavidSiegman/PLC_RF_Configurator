@@ -337,6 +337,29 @@ void ConnectHandlerClass::ConnectHandling(uint n)
                 case 3:
                 {
                     ui->progressBar->setValue(50);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Загрузка параметров калибровки из буфера\r"),NONE);
+                    emit SendComand(SEND_READ_CALIBPROPS_FROM_FLASH,CONFIG_SEND_CONTROL);
+                    ReadDataProgress = 4;
+                    break;
+                }
+                case 1:
+                {
+                    ui->progressBar->setValue(10);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание параметров RF\r"),NONE);
+                    emit SendComand(SEND_BF_03_00_AC_00,CONFIG_SEND_CONTROL);
+                    ReadDataProgress = 2;
+                    break;
+                }
+                case 2:
+                {
+                    ui->progressBar->setValue(40);
+                    emit SendComand(SEND_BF_03_21_88_00,CONFIG_SEND_CONTROL);
+                    ReadDataProgress = 3;
+                    break;
+                }
+                case 3:
+                {
+                    ui->progressBar->setValue(50);
                     emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание сетевых наcтроек\r"),NONE);
                     emit SendComand(SEND_READ_NODE_TYPE,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 4;

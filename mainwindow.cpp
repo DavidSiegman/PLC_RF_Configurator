@@ -104,6 +104,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(timer_COMBufferClear,SIGNAL(timeout()), DataLogic, SLOT(ClearIn_DataBuffer()));
 
+    connect(newParcer,SIGNAL(PARCE_currentLine(int)), ui->progressBar, SLOT(setValue(int)));
+    connect(newParcer,SIGNAL(PARCE_End()), this, SLOT(ParceFinishHandler()));
+
     PortNew->start();
     TCPNew ->start();
 }
@@ -187,7 +190,6 @@ void MainWindow::on_MonitorTimeout_clicked()
             ui->MonitorTimeout->setText(QString::number(i));
         }
     }
-
 }
 //+++++++++++++[Процедура вывода данных в консоль]++++++++++++++++++++++++++++++++++++++++
 void MainWindow::Print(QByteArray data, uint n)
@@ -320,6 +322,69 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
        }
     }
     return false;
+}
+
+void MainWindow::ParceFinishHandler(void)
+{
+    int index = 0;
+    for(int i = 0; i < SI4463Config->Parameters.length();i++)
+    {
+        if(SI4463Config->Parameters.at(i).name.compare("Rsymb(sps):") == 0)
+        {
+            ui->DataRate->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("RF Freq.(MHz):") == 0)
+        {
+            ui->Freq->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("MOD_type:") == 0)
+        {
+            ui->MODULATION->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("Fdev(Hz):") == 0)
+        {
+            ui->Fdev->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("RXBW(Hz):") == 0)
+        {
+            ui->RXBW->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("AFC_en:") == 0)
+        {
+            ui->AFC_State->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("WB filter ") == 0)
+        {
+            ui->WB_Filter->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("NB-filter ") == 0)
+        {
+            index = 1;
+            ui->NB_Filter->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("NB-filter ") == 0)
+        {
+            ui->NB_Filter->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("BW =  ") == 0)
+        {
+            ui->WB_BW->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("BW = ") == 0)
+        {
+           ui->NB_BW->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("Modulation index:") == 0)
+        {
+            ui->MOD_INDEX->setText(SI4463Config->Parameters.at(i).value);
+        }
+        if(SI4463Config->Parameters.at(i).name.compare("ANT_DIV:") == 0)
+        {
+            ui->ANT_DIV->setText(SI4463Config->Parameters.at(i).value);
+        }
+
+    }
+    ui->RFParamWrite->setEnabled(true);
 }
 
 void MainWindow::on_PortNameBox_currentIndexChanged(const QString &arg1)
@@ -1111,5 +1176,10 @@ void MainWindow::on_LogShow_clicked()
     {ui->consol->setMaximumHeight(400);}
     if (ui->consol->maximumHeight() == 0)
     {ui->consol->setMaximumHeight(200);}
+
+}
+
+void MainWindow::on_RFParamWrite_clicked()
+{
 
 }

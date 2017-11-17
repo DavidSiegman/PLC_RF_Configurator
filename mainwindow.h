@@ -71,6 +71,7 @@ signals:
 private slots:
     void Print(QByteArray data, uint n);
     void Print_Log(QString data, uint n);
+    void ParceFinishHandler();
 
     void on_PortNameBox_currentIndexChanged(const QString &arg1);
     void on_action9600_toggled(bool arg1);
@@ -126,6 +127,8 @@ private slots:
     void on_LogShow_clicked();
     void on_readCurrentRSSI_clicked();
     void on_readLatchRSSI_clicked();
+
+    void on_RFParamWrite_clicked();
 
 protected:
     //virtual void mousePressEvent(QMouseEvent *);

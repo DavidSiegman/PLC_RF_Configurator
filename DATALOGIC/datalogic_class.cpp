@@ -26,6 +26,12 @@ void DataLogic_Class::setSerialNumberMode(QString S, bool Enable)
     this->SerialNumber    = S;
     this->addSerialNumber = Enable;
 }
+
+void DataLogic_Class::setCurrentSI4463_PROPERTYS_structur(SI4463_PROPERTYS_structur* structur)
+{
+    this->CurrentSI4463_PROPERTYS_structur = structur;
+}
+
 void DataLogic_Class::ClearIn_DataBuffer(void)
 {
     InDataBuffer.clear();
@@ -206,6 +212,18 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
+    case SEND_LOAD_CALIBPROPS_TO_FLASH:
+    {
+        int u[12] = {0xBA,0x0A,'L','o','a','d','T','o','F','C','A','L'}; length = 12;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_CALIBPROPS_FROM_FLASH:
+    {
+        int u[12] = {0xBA,0x0A,'R','e','a','d','F','r','F','C','A','L'}; length = 12;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
     }
     CRC16->CRC16_Add_To_ByteArray(&data);
     emit SEND_DATA(data,m);
@@ -254,235 +272,247 @@ void DataLogic_Class::ParceData(uint n)
     }
     switch (Comande)
     {
-        case 0xFF: // Запрос версий ПО
+    case 0xFF: // Запрос версий ПО
+    {
+        if (In_Data.length() >= 10+4)
         {
-            if (In_Data.length() >= 10+4)
-            {
-                MODEM->curr_ver     = ComandState;
-                MODEM->boot_ver     = QString::fromUtf8(In_Data.data(),4);
-                MODEM->fw_ver       = QString::fromUtf8(In_Data.data()+10,4);
-                MODEM->BOOT_VERSION = MODEM->boot_ver.toDouble();
-                MODEM->FW_VERSION   = MODEM->fw_ver.toDouble();
-            }
-            emit outConnect(DataLogicMode);
-            break;
+            MODEM->curr_ver     = ComandState;
+            MODEM->boot_ver     = QString::fromUtf8(In_Data.data(),4);
+            MODEM->fw_ver       = QString::fromUtf8(In_Data.data()+10,4);
+            MODEM->BOOT_VERSION = MODEM->boot_ver.toDouble();
+            MODEM->FW_VERSION   = MODEM->fw_ver.toDouble();
         }
-        case 0xF0: // Запрос режима ретрансляции
-        {
-            MODEM->SWITCH_MODE     = ComandState;
-            emit outConnect(DataLogicMode);
-            break;
-        }
-        case 0xEF:
-        {
-            emit outConnect(DataLogicMode);
-            break;
-        }
-        case 0xEE: // Считывание параметров частоты PLC Модедма
-        {
-            break;
-        }
-        case 0xED: // Записть параметров частоты PLC Модедма
-        {
-            break;
-        }
-        case 0xEC: // Cчитывание серийного адреса устройства
-        {
-            break;
-        }
-        case 0xEB: // Чтение Элемента таблицы ретрансляции
-        {
-            break;
-        }
-        case 0xEA: // Запись Элемента таблицы ретрансляции в буфер для записи
-        {
-            break;
-        }
-        case 0xE9: // Стирание таблицы ретрансляции из флэш памяти модема
-        {
-            break;
-        }
-        case 0xE8: // Запись таблицы ретрансляции во флэш память модема из буфера
-        {
-            break;
-        }
-           case 0xE5: // Latch RSSI
-           {
-             signed short RSSI = 0;
-             signed short ANT1_RSSI = 0;
-             signed short ANT2_RSSI = 0;
+        emit outConnect(DataLogicMode);
+        break;
+    }
+    case 0xF0: // Запрос режима ретрансляции
+    {
+        MODEM->SWITCH_MODE     = ComandState;
+        emit outConnect(DataLogicMode);
+        break;
+    }
+    case 0xEF:
+    {
+        emit outConnect(DataLogicMode);
+        break;
+    }
+    case 0xEE: // Считывание параметров частоты PLC Модедма
+    {
+        break;
+    }
+    case 0xED: // Записть параметров частоты PLC Модедма
+    {
+        break;
+    }
+    case 0xEC: // Cчитывание серийного адреса устройства
+    {
+        break;
+    }
+    case 0xEB: // Чтение Элемента таблицы ретрансляции
+    {
+        break;
+    }
+    case 0xEA: // Запись Элемента таблицы ретрансляции в буфер для записи
+    {
+        break;
+    }
+    case 0xE9: // Стирание таблицы ретрансляции из флэш памяти модема
+    {
+        break;
+    }
+    case 0xE8: // Запись таблицы ретрансляции во флэш память модема из буфера
+    {
+        break;
+    }
+    case 0xE5: // Latch RSSI
+    {
+      signed short RSSI = 0;
+      signed short ANT1_RSSI = 0;
+      signed short ANT2_RSSI = 0;
 
-             if (In_Data.length() >= 2)
+      if (In_Data.length() >= 2)
+      {
+          SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0 = In_Data.at(0);
+          SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1 = In_Data.at(1);
+
+          RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1) << 8)
+                              | (SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0);
+      }
+
+      signed short AFC = 0;
+
+      if ((NumbOfBytes == 6)&&In_Data.length() >= 4)
+      {
+          SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
+          SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
+          AFC = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
+                             | (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
+          if ((AFC & (1 << 15)))
+          {
+              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0xFF;
+              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0xFF;
+              AFC |= 0xFFFF0000;
+          }
+          emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
+      }
+      else if ((NumbOfBytes == 8)&&In_Data.length() >= 6)
+      {
+          SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
+          SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
+          SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = In_Data.at(4);
+          SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = In_Data.at(5);
+
+          AFC = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3) << 24)
+                            | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2) << 16)
+                            | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
+                            |  (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
+
+          emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
+      }
+      if ((NumbOfBytes == 10)&&In_Data.length() >= 8)
+      {
+          SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_0 = In_Data.at(2);
+          SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_1 = In_Data.at(3);
+
+          SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_0 = In_Data.at(4);
+          SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_1 = In_Data.at(5);
+
+          ANT1_RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_1) << 8)
+                                   | (SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_0);
+          ANT2_RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_1) << 8)
+                                   | (SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_0);
+
+          SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(6);
+          SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(7);
+          AFC = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
+                             | (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
+          if ((AFC & (1 << 15)))
+          {
+              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0xFF;
+              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0xFF;
+              AFC |= 0xFFFF0000;
+          }
+          emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
+      }
+
+
+      break;
+    }
+    case 0xE3:
+    {
+      if ((NumbOfBytes == 6)&&In_Data.length() >= 4)
+     {
+         MODEM->SWITCH_TIMEOUT     = 0;
+         MODEM->SWITCH_TIMEOUT    |= *((uint*)(In_Data.data()));;
+     }
+     emit outConnect(DataLogicMode);
+     break;
+    }
+    case 0xE2: // Таймаут RX
+    {
+        if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
+        {
+            MODEM->RX_TIMEOUT       = 0;
+            MODEM->RX_TIMEOUT      |= *((uint*)(In_Data.data()));;
+        }
+        emit outConnect(DataLogicMode);
+        break;
+    }
+    case 0xE1: // Таймаут TX
+    {
+        if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
+        {
+            MODEM->TX_TIMEOUT       = 0;
+            MODEM->TX_TIMEOUT      |= *((uint*)(In_Data.data()));;
+        }
+        emit outConnect(DataLogicMode);
+        break;
+    }
+    case 0xE0: // Уровень свича
+    {
+        if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
+        {
+            MODEM->SWITCH_LEVEL     = 0;
+            MODEM->SWITCH_LEVEL     |= *((uint*)(In_Data.data()));
+        }
+        emit outConnect(DataLogicMode);
+        break;
+    }
+    case 0xDA: // Установить UP_Linc в 1 (только для снифера)
+    {
+        break;
+    }
+    case 0xD9: // Режим пропускания сообщений (только для снифера)
+    {
+        break;
+    }
+    case 0xD8: // Режим широковещания (только для снифера)
+    {
+        break;
+    }
+    case 0xBF: // Чтение свойств SI4463 из памяти RF модэма v5+, или запись свойств во буфер
+    {
+         if (In_Data.length() >= 2)
+         {
+             uchar GROUP       = ComandState;
+             uchar NUM_PROPS   = In_Data.at(0);
+             uchar START_PROP  = In_Data.at(1);
+             //uchar *group_adress = SI4463Conf->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP);
+             if ((NumbOfBytes - 4) == NUM_PROPS)
              {
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0 = In_Data.at(0);
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1 = In_Data.at(1);
-
-                 RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1) << 8)
-                                     | (SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0);
-             }
-
-             signed short AFC = 0;
-
-             if ((NumbOfBytes == 6)&&In_Data.length() >= 4)
-             {
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
-                 AFC = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
-                                    | (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
-                 if ((AFC & (1 << 15)))
+                 if (In_Data.length() >= NUM_PROPS+1)
                  {
-                     SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0xFF;
-                     SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0xFF;
-                     AFC |= 0xFFFF0000;
-                 }
-                 emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
-             }
-             else if ((NumbOfBytes == 8)&&In_Data.length() >= 6)
-             {
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = In_Data.at(4);
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = In_Data.at(5);
-
-                 AFC = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3) << 24)
-                                   | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2) << 16)
-                                   | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
-                                   |  (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
-
-                 emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
-             }
-             if ((NumbOfBytes == 10)&&In_Data.length() >= 8)
-             {
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_0 = In_Data.at(2);
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_1 = In_Data.at(3);
-
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_0 = In_Data.at(4);
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_1 = In_Data.at(5);
-
-                 ANT1_RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_1) << 8)
-                                          | (SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_0);
-                 ANT2_RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_1) << 8)
-                                          | (SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_0);
-
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(6);
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(7);
-                 AFC = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
-                                    | (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
-                 if ((AFC & (1 << 15)))
-                 {
-                     SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0xFF;
-                     SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0xFF;
-                     AFC |= 0xFFFF0000;
-                 }
-                 emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
-             }
-
-
-             break;
-           }
-           case 0xE3:
-           {
-             if ((NumbOfBytes == 6)&&In_Data.length() >= 4)
-            {
-                MODEM->SWITCH_TIMEOUT     = 0;
-                MODEM->SWITCH_TIMEOUT    |= *((uint*)(In_Data.data()));;
-            }
-            emit outConnect(DataLogicMode);
-            break;
-        }
-        case 0xE2: // Таймаут RX
-        {
-            if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
-            {
-                MODEM->RX_TIMEOUT       = 0;
-                MODEM->RX_TIMEOUT      |= *((uint*)(In_Data.data()));;
-            }
-            emit outConnect(DataLogicMode);
-            break;
-        }
-        case 0xE1: // Таймаут TX
-        {
-            if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
-            {
-                MODEM->TX_TIMEOUT       = 0;
-                MODEM->TX_TIMEOUT      |= *((uint*)(In_Data.data()));;
-            }
-            emit outConnect(DataLogicMode);
-            break;
-        }
-        case 0xE0: // Уровень свича
-        {
-            if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
-            {
-                MODEM->SWITCH_LEVEL     = 0;
-                MODEM->SWITCH_LEVEL     |= *((uint*)(In_Data.data()));
-            }
-            emit outConnect(DataLogicMode);
-            break;
-        }
-        case 0xBF: // Чтение свойств SI4463 из памяти RF модэма v5+, или запись свойств во буфер
-        {
-             if (In_Data.length() >= 2)
-             {
-                 uchar GROUP       = ComandState;
-                 uchar NUM_PROPS   = In_Data.at(0);
-                 uchar START_PROP  = In_Data.at(1);
-                 //uchar *group_adress = SI4463Conf->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP);
-                 if ((NumbOfBytes - 4) == NUM_PROPS)
-                 {
-                     if (In_Data.length() >= NUM_PROPS+1)
+                     for (uint i = 0; i < NUM_PROPS; i++)
                      {
-                         for (uint i = 0; i < NUM_PROPS; i++)
-                         {
-                             SI4463Conf->aSI4463_SET_PROPERTYS(GROUP, START_PROP, i, *(In_Data.data()+i+2),SI4463Conf->aSI4463_PROPERTYS());
-                             //*(uchar*)(group_adress) = *(In_Data.data()+i+2);
-                             //group_adress++;
-                         }
+                         SI4463Conf->aSI4463_SET_PROPERTYS(GROUP, START_PROP, i, *(In_Data.data()+i+2),SI4463Conf->aSI4463_PROPERTYS());
+                         //*(uchar*)(group_adress) = *(In_Data.data()+i+2);
+                         //group_adress++;
                      }
                  }
              }
-             emit outConnect(DataLogicMode);
-             break;
-        }
-        case 0xBE: // Запись свойств SI4463 в памяти RF модэма v5+
-        {
-            break;
-        }
-        case 0xBD: // Установка логики мигания светодиодов
-        {
-            break;
-        }
-        case 0xBC: // Отключение проверки CRC
-        {
-            break;
-        }
-           case 0xBB: // Current RSSI
-           {
-             signed short RSSI = 0;
-             if(In_Data.length() >= 2)
-             {
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_0 = In_Data.at(0);
-                 SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_1 = In_Data.at(1);
+         }
+         emit outConnect(DataLogicMode);
+         break;
+    }
+    case 0xBE: // Запись свойств SI4463 в памяти RF модэма v5+
+    {
+        break;
+    }
+    case 0xBD: // Установка логики мигания светодиодов
+    {
+        break;
+    }
+    case 0xBC: // Отключение проверки CRC
+    {
+        break;
+    }
+    case 0xBB: // Current RSSI
+    {
+      signed short RSSI = 0;
+      if(In_Data.length() >= 2)
+      {
+          SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_0 = In_Data.at(0);
+          SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_1 = In_Data.at(1);
 
-                 RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_1) << 8)
-                                     | (SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_0);
-             }
+          RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_1) << 8)
+                              | (SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_0);
+      }
 
-             emit outCurrentRSSI(RSSI);
-             break;
-           }
-        case 0xDA: // Установить UP_Linc в 1 (только для снифера)
+      emit outCurrentRSSI(RSSI);
+      break;
+    }
+    case 0xBA: // Чтение или запись параметров калибровки
+    {
+        if (ComandState == 1)
         {
-            break;
+            emit outConnect(DataLogicMode);
         }
-        case 0xD9: // Режим пропускания сообщений (только для снифера)
+        else if  (ComandState == 2)
         {
-            break;
+            emit outConnect(DataLogicMode);
         }
-        case 0xD8: // Режим широковещания (только для снифера)
-        {
-            break;
-        }
+        break;
+    }
     }
     ParceDataBuffer.clear();
 }

@@ -2,6 +2,9 @@
 
 SI4463Class::SI4463Class(QObject *parent) : QObject(parent)
 {
+    this->Color1 = new QColor(255,224,231,180);
+    this->Color2 = new QColor(240,215,225,200);
+
     this->SI4463_PROPERTYS_BytesNumber = (uint)&(SI4463_PROPERTYS.Field.GROUP_50.Bytes[66]) - (uint)&(SI4463_PROPERTYS.Field.GROUP_00.Bytes[0]);
 
     this->GROUP_00_BytesNumber         = 10;
@@ -276,21 +279,39 @@ SI4463Class::SI4463Class(QObject *parent) : QObject(parent)
     model->setHorizontalHeaderLabels(horizontalHeader);
     //QStringList verticalHeader;
 
+    QStandardItem *item;
+    QStandardItem *item1;
+    QStandardItem *item2;
+    QStandardItem *item3;
     for(int i = 0; i < SI4463_PROPERTYS_BytesNumber; i++)
     {
-        //verticalHeader.append("");
-        //model->setVerticalHeaderLabels(verticalHeader);
+        item  = new QStandardItem("");
+        item1 = new QStandardItem("");
+        item2 = new QStandardItem("");
+        item3 = new QStandardItem("");
+
+        item->setEditable(false);item->setCheckable(false);
+        item1->setTextAlignment(Qt::AlignCenter);
+        item1->setEditable(false);item1->setCheckable(false);
+        item2->setTextAlignment(Qt::AlignCenter);
+        item2->setEditable(false);item2->setCheckable(false);
+        item3->setTextAlignment(Qt::AlignCenter);
+        item3->setEditable(false);item3->setCheckable(false);
+
         if(i < 244)
         {
-            item = new QStandardItem(this->SI4463_PROPERTYS_NAME.at(i));
-            item->setEnabled(false);
+            item->setText(this->SI4463_PROPERTYS_NAME.at(i));
+
         }
         else
         {
-            item = new QStandardItem(this->SI4463_PROPERTYS_NAME.at(244) + "_" + QString::number(i-244));
-            item->setEnabled(false);
+            item->setText(this->SI4463_PROPERTYS_NAME.at(244) + "_" + QString::number(i-244));
+
         }
         model->setItem(i, 0, item);
+        model->setItem(i, 1, item1);
+        model->setItem(i, 2, item2);
+        model->setItem(i, 3, item3);
     }
 }
 void SI4463Class::aSI4463_SET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP_COUNTER, uchar PROP_DATA, SI4463_PROPERTYS_structur* struc)
@@ -302,27 +323,64 @@ void SI4463Class::aSI4463_SET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP
     uint index = (uint)(group_adress + PROP_COUNTER) - (uint)&(struc->Field.GROUP_00.Bytes[0]);
     if (struc == aSI4463_PROPERTYS())
     {
+        uchar *FFile_adress  = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, aSI4463_SI4463_PROPERTYS_FROM_FILE());
+        *(uchar*)(FFile_adress + PROP_COUNTER) = PROP_DATA;
         hex_item.append(PROP_DATA);
         S = "0x" + hex_item.toHex().toUpper();
-        item = new QStandardItem(S);
-        item->setEnabled(false);
-        model->setItem(index, 1, item);
+        model->item(index,1)->setText(S);
+        model->item(index,2)->setText(S);
     }
     else if (struc == aSI4463_SI4463_PROPERTYS_FROM_FILE())
     {
+        uchar *SI4463_adress = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, aSI4463_PROPERTYS());
+        uchar *Calib_adress  = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, aSI4463_PROPERTYS_CALIB());
         hex_item.append(PROP_DATA);
         S = "0x" + hex_item.toHex().toUpper();
-        item = new QStandardItem(S);
-        item->setEnabled(false);
-        model->setItem(index, 2, item);
+        model->item(index,2)->setText(S);
+
+        if (*(uchar*)(group_adress + PROP_COUNTER) != *(uchar*)(SI4463_adress + PROP_COUNTER))
+        {
+            QBrush b(*this->Color1);
+            model->item(index,2)->setBackground(b);
+            if ((*(uchar*)(group_adress + PROP_COUNTER) != *(uchar*)(Calib_adress + PROP_COUNTER)))
+            {
+                if (model->item(index,3)->text().compare("") != 0)
+                {
+                    QBrush b(*this->Color2);
+                    model->item(index,3)->setBackground(b);
+                }
+            }
+        }
+        else
+        {
+            QColor c(255,255,255,255); QBrush b(c);
+            model->item(index,2)->setBackground(b);
+            if ((*(uchar*)(group_adress + PROP_COUNTER) != *(uchar*)(Calib_adress + PROP_COUNTER)))
+            {
+                if (model->item(index,3)->text().compare("") != 0)
+                {
+                    QBrush b(*this->Color2);
+                    model->item(index,3)->setBackground(b);
+                }
+            }
+        }
     }
     else if (struc == aSI4463_PROPERTYS_CALIB())
     {
+        uchar *SI4463_adress = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, aSI4463_PROPERTYS());
         hex_item.append(PROP_DATA);
         S = "0x" + hex_item.toHex().toUpper();
-        item = new QStandardItem(S);
-        item->setEnabled(false);
-        model->setItem(index, 3, item);
+        model->item(index,3)->setText(S);
+        if (*(uchar*)(group_adress + PROP_COUNTER) != *(uchar*)(SI4463_adress + PROP_COUNTER))
+        {
+            QBrush b(*this->Color1);
+            model->item(index,3)->setBackground(b);
+        }
+        else
+        {
+            QColor c(255,255,255,255); QBrush b(c);
+            model->item(index,3)->setBackground(b);
+        }
     }
 }
 
