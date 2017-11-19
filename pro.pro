@@ -34,7 +34,8 @@ HEADERS += \
     SI4463/si4463_propertys_tablemodel.h \
     TCP/tcp.h \
     FILE/parceclass.h \
-    STYLE/style.h
+    STYLE/style.h \
+    NET/nettableclass.h
 
 SOURCES += \
     COM/port.cpp \
@@ -53,7 +54,8 @@ SOURCES += \
     SI4463/si4463_propertys_tablemodel.cpp \
     TCP/tcp.cpp \
     FILE/parceclass.cpp \
-    STYLE/style.cpp
+    STYLE/style.cpp \
+    NET/nettableclass.cpp
 
 FORMS += \
     mainwindow.ui

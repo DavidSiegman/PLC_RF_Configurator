@@ -20,6 +20,7 @@
 #include "COM/port.h"
 #include "MODEM/modemclass.h"
 #include "CRC/crc16_class.h"
+#include "NET/nettableclass.h"
 #include "GRAPH/mygraphscene.h"
 #include "GRAPH/mypoligon.h"
 #include <mess_enum.h>
@@ -49,6 +50,7 @@ private:
     MODEMClass          *MODEM;
     TCP                 *TCPNew;
     ParceClass          *newParcer;
+    NetTableClass       *newNetTable;
     QString QByteAray_To_QString(QByteArray arr);
     QByteArray QString_To_QByteAray(QString str, bool crc);
 
@@ -67,6 +69,8 @@ signals:
     void STOP_MONITOR();
     void READ_CURRENT_RSSI();
     void READ_LRSSI_AFC();
+
+    void ADD_NET_TABLE_ITEM(QString value);
 
 private slots:
     void ShowConnectionPanel(void);
@@ -136,6 +140,8 @@ private slots:
     void on_actionConn_triggered();
 
     void on_OpenBin_clicked();
+
+    void on_pushButton_7_clicked();
 
 protected:
     //virtual void mousePressEvent(QMouseEvent *);

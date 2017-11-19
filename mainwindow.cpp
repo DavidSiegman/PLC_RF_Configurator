@@ -14,7 +14,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
-
     QString s = Style::ToolTip_StyleSheet + Style::Widget1_StyleSheet;
 
     ui->setupUi(this);
@@ -32,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->InfoWidget            ->setLayout(ui->InfoLayout);
     ui->ConnectionsWidget     ->setLayout(ui->ConnectionsLayout);
     ui->LogWidget             ->setLayout(ui->LogLayout);
+    ui->DevConnectWidget      ->setLayout(ui->DevConnectLayout);
+    ui->UpgradeWidget         ->setLayout(ui->UpgradeLayout);
 
     ui->RSSIWidget            ->setEnabled(false);
     ui->tabWidget             ->setEnabled(false);
@@ -43,9 +44,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->action1_5_bits        ->setEnabled(true);
     #endif
 
-    ui->InfoWidget->setMaximumHeight(0);
-    ui->LogWidget->setMaximumHeight(0);
-    ui->ConnectionsWidget->setMaximumWidth(0);
+    ui->InfoWidget            ->setMaximumHeight(0);
+    ui->LogWidget             ->setMaximumHeight(0);
+    ui->ConnectionsWidget     ->setMaximumWidth(0);
 
     timer_COMBufferClear      = new QTimer();
     timer_ConnectionsPanel    = new QTimer();
@@ -57,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     SI4463Config              = new SI4463Class();
     DataLogic                 = new DataLogic_Class(oCRC16,timer_COMBufferClear,SI4463Config,MODEM,PortNew,TCPNew);   // Создаём Объект обработки сообщений
     ConnectHandler            = new ConnectHandlerClass(ui, DataLogic,MODEM);
+    newNetTable               = new NetTableClass(ui->NetTable);
     scene                     = new myGraphScene(this);
 
     ui->SI4436_PROPSView      ->setModel(SI4463Config->model);
@@ -112,6 +114,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(timer_COMBufferClear,SIGNAL(timeout()), DataLogic, SLOT(ClearIn_DataBuffer()));
     connect(timer_ConnectionsPanel,SIGNAL(timeout()), this, SLOT(HideConnectionPanel()));
+
+    connect(this,SIGNAL(ADD_NET_TABLE_ITEM(QString)), newNetTable, SLOT(addNewItem(QString)));
 
     connect(newParcer,SIGNAL(PARCE_currentLine(int)), ui->progressBar, SLOT(setValue(int)));
     connect(newParcer,SIGNAL(PARCE_End()), this, SLOT(ParceFinishHandler()));
@@ -1224,4 +1228,14 @@ void MainWindow::on_OpenBin_clicked()
 {
    QString str = QFileDialog::getOpenFileName(0, "Open File", "", "*.bin");
    ui->PatchBin->setText(str);
+}
+
+void MainWindow::on_pushButton_7_clicked()
+{
+    bool ok;
+    int i = QInputDialog::getInt(this, QString::fromUtf8("Введите серийный номер"), QString::fromUtf8(""), 1, 1, 4294967295, 1, &ok);
+    if (ok){
+        emit ADD_NET_TABLE_ITEM(QString::number(i));
+    }
+
 }
