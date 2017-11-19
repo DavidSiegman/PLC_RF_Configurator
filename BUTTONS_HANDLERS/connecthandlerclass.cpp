@@ -323,6 +323,7 @@ void ConnectHandlerClass::ConnectHandling(uint n)
                 {
                     ui->progressBar->setValue(10);
                     emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание параметров RF\r"),NONE);
+                    DataLogic->setCurrentSI4463_PROPERTYS_structur(0);
                     emit SendComand(SEND_BF_03_00_AC_00,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 2;
                     break;
@@ -330,6 +331,7 @@ void ConnectHandlerClass::ConnectHandling(uint n)
                 case 2:
                 {
                     ui->progressBar->setValue(40);
+                    DataLogic->setCurrentSI4463_PROPERTYS_structur(0);
                     emit SendComand(SEND_BF_03_21_88_00,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 3;
                     break;
@@ -342,59 +344,61 @@ void ConnectHandlerClass::ConnectHandling(uint n)
                     ReadDataProgress = 4;
                     break;
                 }
-                case 1:
+                case 4:
                 {
                     ui->progressBar->setValue(10);
                     emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание параметров RF\r"),NONE);
+                    DataLogic->setCurrentSI4463_PROPERTYS_structur(1);
                     emit SendComand(SEND_BF_03_00_AC_00,CONFIG_SEND_CONTROL);
-                    ReadDataProgress = 2;
-                    break;
-                }
-                case 2:
-                {
-                    ui->progressBar->setValue(40);
-                    emit SendComand(SEND_BF_03_21_88_00,CONFIG_SEND_CONTROL);
-                    ReadDataProgress = 3;
-                    break;
-                }
-                case 3:
-                {
-                    ui->progressBar->setValue(50);
-                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание сетевых наcтроек\r"),NONE);
-                    emit SendComand(SEND_READ_NODE_TYPE,CONFIG_SEND_CONTROL);
-                    ReadDataProgress = 4;
-                    break;
-                }
-                case 4:
-                {
-                    ui->progressBar->setValue(60);
-                    emit SendComand(SEND_READ_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 5;
                     break;
                 }
                 case 5:
                 {
-                    ui->progressBar->setValue(70);
-                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание таймаутов\r"),NONE);
-                    emit SendComand(SEND_READ_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
+                    ui->progressBar->setValue(40);
+                    DataLogic->setCurrentSI4463_PROPERTYS_structur(1);
+                    emit SendComand(SEND_BF_03_21_88_00,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 6;
                     break;
                 }
                 case 6:
                 {
-                    ui->progressBar->setValue(80);
-                    emit SendComand(SEND_READ_RX_TIMEOUT,CONFIG_SEND_CONTROL);
+                    ui->progressBar->setValue(50);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание сетевых наcтроек\r"),NONE);
+                    emit SendComand(SEND_READ_NODE_TYPE,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 7;
                     break;
                 }
                 case 7:
                 {
-                    ui->progressBar->setValue(90);
-                    emit SendComand(SEND_READ_TX_TIMEOUT,CONFIG_SEND_CONTROL);
+                    ui->progressBar->setValue(60);
+                    emit SendComand(SEND_READ_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 8;
                     break;
                 }
                 case 8:
+                {
+                    ui->progressBar->setValue(70);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание таймаутов\r"),NONE);
+                    emit SendComand(SEND_READ_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
+                    ReadDataProgress = 9;
+                    break;
+                }
+                case 9:
+                {
+                    ui->progressBar->setValue(80);
+                    emit SendComand(SEND_READ_RX_TIMEOUT,CONFIG_SEND_CONTROL);
+                    ReadDataProgress = 10;
+                    break;
+                }
+                case 10:
+                {
+                    ui->progressBar->setValue(90);
+                    emit SendComand(SEND_READ_TX_TIMEOUT,CONFIG_SEND_CONTROL);
+                    ReadDataProgress = 11;
+                    break;
+                }
+                case 11:
                 {
                     ui->progressBar->setValue(100);
                     isAOPEN();

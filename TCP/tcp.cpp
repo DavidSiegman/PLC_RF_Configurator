@@ -27,7 +27,6 @@ void  TCP::TCP_Disconnect()
     if(this->TCPSocket->isOpen()){
         this->TCPSocket->close();
         emit TCP_Error(">> ======= Соединение с: " + this->SettingsTCP.IP.toLocal8Bit() + ":" + QString::number(this->SettingsTCP.PORT)+ " разорвано!\r",COM_CLOSE);
-        this->deleteLater();
     }
 }
 void  TCP::TCP_Connect()
@@ -82,6 +81,5 @@ void TCP::TCP_ErrorHandler(QAbstractSocket::SocketError error)//
         QString s = "Error: "; s += strError;
         qDebug() << s;
         emit TCP_Error(this->TCPSocket->errorString().toLocal8Bit() + "\r",NONE);
-        //COM_Disconnect();
     }
 }

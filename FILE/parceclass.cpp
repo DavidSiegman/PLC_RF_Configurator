@@ -82,14 +82,14 @@ void ParceClass::run()
                                 {
                                     bool b = false;
                                     uint nHex = PropertyValue.toUInt(&b,16);
-                                    SI4463->aSI4463_SET_PROPERTYS(0, 0, i, nHex,SI4463->aSI4463_PROPERTYS_CALIB());
+                                    SI4463->aSI4463_SET_PROPERTYS(0, 0, i, nHex,SI4463->aSI4463_PROPERTYS_CALIB_FROM_FILE());
                                     break;
                                 }
                                 else if (calibration_parameters == 0)
                                 {
                                     bool b = false;
                                     uint nHex = PropertyValue.toUInt(&b,16);
-                                    SI4463->aSI4463_SET_PROPERTYS(0, 0, i, nHex,SI4463->aSI4463_SI4463_PROPERTYS_FROM_FILE());
+                                    SI4463->aSI4463_SET_PROPERTYS(0, 0, i, nHex,SI4463->aSI4463_PROPERTYS_FROM_FILE());
                                     break;
                                 }
                             }

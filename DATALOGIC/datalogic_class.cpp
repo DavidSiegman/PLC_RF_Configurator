@@ -27,9 +27,17 @@ void DataLogic_Class::setSerialNumberMode(QString S, bool Enable)
     this->addSerialNumber = Enable;
 }
 
-void DataLogic_Class::setCurrentSI4463_PROPERTYS_structur(SI4463_PROPERTYS_structur* structur)
+void DataLogic_Class::setCurrentSI4463_PROPERTYS_structur(uint select)
 {
-    this->CurrentSI4463_PROPERTYS_structur = structur;
+    if (select == 0)
+    {
+        this->CurrentSI4463_PROPERTYS_structur = SI4463Conf->aSI4463_PROPERTYS();
+    }
+    else
+    {
+        this->CurrentSI4463_PROPERTYS_structur = SI4463Conf->aSI4463_PROPERTYS_CALIB();
+    }
+
 }
 
 void DataLogic_Class::ClearIn_DataBuffer(void)
@@ -464,9 +472,7 @@ void DataLogic_Class::ParceData(uint n)
                  {
                      for (uint i = 0; i < NUM_PROPS; i++)
                      {
-                         SI4463Conf->aSI4463_SET_PROPERTYS(GROUP, START_PROP, i, *(In_Data.data()+i+2),SI4463Conf->aSI4463_PROPERTYS());
-                         //*(uchar*)(group_adress) = *(In_Data.data()+i+2);
-                         //group_adress++;
+                         SI4463Conf->aSI4463_SET_PROPERTYS(GROUP, START_PROP, i, *(In_Data.data()+i+2),CurrentSI4463_PROPERTYS_structur);
                      }
                  }
              }

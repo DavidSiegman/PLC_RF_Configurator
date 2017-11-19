@@ -29,6 +29,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->RSSIWidget            ->setLayout(ui->RSSILayout);
     ui->SwitchPropWidget      ->setLayout(ui->SwitchPropLayout);
     ui->SwTableWidget         ->setLayout(ui->SwTableLayout);
+    ui->InfoWidget            ->setLayout(ui->InfoLayout);
+    ui->ConnectionsWidget     ->setLayout(ui->ConnectionsLayout);
+    ui->LogWidget             ->setLayout(ui->LogLayout);
 
     ui->RSSIWidget            ->setEnabled(false);
     ui->tabWidget             ->setEnabled(false);
@@ -40,7 +43,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->action1_5_bits        ->setEnabled(true);
     #endif
 
+    ui->InfoWidget->setMaximumHeight(0);
+    ui->LogWidget->setMaximumHeight(0);
+    ui->ConnectionsWidget->setMaximumWidth(0);
+
     timer_COMBufferClear      = new QTimer();
+    timer_ConnectionsPanel    = new QTimer();
     MODEM                     = new MODEMClass;
     PortNew                   = new Port();                                                                   // Создаем Поток обработки портов
     TCPNew                    = new TCP();
@@ -103,6 +111,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(DataLogic,SIGNAL(outLRSSI_AFC(signed short,signed short,signed short,double)),this,SLOT(out_LRSSI_AFC(signed short,signed short,signed short,double)));
 
     connect(timer_COMBufferClear,SIGNAL(timeout()), DataLogic, SLOT(ClearIn_DataBuffer()));
+    connect(timer_ConnectionsPanel,SIGNAL(timeout()), this, SLOT(HideConnectionPanel()));
 
     connect(newParcer,SIGNAL(PARCE_currentLine(int)), ui->progressBar, SLOT(setValue(int)));
     connect(newParcer,SIGNAL(PARCE_End()), this, SLOT(ParceFinishHandler()));
@@ -1161,25 +1170,58 @@ void MainWindow::on_pushButton_clicked()
     ui->consol->clear();
 }
 
-void MainWindow::on_logHidden_clicked()
-{
-    if (ui->consol->maximumHeight() == 200)
-    {ui->consol->setMaximumHeight(0);}
-    if (ui->consol->maximumHeight() == 400)
-    {ui->consol->setMaximumHeight(200);}
-
-}
-
 void MainWindow::on_LogShow_clicked()
 {
-    if (ui->consol->maximumHeight() == 200)
-    {ui->consol->setMaximumHeight(400);}
-    if (ui->consol->maximumHeight() == 0)
-    {ui->consol->setMaximumHeight(200);}
-
+    if (ui->LogWidget->maximumHeight() > 0)
+    {ui->LogWidget->setMaximumHeight(0);}
+    else
+    {ui->LogWidget->setMaximumHeight(200);}
 }
 
 void MainWindow::on_RFParamWrite_clicked()
 {
 
+}
+
+void MainWindow::on_pushButton_3_clicked()
+{
+    if(ui->ConnectionsWidget->maximumWidth() > 0)
+    {
+        HideConnectionPanel();
+    }
+    else
+    {
+        ShowConnectionPanel();
+    }
+}
+
+void MainWindow::ShowConnectionPanel(void)
+{
+    ui->ConnectionsWidget->setMaximumWidth(175);
+    timer_ConnectionsPanel->start(15000);
+}
+void MainWindow::HideConnectionPanel(void)
+{
+    if(timer_ConnectionsPanel->isActive())
+    {
+        timer_ConnectionsPanel->stop();
+    }
+    ui->ConnectionsWidget->setMaximumWidth(0);
+}
+void MainWindow::on_actionConn_triggered()
+{
+    if(ui->ConnectionsWidget->maximumWidth() > 0)
+    {
+        HideConnectionPanel();
+    }
+    else
+    {
+        ShowConnectionPanel();
+    }
+}
+
+void MainWindow::on_OpenBin_clicked()
+{
+   QString str = QFileDialog::getOpenFileName(0, "Open File", "", "*.bin");
+   ui->PatchBin->setText(str);
 }

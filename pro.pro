@@ -57,3 +57,6 @@ SOURCES += \
 
 FORMS += \
     mainwindow.ui
+
+RESOURCES += \
+    RESOURCES/images.qrc

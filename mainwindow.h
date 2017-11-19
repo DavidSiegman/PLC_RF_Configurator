@@ -40,11 +40,11 @@ public:
 private:
     Ui::MainWindow *ui;
 
-    SI4463Class         *SI4463Config;                             //
-    QTimer              *timer_COMBufferClear;                     //
-    Port                *PortNew;                                  //
-    DataLogic_Class     *DataLogic;                                //
-    CRC16_Class         *oCRC16;                                   //
+    SI4463Class         *SI4463Config;                                     //
+    QTimer              *timer_COMBufferClear, *timer_ConnectionsPanel;    //
+    Port                *PortNew;                                          //
+    DataLogic_Class     *DataLogic;                                        //
+    CRC16_Class         *oCRC16;                                           //
     ConnectHandlerClass *ConnectHandler;
     MODEMClass          *MODEM;
     TCP                 *TCPNew;
@@ -69,6 +69,8 @@ signals:
     void READ_LRSSI_AFC();
 
 private slots:
+    void ShowConnectionPanel(void);
+    void HideConnectionPanel(void);
     void Print(QByteArray data, uint n);
     void Print_Log(QString data, uint n);
     void ParceFinishHandler();
@@ -123,12 +125,17 @@ private slots:
     void on_MonitorStop_clicked();
     void on_MonitorTimeout_clicked();
     void on_pushButton_clicked();
-    void on_logHidden_clicked();
     void on_LogShow_clicked();
     void on_readCurrentRSSI_clicked();
     void on_readLatchRSSI_clicked();
 
     void on_RFParamWrite_clicked();
+
+    void on_pushButton_3_clicked();
+
+    void on_actionConn_triggered();
+
+    void on_OpenBin_clicked();
 
 protected:
     //virtual void mousePressEvent(QMouseEvent *);

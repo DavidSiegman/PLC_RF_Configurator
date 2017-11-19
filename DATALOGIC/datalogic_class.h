@@ -23,7 +23,7 @@ public:
     uint         Delay_Time;
 
     void setSerialNumberMode(QString S, bool Enable);
-    void setCurrentSI4463_PROPERTYS_structur(SI4463_PROPERTYS_structur* structur);
+    void setCurrentSI4463_PROPERTYS_structur(uint select);
 
 private:
     SI4463Class *SI4463Conf;

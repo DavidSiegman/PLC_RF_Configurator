@@ -21,7 +21,7 @@ void Port :: run(){
 
 void Port :: COM_SetPortName(QString Name)
 {
-    SettingsPort.name        = Name;
+    SettingsPort.name = Name;
     QString s = "Set Port Name: "; s += Name;
     qDebug() << s;
 }
@@ -102,12 +102,10 @@ void Port::COM_ErrorHandler(QSerialPort::SerialPortError error)//
     qDebug() << s;
 }//
 
-
 void  Port::COM_Disconnect(){
     if(this->thisPort->isOpen()){
         this->thisPort->close();
         emit COM_Error(">> ======= Порт " + this->SettingsPort.name.toLocal8Bit() + " Закрыт!\r",COM_CLOSE);
-        this->deleteLater();
     }
 }
 
@@ -118,7 +116,7 @@ void Port :: COM_WriteDATA(QByteArray data)
         this->thisPort->write(data);
     }
 }
-//
+
 void Port :: COM_ReadDATA()
 {
     QByteArray  in_data;

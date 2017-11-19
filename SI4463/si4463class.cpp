@@ -272,9 +272,10 @@ SI4463Class::SI4463Class(QObject *parent) : QObject(parent)
     //Заголовки столбцов
     QStringList horizontalHeader;
     horizontalHeader.append("Параметр");
-    horizontalHeader.append("Значения");
-    horizontalHeader.append("Для записи");
-    horizontalHeader.append("Для калибровки");
+    horizontalHeader.append("Свойства текущие");
+    horizontalHeader.append("Свойства новые");
+    horizontalHeader.append("Калибровка текущие");
+    horizontalHeader.append("Калибровка новые");
 
     model->setHorizontalHeaderLabels(horizontalHeader);
     //QStringList verticalHeader;
@@ -283,12 +284,14 @@ SI4463Class::SI4463Class(QObject *parent) : QObject(parent)
     QStandardItem *item1;
     QStandardItem *item2;
     QStandardItem *item3;
+    QStandardItem *item4;
     for(int i = 0; i < SI4463_PROPERTYS_BytesNumber; i++)
     {
         item  = new QStandardItem("");
         item1 = new QStandardItem("");
         item2 = new QStandardItem("");
         item3 = new QStandardItem("");
+        item4 = new QStandardItem("");
 
         item->setEditable(false);item->setCheckable(false);
         item1->setTextAlignment(Qt::AlignCenter);
@@ -297,6 +300,8 @@ SI4463Class::SI4463Class(QObject *parent) : QObject(parent)
         item2->setEditable(false);item2->setCheckable(false);
         item3->setTextAlignment(Qt::AlignCenter);
         item3->setEditable(false);item3->setCheckable(false);
+        item4->setTextAlignment(Qt::AlignCenter);
+        item4->setEditable(false);item3->setCheckable(false);
 
         if(i < 244)
         {
@@ -312,6 +317,7 @@ SI4463Class::SI4463Class(QObject *parent) : QObject(parent)
         model->setItem(i, 1, item1);
         model->setItem(i, 2, item2);
         model->setItem(i, 3, item3);
+        model->setItem(i, 4, item4);
     }
 }
 void SI4463Class::aSI4463_SET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP_COUNTER, uchar PROP_DATA, SI4463_PROPERTYS_structur* struc)
@@ -323,14 +329,14 @@ void SI4463Class::aSI4463_SET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP
     uint index = (uint)(group_adress + PROP_COUNTER) - (uint)&(struc->Field.GROUP_00.Bytes[0]);
     if (struc == aSI4463_PROPERTYS())
     {
-        uchar *FFile_adress  = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, aSI4463_SI4463_PROPERTYS_FROM_FILE());
+        uchar *FFile_adress  = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, aSI4463_PROPERTYS_FROM_FILE());
         *(uchar*)(FFile_adress + PROP_COUNTER) = PROP_DATA;
         hex_item.append(PROP_DATA);
         S = "0x" + hex_item.toHex().toUpper();
         model->item(index,1)->setText(S);
         model->item(index,2)->setText(S);
     }
-    else if (struc == aSI4463_SI4463_PROPERTYS_FROM_FILE())
+    else if (struc == aSI4463_PROPERTYS_FROM_FILE())
     {
         uchar *SI4463_adress = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, aSI4463_PROPERTYS());
         uchar *Calib_adress  = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, aSI4463_PROPERTYS_CALIB());
@@ -342,44 +348,37 @@ void SI4463Class::aSI4463_SET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP
         {
             QBrush b(*this->Color1);
             model->item(index,2)->setBackground(b);
-            if ((*(uchar*)(group_adress + PROP_COUNTER) != *(uchar*)(Calib_adress + PROP_COUNTER)))
-            {
-                if (model->item(index,3)->text().compare("") != 0)
-                {
-                    QBrush b(*this->Color2);
-                    model->item(index,3)->setBackground(b);
-                }
-            }
         }
         else
         {
             QColor c(255,255,255,255); QBrush b(c);
             model->item(index,2)->setBackground(b);
-            if ((*(uchar*)(group_adress + PROP_COUNTER) != *(uchar*)(Calib_adress + PROP_COUNTER)))
-            {
-                if (model->item(index,3)->text().compare("") != 0)
-                {
-                    QBrush b(*this->Color2);
-                    model->item(index,3)->setBackground(b);
-                }
-            }
         }
     }
     else if (struc == aSI4463_PROPERTYS_CALIB())
     {
-        uchar *SI4463_adress = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, aSI4463_PROPERTYS());
+        uchar *FFileCalib_adress  = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, aSI4463_PROPERTYS_CALIB_FROM_FILE());
+        *(uchar*)(FFileCalib_adress + PROP_COUNTER) = PROP_DATA;
         hex_item.append(PROP_DATA);
         S = "0x" + hex_item.toHex().toUpper();
         model->item(index,3)->setText(S);
-        if (*(uchar*)(group_adress + PROP_COUNTER) != *(uchar*)(SI4463_adress + PROP_COUNTER))
+        model->item(index,4)->setText(S);
+    }
+    else if (struc == aSI4463_PROPERTYS_CALIB_FROM_FILE())
+    {
+        uchar *SI4463Calib_adress = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, aSI4463_PROPERTYS_CALIB());
+        hex_item.append(PROP_DATA);
+        S = "0x" + hex_item.toHex().toUpper();
+        model->item(index,4)->setText(S);
+        if (*(uchar*)(group_adress + PROP_COUNTER) != *(uchar*)(SI4463Calib_adress + PROP_COUNTER))
         {
             QBrush b(*this->Color1);
-            model->item(index,3)->setBackground(b);
+            model->item(index,4)->setBackground(b);
         }
         else
         {
             QColor c(255,255,255,255); QBrush b(c);
-            model->item(index,3)->setBackground(b);
+            model->item(index,4)->setBackground(b);
         }
     }
 }
@@ -388,13 +387,17 @@ SI4463_PROPERTYS_structur*        SI4463Class::aSI4463_PROPERTYS(void)
 {
     return &SI4463_PROPERTYS;
 }
-SI4463_PROPERTYS_structur*        SI4463Class::aSI4463_SI4463_PROPERTYS_FROM_FILE(void)
+SI4463_PROPERTYS_structur*        SI4463Class::aSI4463_PROPERTYS_FROM_FILE(void)
 {
     return &SI4463_PROPERTYS_FROM_FILE;
 }
 SI4463_PROPERTYS_structur*        SI4463Class::aSI4463_PROPERTYS_CALIB(void)
 {
     return &SI4463_PROPERTYS_CALIB;
+}
+SI4463_PROPERTYS_structur*        SI4463Class::aSI4463_PROPERTYS_CALIB_FROM_FILE(void)
+{
+    return &SI4463_PROPERTYS_CALIB_FROM_FILE;
 }
 SI4463_PART_INFO_structur*        SI4463Class::aSI4463_PART_INFO(void)
 {
