@@ -24,8 +24,10 @@ enum
     IN_INTERFACE_RF_PLC,
     CONNECT_HANDLING,
     SEND_AOPEN,
-    SEND_BF_03_00_AC_00,
-    SEND_BF_03_21_88_00,
+    SEND_BF_03_00_AC_00, // чтение первой части параметров SI4463
+    SEND_BF_03_21_88_00, // чтение второй части параметров SI4463
+    SEND_BF_AF_00_AC_00, // запись первой части параметров SI4463
+    SEND_BF_8B_21_88_00, // запись второй части параметров SI4463
     SEND_READ_NODE_TYPE,
     SEND_WRITE_NODE_TYPE,
     SEND_READ_SWITCH_LEVEL,
@@ -39,6 +41,9 @@ enum
     SEND_READ_RSSI,
     SEND_READ_RSSI_CURRENT,
     SEND_RELOAD_DEVICE,
+    SEND_WRITE_RF_PARAMETERS,
+    SEND_LOAD_PROPERTYS_TO_FLASH,
+    SEND_READ_PROPERTYS_FROM_FLASH,
     SEND_LOAD_CALIBPROPS_TO_FLASH,
     SEND_READ_CALIBPROPS_FROM_FLASH
 };

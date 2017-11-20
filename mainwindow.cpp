@@ -104,6 +104,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this,SIGNAL(READ_LRSSI_AFC()),   ConnectHandler,SLOT(ReadLRSSI_AFC()));
     connect(this,SIGNAL(START_MONITOR()),    ConnectHandler,SLOT(StartMonitor()));
     connect(this,SIGNAL(STOP_MONITOR()),     ConnectHandler,SLOT(StopMonitor()));
+    connect(this,SIGNAL(WRITE_RF_PARAMS()),  ConnectHandler,SLOT(WriteRF_PARAMS()));
 
     connect(DataLogic,SIGNAL(noANSWER()),    ConnectHandler,SLOT(aOPEN()));
     connect(DataLogic,SIGNAL(noANSWER()),    ConnectHandler,SLOT(StopMonitor()));
@@ -1184,7 +1185,7 @@ void MainWindow::on_LogShow_clicked()
 
 void MainWindow::on_RFParamWrite_clicked()
 {
-
+    emit WRITE_RF_PARAMS();
 }
 
 void MainWindow::on_pushButton_3_clicked()

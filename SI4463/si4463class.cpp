@@ -383,6 +383,12 @@ void SI4463Class::aSI4463_SET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP
     }
 }
 
+uchar SI4463Class::aSI4463_GET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP_COUNTER, SI4463_PROPERTYS_structur* struc)
+{
+    uchar *group_adress = this->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP, struc);
+    return *(uchar*)(group_adress + PROP_COUNTER);
+}
+
 SI4463_PROPERTYS_structur*        SI4463Class::aSI4463_PROPERTYS(void)
 {
     return &SI4463_PROPERTYS;

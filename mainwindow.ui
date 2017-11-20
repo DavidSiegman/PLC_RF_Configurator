@@ -29,14 +29,14 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <property name="tabletTracking">
-    <bool>false</bool>
-   </property>
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
    <property name="styleSheet">
     <string notr="true">background-color: rgba(226, 124, 50,30);</string>
+   </property>
+   <property name="tabletTracking" stdset="0">
+    <bool>false</bool>
    </property>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
@@ -582,7 +582,7 @@
           <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="tab">
           <property name="styleSheet">
@@ -1079,7 +1079,7 @@
                   <height>60</height>
                  </size>
                 </property>
-                <widget class="QWidget" name="">
+                <widget class="QWidget" name="layoutWidget">
                  <property name="geometry">
                   <rect>
                    <x>0</x>
@@ -1717,7 +1717,7 @@
              <x>0</x>
              <y>-1</y>
              <width>481</width>
-             <height>301</height>
+             <height>221</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="RFTab_Layout">

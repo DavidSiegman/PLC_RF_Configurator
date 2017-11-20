@@ -47,7 +47,7 @@ private:
 signals:
     void OutData(QByteArray data);
     void DataForPrint(QByteArray data,uint n);
-    void outConnect(uint n);
+    void outConnect(uint n, uint state);
     void outCurrentRSSI(signed short RSSI);
     void outLRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,signed short ANT2_RSSI,double AFC);
     void noANSWER();

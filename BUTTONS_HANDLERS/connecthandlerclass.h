@@ -36,14 +36,16 @@ public slots:
     void StopMonitor();
     void ReadCURRENT_RSSI();
     void ReadLRSSI_AFC();
+    void WriteRF_PARAMS();
 
-    void ConnectHandling(uint n);
+    void ConnectHandling(uint n, uint state);
 
     void isAOPEN();
     void isSWITCH_MODE();
     void isSWITCH_PROP();
     void isCURRENT_RSSI();
     void isLRSSI_AFC();
+    void isRF_PARAMS();
 };
 
 #endif // CONNECTHANDLERCLASS_H

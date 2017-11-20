@@ -69,6 +69,7 @@ signals:
     void STOP_MONITOR();
     void READ_CURRENT_RSSI();
     void READ_LRSSI_AFC();
+    void WRITE_RF_PARAMS();
 
     void ADD_NET_TABLE_ITEM(QString value);
 

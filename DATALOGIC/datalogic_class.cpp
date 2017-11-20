@@ -33,9 +33,17 @@ void DataLogic_Class::setCurrentSI4463_PROPERTYS_structur(uint select)
     {
         this->CurrentSI4463_PROPERTYS_structur = SI4463Conf->aSI4463_PROPERTYS();
     }
-    else
+    else if (select == 1)
     {
         this->CurrentSI4463_PROPERTYS_structur = SI4463Conf->aSI4463_PROPERTYS_CALIB();
+    }
+    else if (select == 2)
+    {
+        this->CurrentSI4463_PROPERTYS_structur = SI4463Conf->aSI4463_PROPERTYS_FROM_FILE();
+    }
+    else if (select == 3)
+    {
+        this->CurrentSI4463_PROPERTYS_structur = SI4463Conf->aSI4463_PROPERTYS_CALIB_FROM_FILE();
     }
 
 }
@@ -214,24 +222,57 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
+    case SEND_BF_AF_00_AC_00:
+    {
+        int u[5] = {0xBF,0xAF,0x00,0xAC,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        for(int i = 0; i < 0xAC; i++)
+        {
+            data.append(SI4463Conf->aSI4463_GET_PROPERTYS(0x00, 0x00, i, CurrentSI4463_PROPERTYS_structur));
+        }
+        break;
+    }
+    case SEND_BF_8B_21_88_00:
+    {
+        int u[5] = {0xBF,0x8B,0x21,0x88,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        for(int i = 0; i < 0x88; i++)
+        {
+            data.append(SI4463Conf->aSI4463_GET_PROPERTYS(0x21, 0x00, i, CurrentSI4463_PROPERTYS_structur));
+        }
+        break;
+    }
     case SEND_READ_RSSI_CURRENT:
     {
         int u[2] = {0xBB,0x00}; length = 2;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
+    case SEND_LOAD_PROPERTYS_TO_FLASH:
+    {
+        int u[18] = {0xBE,0x10,'L','o','a','d','P','r','o','p','s','T','o','F','l','a','s','h'}; length = 18;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_PROPERTYS_FROM_FLASH:
+    {
+        int u[20] = {0xBE,0x12,'R','e','a','d','P','r','o','p','s','F','r','o','m','F','l','a','s','h'}; length = 20;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
     case SEND_LOAD_CALIBPROPS_TO_FLASH:
     {
-        int u[12] = {0xBA,0x0A,'L','o','a','d','T','o','F','C','A','L'}; length = 12;
+        int u[18] = {0xBE,0x10,'L','o','a','d','C','a','l','P','r','T','o','F','l','a','s','h'}; length = 18;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
     case SEND_READ_CALIBPROPS_FROM_FLASH:
     {
-        int u[12] = {0xBA,0x0A,'R','e','a','d','F','r','F','C','A','L'}; length = 12;
+        int u[20] = {0xBE,0x12,'R','e','a','d','C','a','l','P','r','F','r','o','m','F','l','a','s','h'}; length = 20;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
+
     }
     CRC16->CRC16_Add_To_ByteArray(&data);
     emit SEND_DATA(data,m);
@@ -290,18 +331,18 @@ void DataLogic_Class::ParceData(uint n)
             MODEM->BOOT_VERSION = MODEM->boot_ver.toDouble();
             MODEM->FW_VERSION   = MODEM->fw_ver.toDouble();
         }
-        emit outConnect(DataLogicMode);
+        emit outConnect(DataLogicMode,1);
         break;
     }
     case 0xF0: // Запрос режима ретрансляции
     {
         MODEM->SWITCH_MODE     = ComandState;
-        emit outConnect(DataLogicMode);
+        emit outConnect(DataLogicMode,1);
         break;
     }
     case 0xEF:
     {
-        emit outConnect(DataLogicMode);
+        emit outConnect(DataLogicMode,ComandState);
         break;
     }
     case 0xEE: // Считывание параметров частоты PLC Модедма
@@ -402,19 +443,17 @@ void DataLogic_Class::ParceData(uint n)
           }
           emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
       }
-
-
       break;
     }
     case 0xE3:
     {
-      if ((NumbOfBytes == 6)&&In_Data.length() >= 4)
-     {
-         MODEM->SWITCH_TIMEOUT     = 0;
-         MODEM->SWITCH_TIMEOUT    |= *((uint*)(In_Data.data()));;
-     }
-     emit outConnect(DataLogicMode);
-     break;
+        if ((NumbOfBytes == 6)&&In_Data.length() >= 4)
+        {
+            MODEM->SWITCH_TIMEOUT     = 0;
+            MODEM->SWITCH_TIMEOUT    |= *((uint*)(In_Data.data()));;
+        }
+        emit outConnect(DataLogicMode,ComandState);
+        break;
     }
     case 0xE2: // Таймаут RX
     {
@@ -423,7 +462,7 @@ void DataLogic_Class::ParceData(uint n)
             MODEM->RX_TIMEOUT       = 0;
             MODEM->RX_TIMEOUT      |= *((uint*)(In_Data.data()));;
         }
-        emit outConnect(DataLogicMode);
+        emit outConnect(DataLogicMode,ComandState);
         break;
     }
     case 0xE1: // Таймаут TX
@@ -433,7 +472,7 @@ void DataLogic_Class::ParceData(uint n)
             MODEM->TX_TIMEOUT       = 0;
             MODEM->TX_TIMEOUT      |= *((uint*)(In_Data.data()));;
         }
-        emit outConnect(DataLogicMode);
+        emit outConnect(DataLogicMode,ComandState);
         break;
     }
     case 0xE0: // Уровень свича
@@ -443,7 +482,7 @@ void DataLogic_Class::ParceData(uint n)
             MODEM->SWITCH_LEVEL     = 0;
             MODEM->SWITCH_LEVEL     |= *((uint*)(In_Data.data()));
         }
-        emit outConnect(DataLogicMode);
+        emit outConnect(DataLogicMode,ComandState);
         break;
     }
     case 0xDA: // Установить UP_Linc в 1 (только для снифера)
@@ -460,28 +499,37 @@ void DataLogic_Class::ParceData(uint n)
     }
     case 0xBF: // Чтение свойств SI4463 из памяти RF модэма v5+, или запись свойств во буфер
     {
-         if (In_Data.length() >= 2)
-         {
-             uchar GROUP       = ComandState;
-             uchar NUM_PROPS   = In_Data.at(0);
-             uchar START_PROP  = In_Data.at(1);
-             //uchar *group_adress = SI4463Conf->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP);
-             if ((NumbOfBytes - 4) == NUM_PROPS)
-             {
-                 if (In_Data.length() >= NUM_PROPS+1)
-                 {
-                     for (uint i = 0; i < NUM_PROPS; i++)
-                     {
-                         SI4463Conf->aSI4463_SET_PROPERTYS(GROUP, START_PROP, i, *(In_Data.data()+i+2),CurrentSI4463_PROPERTYS_structur);
-                     }
-                 }
-             }
-         }
-         emit outConnect(DataLogicMode);
-         break;
+        if (NumbOfBytes > 2)
+        {
+            if (In_Data.length() >= 2)
+            {
+                uchar GROUP       = ComandState;
+                uchar NUM_PROPS   = In_Data.at(0);
+                uchar START_PROP  = In_Data.at(1);
+                //uchar *group_adress = SI4463Conf->SI4463_Get_Group_Adress_From_RAM(GROUP, START_PROP);
+                if ((NumbOfBytes - 4) == NUM_PROPS)
+                {
+                    if (In_Data.length() >= NUM_PROPS+1)
+                    {
+                        for (uint i = 0; i < NUM_PROPS; i++)
+                        {
+                            SI4463Conf->aSI4463_SET_PROPERTYS(GROUP, START_PROP, i, *(In_Data.data()+i+2),CurrentSI4463_PROPERTYS_structur);
+                        }
+                    }
+                }
+            }
+            emit outConnect(DataLogicMode,1);
+        }
+        else
+        {
+            emit outConnect(DataLogicMode,ComandState);
+        }
+        break;
     }
-    case 0xBE: // Запись свойств SI4463 в памяти RF модэма v5+
+    case 0xBE: // Запись свойств SI4463 из флэша в RAM и наоборот в RF модэмах v5+
     {
+        emit outConnect(DataLogicMode,ComandState);
+
         break;
     }
     case 0xBD: // Установка логики мигания светодиодов
@@ -509,14 +557,7 @@ void DataLogic_Class::ParceData(uint n)
     }
     case 0xBA: // Чтение или запись параметров калибровки
     {
-        if (ComandState == 1)
-        {
-            emit outConnect(DataLogicMode);
-        }
-        else if  (ComandState == 2)
-        {
-            emit outConnect(DataLogicMode);
-        }
+        emit outConnect(DataLogicMode,ComandState);
         break;
     }
     }

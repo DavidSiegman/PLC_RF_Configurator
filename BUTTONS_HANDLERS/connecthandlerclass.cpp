@@ -20,7 +20,7 @@ ConnectHandlerClass::ConnectHandlerClass(Ui::MainWindow *ui,DataLogic_Class *Dat
     this->DataLogic = DataLogic;
     this->MODEM     = MODEM;
     connect(this,SIGNAL(SendComand(uint,uint)),this->DataLogic,SLOT(ComandHandling(uint,uint)));
-    connect(this->DataLogic,SIGNAL(outConnect(uint)),this,SLOT(ConnectHandling(uint)));
+    connect(this->DataLogic,SIGNAL(outConnect(uint,uint)),this,SLOT(ConnectHandling(uint,uint)));
 
 
     NetTab       = this->ui->NetTab;
@@ -54,7 +54,7 @@ void ConnectHandlerClass::aOPEN()
         else{DataLogic->setSerialNumberMode(ui->SN->text(), false);}
         ReadDataProgress = 0;
         emit SendLog(QString::fromUtf8(">> ======= Подключение к устройству\r"),NONE);
-        ConnectHandling(CONNECT_HANDLING);
+        ConnectHandling(CONNECT_HANDLING,1);
     }
     else if (s.compare("Отключение") == 0)
     {
@@ -149,7 +149,7 @@ void ConnectHandlerClass::SetSWITCH_MODE()
         ui->SWITCH->setChecked(false);
         ui->SwitchPropWidget->setEnabled(false);
     }
-    ConnectHandling(SEND_WRITE_NODE_TYPE);
+    ConnectHandling(SEND_WRITE_NODE_TYPE,1);
 }
 void ConnectHandlerClass::isSWITCH_MODE()
 {
@@ -178,7 +178,7 @@ void ConnectHandlerClass::SetSWITCH_PROP()
     MODEM->SWITCH_LEVEL   = ui->SWITCHLVL->text().toInt();
     MODEM->SWITCH_TIMEOUT = ui->SWITCHTM->text().toInt();
     ReadDataProgress = 0;
-    ConnectHandling(SEND_WRITE_SWITCH_LEVEL);
+    ConnectHandling(SEND_WRITE_SWITCH_LEVEL,1);
 }
 void ConnectHandlerClass::isSWITCH_PROP()
 {
@@ -223,6 +223,19 @@ void ConnectHandlerClass::isLRSSI_AFC()
 {
 
 }
+void ConnectHandlerClass::WriteRF_PARAMS()
+{
+    ui->RSSIWidget->setEnabled(false);
+    ui->MANUAL_ENTER->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
+    ConnectHandling(SEND_WRITE_RF_PARAMETERS,1);
+}
+void ConnectHandlerClass::isRF_PARAMS()
+{
+    ui->RSSIWidget->setEnabled(true);
+    ui->MANUAL_ENTER->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+}
 
 void ConnectHandlerClass::StartMonitor()
 {
@@ -263,7 +276,7 @@ void ConnectHandlerClass::StopMonitor()
     }
 }
 
-void ConnectHandlerClass::ConnectHandling(uint n)
+void ConnectHandlerClass::ConnectHandling(uint n, uint state)
 {
     DataLogic->DataLogicMode = n;
     if (n == CONNECT_HANDLING)
@@ -321,84 +334,92 @@ void ConnectHandlerClass::ConnectHandling(uint n)
                 }
                 case 1:
                 {
-                    ui->progressBar->setValue(10);
-                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание параметров RF\r"),NONE);
-                    DataLogic->setCurrentSI4463_PROPERTYS_structur(0);
-                    emit SendComand(SEND_BF_03_00_AC_00,CONFIG_SEND_CONTROL);
+                    ui->progressBar->setValue(8);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Загрузка параметров из буфера\r"),NONE);
+                    emit SendComand(SEND_READ_PROPERTYS_FROM_FLASH,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 2;
                     break;
                 }
                 case 2:
                 {
-                    ui->progressBar->setValue(40);
+                    ui->progressBar->setValue(16);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание параметров RF\r"),NONE);
                     DataLogic->setCurrentSI4463_PROPERTYS_structur(0);
-                    emit SendComand(SEND_BF_03_21_88_00,CONFIG_SEND_CONTROL);
+                    emit SendComand(SEND_BF_03_00_AC_00,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 3;
                     break;
                 }
                 case 3:
                 {
-                    ui->progressBar->setValue(50);
-                    emit SendLog(QString::fromUtf8("\r>> ======= Загрузка параметров калибровки из буфера\r"),NONE);
-                    emit SendComand(SEND_READ_CALIBPROPS_FROM_FLASH,CONFIG_SEND_CONTROL);
+                    ui->progressBar->setValue(24);
+                    DataLogic->setCurrentSI4463_PROPERTYS_structur(0);
+                    emit SendComand(SEND_BF_03_21_88_00,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 4;
                     break;
                 }
                 case 4:
                 {
-                    ui->progressBar->setValue(10);
-                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание параметров RF\r"),NONE);
-                    DataLogic->setCurrentSI4463_PROPERTYS_structur(1);
-                    emit SendComand(SEND_BF_03_00_AC_00,CONFIG_SEND_CONTROL);
+                    ui->progressBar->setValue(32);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Загрузка параметров калибровки из буфера\r"),NONE);
+                    emit SendComand(SEND_READ_CALIBPROPS_FROM_FLASH,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 5;
                     break;
                 }
                 case 5:
                 {
                     ui->progressBar->setValue(40);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание параметров RF\r"),NONE);
                     DataLogic->setCurrentSI4463_PROPERTYS_structur(1);
-                    emit SendComand(SEND_BF_03_21_88_00,CONFIG_SEND_CONTROL);
+                    emit SendComand(SEND_BF_03_00_AC_00,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 6;
                     break;
                 }
                 case 6:
                 {
-                    ui->progressBar->setValue(50);
-                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание сетевых наcтроек\r"),NONE);
-                    emit SendComand(SEND_READ_NODE_TYPE,CONFIG_SEND_CONTROL);
+                    ui->progressBar->setValue(48);
+                    DataLogic->setCurrentSI4463_PROPERTYS_structur(1);
+                    emit SendComand(SEND_BF_03_21_88_00,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 7;
                     break;
                 }
                 case 7:
                 {
-                    ui->progressBar->setValue(60);
-                    emit SendComand(SEND_READ_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
+                    ui->progressBar->setValue(56);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание сетевых наcтроек\r"),NONE);
+                    emit SendComand(SEND_READ_NODE_TYPE,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 8;
                     break;
                 }
                 case 8:
                 {
-                    ui->progressBar->setValue(70);
-                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание таймаутов\r"),NONE);
-                    emit SendComand(SEND_READ_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
+                    ui->progressBar->setValue(64);
+                    emit SendComand(SEND_READ_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 9;
                     break;
                 }
                 case 9:
                 {
-                    ui->progressBar->setValue(80);
-                    emit SendComand(SEND_READ_RX_TIMEOUT,CONFIG_SEND_CONTROL);
+                    ui->progressBar->setValue(72);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание таймаутов\r"),NONE);
+                    emit SendComand(SEND_READ_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 10;
                     break;
                 }
                 case 10:
                 {
-                    ui->progressBar->setValue(90);
-                    emit SendComand(SEND_READ_TX_TIMEOUT,CONFIG_SEND_CONTROL);
+                    ui->progressBar->setValue(80);
+                    emit SendComand(SEND_READ_RX_TIMEOUT,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 11;
                     break;
                 }
                 case 11:
+                {
+                    ui->progressBar->setValue(88);
+                    emit SendComand(SEND_READ_TX_TIMEOUT,CONFIG_SEND_CONTROL);
+                    ReadDataProgress = 12;
+                    break;
+                }
+                case 12:
                 {
                     ui->progressBar->setValue(100);
                     isAOPEN();
@@ -478,6 +499,65 @@ void ConnectHandlerClass::ConnectHandling(uint n)
         {
             ui->progressBar->setValue(100);
             isSWITCH_PROP();
+            ReadDataProgress = 0;
+            break;
+        }
+        }
+    }
+    else if (n == SEND_WRITE_RF_PARAMETERS)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
+        {
+            ui->progressBar->setValue(16);
+            DataLogic->setCurrentSI4463_PROPERTYS_structur(2);
+            emit SendComand(SEND_BF_AF_00_AC_00,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 1;
+            break;
+        }
+        case 1:
+        {
+            ui->progressBar->setValue(32);
+            DataLogic->setCurrentSI4463_PROPERTYS_structur(2);
+            emit SendComand(SEND_BF_8B_21_88_00,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 2;
+            break;
+        }
+        case 2:
+        {
+            ui->progressBar->setValue(48);
+            emit SendComand(SEND_LOAD_PROPERTYS_TO_FLASH,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 3;
+            break;
+        }
+        case 3:
+        {
+            ui->progressBar->setValue(64);
+            DataLogic->setCurrentSI4463_PROPERTYS_structur(3);
+            emit SendComand(SEND_BF_AF_00_AC_00,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 4;
+            break;
+        }
+        case 4:
+        {
+            ui->progressBar->setValue(80);
+            DataLogic->setCurrentSI4463_PROPERTYS_structur(3);
+            emit SendComand(SEND_BF_8B_21_88_00,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 5;
+            break;
+        }
+        case 5:
+        {
+            ui->progressBar->setValue(96);
+            emit SendComand(SEND_LOAD_CALIBPROPS_TO_FLASH,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 6;
+            break;
+        }
+        case 6:
+        {
+            ui->progressBar->setValue(100);
+            isRF_PARAMS();
             ReadDataProgress = 0;
             break;
         }

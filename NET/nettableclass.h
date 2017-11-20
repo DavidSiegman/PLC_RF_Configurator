@@ -9,7 +9,7 @@ class NetTableClass : public QObject
 {
     Q_OBJECT
 public:
-    explicit NetTableClass(QTableView *NetTable,QObject *parent = nullptr);
+    explicit NetTableClass(QTableView *NetTable,QObject *parent = 0);
 private:
     QTableView *NetTable;
     QStandardItemModel *model;

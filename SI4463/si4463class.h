@@ -22,6 +22,8 @@ public:
 
     void aSI4463_SET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP_COUNTER, uchar PROP_DATA, SI4463_PROPERTYS_structur* struc);
 
+    uchar  aSI4463_GET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP_COUNTER, SI4463_PROPERTYS_structur* struc);
+
 private:
     SI4463_PROPERTYS_structur    SI4463_PROPERTYS;
     SI4463_PROPERTYS_structur    SI4463_PROPERTYS_FROM_FILE;
