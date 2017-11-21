@@ -10,9 +10,9 @@ public:
     explicit MODEMClass(QObject *parent = 0);
     uchar    curr_ver, SWITCH_MODE;
     uint     SWITCH_LEVEL, SWITCH_TIMEOUT, RX_TIMEOUT, TX_TIMEOUT, LED_LOGIC, CRC_CHECK_DISABLE;
-    uint     RESET_DEVICE_TIMEOUT,UP_LINC, DIRECT_RET, BROADCAST;
+    uint     RESET_DEVICE_TIMEOUT,UP_LINC, DIRECT_RET, BROADCAST, SNIFER_MODE;
     QString  boot_ver,fw_ver;
-    double   BOOT_VERSION, FW_VERSION;
+    double   BOOT_VERSION, FW_VERSION, BOOT_VERSION_SNIFER, FW_VERSION_SNIFER;
 private:
 
 signals:

@@ -7,5 +7,6 @@ MODEMClass::MODEMClass(QObject *parent) : QObject(parent)
     RESET_DEVICE_TIMEOUT = 0; UP_LINC = 0; DIRECT_RET = 0; BROADCAST = 0;
     boot_ver = ""; fw_ver = "";
     BOOT_VERSION = 0; FW_VERSION = 0;
+    BOOT_VERSION_SNIFER = 0; FW_VERSION_SNIFER = 0;
 }
 

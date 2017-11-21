@@ -97,14 +97,19 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->COMDisconnect, SIGNAL(clicked()),PortNew,SLOT(COM_Disconnect()));
     connect(ui->COMDisconnect, SIGNAL(clicked()),ConnectHandler,SLOT(StopMonitor()));
 
-    connect(this,SIGNAL(AOPEN()),            ConnectHandler,SLOT(aOPEN()));
-    connect(this,SIGNAL(SET_SWITCH_MODE()),  ConnectHandler,SLOT(SetSWITCH_MODE()));
-    connect(this,SIGNAL(SET_SWITCH_PROP()),  ConnectHandler,SLOT(SetSWITCH_PROP()));
-    connect(this,SIGNAL(READ_CURRENT_RSSI()),ConnectHandler,SLOT(ReadCURRENT_RSSI()));
-    connect(this,SIGNAL(READ_LRSSI_AFC()),   ConnectHandler,SLOT(ReadLRSSI_AFC()));
-    connect(this,SIGNAL(START_MONITOR()),    ConnectHandler,SLOT(StartMonitor()));
-    connect(this,SIGNAL(STOP_MONITOR()),     ConnectHandler,SLOT(StopMonitor()));
-    connect(this,SIGNAL(WRITE_RF_PARAMS()),  ConnectHandler,SLOT(WriteRF_PARAMS()));
+    connect(this,SIGNAL(AOPEN()),                 ConnectHandler,SLOT(aOPEN()));
+    connect(this,SIGNAL(SET_SWITCH_MODE()),       ConnectHandler,SLOT(SetSWITCH_MODE()));
+    connect(this,SIGNAL(SET_SWITCH_PROP()),       ConnectHandler,SLOT(SetSWITCH_PROP()));
+    connect(this,SIGNAL(READ_CURRENT_RSSI()),     ConnectHandler,SLOT(ReadCURRENT_RSSI()));
+    connect(this,SIGNAL(READ_LRSSI_AFC()),        ConnectHandler,SLOT(ReadLRSSI_AFC()));
+    connect(this,SIGNAL(START_MONITOR()),         ConnectHandler,SLOT(StartMonitor()));
+    connect(this,SIGNAL(STOP_MONITOR()),          ConnectHandler,SLOT(StopMonitor()));
+    connect(this,SIGNAL(WRITE_RF_PARAMS()),       ConnectHandler,SLOT(WriteRF_PARAMS()));
+    connect(this,SIGNAL(SEND_RF_RESET()),         ConnectHandler,SLOT(SendRF_RESET()));
+    connect(this,SIGNAL(SEND_SNIFER_MODE()),      ConnectHandler,SLOT(SendSNIFER_MODE()));
+    connect(this,SIGNAL(SEND_UPLINC_MODE()),      ConnectHandler,SLOT(SendUPLINC_MODE()));
+    connect(this,SIGNAL(SEND_CRC_DISABLE_MODE()), ConnectHandler,SLOT(SendCRC_DISABLE_MODE()));
+    connect(this,SIGNAL(SEND_BROADCAST_MODE()),   ConnectHandler,SLOT(SendBROADCAST_MODE()));
 
     connect(DataLogic,SIGNAL(noANSWER()),    ConnectHandler,SLOT(aOPEN()));
     connect(DataLogic,SIGNAL(noANSWER()),    ConnectHandler,SLOT(StopMonitor()));
@@ -133,7 +138,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::showEvent ( QShowEvent * event )
 {
-
 }
 
 void MainWindow::resizeEvent ( QResizeEvent * event )
@@ -1239,4 +1243,55 @@ void MainWindow::on_pushButton_7_clicked()
         emit ADD_NET_TABLE_ITEM(QString::number(i));
     }
 
+}
+
+void MainWindow::on_pushButton_12_clicked()
+{
+    emit SEND_RF_RESET();
+}
+
+void MainWindow::on_comboBox_currentIndexChanged(int index)
+{
+    MODEM->SNIFER_MODE = index;
+    emit SEND_SNIFER_MODE();
+}
+
+void MainWindow::on_checkBox_3_stateChanged(int arg1)
+{
+    if (arg1 == 0)
+    {
+        MODEM->UP_LINC = 0;
+    }
+    else
+    {
+        MODEM->UP_LINC = 1;
+    }
+
+    emit SEND_UPLINC_MODE();
+}
+
+void MainWindow::on_checkBox_5_stateChanged(int arg1)
+{
+    if (arg1 == 0)
+    {
+        MODEM->CRC_CHECK_DISABLE = 0;
+    }
+    else
+    {
+        MODEM->CRC_CHECK_DISABLE = 1;
+    }
+    emit SEND_CRC_DISABLE_MODE();
+}
+
+void MainWindow::on_checkBox_4_stateChanged(int arg1)
+{
+    if (arg1 == 0)
+    {
+        MODEM->BROADCAST = 0;
+    }
+    else
+    {
+        MODEM->BROADCAST = 1;
+    }
+    emit SEND_BROADCAST_MODE();
 }

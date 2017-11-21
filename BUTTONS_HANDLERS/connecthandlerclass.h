@@ -37,6 +37,11 @@ public slots:
     void ReadCURRENT_RSSI();
     void ReadLRSSI_AFC();
     void WriteRF_PARAMS();
+    void SendRF_RESET();
+    void SendSNIFER_MODE();
+    void SendUPLINC_MODE();
+    void SendCRC_DISABLE_MODE();
+    void SendBROADCAST_MODE();
 
     void ConnectHandling(uint n, uint state);
 
@@ -46,6 +51,11 @@ public slots:
     void isCURRENT_RSSI();
     void isLRSSI_AFC();
     void isRF_PARAMS();
+    void isRF_RESET();
+    void isSNIFER_MODE();
+    void isUPLINC_MODE();
+    void isCRC_DISABLE_MODE();
+    void isBROADCAST_MODE();
 };
 
 #endif // CONNECTHANDLERCLASS_H

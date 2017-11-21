@@ -70,6 +70,11 @@ signals:
     void READ_CURRENT_RSSI();
     void READ_LRSSI_AFC();
     void WRITE_RF_PARAMS();
+    void SEND_RF_RESET();
+    void SEND_SNIFER_MODE();
+    void SEND_UPLINC_MODE();
+    void SEND_CRC_DISABLE_MODE();
+    void SEND_BROADCAST_MODE();
 
     void ADD_NET_TABLE_ITEM(QString value);
 
@@ -133,16 +138,16 @@ private slots:
     void on_LogShow_clicked();
     void on_readCurrentRSSI_clicked();
     void on_readLatchRSSI_clicked();
-
     void on_RFParamWrite_clicked();
-
     void on_pushButton_3_clicked();
-
     void on_actionConn_triggered();
-
     void on_OpenBin_clicked();
-
     void on_pushButton_7_clicked();
+    void on_pushButton_12_clicked();
+    void on_comboBox_currentIndexChanged(int index);
+    void on_checkBox_3_stateChanged(int arg1);
+    void on_checkBox_5_stateChanged(int arg1);
+    void on_checkBox_4_stateChanged(int arg1);
 
 protected:
     //virtual void mousePressEvent(QMouseEvent *);

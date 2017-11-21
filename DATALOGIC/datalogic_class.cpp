@@ -83,8 +83,6 @@ void DataLogic_Class::In_DataBuffer(QByteArray data)
                                                         // ====================================
 
         this->timer->stop();
-        Repeat_Counter = Repeat_Number;
-        timerRepeat->stop();
 
         ClearOut_DataBuffer();
         OutDataBuffer.append(InDataBuffer);
@@ -136,6 +134,12 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     case SEND_AOPEN:
     {
         int u[2] = {0xFF,0x00};length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_RF_RESET:
+    {
+        int u[2] = {0xE4,0x00};length = 2;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
@@ -272,7 +276,30 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
-
+    case SEND_SNIFER_MODE:
+    {
+        int u[3] = {0xD9,0x01,(int)(MODEM->SNIFER_MODE)}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_UPLINC_MODE:
+    {
+        int u[3] = {0xDA,0x01,(int)(MODEM->UP_LINC)}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_CRC_CHECK_MODE:
+    {
+        int u[3] = {0xBC,0x01,(int)(MODEM->CRC_CHECK_DISABLE)}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_BROADCASTING_MODE:
+    {
+        int u[3] = {0xD8,0x01,(int)(MODEM->BROADCAST)}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
     }
     CRC16->CRC16_Add_To_ByteArray(&data);
     emit SEND_DATA(data,m);
@@ -330,19 +357,44 @@ void DataLogic_Class::ParceData(uint n)
             MODEM->fw_ver       = QString::fromUtf8(In_Data.data()+10,4);
             MODEM->BOOT_VERSION = MODEM->boot_ver.toDouble();
             MODEM->FW_VERSION   = MODEM->fw_ver.toDouble();
+            if((MODEM->boot_ver.at(0) == 'R'))
+            {
+                QString s; s.append(MODEM->boot_ver.at(2)); s.append(MODEM->boot_ver.at(3));
+                MODEM->BOOT_VERSION_SNIFER = s.toDouble();
+            }
+            if((MODEM->fw_ver.at(0) == 'R'))
+            {
+                QString s; s.append(MODEM->boot_ver.at(2)); s.append(MODEM->boot_ver.at(3));
+                MODEM->FW_VERSION_SNIFER = s.toDouble();
+            }
+
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,1);
         }
-        emit outConnect(DataLogicMode,1);
+
         break;
     }
     case 0xF0: // Запрос режима ретрансляции
     {
         MODEM->SWITCH_MODE     = ComandState;
+
+        Repeat_Counter = Repeat_Number;
+        timerRepeat->stop();
+
         emit outConnect(DataLogicMode,1);
         break;
     }
-    case 0xEF:
+    case 0xEF: // Запись режима ретрансляции
     {
-        emit outConnect(DataLogicMode,ComandState);
+        if (ComandState == 1)
+        {
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
+        }
         break;
     }
     case 0xEE: // Считывание параметров частоты PLC Модедма
@@ -402,6 +454,9 @@ void DataLogic_Class::ParceData(uint n)
               SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0xFF;
               AFC |= 0xFFFF0000;
           }
+          Repeat_Counter = Repeat_Number;
+          timerRepeat->stop();
+
           emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
       }
       else if ((NumbOfBytes == 8)&&In_Data.length() >= 6)
@@ -416,6 +471,8 @@ void DataLogic_Class::ParceData(uint n)
                             | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
                             |  (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
 
+          Repeat_Counter = Repeat_Number;
+          timerRepeat->stop();
           emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
       }
       if ((NumbOfBytes == 10)&&In_Data.length() >= 8)
@@ -441,18 +498,36 @@ void DataLogic_Class::ParceData(uint n)
               SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0xFF;
               AFC |= 0xFFFF0000;
           }
+          Repeat_Counter = Repeat_Number;
+          timerRepeat->stop();
           emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
       }
       break;
+    }
+    case 0xE4: // Modem Reset
+    {
+        if (ComandState == 1)
+        {
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
+        }
+        break;
     }
     case 0xE3:
     {
         if ((NumbOfBytes == 6)&&In_Data.length() >= 4)
         {
             MODEM->SWITCH_TIMEOUT     = 0;
-            MODEM->SWITCH_TIMEOUT    |= *((uint*)(In_Data.data()));;
+            MODEM->SWITCH_TIMEOUT    |= *((uint*)(In_Data.data()));
+
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
         }
-        emit outConnect(DataLogicMode,ComandState);
+
         break;
     }
     case 0xE2: // Таймаут RX
@@ -460,9 +535,13 @@ void DataLogic_Class::ParceData(uint n)
         if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
         {
             MODEM->RX_TIMEOUT       = 0;
-            MODEM->RX_TIMEOUT      |= *((uint*)(In_Data.data()));;
+            MODEM->RX_TIMEOUT      |= *((uint*)(In_Data.data()));
+
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
         }
-        emit outConnect(DataLogicMode,ComandState);
         break;
     }
     case 0xE1: // Таймаут TX
@@ -470,9 +549,13 @@ void DataLogic_Class::ParceData(uint n)
         if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
         {
             MODEM->TX_TIMEOUT       = 0;
-            MODEM->TX_TIMEOUT      |= *((uint*)(In_Data.data()));;
+            MODEM->TX_TIMEOUT      |= *((uint*)(In_Data.data()));
+
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
         }
-        emit outConnect(DataLogicMode,ComandState);
         break;
     }
     case 0xE0: // Уровень свича
@@ -481,20 +564,45 @@ void DataLogic_Class::ParceData(uint n)
         {
             MODEM->SWITCH_LEVEL     = 0;
             MODEM->SWITCH_LEVEL     |= *((uint*)(In_Data.data()));
+
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
         }
-        emit outConnect(DataLogicMode,ComandState);
         break;
     }
     case 0xDA: // Установить UP_Linc в 1 (только для снифера)
     {
+        if (ComandState == 1)
+        {
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
+        }
         break;
     }
     case 0xD9: // Режим пропускания сообщений (только для снифера)
     {
+        if (ComandState == 1)
+        {
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
+        }
         break;
     }
     case 0xD8: // Режим широковещания (только для снифера)
     {
+        if (ComandState == 1)
+        {
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
+        }
         break;
     }
     case 0xBF: // Чтение свойств SI4463 из памяти RF модэма v5+, или запись свойств во буфер
@@ -518,26 +626,54 @@ void DataLogic_Class::ParceData(uint n)
                     }
                 }
             }
-            emit outConnect(DataLogicMode,1);
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
         }
         else
         {
-            emit outConnect(DataLogicMode,ComandState);
+            if (ComandState == 1)
+            {
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+
+                emit outConnect(DataLogicMode,ComandState);
+            }
         }
         break;
     }
     case 0xBE: // Запись свойств SI4463 из флэша в RAM и наоборот в RF модэмах v5+
     {
-        emit outConnect(DataLogicMode,ComandState);
+        if (ComandState == 1)
+        {
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
 
+            emit outConnect(DataLogicMode,ComandState);
+        }
         break;
     }
     case 0xBD: // Установка логики мигания светодиодов
     {
+        if (ComandState == 1)
+        {
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
+        }
         break;
     }
     case 0xBC: // Отключение проверки CRC
     {
+        if (ComandState == 1)
+        {
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            emit outConnect(DataLogicMode,ComandState);
+        }
         break;
     }
     case 0xBB: // Current RSSI
@@ -550,15 +686,13 @@ void DataLogic_Class::ParceData(uint n)
 
           RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_1) << 8)
                               | (SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_0);
-      }
 
-      emit outCurrentRSSI(RSSI);
+          Repeat_Counter = Repeat_Number;
+          timerRepeat->stop();
+
+          emit outCurrentRSSI(RSSI);
+      }
       break;
-    }
-    case 0xBA: // Чтение или запись параметров калибровки
-    {
-        emit outConnect(DataLogicMode,ComandState);
-        break;
     }
     }
     ParceDataBuffer.clear();

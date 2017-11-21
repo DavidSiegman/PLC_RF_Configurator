@@ -60,6 +60,7 @@ void ConnectHandlerClass::aOPEN()
     {
         ui->boot_v->setText("");
         ui->fw_v->setText("");
+        ui->DeviceType->setText("");
         ui->boot_v->setStyleSheet(String2_3);
         ui->fw_v->setStyleSheet(String2_3);
 
@@ -98,19 +99,38 @@ void ConnectHandlerClass::isAOPEN()
     ui->Interface->setEnabled(false);
     ui->SN->setEnabled(false);
 
-    ui->tabWidget->addTab(NetTab,            "Настройки Сети");
+    if ((MODEM->BOOT_VERSION == 0))
+    {
+        ui->tabWidget->addTab(SniferTab,     "USB/RF Преобразователь");
+        if ((MODEM->BOOT_VERSION_SNIFER > 0)&&(MODEM->BOOT_VERSION_SNIFER < 20))
+        {
+            ui->tabWidget->addTab(RFOldTab,      "Настройки RF");
+            ui->DeviceType->setText("USB/RF Преобразователь (Snifer)(Микросхема SI4432)");
+        }
+        else if(MODEM->BOOT_VERSION_SNIFER >= 20)
+        {
+            ui->tabWidget->addTab(RFTab,         "Настройки RF");
+            ui->DeviceType->setText("USB/RF Преобразователь (Snifer)(Микросхема SI4463)");
+        }
+        ui->tabWidget->addTab(RFMonitorTab,  "RF RSSI Монитор");
+    }
     if ((MODEM->BOOT_VERSION > 0)&(MODEM->BOOT_VERSION < 3))
     {
+        ui->tabWidget->addTab(NetTab,        "Настройки Сети");
         ui->tabWidget->addTab(PLCTab,        "Настройки PLC");
     }
     if ((MODEM->BOOT_VERSION >= 3) & (MODEM->BOOT_VERSION < 5))
     {
+        ui->tabWidget->addTab(NetTab,        "Настройки Сети");
         ui->tabWidget->addTab(RFOldTab,      "Настройки RF");
+        ui->DeviceType->setText("RF-Модуль (Микросхема SI4432)");
     }
     else if ((MODEM->BOOT_VERSION >= 5) & (MODEM->BOOT_VERSION < 6))
     {
+        ui->tabWidget->addTab(NetTab,        "Настройки Сети");
         ui->tabWidget->addTab(RFTab,         "Настройки RF");
         ui->tabWidget->addTab(RFMonitorTab,  "RF RSSI Монитор");
+        ui->DeviceType->setText("RF-Модуль (Микросхема SI4463)");
     }
 
     if (MODEM->SWITCH_MODE == 0)
@@ -223,17 +243,76 @@ void ConnectHandlerClass::isLRSSI_AFC()
 {
 
 }
+
 void ConnectHandlerClass::WriteRF_PARAMS()
 {
     ui->RSSIWidget->setEnabled(false);
-    ui->MANUAL_ENTER->setEnabled(false);
     ui->tabWidget->setEnabled(false);
     ConnectHandling(SEND_WRITE_RF_PARAMETERS,1);
 }
 void ConnectHandlerClass::isRF_PARAMS()
 {
     ui->RSSIWidget->setEnabled(true);
-    ui->MANUAL_ENTER->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+}
+
+void ConnectHandlerClass::SendRF_RESET()
+{
+    ui->RSSIWidget->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
+    ConnectHandling(SEND_RF_RESET,1);
+}
+void ConnectHandlerClass::isRF_RESET()
+{
+    ui->RSSIWidget->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+}
+
+void ConnectHandlerClass::SendSNIFER_MODE()
+{
+    ui->RSSIWidget->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
+    ConnectHandling(SEND_SNIFER_MODE,1);
+}
+void ConnectHandlerClass::isSNIFER_MODE()
+{
+    ui->RSSIWidget->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+}
+
+void ConnectHandlerClass::SendUPLINC_MODE()
+{
+    ui->RSSIWidget->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
+    ConnectHandling(SEND_UPLINC_MODE,1);
+}
+void ConnectHandlerClass::isUPLINC_MODE()
+{
+    ui->RSSIWidget->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+}
+
+void ConnectHandlerClass::SendCRC_DISABLE_MODE()
+{
+    ui->RSSIWidget->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
+    ConnectHandling(SEND_CRC_CHECK_MODE,1);
+}
+void ConnectHandlerClass::isCRC_DISABLE_MODE()
+{
+    ui->RSSIWidget->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+}
+
+void ConnectHandlerClass::SendBROADCAST_MODE()
+{
+    ui->RSSIWidget->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
+    ConnectHandling(SEND_BROADCASTING_MODE,1);
+}
+void ConnectHandlerClass::isBROADCAST_MODE()
+{
+    ui->RSSIWidget->setEnabled(true);
     ui->tabWidget->setEnabled(true);
 }
 
@@ -281,7 +360,6 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
     DataLogic->DataLogicMode = n;
     if (n == CONNECT_HANDLING)
     {
-
         if (ReadDataProgress == 0)
         {
             ui->progressBar->setValue(0);
@@ -295,14 +373,15 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
             {
                 n = PLC_READ_DATA;
             }
-            if ((MODEM->BOOT_VERSION >= 3) & (MODEM->BOOT_VERSION < 5))
+            if (((MODEM->BOOT_VERSION >= 3) & (MODEM->BOOT_VERSION < 5))||((MODEM->BOOT_VERSION == 0) & (MODEM->BOOT_VERSION_SNIFER < 20)))
             {
                 n = RF_OLD_READ_DATA;
             }
-            else if ((MODEM->BOOT_VERSION >= 5) & (MODEM->BOOT_VERSION < 6))
+            else if (((MODEM->BOOT_VERSION >= 5) & (MODEM->BOOT_VERSION < 6))||((MODEM->BOOT_VERSION == 0) & (MODEM->BOOT_VERSION_SNIFER >= 20)))
             {
                 n = RF_READ_DATA;
             }
+
             switch (n)
             {
             case PLC_READ_DATA:
@@ -422,6 +501,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
                 case 12:
                 {
                     ui->progressBar->setValue(100);
+                    emit SendLog(QString::fromUtf8(">> ======= Открытие сеанса связи завершилось успешно\r"),NONE);
                     isAOPEN();
                     ReadDataProgress = 0;
                     break;
@@ -443,6 +523,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 0:
         {
             ui->progressBar->setValue(0);
+            emit SendLog(QString::fromUtf8("\r>> ======= Запись режима сети\r"),NONE);
             emit SendComand(SEND_WRITE_NODE_TYPE,CONFIG_SEND_CONTROL);
             ReadDataProgress = 1;
             break;
@@ -450,6 +531,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 1:
         {
             ui->progressBar->setValue(50);
+            emit SendLog(QString::fromUtf8("\r>> ======= Чтение режима сети\r"),NONE);
             emit SendComand(SEND_READ_NODE_TYPE,CONFIG_SEND_CONTROL);
             ReadDataProgress = 2;
             break;
@@ -457,6 +539,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 2:
         {
             ui->progressBar->setValue(100);
+            emit SendLog(QString::fromUtf8(">> ======= Установка режима прошла успешно\r"),NONE);
             isSWITCH_MODE();
             ReadDataProgress = 0;
             break;
@@ -470,6 +553,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 0:
         {
             ui->progressBar->setValue(0);
+            emit SendLog(QString::fromUtf8("\r>> ======= Запись уровня ретранслятора\r"),NONE);
             emit SendComand(SEND_WRITE_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
             ReadDataProgress = 1;
             break;
@@ -477,6 +561,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 1:
         {
             ui->progressBar->setValue(30);
+            emit SendLog(QString::fromUtf8("\r>> ======= Чтение уровня ретранслятора\r"),NONE);
             emit SendComand(SEND_READ_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
             ReadDataProgress = 2;
             break;
@@ -484,6 +569,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 2:
         {
             ui->progressBar->setValue(60);
+            emit SendLog(QString::fromUtf8("\r>> ======= Запись задержки ретранслятора\r"),NONE);
             emit SendComand(SEND_WRITE_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
             ReadDataProgress = 3;
             break;
@@ -491,6 +577,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 3:
         {
             ui->progressBar->setValue(90);
+            emit SendLog(QString::fromUtf8("\r>> ======= Чтение задержки ретранслятора\r"),NONE);
             emit SendComand(SEND_READ_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
             ReadDataProgress = 4;
             break;
@@ -498,6 +585,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 4:
         {
             ui->progressBar->setValue(100);
+            emit SendLog(QString::fromUtf8(">> ======= Установка параметров прошла успешно\r"),NONE);
             isSWITCH_PROP();
             ReadDataProgress = 0;
             break;
@@ -511,6 +599,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 0:
         {
             ui->progressBar->setValue(16);
+            emit SendLog(QString::fromUtf8("\r>> ======= Запись основных параметров радио-модуля в RAM\r"),NONE);
             DataLogic->setCurrentSI4463_PROPERTYS_structur(2);
             emit SendComand(SEND_BF_AF_00_AC_00,CONFIG_SEND_CONTROL);
             ReadDataProgress = 1;
@@ -527,6 +616,8 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 2:
         {
             ui->progressBar->setValue(48);
+            emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно"),NONE);
+            emit SendLog(QString::fromUtf8("\r>> ======= Запись основных параметров радио-модуля во FLASH\r"),NONE);
             emit SendComand(SEND_LOAD_PROPERTYS_TO_FLASH,CONFIG_SEND_CONTROL);
             ReadDataProgress = 3;
             break;
@@ -534,6 +625,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 3:
         {
             ui->progressBar->setValue(64);
+            emit SendLog(QString::fromUtf8("\r>> ======= Запись параметров IQ калибровки радио-модуля в RAM\r"),NONE);
             DataLogic->setCurrentSI4463_PROPERTYS_structur(3);
             emit SendComand(SEND_BF_AF_00_AC_00,CONFIG_SEND_CONTROL);
             ReadDataProgress = 4;
@@ -550,6 +642,8 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 5:
         {
             ui->progressBar->setValue(96);
+            emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно"),NONE);
+            emit SendLog(QString::fromUtf8("\r>> ======= Запись параметров IQ калибровки радио-модуля во FLASH\r"),NONE);
             emit SendComand(SEND_LOAD_CALIBPROPS_TO_FLASH,CONFIG_SEND_CONTROL);
             ReadDataProgress = 6;
             break;
@@ -557,7 +651,118 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         case 6:
         {
             ui->progressBar->setValue(100);
+            emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно\r"),NONE);
             isRF_PARAMS();
+            ReadDataProgress = 0;
+            break;
+        }
+        }
+    }
+    else if (n == SEND_RF_RESET)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
+        {
+            ui->progressBar->setValue(0);
+            emit SendLog(QString::fromUtf8("\r>> ======= Перезагрузка радио-модуля\r"),NONE);
+            emit SendComand(SEND_RF_RESET,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 1;
+            break;
+        }
+        case 1:
+        {
+            ui->progressBar->setValue(100);
+            emit SendLog(QString::fromUtf8(">> ======= Модуль перезагружен успешно\r"),NONE);
+            isRF_RESET();
+            ReadDataProgress = 0;
+            break;
+        }
+        }
+    }
+    else if (n == SEND_SNIFER_MODE)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
+        {
+            ui->progressBar->setValue(0);
+            emit SendLog(QString::fromUtf8("\r>> ======= Запись режима работы USB/RF преобразователя\r"),NONE);
+            emit SendComand(SEND_SNIFER_MODE,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 1;
+            break;
+        }
+        case 1:
+        {
+            ui->progressBar->setValue(100);
+            emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно\r"),NONE);
+            isSNIFER_MODE();
+            ReadDataProgress = 0;
+            break;
+        }
+        }
+    }
+    else if (n == SEND_UPLINC_MODE)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
+        {
+            ui->progressBar->setValue(0);
+            emit SendLog(QString::fromUtf8("\r>> ======= Установка UP_Link\r"),NONE);
+            emit SendComand(SEND_UPLINC_MODE,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 1;
+            break;
+        }
+        case 1:
+        {
+            ui->progressBar->setValue(100);
+            emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно\r"),NONE);
+            isUPLINC_MODE();
+            ReadDataProgress = 0;
+            break;
+        }
+        }
+    }
+    else if (n == SEND_CRC_CHECK_MODE)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
+        {
+            ui->progressBar->setValue(0);
+            emit SendLog(QString::fromUtf8("\r>> ======= Запись режима проверки CRC\r"),NONE);
+            emit SendComand(SEND_CRC_CHECK_MODE,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 1;
+            break;
+        }
+        case 1:
+        {
+            ui->progressBar->setValue(100);
+            emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно\r"),NONE);
+            isCRC_DISABLE_MODE();
+            ReadDataProgress = 0;
+            break;
+        }
+        }
+    }
+    else if (n == SEND_BROADCASTING_MODE)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
+        {
+            ui->progressBar->setValue(0);
+            emit SendLog(QString::fromUtf8("\r>> ======= Запись режима широковещания\r"),NONE);
+            emit SendComand(SEND_BROADCASTING_MODE,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 1;
+            break;
+        }
+        case 1:
+        {
+            ui->progressBar->setValue(100);
+            emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно\r"),NONE);
+            isBROADCAST_MODE();
             ReadDataProgress = 0;
             break;
         }

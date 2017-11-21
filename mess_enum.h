@@ -28,6 +28,11 @@ enum
     SEND_BF_03_21_88_00, // чтение второй части параметров SI4463
     SEND_BF_AF_00_AC_00, // запись первой части параметров SI4463
     SEND_BF_8B_21_88_00, // запись второй части параметров SI4463
+    SEND_RF_RESET,
+    SEND_SNIFER_MODE,
+    SEND_UPLINC_MODE,
+    SEND_CRC_CHECK_MODE,
+    SEND_BROADCASTING_MODE,
     SEND_READ_NODE_TYPE,
     SEND_WRITE_NODE_TYPE,
     SEND_READ_SWITCH_LEVEL,
