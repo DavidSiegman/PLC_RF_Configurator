@@ -110,11 +110,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this,SIGNAL(SEND_UPLINC_MODE()),      ConnectHandler,SLOT(SendUPLINC_MODE()));
     connect(this,SIGNAL(SEND_CRC_DISABLE_MODE()), ConnectHandler,SLOT(SendCRC_DISABLE_MODE()));
     connect(this,SIGNAL(SEND_BROADCAST_MODE()),   ConnectHandler,SLOT(SendBROADCAST_MODE()));
+    connect(this,SIGNAL(WRITE_SWITCH_TABLE()),    ConnectHandler,SLOT(WriteSWITCH_TABLE()));
+
 
     connect(DataLogic,SIGNAL(noANSWER()),    ConnectHandler,SLOT(aOPEN()));
     connect(DataLogic,SIGNAL(noANSWER()),    ConnectHandler,SLOT(StopMonitor()));
 
     connect(DataLogic,SIGNAL(DataForPrint(QByteArray,uint)),this,SLOT(Print(QByteArray,uint)));
+    connect(DataLogic,SIGNAL(LogForPrint(QString,uint)),this, SLOT(Print_Log(QString,uint)));
     connect(DataLogic,SIGNAL(outCurrentRSSI(signed short)),this,SLOT(out_Current_RSSI(signed short)));
     connect(DataLogic,SIGNAL(outLRSSI_AFC(signed short,signed short,signed short,double)),this,SLOT(out_LRSSI_AFC(signed short,signed short,signed short,double)));
 
@@ -1294,4 +1297,16 @@ void MainWindow::on_checkBox_4_stateChanged(int arg1)
         MODEM->BROADCAST = 1;
     }
     emit SEND_BROADCAST_MODE();
+}
+
+void MainWindow::on_SetNetLevel_clicked()
+{
+    emit SET_SWITCH_PROP();
+}
+
+void MainWindow::on_SetDeviceMonitorSN_clicked()
+{
+    MODEM->SwitchTable.append(ui->DeviceMonitorSN->text());
+    MODEM->SwitchTable_element_index = 1;
+    emit WRITE_SWITCH_TABLE();
 }

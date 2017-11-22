@@ -42,6 +42,7 @@ public slots:
     void SendUPLINC_MODE();
     void SendCRC_DISABLE_MODE();
     void SendBROADCAST_MODE();
+    void WriteSWITCH_TABLE();
 
     void ConnectHandling(uint n, uint state);
 
@@ -56,6 +57,7 @@ public slots:
     void isUPLINC_MODE();
     void isCRC_DISABLE_MODE();
     void isBROADCAST_MODE();
+    void isSWITCH_TABLE();
 };
 
 #endif // CONNECTHANDLERCLASS_H

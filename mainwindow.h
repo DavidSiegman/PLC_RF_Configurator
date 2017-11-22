@@ -75,6 +75,7 @@ signals:
     void SEND_UPLINC_MODE();
     void SEND_CRC_DISABLE_MODE();
     void SEND_BROADCAST_MODE();
+    void WRITE_SWITCH_TABLE();
 
     void ADD_NET_TABLE_ITEM(QString value);
 
@@ -148,6 +149,10 @@ private slots:
     void on_checkBox_3_stateChanged(int arg1);
     void on_checkBox_5_stateChanged(int arg1);
     void on_checkBox_4_stateChanged(int arg1);
+
+    void on_SetNetLevel_clicked();
+
+    void on_SetDeviceMonitorSN_clicked();
 
 protected:
     //virtual void mousePressEvent(QMouseEvent *);

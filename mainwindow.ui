@@ -582,7 +582,7 @@
           <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="currentIndex">
-          <number>6</number>
+          <number>5</number>
          </property>
          <widget class="QWidget" name="tab">
           <property name="styleSheet">
@@ -2883,6 +2883,18 @@
             <property name="spacing">
              <number>2</number>
             </property>
+            <property name="leftMargin">
+             <number>5</number>
+            </property>
+            <property name="topMargin">
+             <number>5</number>
+            </property>
+            <property name="rightMargin">
+             <number>5</number>
+            </property>
+            <property name="bottomMargin">
+             <number>5</number>
+            </property>
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_46">
               <property name="spacing">
@@ -2963,7 +2975,7 @@
                 <item>
                  <widget class="QLabel" name="label_53">
                   <property name="text">
-                   <string>Уровень сети:</string>
+                   <string>Мониторить сеть с уровнем:</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -2973,10 +2985,10 @@
                 <item>
                  <widget class="QLabel" name="label_54">
                   <property name="text">
-                   <string>Мониторить сообщения прибора: </string>
+                   <string>Мониторить обмен с прибором:</string>
                   </property>
                   <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
                   </property>
                  </widget>
                 </item>
