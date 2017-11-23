@@ -8,6 +8,7 @@
 #include "TCP/tcp.h"
 #include "CRC/crc16_class.h"
 #include "SI4463/si4463class.h"
+#include "SI4432/si4432class.h"
 #include "MODEM/modemclass.h"
 #include <mess_enum.h>
 
@@ -44,7 +45,7 @@ class DataLogic_Class : public QObject
 {
     Q_OBJECT
 public:
-    explicit DataLogic_Class(CRC16_Class *oCRC16, QTimer *t, SI4463Class *SI4463Conf,MODEMClass *MODEM,Port *nPort,TCP *nTCP,QObject *parent = 0);
+    explicit DataLogic_Class(CRC16_Class *oCRC16,QTimer *t,SI4463Class *SI4463Conf,SI4432Class *SI4432Conf,MODEMClass *MODEM,Port *nPort,TCP *nTCP,QObject *parent = 0);
 
     uint         DataLogicMode;
     uint         Repeat_Number;
@@ -56,6 +57,7 @@ public:
 
 private:
     SI4463Class     *SI4463Conf;
+    SI4432Class     *SI4432Conf;
     QTimer          *timer, *timerRepeat;
     CRC16_Class     *CRC16;
     MODEMClass      *MODEM;
