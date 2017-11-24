@@ -35,7 +35,8 @@ HEADERS += \
     TCP/tcp.h \
     FILE/parceclass.h \
     STYLE/style.h \
-    NET/nettableclass.h
+    NET/nettableclass.h \
+    SI4432/si4432class.h
 
 SOURCES += \
     COM/port.cpp \
@@ -55,7 +56,8 @@ SOURCES += \
     TCP/tcp.cpp \
     FILE/parceclass.cpp \
     STYLE/style.cpp \
-    NET/nettableclass.cpp
+    NET/nettableclass.cpp \
+    SI4432/si4432class.cpp
 
 FORMS += \
     mainwindow.ui

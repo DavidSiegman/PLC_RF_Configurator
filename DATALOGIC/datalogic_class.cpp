@@ -2,11 +2,12 @@
 
 //#include "mainwindow.h"
 
-DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16, QTimer *t,SI4463Class *SI4463Conf, MODEMClass *MODEM,Port *nPort,TCP *nTCP,QObject *parent) : QObject(parent)
+DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16, QTimer *t,SI4463Class *SI4463Conf,SI4432Class *SI4432Conf, MODEMClass *MODEM,Port *nPort,TCP *nTCP,QObject *parent) : QObject(parent)
 {
     this->CRC16           = oCRC16;
     this->timer           = t;
     this->SI4463Conf      = SI4463Conf;
+    this->SI4432Conf      = SI4432Conf;
     this->MODEM           = MODEM;
     this->nPort           = nPort;
     this->nTCP            = nTCP;
@@ -46,7 +47,6 @@ void DataLogic_Class::setCurrentSI4463_PROPERTYS_structur(uint select)
     {
         this->CurrentSI4463_PROPERTYS_structur = SI4463Conf->aSI4463_PROPERTYS_CALIB_FROM_FILE();
     }
-
 }
 
 void DataLogic_Class::ClearIn_DataBuffer(void)
@@ -323,6 +323,12 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     case SEND_LOAD_SWITCH_TABLE_TO_FLASH:
     {
         int u[9] = {0xE8,0x07,0xCD,0xA5,0xC9,0xF8,0xE0,0xC0,0x96}; length = 9;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_SI4432_PARAMETERS:
+    {
+        int u[2] = {0xE6,0x00}; length = 2;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
@@ -603,6 +609,27 @@ void DataLogic_Class::ParceData(uint n)
               emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
           }
           break;
+        }
+        case 0xE6: // Чтение RF Параметров SI4432
+        {
+            if (ComandState == 1)
+            {
+                if (In_Data.length() >= NumbOfBytes-3)
+                {
+                    SI4432Conf->aSI4463_RF_Config_struct()->RF_CONF_REG_1.reg = (((uint)(In_Data.at(0)) &0xFF) << 0)|(((uint)(In_Data.at(1)) &0xFF) << 8)|(((uint)(In_Data.at(2)) &0xFF) << 16)|(((uint)(In_Data.at(3)) &0xFF) << 24);
+                    SI4432Conf->aSI4463_RF_Config_struct()->RF_CONF_REG_2.reg = (((uint)(In_Data.at(4)) &0xFF) << 0)|(((uint)(In_Data.at(5)) &0xFF) << 8)|(((uint)(In_Data.at(6)) &0xFF) << 16)|(((uint)(In_Data.at(7)) &0xFF) << 24);
+                    SI4432Conf->aSI4463_RF_Config_struct()->RF_NOM_FREQUENC   = (((uint)(In_Data.at(8)) &0xFF) << 0)|(((uint)(In_Data.at(9)) &0xFF) << 8)|(((uint)(In_Data.at(10))&0xFF) << 16)|(((uint)(In_Data.at(11))&0xFF) << 24);
+                    SI4432Conf->aSI4463_RF_Config_struct()->RF_SYNCH_WORD     = (((uint)(In_Data.at(12))&0xFF) << 0)|(((uint)(In_Data.at(13))&0xFF) << 8)|(((uint)(In_Data.at(14))&0xFF) << 16)|(((uint)(In_Data.at(15))&0xFF) << 24);
+                    SI4432Conf->aSI4463_RF_Config_struct()->RF_RX_HAEDER      = (((uint)(In_Data.at(16))&0xFF) << 0)|(((uint)(In_Data.at(17))&0xFF) << 8)|(((uint)(In_Data.at(18))&0xFF) << 16)|(((uint)(In_Data.at(19))&0xFF) << 24);
+                    SI4432Conf->aSI4463_RF_Config_struct()->RF_TX_HAEDER      = (((uint)(In_Data.at(20))&0xFF) << 0)|(((uint)(In_Data.at(21))&0xFF) << 8)|(((uint)(In_Data.at(22))&0xFF) << 16)|(((uint)(In_Data.at(23))&0xFF) << 24);
+
+                    Repeat_Counter = Repeat_Number;
+                    timerRepeat->stop();
+
+                    emit outConnect(DataLogicMode,ComandState);
+                }
+            }
+            break;
         }
         case 0xE4: // Modem Reset
         {

@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->tab                   ->setLayout(ui->tab_1_Layout);
     ui->NetTab                ->setLayout(ui->NetTab_Layout);
     ui->RFTab                 ->setLayout(ui->RFTab_Layout);
+    ui->RFOldTab              ->setLayout(ui->RFOldLayout);
     ui->MonitorTab            ->setLayout(ui->MonitorTab_Layout);
     ui->COMWidget             ->setLayout(ui->COMLayout);
     ui->TCPWidget             ->setLayout(ui->TCPLayout);
@@ -56,7 +57,8 @@ MainWindow::MainWindow(QWidget *parent) :
     oCRC16                    = new CRC16_Class();                                                            // Создаём Объект расчёта CRC
     newParcer                 = new ParceClass();
     SI4463Config              = new SI4463Class();
-    DataLogic                 = new DataLogic_Class(oCRC16,timer_COMBufferClear,SI4463Config,MODEM,PortNew,TCPNew);   // Создаём Объект обработки сообщений
+    SI4432Config              = new SI4432Class();
+    DataLogic                 = new DataLogic_Class(oCRC16,timer_COMBufferClear,SI4463Config,SI4432Config,MODEM,PortNew,TCPNew);   // Создаём Объект обработки сообщений
     ConnectHandler            = new ConnectHandlerClass(ui, DataLogic,MODEM);
     newNetTable               = new NetTableClass(ui->NetTable);
     scene                     = new myGraphScene(this);

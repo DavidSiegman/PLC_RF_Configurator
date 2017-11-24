@@ -634,7 +634,96 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
             }
             case RF_OLD_READ_DATA:
             {
-                break;
+                switch (ReadDataProgress)
+                {
+                case 0:
+                {
+                    ReadDataProgress = 1;
+                    break;
+                }
+                case 1:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(8);
+                        emit SendLog(QString::fromUtf8("\r>> ======= Загрузка параметров из буфера\r"),NONE);
+                        emit SendComand(SEND_READ_SI4432_PARAMETERS,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 2;
+                    }
+                    break;
+                }
+                case 2:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(56);
+                        emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание сетевых наcтроек\r"),NONE);
+                        emit SendComand(SEND_READ_NODE_TYPE,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 3;
+                    }
+                    break;
+                }
+                case 3:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(64);
+                        emit SendComand(SEND_READ_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 4;
+                    }
+                    break;
+                }
+                case 4:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(72);
+                        emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание таймаутов\r"),NONE);
+                        emit SendComand(SEND_READ_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
+                        if (MODEM->BOOT_VERSION >= 4)
+                        {
+                            ReadDataProgress = 5;
+                        }
+                        else
+                        {
+                            ReadDataProgress = 7;
+                        }
+                    }
+                    break;
+                }
+                case 5:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(80);
+                        emit SendComand(SEND_READ_RX_TIMEOUT,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 6;
+                    }
+                    break;
+                }
+                case 6:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(88);
+                        emit SendComand(SEND_READ_TX_TIMEOUT,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 7;
+                    }
+                    break;
+                }
+                case 7:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(100);
+                        emit SendLog(QString::fromUtf8(">> ======= Открытие сеанса связи завершилось успешно\r"),NONE);
+                        isAOPEN();
+                        ReadDataProgress = 0;
+                    }
+                    break;
+                }
+                }
+                break; 
             }
             case RF_SNIFFER_OLD_READ_DATA:
             {
@@ -823,10 +912,20 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         {
             if (state != 0)
             {
-                ui->progressBar->setValue(0);
-                emit SendLog(QString::fromUtf8("\r>> ======= Запись уровня ретранслятора\r"),NONE);
-                emit SendComand(SEND_WRITE_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
-                ReadDataProgress = 1;
+                if (MODEM->BOOT_VERSION >= 4)
+                {
+                    ui->progressBar->setValue(0);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Запись уровня ретранслятора\r"),NONE);
+                    emit SendComand(SEND_WRITE_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
+                    ReadDataProgress = 1;
+                }
+                else
+                {
+                    ui->progressBar->setValue(60);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Запись задержки ретранслятора\r"),NONE);
+                    emit SendComand(SEND_WRITE_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
+                    ReadDataProgress = 3;
+                }
             }
             break;
         }

@@ -16,6 +16,7 @@
 
 #include "BUTTONS_HANDLERS/connecthandlerclass.h"
 #include "SI4463/si4463_propertys_tablemodel.h"
+#include "SI4432/si4432class.h"
 #include "FILE/parceclass.h"
 #include "COM/port.h"
 #include "MODEM/modemclass.h"
@@ -42,6 +43,7 @@ private:
     Ui::MainWindow *ui;
 
     SI4463Class         *SI4463Config;                                     //
+    SI4432Class         *SI4432Config;                                     //
     QTimer              *timer_COMBufferClear, *timer_ConnectionsPanel;    //
     Port                *PortNew;                                          //
     DataLogic_Class     *DataLogic;                                        //
