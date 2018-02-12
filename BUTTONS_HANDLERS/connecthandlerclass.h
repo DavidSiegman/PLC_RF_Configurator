@@ -29,6 +29,7 @@ signals:
     void MonitorStart();
     void MonitorStop();
 public slots:
+    void STOP();
     void aOPEN();
     void SetSWITCH_MODE();
     void SetSWITCH_PROP();
@@ -37,14 +38,19 @@ public slots:
     void ReadCURRENT_RSSI();
     void ReadLRSSI_AFC();
     void WriteRF_PARAMS();
+    void WriteRFSI4432_PARAMS();
     void SendRF_RESET();
     void SendSNIFER_MODE();
     void SendUPLINC_MODE();
     void SendCRC_DISABLE_MODE();
     void SendBROADCAST_MODE();
     void WriteSWITCH_TABLE();
+    void ReadSWITCH_TABLE();
+    void SendSWITCH_TABLE_DELETE();
+    void WriteMASK_DESTINATION();
 
     void ConnectHandling(uint n, uint state);
+    void MonitorComandCounter(uint n, uint state);
 
     void isAOPEN();
     void isSWITCH_MODE();
@@ -53,11 +59,14 @@ public slots:
     void isLRSSI_AFC();
     void isRF_PARAMS();
     void isRF_RESET();
+    void isRFSI4432_PARAMS();
     void isSNIFER_MODE();
     void isUPLINC_MODE();
     void isCRC_DISABLE_MODE();
     void isBROADCAST_MODE();
     void isSWITCH_TABLE();
+    void isSWITCH_TABLE_DELETE();
+    void isMASK_DESTINATION();
 };
 
 #endif // CONNECTHANDLERCLASS_H

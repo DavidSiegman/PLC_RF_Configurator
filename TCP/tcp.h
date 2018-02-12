@@ -24,6 +24,7 @@ public:
 private:
     TCPSettings    SettingsTCP;
     QTcpSocket    *TCPSocket;
+
 signals:
     void TCP_Finished();
     void TCP_Error(QString err, uint n);

@@ -19,11 +19,13 @@
 #include "SI4432/si4432class.h"
 #include "FILE/parceclass.h"
 #include "COM/port.h"
+#include "PLC/plcclass.h"
 #include "MODEM/modemclass.h"
 #include "CRC/crc16_class.h"
-#include "NET/nettableclass.h"
 #include "GRAPH/mygraphscene.h"
 #include "GRAPH/mypoligon.h"
+#include "FILTER/filter.h"
+#include "UPDATE/update.h"
 #include <mess_enum.h>
 
 
@@ -44,24 +46,26 @@ private:
 
     SI4463Class         *SI4463Config;                                     //
     SI4432Class         *SI4432Config;                                     //
+    PLCClass            *PLCConfig;                                        //
     QTimer              *timer_COMBufferClear, *timer_ConnectionsPanel;    //
-    Port                *PortNew;                                          //
+    Port                *newPort;                                          //
     DataLogic_Class     *DataLogic;                                        //
     CRC16_Class         *oCRC16;                                           //
     ConnectHandlerClass *ConnectHandler;
     MODEMClass          *MODEM;
-    TCP                 *TCPNew;
+    TCP                 *newTCP;
     ParceClass          *newParcer;
-    NetTableClass       *newNetTable;
-    QString QByteAray_To_QString(QByteArray arr);
-    QByteArray QString_To_QByteAray(QString str, bool crc);
+    Filter              *newFilter;
+    UPDATE              *newUPDATE;
 
     myGraphScene * scene;
 
     myPoligon *pRSSICurrent, *pAFC ,*pRSSI;
     QPolygonF pfRSSICurrent, pfAFC, pfRSSI;
 
-    double x;
+    char Class_init_state;
+
+    double x_coord;
 
 signals:
     void AOPEN();
@@ -72,14 +76,20 @@ signals:
     void READ_CURRENT_RSSI();
     void READ_LRSSI_AFC();
     void WRITE_RF_PARAMS();
+    void WRITE_RFSI4432_PARAMS();
     void SEND_RF_RESET();
     void SEND_SNIFER_MODE();
     void SEND_UPLINC_MODE();
     void SEND_CRC_DISABLE_MODE();
     void SEND_BROADCAST_MODE();
     void WRITE_SWITCH_TABLE();
+    void SEND_SWITCH_TABLE_DELETE();
+    void READ_SWITCH_TABLE();
+    void WRITE_MASK_DESTINATION();
 
     void ADD_NET_TABLE_ITEM(QString value);
+    void DEL_NET_TABLE_ITEM();
+    void SET_CURR_INDEX(uchar index);
 
 private slots:
     void ShowConnectionPanel(void);
@@ -145,16 +155,80 @@ private slots:
     void on_pushButton_3_clicked();
     void on_actionConn_triggered();
     void on_OpenBin_clicked();
-    void on_pushButton_7_clicked();
-    void on_pushButton_12_clicked();
     void on_comboBox_currentIndexChanged(int index);
     void on_checkBox_3_stateChanged(int arg1);
     void on_checkBox_5_stateChanged(int arg1);
     void on_checkBox_4_stateChanged(int arg1);
-
     void on_SetNetLevel_clicked();
-
     void on_SetDeviceMonitorSN_clicked();
+    void on_DIV_DR_stateChanged(int arg1);
+    void on_FX2_stateChanged(int arg1);
+    void on_FCAR_currentIndexChanged(int index);
+    void on_MT_currentIndexChanged(int index);
+    void on_PA_currentIndexChanged(int index);
+    void on_DR_valueChanged(int arg1);
+    void on_FOFF_valueChanged(int arg1);
+    void on_DV_valueChanged(int arg1);
+    void on_BW_currentIndexChanged(int index);
+    void on_SNW_N_currentIndexChanged(int index);
+    void on_HEAD_N_currentIndexChanged(int index);
+    void on_RFSI4432_Write_clicked();
+    void on_RF_RESET_clicked();
+    void on_FNOM_valueChanged(double arg1);
+    void on_TCPConnect_clicked();
+    void on_NetTable_clicked(const QModelIndex &index);
+    void on_Add_NetItem_clicked();
+    void on_Del_NetItem_clicked();
+    void on_RF_Reset_clicked();
+    void on_Del_NetTable_clicked();
+    void on_Read_NetTable_clicked();
+    void on_Write_NetTable_clicked();
+
+    void on_LVL0_DIS_valueChanged(int arg1);
+
+    void on_LVL1_DIS_valueChanged(int arg1);
+
+    void on_LVL2_DIS_valueChanged(int arg1);
+
+    void on_LVL3_DIS_valueChanged(int arg1);
+
+    void on_LVL4_DIS_valueChanged(int arg1);
+
+    void on_LVL5_DIS_valueChanged(int arg1);
+
+    void on_LVL6_DIS_valueChanged(int arg1);
+
+    void on_LVL7_DIS_valueChanged(int arg1);
+
+    void on_LVL8_DIS_valueChanged(int arg1);
+
+    void on_LVL9_DIS_valueChanged(int arg1);
+
+    void on_SetDestinationMASK_clicked();
+
+    void on_LVL0_valueChanged(int arg1);
+
+    void on_LVL1_valueChanged(int arg1);
+
+    void on_LVL2_valueChanged(int arg1);
+
+    void on_LVL3_valueChanged(int arg1);
+
+    void on_LVL4_valueChanged(int arg1);
+
+    void on_LVL5_valueChanged(int arg1);
+
+    void on_LVL6_valueChanged(int arg1);
+
+    void on_LVL7_valueChanged(int arg1);
+
+    void on_LVL8_valueChanged(int arg1);
+
+    void on_LVL9_valueChanged(int arg1);
+
+    void on_SWITCH_clicked();
+
+    void on_UPDATE_START_clicked();
 
 protected:
     //virtual void mousePressEvent(QMouseEvent *);

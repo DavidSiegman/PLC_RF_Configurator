@@ -30,14 +30,21 @@ ConnectHandlerClass::ConnectHandlerClass(Ui::MainWindow *ui,DataLogic_Class *Dat
     SniferTab    = this->ui->SniferTab;
     RFMonitorTab = this->ui->MonitorTab;
 
-    this->ui->tabWidget->removeTab(6);
+    //this->ui->tabWidget->removeTab(6);
     this->ui->tabWidget->removeTab(5);
     this->ui->tabWidget->removeTab(4);
     this->ui->tabWidget->removeTab(3);
     this->ui->tabWidget->removeTab(2);
     this->ui->tabWidget->removeTab(1);
+
 }
 
+void ConnectHandlerClass::STOP()
+{
+    ui->RSSIWidget->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+    emit SendLog(QString::fromUtf8(">> ======= Запрос остановлен\r"),NONE);
+}
 void ConnectHandlerClass::aOPEN()
 {
     QString s = ui->Connect->text();
@@ -48,7 +55,6 @@ void ConnectHandlerClass::aOPEN()
         ui->RSSIWidget->setEnabled(false);
         ui->MANUAL_ENTER->setEnabled(false);
         ui->tabWidget->setEnabled(false);
-        ui->Connect->setText("Отключение");
         if (ui->Interface->currentIndex() == 1)
         {DataLogic->setSerialNumberMode(ui->SN->text(), true);}
         else{DataLogic->setSerialNumberMode(ui->SN->text(), false);}
@@ -78,12 +84,14 @@ void ConnectHandlerClass::aOPEN()
         ui->tabWidget->removeTab(3);
         ui->tabWidget->removeTab(2);
         ui->tabWidget->removeTab(1);
+        ui->tabWidget->addTab(RFMonitorTab,  "RF RSSI Монитор");
         MODEM->SwitchTable.clear();
         emit SendLog(QString::fromUtf8(">> ======= Устройство отключено\r"),NONE);
     }
 }
 void ConnectHandlerClass::isAOPEN()
 {
+    ui->Connect->setText("Отключение");
     ui->boot_v->setText(MODEM->boot_ver);
     ui->fw_v->setText(MODEM->fw_ver);
 
@@ -113,7 +121,7 @@ void ConnectHandlerClass::isAOPEN()
         {
             ui->tabWidget->addTab(RFTab,         "Настройки RF");
             ui->DeviceType->setText("USB/RF Преобразователь (Snifer)(Микросхема SI4463)");
-            ui->NetLevel->setText(QString("%1").arg(MODEM->SWITCH_LEVEL));
+            ui->NetLevel->setText(QString("%1").arg(MODEM->getSWITCH_LEVEL()));
             if(MODEM->SwitchTable.length() == 0)
             {
                 ui->DeviceMonitorSN->setText("0");
@@ -123,19 +131,24 @@ void ConnectHandlerClass::isAOPEN()
                 ui->DeviceMonitorSN->setText(MODEM->SwitchTable.at(0));
             }
         }
+        //ui->SWITCHLVL->setText(QString("%1").arg(MODEM->getSWITCH_LEVEL()));
+        ui->NetLevel->setText(QString("%1").arg(MODEM->getSWITCH_LEVEL()));
+        //ui->SWITCHTM->setText(QString("%1").arg(MODEM->SWITCH_TIMEOUT));
         ui->tabWidget->addTab(RFMonitorTab,  "RF RSSI Монитор");
     }
     if ((MODEM->BOOT_VERSION > 0)&(MODEM->BOOT_VERSION < 3))
     {
         ui->tabWidget->addTab(NetTab,        "Настройки Сети");
         ui->tabWidget->addTab(PLCTab,        "Настройки PLC");
+        ui->DeviceType->setText("PLC-Модуль");
     }
     if ((MODEM->BOOT_VERSION >= 3) & (MODEM->BOOT_VERSION < 5))
     {
         ui->tabWidget->addTab(NetTab,        "Настройки Сети");
         ui->tabWidget->addTab(RFOldTab,      "Настройки RF");
+        ui->tabWidget->addTab(RFMonitorTab,  "RF RSSI Монитор");
         ui->DeviceType->setText("RF-Модуль (Микросхема SI4432)");
-        ui->SWITCHLVL->setText(QString("%1").arg(MODEM->SWITCH_LEVEL));
+        ui->SWITCHLVL->setText(QString("%1").arg(MODEM->getSWITCH_LEVEL()));
         ui->SWITCHTM->setText(QString("%1").arg(MODEM->SWITCH_TIMEOUT));
     }
     else if ((MODEM->BOOT_VERSION >= 5) & (MODEM->BOOT_VERSION < 6))
@@ -144,7 +157,7 @@ void ConnectHandlerClass::isAOPEN()
         ui->tabWidget->addTab(RFTab,         "Настройки RF");
         ui->tabWidget->addTab(RFMonitorTab,  "RF RSSI Монитор");
         ui->DeviceType->setText("RF-Модуль (Микросхема SI4463)");
-        ui->SWITCHLVL->setText(QString("%1").arg(MODEM->SWITCH_LEVEL));
+        ui->SWITCHLVL->setText(QString("%1").arg(MODEM->getSWITCH_LEVEL()));
         ui->SWITCHTM->setText(QString("%1").arg(MODEM->SWITCH_TIMEOUT));
     }
 
@@ -160,6 +173,8 @@ void ConnectHandlerClass::isAOPEN()
     }
     ui->RXTM->setText(QString("%1").arg(MODEM->RX_TIMEOUT));
     ui->TXTM->setText(QString("%1").arg(MODEM->TX_TIMEOUT));
+    ui->RXTM_2->setText(QString("%1").arg(MODEM->RX_TIMEOUT));
+    ui->TXTM_2->setText(QString("%1").arg(MODEM->TX_TIMEOUT));
     ui->tabWidget->setEnabled(true);
 }
 
@@ -212,11 +227,12 @@ void ConnectHandlerClass::SetSWITCH_PROP()
     {
         if ((MODEM->BOOT_VERSION_SNIFER > 0)&&(MODEM->BOOT_VERSION_SNIFER < 20))
         {
-
+            MODEM->setSWITCH_LEVEL(ui->NetLevel->text().toInt());
+            MODEM->SWITCH_TIMEOUT = 10;
         }
         else if(MODEM->BOOT_VERSION_SNIFER >= 20)
         {
-            MODEM->SWITCH_LEVEL   = ui->NetLevel->text().toInt();
+            MODEM->setSWITCH_LEVEL(ui->NetLevel->text().toInt());
             MODEM->SWITCH_TIMEOUT = 10;
         }
     }
@@ -226,12 +242,12 @@ void ConnectHandlerClass::SetSWITCH_PROP()
     }
     else if ((MODEM->BOOT_VERSION >= 3) & (MODEM->BOOT_VERSION < 5))
     {
-        MODEM->SWITCH_LEVEL   = ui->SWITCHLVL->text().toInt();
+        MODEM->setSWITCH_LEVEL(ui->SWITCHLVL->text().toInt());
         MODEM->SWITCH_TIMEOUT = ui->SWITCHTM->text().toInt();
     }
     else if ((MODEM->BOOT_VERSION >= 5) & (MODEM->BOOT_VERSION < 6))
     {
-        MODEM->SWITCH_LEVEL   = ui->SWITCHLVL->text().toInt();
+        MODEM->setSWITCH_LEVEL(ui->SWITCHLVL->text().toInt());
         MODEM->SWITCH_TIMEOUT = ui->SWITCHTM->text().toInt();
     }
 
@@ -251,7 +267,7 @@ void ConnectHandlerClass::isSWITCH_PROP()
         }
         else if(MODEM->BOOT_VERSION_SNIFER >= 20)
         {
-            ui->NetLevel->setText(QString("%1").arg(MODEM->SWITCH_LEVEL));
+            ui->NetLevel->setText(QString("%1").arg(MODEM->getSWITCH_LEVEL()));
         }
     }
     else if ((MODEM->BOOT_VERSION > 0)&(MODEM->BOOT_VERSION < 3))
@@ -260,12 +276,12 @@ void ConnectHandlerClass::isSWITCH_PROP()
     }
     else if ((MODEM->BOOT_VERSION >= 3) & (MODEM->BOOT_VERSION < 5))
     {
-        ui->SWITCHLVL->setText(QString("%1").arg(MODEM->SWITCH_LEVEL));
+        ui->SWITCHLVL->setText(QString("%1").arg(MODEM->getSWITCH_LEVEL()));
         ui->SWITCHTM->setText(QString("%1").arg(MODEM->SWITCH_TIMEOUT));
     }
     else if ((MODEM->BOOT_VERSION >= 5) & (MODEM->BOOT_VERSION < 6))
     {
-        ui->SWITCHLVL->setText(QString("%1").arg(MODEM->SWITCH_LEVEL));
+        ui->SWITCHLVL->setText(QString("%1").arg(MODEM->getSWITCH_LEVEL()));
         ui->SWITCHTM->setText(QString("%1").arg(MODEM->SWITCH_TIMEOUT));
     }
 }
@@ -313,6 +329,18 @@ void ConnectHandlerClass::WriteRF_PARAMS()
     ConnectHandling(SEND_WRITE_RF_PARAMETERS,1);
 }
 void ConnectHandlerClass::isRF_PARAMS()
+{
+    ui->RSSIWidget->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+}
+
+void ConnectHandlerClass::WriteRFSI4432_PARAMS()
+{
+    ui->RSSIWidget->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
+    ConnectHandling(SEND_WRITE_SI4432_PARAMETERS,1);
+}
+void ConnectHandlerClass::isRFSI4432_PARAMS()
 {
     ui->RSSIWidget->setEnabled(true);
     ui->tabWidget->setEnabled(true);
@@ -380,11 +408,50 @@ void ConnectHandlerClass::isBROADCAST_MODE()
 
 void ConnectHandlerClass::WriteSWITCH_TABLE()
 {
+    if (MODEM->SwitchTable.length() > 0)
+    {
+        ui->RSSIWidget->setEnabled(false);
+        ui->tabWidget->setEnabled(false);
+
+        MODEM->setCurrent_Index(0);
+        ConnectHandling(SEND_WRITE_SWITCH_TABLE_ELEMENT,1);
+    }
+}
+void ConnectHandlerClass::ReadSWITCH_TABLE()
+{
     ui->RSSIWidget->setEnabled(false);
     ui->tabWidget->setEnabled(false);
+    ReadDataProgress = 3;
+
+    MODEM->clearNetTable();
+    MODEM->setCurrent_Index(0);
     ConnectHandling(SEND_WRITE_SWITCH_TABLE_ELEMENT,1);
 }
 void ConnectHandlerClass::isSWITCH_TABLE()
+{
+    ui->RSSIWidget->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+}
+
+void ConnectHandlerClass::SendSWITCH_TABLE_DELETE()
+{
+    ui->RSSIWidget->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
+    ConnectHandling(SEND_DELET_SWITCH_TABLE_FROM_FLASH,1);
+}
+void ConnectHandlerClass::isSWITCH_TABLE_DELETE()
+{
+    ui->RSSIWidget->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+    MODEM->clearNetTable();
+}
+void ConnectHandlerClass::WriteMASK_DESTINATION()
+{
+    ui->RSSIWidget->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
+    ConnectHandling(SEND_WRITE_MASK_DESTINATION,1);
+}
+void ConnectHandlerClass::isMASK_DESTINATION()
 {
     ui->RSSIWidget->setEnabled(true);
     ui->tabWidget->setEnabled(true);
@@ -405,13 +472,32 @@ void ConnectHandlerClass::StartMonitor()
         uint timeout = ui->MonitorTimeout->text().toInt();
         uint parameter = ui->Interface->currentIndex();
 
+        if (ui->Interface->currentIndex() == 1)
+        {DataLogic->setSerialNumberMode(ui->SN->text(), true);}
+        else{DataLogic->setSerialNumberMode(ui->SN->text(), false);}
+
         Monitor = new MonitorClass(timeout,parameter);
         connect(Monitor,SIGNAL(SendComand(uint,uint)),this->DataLogic,SLOT(ComandHandling(uint,uint)));
+        connect(Monitor,SIGNAL(SendComand(uint,uint)),this,SLOT(MonitorComandCounter(uint,uint)));
         connect(this,SIGNAL(MonitorStart()),Monitor,SLOT(startMonitor()));
         connect(this,SIGNAL(MonitorStop()),Monitor,SLOT(stopMonitor()));
 
+        ui->MsgCounter->setText("0");
+        ui->YesAnswer->setText("0");
+        ui->NoAnswer->setText("0");
+        ui->AValue->setText("0");
+
         emit MonitorStart();
     }
+}
+void ConnectHandlerClass::MonitorComandCounter(uint n, uint state)
+{
+    unsigned int counter  = ui->MsgCounter->text().toInt();
+    unsigned int counter2 = ui->YesAnswer->text().toInt();
+    unsigned int counter3 = counter - counter2;
+    ui->NoAnswer->setText(QString::number(counter3));
+    counter++;
+    ui->MsgCounter->setText(QString::number(counter));
 }
 void ConnectHandlerClass::StopMonitor()
 {
@@ -470,9 +556,9 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
             }
 
             switch (n)
-            {
-            case PLC_READ_DATA:
-            {
+            {                   // ==================================================================================
+            case PLC_READ_DATA: // Параметры PLC модуля =============================================================
+            {                   // ==================================================================================
                 switch (ReadDataProgress)
                 {
                 case 0:
@@ -482,15 +568,43 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
                 }
                 case 1:
                 {
-                    ReadDataProgress = 0;
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(8);
+                        emit SendLog(QString::fromUtf8("\r>> ======= Чтение частоты PLC\r"),NONE);
+                        emit SendComand(SEND_READ_PLC_FREQ_PARAMS,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 2;
+                    }
+                    break;
+                }
+                case 2:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(56);
+                        emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание сетевых наcтроек\r"),NONE);
+                        emit SendComand(SEND_READ_NODE_TYPE,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 3;
+                    }
+                    break;
+                }
+                case 3:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(100);
+                        emit SendLog(QString::fromUtf8(">> ======= Открытие сеанса связи завершилось успешно\r"),NONE);
+                        isAOPEN();
+                        ReadDataProgress = 0;
+                    }
                     break;
                 }
                 }
 
                 break;
-            }
-            case RF_READ_DATA:
-            {
+            }                   // ==================================================================================
+            case RF_READ_DATA:  // Параметры радиомодуля на SI4463 ==================================================
+            {                   // ==================================================================================
                 switch (ReadDataProgress)
                 {
                 case 0:
@@ -631,9 +745,9 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
                 }
                 }
                 break;
-            }
-            case RF_OLD_READ_DATA:
-            {
+            }                      // ==================================================================================
+            case RF_OLD_READ_DATA: // параметры радиомодуля на SI4432 ==================================================
+            {                      // ==================================================================================
                 switch (ReadDataProgress)
                 {
                 case 0:
@@ -646,7 +760,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
                     if (state != 0)
                     {
                         ui->progressBar->setValue(8);
-                        emit SendLog(QString::fromUtf8("\r>> ======= Загрузка параметров из буфера\r"),NONE);
+                        emit SendLog(QString::fromUtf8("\r>> ======= Считывание настроек радио микросхемы\r"),NONE);
                         emit SendComand(SEND_READ_SI4432_PARAMETERS,CONFIG_SEND_CONTROL);
                         ReadDataProgress = 2;
                     }
@@ -724,13 +838,96 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
                 }
                 }
                 break; 
-            }
-            case RF_SNIFFER_OLD_READ_DATA:
-            {
+            }                              // ==================================================================================
+            case RF_SNIFFER_OLD_READ_DATA: // Параметры снифера на SI4432 ======================================================
+            {                              // ==================================================================================
+                switch (ReadDataProgress)
+                {
+                case 0:
+                {
+                    ReadDataProgress = 1;
+                    break;
+                }
+                case 1:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(8);
+                        emit SendLog(QString::fromUtf8("\r>> ======= Считывание настроек радио микросхемы\r"),NONE);
+                        emit SendComand(SEND_READ_SI4432_PARAMETERS,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 2;
+                    }
+                    break;
+                }
+                case 2:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(64);
+                        emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание сетевых наcтроек\r"),NONE);
+                        emit SendComand(SEND_READ_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 3;
+                    }
+                    break;
+                }
+                case 3:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(72);
+                        emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание таймаутов\r"),NONE);
+                        emit SendComand(SEND_READ_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 4;
+                    }
+                    break;
+                }
+                case 4:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(80);
+                        emit SendComand(SEND_READ_RX_TIMEOUT,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 5;
+                    }
+                    break;
+                }
+                case 5:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(88);
+                        emit SendComand(SEND_READ_TX_TIMEOUT,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 6;
+                    }
+                    break;
+                }
+                case 6:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(95);
+                        emit SendLog(QString::fromUtf8("\r>> ======= Чтение маски назначения\r"),NONE);
+                        emit SendComand(SEND_READ_MASK_DESTINATION,CONFIG_SEND_CONTROL);
+                        ReadDataProgress = 7;
+                    }
+                    break;
+                }
+                case 7:
+                {
+                    if (state != 0)
+                    {
+                        ui->progressBar->setValue(100);
+                        emit SendLog(QString::fromUtf8(">> ======= Открытие сеанса связи завершилось успешно\r"),NONE);
+                        isAOPEN();
+                        ReadDataProgress = 0;
+                    }
+                    break;
+                }
+                }
                 break;
-            }
-            case RF_SNIFFER_READ_DATA:
-            {
+            }                          // ==================================================================================
+            case RF_SNIFFER_READ_DATA: // Параметры снифера на SI4463 ======================================================
+            {                          // ==================================================================================
                 switch (ReadDataProgress)
                 {
                 case 0:
@@ -912,10 +1109,10 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         {
             if (state != 0)
             {
-                if (MODEM->BOOT_VERSION >= 4)
+                if ((MODEM->BOOT_VERSION >= 4)||(MODEM->BOOT_VERSION == 0))
                 {
                     ui->progressBar->setValue(0);
-                    emit SendLog(QString::fromUtf8("\r>> ======= Запись уровня ретранслятора\r"),NONE);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Запись уровня/маски ретранслятора\r"),NONE);
                     emit SendComand(SEND_WRITE_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
                     ReadDataProgress = 1;
                 }
@@ -934,7 +1131,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
             if (state != 0)
             {
                 ui->progressBar->setValue(30);
-                emit SendLog(QString::fromUtf8("\r>> ======= Чтение уровня ретранслятора\r"),NONE);
+                emit SendLog(QString::fromUtf8("\r>> ======= Чтение уровня/маски ретранслятора\r"),NONE);
                 emit SendComand(SEND_READ_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
                 if (MODEM->BOOT_VERSION == 0)
                 {
@@ -1063,6 +1260,46 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
                 ui->progressBar->setValue(100);
                 emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно\r"),NONE);
                 isRF_PARAMS();
+                ReadDataProgress = 0;
+            }
+            break;
+        }
+        }
+    }
+    else if (n == SEND_WRITE_SI4432_PARAMETERS)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(0);
+                emit SendLog(QString::fromUtf8("\r>> ======= Запись параметров SI4432\r"),NONE);
+                emit SendComand(SEND_WRITE_SI4432_PARAMETERS,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 1;
+            }
+            break;
+        }
+        case 1:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(0);
+                emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно"),NONE);
+                emit SendLog(QString::fromUtf8("\r>> ======= Чтение параметров SI4432\r"),NONE);
+                emit SendComand(SEND_READ_SI4432_PARAMETERS,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 2;
+            }
+            break;
+        }
+        case 2:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(100);
+                emit SendLog(QString::fromUtf8(">> ======= Чтение прошло успешно\r"),NONE);
+                isRFSI4432_PARAMS();
                 ReadDataProgress = 0;
             }
             break;
@@ -1218,8 +1455,8 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
             if (state != 0)
             {
                 ui->progressBar->setValue(0);
-                emit SendLog(QString::fromUtf8("\r>> ======= Запись таблицы в RAM\r"),NONE);
-                emit SendComand(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
+                emit SendLog(QString::fromUtf8("\r>> ======= Стирание таблицы ретрансляции\r"),NONE);
+                emit SendComand(SEND_DELET_SWITCH_TABLE_FROM_FLASH,CONFIG_SEND_CONTROL);
                 ReadDataProgress = 1;
             }
             break;
@@ -1229,8 +1466,8 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
             if (state != 0)
             {
                 ui->progressBar->setValue(0);
-                emit SendLog(QString::fromUtf8("\r>> ======= Запись таблицы во Flash\r"),NONE);
-                emit SendComand(SEND_LOAD_SWITCH_TABLE_TO_FLASH,CONFIG_SEND_CONTROL);
+                emit SendLog(QString::fromUtf8("\r>> ======= Запись таблицы в RAM\r"),NONE);
+                emit SendComand(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                 ReadDataProgress = 2;
             }
             break;
@@ -1240,8 +1477,8 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
             if (state != 0)
             {
                 ui->progressBar->setValue(0);
-                emit SendLog(QString::fromUtf8("\r>> ======= Чтение таблицы\r"),NONE);
-                emit SendComand(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
+                emit SendLog(QString::fromUtf8("\r>> ======= Запись таблицы во Flash\r"),NONE);
+                emit SendComand(SEND_LOAD_SWITCH_TABLE_TO_FLASH,CONFIG_SEND_CONTROL);
                 ReadDataProgress = 3;
             }
             break;
@@ -1250,13 +1487,93 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         {
             if (state != 0)
             {
+                ui->progressBar->setValue(0);
+                emit SendLog(QString::fromUtf8("\r>> ======= Чтение таблицы\r"),NONE);
+                emit SendComand(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 4;
+            }
+            break;
+        }
+        case 4:
+        {
+            if (state != 0)
+            {
                 ui->progressBar->setValue(100);
                 emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно\r"),NONE);
-                isBROADCAST_MODE();
+                isSWITCH_TABLE();
                 ReadDataProgress = 0;
             }
             break;
         }
         }
     }
+    else if (n == SEND_DELET_SWITCH_TABLE_FROM_FLASH)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(0);
+                emit SendLog(QString::fromUtf8("\r>> ======= Стирание таблицы ретрансляции\r"),NONE);
+                emit SendComand(SEND_DELET_SWITCH_TABLE_FROM_FLASH,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 1;
+            }
+            break;
+        }
+        case 1:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(100);
+                emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно\r"),NONE);
+                isSWITCH_TABLE_DELETE();
+                ReadDataProgress = 0;
+            }
+            break;
+        }
+        }
+    }
+    else if (n == SEND_WRITE_MASK_DESTINATION)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(0);
+                emit SendLog(QString::fromUtf8("\r>> ======= Запись маски назначения\r"),NONE);
+                emit SendComand(SEND_WRITE_MASK_DESTINATION,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 1;
+            }
+            break;
+        }
+        case 1:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(50);
+                emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно"),NONE);
+                emit SendLog(QString::fromUtf8("\r>> ======= Чтение маски назначения\r"),NONE);
+                emit SendComand(SEND_READ_MASK_DESTINATION,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 2;
+            }
+            break;
+        }
+        case 2:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(100);
+                emit SendLog(QString::fromUtf8(">> ======= Чтение прошло успешно\r"),NONE);
+                isRFSI4432_PARAMS();
+                ReadDataProgress = 0;
+            }
+            break;
+        }
+        }
+    }
+
 }

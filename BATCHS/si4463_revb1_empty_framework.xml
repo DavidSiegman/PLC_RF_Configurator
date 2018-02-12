@@ -7,7 +7,7 @@
           <Value>0</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudCenterFrequency">
-          <Value>433.93000</Value>
+          <Value>433.92</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudChannelSpacing">
           <Value>50</Value>
@@ -18,10 +18,10 @@
           <Checked>False</Checked>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudCrystalToleranceTX">
-          <Value>20</Value>
+          <Value>10</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudCrystalToleranceRX">
-          <Value>20</Value>
+          <Value>10</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudCrystalFrequency">
           <Value>30</Value>
@@ -62,16 +62,16 @@
           <SelectedIndex>2</SelectedIndex>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudDataRate">
-          <Value>4.8</Value>
+          <Value>9.600</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudDeviation">
-          <Value>7.500</Value>
+          <Value>9.600</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.CheckBox" Name="chbManualRxBandwidth">
           <Checked>False</Checked>
         </DataItem>
         <DataItem Type="NewWDS.Applications.App_Common.CustomContols.NumericUpDownExtended" Name="nudBandwidth">
-          <Value>15.2</Value>
+          <Value>1.1</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.ComboBox" Name="cbbIfMode">
           <SelectedIndex>0</SelectedIndex>
@@ -81,7 +81,7 @@
         </DataItem>
         <pnlRssiControl Type="System.Windows.Forms.Panel">
           <DataItem Type="System.Windows.Forms.ComboBox" Name="cbbRssiLatch">
-            <SelectedIndex>1</SelectedIndex>
+            <SelectedIndex>2</SelectedIndex>
           </DataItem>
           <DataItem Type="System.Windows.Forms.ComboBox" Name="cbbRssiAverage">
             <SelectedIndex>0</SelectedIndex>
@@ -414,11 +414,11 @@
       </grbChipInterrupt>
       <grbModemInterrupt Type="System.Windows.Forms.GroupBox">
         <DataItem Type="System.Windows.Forms.CheckBox" Name="chbEnableModemInterrupt">
-          <Checked>True</Checked>
+          <Checked>False</Checked>
         </DataItem>
         <DataItem Type="NewWDS.Applications.App_Common.ByteStatusControl.ByteStatus" Name="bstModemInterruptStatus">
-          <Enabled>True</Enabled>
-          <Value>1</Value>
+          <Enabled>False</Enabled>
+          <Value>0</Value>
         </DataItem>
       </grbModemInterrupt>
       <grbPacketHandlerInterrupt Type="System.Windows.Forms.GroupBox">

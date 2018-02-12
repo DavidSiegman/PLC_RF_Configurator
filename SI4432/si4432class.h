@@ -2,35 +2,21 @@
 #define SI4432CLASS_H
 
 #include <QObject>
+#include "ui_mainwindow.h"
 
 typedef union
 {
-    struct {
-    unsigned int   TXDR:  16;
-    unsigned char  FC:    5;
-    unsigned char  hb:    1;
-    unsigned char  DivDR: 1;
-    unsigned char  PA:    3;
-    unsigned char  MT:    1;
-    }Feld;
     volatile unsigned int reg;
 } RF_Config_Register_1;
 
 typedef union
 {
-    struct {
-      signed short Fo:   10;
-    unsigned char  IFBW:  6;
-    unsigned short Fd:    9;
-    unsigned char  HC:    4;
-    unsigned char  SWC:   3;
-    }Feld;
     volatile unsigned int reg;
 } RF_Config_Register_2;
 typedef union
 {
     struct {
-      signed char xcl:        7;
+    unsigned char xcl:        7;
     unsigned char xtalshift:  1;
     unsigned int  unused:     24;
     }Feld;
@@ -55,27 +41,68 @@ struct RF_Config_struct
     volatile unsigned char        ndec;
     volatile unsigned char        filset;
 };
+struct RF_RegRead_struct
+{
+    volatile unsigned char        MODE;
+    volatile unsigned char        REG;
+    volatile unsigned char        VALUE;
+};
 
 class SI4432Class : public QObject
 {
     Q_OBJECT
 public:
-    explicit SI4432Class(QObject *parent = 0);
+    explicit SI4432Class(Ui::MainWindow *ui,QObject *parent = 0);
 
-    RF_Config_struct*        aSI4463_RF_Config_struct(void);
+    RF_Config_struct*        aSI4432_RF_Config_struct(void);
+    RF_RegRead_struct*       aSI4432_RF_RegRead_struct(void);
 private:
-    RF_Config_struct SI4432_Parameters;
+    Ui::MainWindow    *ui;
+    RF_Config_struct  *SI4432_Parameters;
+    RF_RegRead_struct *RF_RegRead;
 
 signals:
 
 public slots:
+    void           RF22_SET_TXDR  (unsigned short TXDR);
+    unsigned short RF22_GET_TXDR  (void);
+    void           RF22_SET_FC    (unsigned char FC);
+    unsigned char  RF22_GET_FC    (void);
+    void           RF22_SET_hb    (unsigned char hb);
+    unsigned char  RF22_GET_hb    (void);
+    void           RF22_SET_DivDR (unsigned char DivDR);
+    unsigned char  RF22_GET_DivDR (void);
+    void           RF22_SET_PA    (unsigned char PA);
+    unsigned char  RF22_GET_PA    (void);
+    void           RF22_SET_MT    (unsigned char MT);
+    unsigned char  RF22_GET_MT    (void);
+    void           RF22_SET_Fo    (signed  short Fo);
+    signed  short  RF22_GET_Fo    (void);
+    void           RF22_SET_IFBW  (unsigned char IFBW);
+    unsigned char  RF22_GET_IFBW  (void);
+    void           RF22_SET_Fd    (unsigned short Fd);
+    unsigned short RF22_GET_Fd    (void);
+    void           RF22_SET_HC    (unsigned char HC);
+    unsigned char  RF22_GET_HC    (void);
+    void           RF22_SET_SWC   (unsigned char SWC);
+    unsigned char  RF22_GET_SWC   (void);
+    void           RF22_SET_NFREQ (unsigned int NFREQ);
+    unsigned int   RF22_GET_NFREQ (void);
+    void           RF22_SET_CLOAD (unsigned char CLOAD);
+    unsigned char  RF22_GET_CLOAD (void);
+
+    void           REFRASH_UI_DATA(void);
+
 
 private slots:
+
+    void RF22_CLOAD_calc(struct RF_Config_struct *config_structur);
     void RF22_Rb_calc(struct RF_Config_struct *config_structur);
     void RF22_RXOSR_calc(struct RF_Config_struct *config_structur);  // !!! без манчестерского кода !!!
     void RF22_NCOFF_calc(struct RF_Config_struct *config_structur);  // !!! без манчестерского кода !!!
     void RF22_CRGAIN_calc(struct RF_Config_struct *config_structur); // !!! без манчестерского кода !!!
     void RF22_IFBW_calc(struct RF_Config_struct *config_structur);
+    void RF22_IFBW_bits(struct RF_Config_struct *config_structur);
 };
 
 #endif // SI4432CLASS_H

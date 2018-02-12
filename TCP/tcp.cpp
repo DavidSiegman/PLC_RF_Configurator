@@ -9,6 +9,7 @@ TCP::TCP(QObject *parent)
     SettingsTCP.PORT = 1131;
 }
 
+
  TCP::~TCP()
 {
     qDebug("By in TCP Thread!");
@@ -26,7 +27,7 @@ void  TCP::TCP_Disconnect()
 {
     if(this->TCPSocket->isOpen()){
         this->TCPSocket->close();
-        emit TCP_Error(">> ======= Соединение с: " + this->SettingsTCP.IP.toLocal8Bit() + ":" + QString::number(this->SettingsTCP.PORT)+ " разорвано!\r",COM_CLOSE);
+        emit TCP_Error(">> ======= Соединение с: " + this->SettingsTCP.IP.toLocal8Bit() + ":" + QString::number(this->SettingsTCP.PORT)+ " разорвано!\r",TCP_CLOSE);
     }
 }
 void  TCP::TCP_Connect()
@@ -37,7 +38,7 @@ void  TCP::TCP_Connect()
 
     if (this->TCPSocket->isOpen())
     {
-        emit TCP_Error(">> ======= Соединение с: " + this->SettingsTCP.IP.toLocal8Bit() + ":" + QString::number(this->SettingsTCP.PORT)  + " установлено\r",COM_OPEN);
+        emit TCP_Error(">> ======= Соединение с: " + this->SettingsTCP.IP.toLocal8Bit() + ":" + QString::number(this->SettingsTCP.PORT)  + " установлено\r",TCP_OPEN);
     }
     else
     {

@@ -172,8 +172,8 @@ SI4463Class::SI4463Class(QObject *parent) : QObject(parent)
     this->SI4463_PROPERTYS_NAME.append("MODEM_AGC_IFPD_DECAY");             // 148
     this->SI4463_PROPERTYS_NAME.append("MODEM_FSK4_GAIN1");                 // 149
     this->SI4463_PROPERTYS_NAME.append("MODEM_FSK4_GAIN0");                 // 150
-    this->SI4463_PROPERTYS_NAME.append("MODEM_FSK4_TH1");                  // 151
-    this->SI4463_PROPERTYS_NAME.append("MODEM_FSK4_TH0");                  // 152
+    this->SI4463_PROPERTYS_NAME.append("MODEM_FSK4_TH1");                   // 151
+    this->SI4463_PROPERTYS_NAME.append("MODEM_FSK4_TH0");                   // 152
     this->SI4463_PROPERTYS_NAME.append("MODEM_FSK4_MAP");                   // 153
     this->SI4463_PROPERTYS_NAME.append("MODEM_OOK_PDTC");                   // 154
     this->SI4463_PROPERTYS_NAME.append("MODEM_OOK_BLOPK");                  // 155

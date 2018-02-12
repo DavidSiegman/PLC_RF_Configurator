@@ -1,25 +1,31 @@
 #include "DATALOGIC/datalogic_class.h"
-
+#include "barr_to_string.h"
 //#include "mainwindow.h"
 
-DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16, QTimer *t,SI4463Class *SI4463Conf,SI4432Class *SI4432Conf, MODEMClass *MODEM,Port *nPort,TCP *nTCP,QObject *parent) : QObject(parent)
+DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16,QTimer *t,SI4463Class *SI4463Conf,SI4432Class *SI4432Conf,
+                                 PLCClass *PLCConf,MODEMClass *MODEM,Port *nPort,TCP *nTCP,UPDATE *nUPDATE,QObject *parent) : QObject(parent)
 {
+    this->setParent(parent);
     this->CRC16           = oCRC16;
     this->timer           = t;
     this->SI4463Conf      = SI4463Conf;
     this->SI4432Conf      = SI4432Conf;
+    this->PLCConf         = PLCConf;
     this->MODEM           = MODEM;
     this->nPort           = nPort;
     this->nTCP            = nTCP;
+    this->nUPDATE         = nUPDATE;
     this->addSerialNumber = false;
 
-    this->timerRepeat     = new QTimer();
+    this->timerRepeat           = new QTimer();
+    this->timerManualRepeat     = new QTimer();
 
     connect(this,SIGNAL(OutData(QByteArray)),            this->nPort,SLOT(COM_WriteDATA(QByteArray)));
     connect(this->nPort, SIGNAL(COM_OutDATA(QByteArray)),this, SLOT(In_DataBuffer(QByteArray)));
     connect(this,SIGNAL(OutData(QByteArray)),            this->nTCP,SLOT(TCP_WriteDATA(QByteArray)));
     connect(this->nTCP, SIGNAL(TCP_OutDATA(QByteArray)), this, SLOT(In_DataBuffer(QByteArray)));
     connect(timerRepeat,SIGNAL(timeout()),               this, SLOT(REPEAT_SEND()));
+    connect(timerManualRepeat,SIGNAL(timeout()),         this, SLOT(MANUAL_REPEAT_SEND()));
 
 }
 
@@ -122,7 +128,22 @@ void DataLogic_Class::Parce_DataBuffer(QByteArray data, uint n)
         else
         {
             emit DataForPrint(OutDataBuffer,COM_RX);     // Вывод данных в консоль
-            ParceData(IN_SNIFER_PLUS_PREAMBLE);
+            QString string = QByteAray_To_QString(ParceDataBuffer).toUpper();
+            QString string2 = "FF FF FF FF C1 03 01 B4 CC ";
+            if (string.compare(string2) == 0)
+            {
+                data.clear();
+                int u[24] = {0xFF,0xFF,0xFF,0xFF,0x80,0x01,0x03,0x01,0x0F,'P','L','C','/','R','F','_','C','f','_','v','3','.','0','1'};int length = 24;
+                for(int i = 0; i < length; i++){data.append((char)u[i]);}
+                CRC16->CRC16_Add_To_ByteArray(&data);
+                emit SEND_DATA(data,CONFIG_SEND_WHITOUT_REPEAT);
+            }
+            else
+            {
+                ParceData(IN_SNIFER_PLUS_PREAMBLE);
+            }
+
+
         }
     }
     ClearOut_DataBuffer();
@@ -216,8 +237,13 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     }
     case SEND_WRITE_SWITCH_LEVEL:
     {
-        int u[6] = {0xE0,0x04,((int)(MODEM->SWITCH_LEVEL >> 0)  & 0xFF),((int)(MODEM->SWITCH_LEVEL >> 8) & 0xFF),
-                              ((int)(MODEM->SWITCH_LEVEL >> 16) & 0xFF),((int)(MODEM->SWITCH_LEVEL >> 24) & 0xFF)};length = 6;
+        int val = MODEM->getSWITCH_LEVEL();
+        int u[6] = {0xE0,0x04,
+                    ((val >> 0)  & 0xFF),
+                    ((val >> 8)  & 0xFF),
+                    ((val >> 16) & 0xFF),
+                    ((val >> 24) & 0xFF)};
+        length = 6;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
@@ -309,15 +335,22 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     }
     case SEND_READ_SWITCH_TABLE_ELEMENT:
     {
-        int u[3] = {0xEB,0x01,(int)(MODEM->SwitchTable.length()+1)}; length = 3;
+        int u[3] = {0xEB,0x01,(int)(MODEM->SwitchTable.length())}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_DELET_SWITCH_TABLE_FROM_FLASH:
+    {
+        int u[9] = {0xE9,0x07,0x5A,0xCD,0x8F,0x9C,0xC0,0x0E,0x69}; length = 9;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
     case SEND_WRITE_SWITCH_TABLE_ELEMENT:
     {
-        uint switchelement = MODEM->SwitchTable.at(MODEM->SwitchTable_element_index-1).toInt();
-        int u[14] = {0xEA,0x0C,(int)(MODEM->SwitchTable_element_index),(int)(switchelement >> 0)&0xFF,(int)(switchelement >> 8)&0xFF,(int)(switchelement >> 16)&0xFF,(int)(switchelement >> 24)&0xFF,0xF8,0xC9,0xDC,0xA5,0x96,0xE0,0x0C}; length = 14;
+        uint switchelement = MODEM->SwitchTable.at(MODEM->getCurrent_Index()).toInt();
+        int u[14] = {0xEA,0x0C,(int)(MODEM->getCurrent_Index()),(int)(switchelement >> 0)&0xFF,(int)(switchelement >> 8)&0xFF,(int)(switchelement >> 16)&0xFF,(int)(switchelement >> 24)&0xFF,0xF8,0xC9,0xDC,0xA5,0x96,0xE0,0x0C}; length = 14;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
+
         break;
     }
     case SEND_LOAD_SWITCH_TABLE_TO_FLASH:
@@ -332,9 +365,79 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
+    case SEND_WRITE_SI4432_PARAMETERS:
+    {
+        int u[26] = {0xE7,0x18,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_1.reg >> 0) &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_1.reg >> 8) &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_1.reg >> 16)&0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_1.reg >> 24)&0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_2.reg >> 0) &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_2.reg >> 8) &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_2.reg >> 16)&0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_2.reg >> 24)&0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_NOM_FREQUENC >> 0)   &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_NOM_FREQUENC >> 8)   &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_NOM_FREQUENC >> 16)  &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_NOM_FREQUENC >> 24)  &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_SYNCH_WORD >> 0)     &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_SYNCH_WORD >> 8)     &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_SYNCH_WORD >> 16)    &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_SYNCH_WORD >> 24)    &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_RX_HAEDER  >> 0)     &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_RX_HAEDER  >> 8)     &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_RX_HAEDER  >> 16)    &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_RX_HAEDER  >> 24)    &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_TX_HAEDER  >> 0)     &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_TX_HAEDER  >> 8)     &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_TX_HAEDER  >> 16)    &0xFF,
+                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_TX_HAEDER  >> 24)    &0xFF,
+                   }; length = 26;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
     }
-    CRC16->CRC16_Add_To_ByteArray(&data);
-    emit SEND_DATA(data,m);
+    case SEND_READ_SI4432_REGISTER:
+    {
+        int u[4] = {0xBB,0x02,SI4432Conf->aSI4432_RF_RegRead_struct()->MODE,SI4432Conf->aSI4432_RF_RegRead_struct()->REG}; length = 4;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_SI4432_REGISTER:
+    {
+        int u[5] = {0xBB,0x03,SI4432Conf->aSI4432_RF_RegRead_struct()->MODE,SI4432Conf->aSI4432_RF_RegRead_struct()->REG,SI4432Conf->aSI4432_RF_RegRead_struct()->VALUE}; length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_PLC_FREQ_PARAMS:
+    {
+        int u[2] = {0xEE,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_MASK_DESTINATION:
+    {
+        int u[2] = {0xD6,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_MASK_DESTINATION:
+    {
+        uint mask =  *(uint*)(MODEM->SWITCH_MASK_DESTINATION);
+        int u[6] = {0xD6,0x04,
+                   (int)(mask >> 0)  &0xFF,
+                   (int)(mask >> 8)  &0xFF,
+                   (int)(mask >> 16) &0xFF,
+                   (int)(mask >> 24) &0xFF,
+                   }; length = 6;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    }
+    if (data.length() > 0)
+    {
+        CRC16->CRC16_Add_To_ByteArray(&data);
+        emit SEND_DATA(data,m);
+    }
 }
 
 void DataLogic_Class::ParceData(uint n)
@@ -386,8 +489,10 @@ void DataLogic_Class::ParceData(uint n)
         {
             for(int i = 4; i < 32; i++)
             {
-                RF_Preamble.Byte_Array[i-4] = (uchar)(ParceDataBuffer.at(i));
+                RF_Preamble.Byte_Array[i-4]     = (uchar)(ParceDataBuffer.at(i));
+                RF_Preamble_new.Byte_Array[i-4] = (uchar)(ParceDataBuffer.at(i));
             }
+            /* Старая преамбула
             s.clear();
             s.append("Длинна пакета: " + QString::number(RF_Preamble.Field.Msg_Length) + "\r");
             s.append("Номер сообщения: " + QString::number(RF_Preamble.Field.Msg_Uniq_Number) + "\r");
@@ -400,18 +505,55 @@ void DataLogic_Class::ParceData(uint n)
             s.append("Серийный номер приёмника: " + QString::number(RF_Preamble.Field.Destination_Net_Address) + "\r");
             s.append("Направление: " + QString::number((uchar)(RF_Preamble.Field.UP_Link)) + "\r");
             s.append("КОД широковещания: " + QString::number(RF_Preamble.Field.broadcasting) + "\r");
-            s.append("Debug: RX_Buffer_current_counter: " + QString::number(RF_Preamble.Field.broadcasting) + "\r");
+            s.append("Debug: RX_Buffer_current_counter: " + QString::number(RF_Preamble.Field.RX_Buffer_current_counter) + "\r");
+            */
+
+            s.clear();
+            s.append("Длинна пакета: "   + QString::number(RF_Preamble_new.Field.Msg_Length) + "\r");
+            s.append("Номер сообщения: " + QString::number(RF_Preamble_new.Field.Msg_Uniq_Number) + "\r");
+            s.append("Уровень сети: "    + QString::number(RF_Preamble_new.Field.Retranslator_Level) + "\r");
+            s.append("Маска сети: "      + QString::number(RF_Preamble_new.Field.Retranslation_MASK_0.Field.LVL0) + "."
+                                         + QString::number(RF_Preamble_new.Field.Retranslation_MASK_0.Field.LVL1) + "."
+                                         + QString::number(RF_Preamble_new.Field.Retranslation_MASK_1.Field.LVL2) + "."
+                                         + QString::number(RF_Preamble_new.Field.Retranslation_MASK_1.Field.LVL3) + "."
+                                         + QString::number(RF_Preamble_new.Field.Retranslation_MASK_0.Field.LVL4) + "."
+                                         + QString::number(RF_Preamble_new.Field.Retranslation_MASK_0.Field.LVL5) + "."
+                                         + QString::number(RF_Preamble_new.Field.Retranslation_MASK_1.Field.LVL6) + "."
+                                         + QString::number(RF_Preamble_new.Field.Retranslation_MASK_1.Field.LVL7) + "."
+                                         + QString::number(RF_Preamble_new.Field.Retranslation_MASK_0.Field.LVL8) + "."
+                                         + QString::number(RF_Preamble_new.Field.Retranslation_MASK_1.Field.LVL9) + "."
+                     + "\r");
+            s.append("Серийный номер источника: "                + QString::number(RF_Preamble_new.Field.Source_Net_Address) + "\r");
+            s.append("Серийный номер последнего ретранслятора: " + QString::number(RF_Preamble_new.Field.Last_Retranslator_Net_Address) + "\r");
+            s.append("Серийный номер приёмника: "                + QString::number(RF_Preamble_new.Field.Destination_Net_Address) + "\r");
+            if (RF_Preamble_new.Field.UP_Link == 0)
+            {
+                s.append("Направление: "                             + QString::number((uchar)(RF_Preamble_new.Field.UP_Link)) + " >> К счётчику" + "\r");
+            }
+            else
+            {
+                s.append("Направление: "                             + QString::number((uchar)(RF_Preamble_new.Field.UP_Link)) + " От счётчика >>" + "\r");
+            }
+            s.append("RSSI USB/RF Преобразователя: "             + QString::number((double)(RF_Preamble_new.Field.in_RSSI)/10) + "\r");
+            s.append("RSSI опрашиваемого прибора: "              + QString::number((double)(RF_Preamble_new.Field.Finish_RSSI)/10) + "\r");
+            s.append("КОД широковещания: "                       + QString::number(RF_Preamble_new.Field.broadcasting) + "\r");
         }
         if (ParceDataBuffer.length() >= RF_Preamble.Field.Msg_Length + 12)
         {
+            NumbOfBytes = ParceDataBuffer.at(6+4+28+4);
+            Comande     = ParceDataBuffer.at(7+4+28+4);
+            ComandState = ParceDataBuffer.at(8+4+28+4);
             In_Data.append(ParceDataBuffer.data()+4+28,RF_Preamble.Field.Msg_Length-26);
         }
 
         emit LogForPrint(s,NONE);
         emit DataForPrint(In_Data,COM_RX);     // Вывод данных в консоль
+
+        In_Data.clear();
+        In_Data.append(ParceDataBuffer.data()+9+4+28+4,RF_Preamble.Field.Msg_Length-26-9-4);
     }
-    if (n != IN_SNIFER_PLUS_PREAMBLE)
-    {
+    //if (n != IN_SNIFER_PLUS_PREAMBLE)
+    //{
         switch (Comande)
         {
         case 0xFF: // Запрос версий ПО
@@ -437,7 +579,10 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,1);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,1);
+                }
             }
 
             break;
@@ -449,7 +594,10 @@ void DataLogic_Class::ParceData(uint n)
             Repeat_Counter = Repeat_Number;
             timerRepeat->stop();
 
-            emit outConnect(DataLogicMode,1);
+            if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+            {
+                emit outConnect(DataLogicMode,1);
+            }
             break;
         }
         case 0xEF: // Запись режима ретрансляции
@@ -459,12 +607,28 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
             }
             break;
         }
         case 0xEE: // Считывание параметров частоты PLC Модедма
         {
+            uint temp = 0;
+            if (In_Data.length() >= 5)
+            {
+                temp = ((In_Data.at(4) & 0xFF) << 16)|((In_Data.at(3) & 0xFF) << 8)|((In_Data.at(2) & 0xFF) << 0);
+                this->PLCConf->PLC_SET_LOWF(temp);
+                temp = ((In_Data.at(1) & 0xFF) << 16)|((In_Data.at(0) & 0xFF) << 8)|((Comande & 0xFF) << 0);
+                this->PLCConf->PLC_SET_HIGHF(temp);
+
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
+            }
             break;
         }
         case 0xED: // Записть параметров частоты PLC Модедма
@@ -479,11 +643,12 @@ void DataLogic_Class::ParceData(uint n)
         {
             if((NumbOfBytes == 6)&&(In_Data.length() >= 4))
             {
-                uint SWT_Element = ((uint)(In_Data.at(0)) << 0)|((uint)(In_Data.at(1)) << 8)|((uint)(In_Data.at(2)) << 16)|((uint)(In_Data.at(3)) << 24);
-                if ((SWT_Element > 0)&&(SWT_Element < 0xFFFFFFFF))
+                uint SWT_Element = ((In_Data.at(0) & 0xFF) << 0)|((In_Data.at(1)& 0xFF) << 8)|((In_Data.at(2)& 0xFF) << 16)|((In_Data.at(3)& 0xFF) << 24);
+                if ((SWT_Element > 0)&&(SWT_Element < 0xFFFFFFFF)&&(MODEM->getCurrent_Index() < 100))
                 {
+                    Repeat_Counter = Repeat_Number;
                     //uint curr_index =  MODEM->SwitchTable.length();
-                    MODEM->SwitchTable.append(QString::number(SWT_Element));
+                    MODEM->addNewItem(QString::number(SWT_Element));
                     ComandHandling(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                 }
                 else
@@ -491,7 +656,10 @@ void DataLogic_Class::ParceData(uint n)
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
 
-                    emit outConnect(DataLogicMode,1);
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                    {
+                        emit outConnect(DataLogicMode,1);
+                    }
                 }
             }
             break;
@@ -500,24 +668,39 @@ void DataLogic_Class::ParceData(uint n)
         {
             if (ComandState == 1)
             {
-                if((MODEM->SwitchTable_element_index > 0)&&(MODEM->SwitchTable_element_index < MODEM->SwitchTable.length()))
+                if(MODEM->getCurrent_Index() < MODEM->SwitchTable.length()-1)
                 {
-                    MODEM->SwitchTable_element_index++;
+                    Repeat_Counter = Repeat_Number;
+                    uchar temp = MODEM->getCurrent_Index() + 1;
+                    MODEM->setCurrent_Index(temp);
                     ComandHandling(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                 }
                 else
                 {
-                    MODEM->SwitchTable.clear();
+                    MODEM->clearNetTable();
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
 
-                    emit outConnect(DataLogicMode,ComandState);
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                    {
+                        emit outConnect(DataLogicMode,ComandState);
+                    }
                 }
             }
             break;
         }
         case 0xE9: // Стирание таблицы ретрансляции из флэш памяти модема
         {
+            if (ComandState == 1)
+            {
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
+            }
             break;
         }
         case 0xE8: // Запись таблицы ретрансляции во флэш память модема из буфера
@@ -527,88 +710,26 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
             }
             break;
         }
-        case 0xE5: // Latch RSSI
+        case 0xE7: // Запсиь RF Параметров SI4432
         {
-          signed short RSSI = 0;
-          signed short ANT1_RSSI = 0;
-          signed short ANT2_RSSI = 0;
+            if (ComandState == 1)
+            {
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
 
-          if (In_Data.length() >= 2)
-          {
-              SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0 = In_Data.at(0);
-              SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1 = In_Data.at(1);
-
-              RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1) << 8)
-                                  | (SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0);
-          }
-
-          signed short AFC = 0;
-
-          if ((NumbOfBytes == 6)&&In_Data.length() >= 4)
-          {
-              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
-              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
-              AFC = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
-                                 | (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
-              if ((AFC & (1 << 15)))
-              {
-                  SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0xFF;
-                  SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0xFF;
-                  AFC |= 0xFFFF0000;
-              }
-              Repeat_Counter = Repeat_Number;
-              timerRepeat->stop();
-
-              emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
-          }
-          else if ((NumbOfBytes == 8)&&(In_Data.length() >= 6))
-          {
-              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
-              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
-              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = In_Data.at(4);
-              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = In_Data.at(5);
-
-              AFC = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3) << 24)
-                                | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2) << 16)
-                                | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
-                                |  (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
-
-              Repeat_Counter = Repeat_Number;
-              timerRepeat->stop();
-              emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
-          }
-          if ((NumbOfBytes == 10)&&(In_Data.length() >= 8))
-          {
-              SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_0 = In_Data.at(2);
-              SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_1 = In_Data.at(3);
-
-              SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_0 = In_Data.at(4);
-              SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_1 = In_Data.at(5);
-
-              ANT1_RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_1) << 8)
-                                       | (SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_0);
-              ANT2_RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_1) << 8)
-                                       | (SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_0);
-
-              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(6);
-              SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(7);
-              AFC = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
-                                 | (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
-              if ((AFC & (1 << 15)))
-              {
-                  SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0xFF;
-                  SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0xFF;
-                  AFC |= 0xFFFF0000;
-              }
-              Repeat_Counter = Repeat_Number;
-              timerRepeat->stop();
-              emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
-          }
-          break;
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
+            }
+           break;
         }
         case 0xE6: // Чтение RF Параметров SI4432
         {
@@ -616,18 +737,101 @@ void DataLogic_Class::ParceData(uint n)
             {
                 if (In_Data.length() >= NumbOfBytes-3)
                 {
-                    SI4432Conf->aSI4463_RF_Config_struct()->RF_CONF_REG_1.reg = (((uint)(In_Data.at(0)) &0xFF) << 0)|(((uint)(In_Data.at(1)) &0xFF) << 8)|(((uint)(In_Data.at(2)) &0xFF) << 16)|(((uint)(In_Data.at(3)) &0xFF) << 24);
-                    SI4432Conf->aSI4463_RF_Config_struct()->RF_CONF_REG_2.reg = (((uint)(In_Data.at(4)) &0xFF) << 0)|(((uint)(In_Data.at(5)) &0xFF) << 8)|(((uint)(In_Data.at(6)) &0xFF) << 16)|(((uint)(In_Data.at(7)) &0xFF) << 24);
-                    SI4432Conf->aSI4463_RF_Config_struct()->RF_NOM_FREQUENC   = (((uint)(In_Data.at(8)) &0xFF) << 0)|(((uint)(In_Data.at(9)) &0xFF) << 8)|(((uint)(In_Data.at(10))&0xFF) << 16)|(((uint)(In_Data.at(11))&0xFF) << 24);
-                    SI4432Conf->aSI4463_RF_Config_struct()->RF_SYNCH_WORD     = (((uint)(In_Data.at(12))&0xFF) << 0)|(((uint)(In_Data.at(13))&0xFF) << 8)|(((uint)(In_Data.at(14))&0xFF) << 16)|(((uint)(In_Data.at(15))&0xFF) << 24);
-                    SI4432Conf->aSI4463_RF_Config_struct()->RF_RX_HAEDER      = (((uint)(In_Data.at(16))&0xFF) << 0)|(((uint)(In_Data.at(17))&0xFF) << 8)|(((uint)(In_Data.at(18))&0xFF) << 16)|(((uint)(In_Data.at(19))&0xFF) << 24);
-                    SI4432Conf->aSI4463_RF_Config_struct()->RF_TX_HAEDER      = (((uint)(In_Data.at(20))&0xFF) << 0)|(((uint)(In_Data.at(21))&0xFF) << 8)|(((uint)(In_Data.at(22))&0xFF) << 16)|(((uint)(In_Data.at(23))&0xFF) << 24);
+                    SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_1.reg = (((uint)(In_Data.at(0)) &0xFF) << 0)|(((uint)(In_Data.at(1)) &0xFF) << 8)|(((uint)(In_Data.at(2)) &0xFF) << 16)|(((uint)(In_Data.at(3)) &0xFF) << 24);
+                    SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_2.reg = (((uint)(In_Data.at(4)) &0xFF) << 0)|(((uint)(In_Data.at(5)) &0xFF) << 8)|(((uint)(In_Data.at(6)) &0xFF) << 16)|(((uint)(In_Data.at(7)) &0xFF) << 24);
+                    SI4432Conf->aSI4432_RF_Config_struct()->RF_NOM_FREQUENC   = (((uint)(In_Data.at(8)) &0xFF) << 0)|(((uint)(In_Data.at(9)) &0xFF) << 8)|(((uint)(In_Data.at(10))&0xFF) << 16)|(((uint)(In_Data.at(11))&0xFF) << 24);
+                    SI4432Conf->aSI4432_RF_Config_struct()->RF_SYNCH_WORD     = (((uint)(In_Data.at(12))&0xFF) << 0)|(((uint)(In_Data.at(13))&0xFF) << 8)|(((uint)(In_Data.at(14))&0xFF) << 16)|(((uint)(In_Data.at(15))&0xFF) << 24);
+                    SI4432Conf->aSI4432_RF_Config_struct()->RF_RX_HAEDER      = (((uint)(In_Data.at(16))&0xFF) << 0)|(((uint)(In_Data.at(17))&0xFF) << 8)|(((uint)(In_Data.at(18))&0xFF) << 16)|(((uint)(In_Data.at(19))&0xFF) << 24);
+                    SI4432Conf->aSI4432_RF_Config_struct()->RF_TX_HAEDER      = (((uint)(In_Data.at(20))&0xFF) << 0)|(((uint)(In_Data.at(21))&0xFF) << 8)|(((uint)(In_Data.at(22))&0xFF) << 16)|(((uint)(In_Data.at(23))&0xFF) << 24);
 
+                    SI4432Conf->REFRASH_UI_DATA();
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
 
-                    emit outConnect(DataLogicMode,ComandState);
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                    {
+                        emit outConnect(DataLogicMode,ComandState);
+                    }
                 }
+            }
+            break;
+        }
+        case 0xE5: // Latch RSSI
+        {
+            signed short RSSI = 0;
+            signed short ANT1_RSSI = 0;
+            signed short ANT2_RSSI = 0;
+
+            if (In_Data.length() >= 2)
+            {
+                SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0 = In_Data.at(0);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1 = In_Data.at(1);
+
+                RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_1) << 8)
+                                    | (SI4463Conf->aSI4463_INTERUPTS()->Field.LATCH_RSSI.Field.LATCH_RSSI_0);
+            }
+
+            signed int AFC = 0;
+
+            if ((NumbOfBytes == 6)&&In_Data.length() >= 4)
+            {
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
+                AFC = ((signed int)  (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
+                                   | (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
+                if ((AFC & (1 << 15)))
+                {
+                    SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0xFF;
+                    SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0xFF;
+                    AFC |= 0xFFFF0000;
+                }
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+
+                emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
+            }
+            else if ((NumbOfBytes == 8)&&(In_Data.length() >= 6))
+            {
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(2);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(3);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = In_Data.at(4);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = In_Data.at(5);
+
+                AFC = ((signed int) (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3) << 24)
+                                  | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2) << 16)
+                                  | ((SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
+                                  |  (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
+
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+                emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
+            }
+            if ((NumbOfBytes == 10)&&(In_Data.length() >= 8))
+            {
+                SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_0 = In_Data.at(2);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_1 = In_Data.at(3);
+
+                SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_0 = In_Data.at(4);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_1 = In_Data.at(5);
+
+                ANT1_RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_1) << 8)
+                                         | (SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_0);
+                ANT2_RSSI = ((signed short)(SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_1) << 8)
+                                         | (SI4463Conf->aSI4463_INTERUPTS()->Field.ANT2_RSSI.Field.ANT2_RSSI_0);
+
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0 = In_Data.at(6);
+                SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1 = In_Data.at(7);
+                AFC = ((signed int)  (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_1) << 8)
+                                   | (SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_0);
+                if ((AFC & (1 << 15)))
+                {
+                    SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_2 = 0xFF;
+                    SI4463Conf->aSI4463_INTERUPTS()->Field.AFC_FREQ_OFFSET.Field.AFC_FREQ_OFFSET_3 = 0xFF;
+                    AFC |= 0xFFFF0000;
+                }
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+                emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
             }
             break;
         }
@@ -638,7 +842,10 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
             }
             break;
         }
@@ -652,7 +859,10 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
             }
             else if (NumbOfBytes == 2)
             {
@@ -661,7 +871,10 @@ void DataLogic_Class::ParceData(uint n)
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
 
-                    emit outConnect(DataLogicMode,ComandState);
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                    {
+                        emit outConnect(DataLogicMode,ComandState);
+                    }
                 }
             }
             break;
@@ -685,7 +898,10 @@ void DataLogic_Class::ParceData(uint n)
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
 
-                    emit outConnect(DataLogicMode,ComandState);
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                    {
+                        emit outConnect(DataLogicMode,ComandState);
+                    }
                 }
             }
             break;
@@ -709,7 +925,10 @@ void DataLogic_Class::ParceData(uint n)
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
 
-                    emit outConnect(DataLogicMode,ComandState);
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                    {
+                        emit outConnect(DataLogicMode,ComandState);
+                    }
                 }
             }
             break;
@@ -718,13 +937,16 @@ void DataLogic_Class::ParceData(uint n)
         {
             if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
             {
-                MODEM->SWITCH_LEVEL     = 0;
-                MODEM->SWITCH_LEVEL     |= *((uint*)(In_Data.data()));
+                //MODEM->setSWITCH_LEVEL(0);
+                MODEM->setSWITCH_LEVEL(*((uint*)(In_Data.data())));
 
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
             }
             else if (NumbOfBytes == 2)
             {
@@ -733,7 +955,10 @@ void DataLogic_Class::ParceData(uint n)
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
 
-                    emit outConnect(DataLogicMode,ComandState);
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                    {
+                        emit outConnect(DataLogicMode,ComandState);
+                    }
                 }
             }
             break;
@@ -745,7 +970,10 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
             }
             break;
         }
@@ -756,7 +984,10 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
             }
             break;
         }
@@ -766,12 +997,32 @@ void DataLogic_Class::ParceData(uint n)
             {
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
-
-                emit outConnect(DataLogicMode,ComandState);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
             }
             break;
         }
-        case 0xBF: // Чтение свойств SI4463 из памяти RF модэма v5+, или запись свойств во буфер
+        case 0xD6: // Записать маску назначения (только для снифера)
+        {
+            if (ComandState == 1)
+            {
+                if (In_Data.length() >= 4)
+                {
+                    uint mask = 0;
+                    mask |= *((uint*)(In_Data.data()));
+                }
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
+            }
+            break;
+        }
+        case 0xBF: // Чтение свойств SI4463 из памяти RF модэма v5+, или запись свойств в буфер
         {
             if (NumbOfBytes > 2)
             {
@@ -795,7 +1046,10 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,1);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,1);
+                }
             }
             else
             {
@@ -804,7 +1058,10 @@ void DataLogic_Class::ParceData(uint n)
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
 
-                    emit outConnect(DataLogicMode,ComandState);
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                    {
+                        emit outConnect(DataLogicMode,ComandState);
+                    }
                 }
             }
             break;
@@ -816,7 +1073,10 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
             }
             break;
         }
@@ -827,7 +1087,10 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
             }
             break;
         }
@@ -838,15 +1101,53 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
             }
             break;
         }
-        case 0xBB: // Current RSSI
+        case 0xBB: // Current RSSI SI4463 или регистры SI4432
         {
-          signed short RSSI = 0;
-          if(In_Data.length() >= 2)
+          if(In_Data.length() == 1) //Запись регистров SI4432
           {
+              if (ComandState == 1)
+              {
+                SI4432Conf->aSI4432_RF_RegRead_struct()->MODE = 0x01;          // Запись
+                SI4432Conf->aSI4432_RF_RegRead_struct()->REG  = In_Data.at(0); // Адрес
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
+              }
+          }
+          if(In_Data.length() == 2) //Чтение регистров SI4432
+          {
+              if (ComandState == 1)
+              {
+                SI4432Conf->aSI4432_RF_RegRead_struct()->MODE  = 0x00;          // Чтение
+                SI4432Conf->aSI4432_RF_RegRead_struct()->REG   = In_Data.at(0); // Адрес
+                SI4432Conf->aSI4432_RF_RegRead_struct()->VALUE = In_Data.at(1); // Значение
+
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+
+                if(SI4432Conf->aSI4432_RF_RegRead_struct()->REG == 0x09)
+                {
+                    SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_3.reg = SI4432Conf->aSI4432_RF_RegRead_struct()->VALUE;
+                }
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
+              }
+          }
+          if(In_Data.length() == 2) // Чтение Current RSSI SI4463
+          {
+              signed short RSSI = 0;
               SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_0 = In_Data.at(0);
               SI4463Conf->aSI4463_INTERUPTS()->Field.CURR_RSSI.Field.CURR_RSSI_1 = In_Data.at(1);
 
@@ -861,7 +1162,7 @@ void DataLogic_Class::ParceData(uint n)
           break;
         }
         }
-    }
+    //}
     ParceDataBuffer.clear();
 }
 
@@ -869,55 +1170,29 @@ void DataLogic_Class::REPEAT_SEND()
 {
     SEND_DATA(repeat_data, CONFIG_SEND_CONTROL);
 }
-
+void DataLogic_Class::MANUAL_REPEAT_SEND()
+{
+    SEND_DATA(repeat_data, MANUAL_CYCLIC_SEND_CONTROL);
+}
+void DataLogic_Class::STOP_SEND_DATA(bool b)
+{
+    Repeat_Counter = Repeat_Number;
+    timerRepeat->stop();
+    emit STOP();
+}
 //+++++++++++++[Процедура ОТПРАВКИ СООБЩЕНИЙ]++++++++++++++++++++++++++++++++++++++++
 
 void DataLogic_Class::SEND_DATA(QByteArray data, uint n)
 {
+    SEND_MODE = n;
     switch (n)
     {
-        case CONFIG_SEND_CONTROL:
-        {
-            if (Repeat_Counter > 0)
-            {
-                QByteArray data_to_write; // Текстовая переменная
-                repeat_data = data;
-                int sn = 0;
-                if (addSerialNumber)
-                {
-                    sn = this->SerialNumber.toInt();
-                    data_to_write.append((char)(sn >> 0));
-                    data_to_write.append((char)(sn >> 8));
-                    data_to_write.append((char)(sn >> 16));
-                    data_to_write.append((char)(sn >> 24));
-                }
-
-                data_to_write.append(data);
-
-                if (addSerialNumber)
-                {
-                    CRC16->CRC16_Add_To_ByteArray(&data_to_write);
-                }
-
-                emit DataForPrint(data_to_write,COM_TX);
-                emit OutData(data_to_write);     // Отправка данных в порт
-
-                timerRepeat->start(Delay_Time);
-                Repeat_Counter--;
-            }
-            else
-            {
-                Repeat_Counter = Repeat_Number;
-                timerRepeat->stop();
-                emit noANSWER();
-            }
-            break;
-        }
-        case CONFIG_SEND_WHITOUT_REPEAT:
+    case CONFIG_SEND_CONTROL:
+    {
+        if (Repeat_Counter > 0)
         {
             QByteArray data_to_write; // Текстовая переменная
             repeat_data = data;
-
             int sn = 0;
             if (addSerialNumber)
             {
@@ -937,13 +1212,71 @@ void DataLogic_Class::SEND_DATA(QByteArray data, uint n)
 
             emit DataForPrint(data_to_write,COM_TX);
             emit OutData(data_to_write);     // Отправка данных в порт
-            break;
+
+            timerRepeat->start(Delay_Time);
+            Repeat_Counter--;
         }
-        case MANUAL_SEND_CONTROL:
+        else
         {
-            emit DataForPrint(data,COM_TX);   // Вывод данных в консоль
-            emit OutData(data);        // Отправка данных в порт
-            break;
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+            emit noANSWER();
         }
+        SEND_MODE = n;
+        break;
+    }
+    case CONFIG_SEND_WHITOUT_REPEAT:
+    {
+
+        QByteArray data_to_write; // Текстовая переменная
+
+        int sn = 0;
+        if (addSerialNumber)
+        {
+            sn = this->SerialNumber.toInt();
+            data_to_write.append((char)(sn >> 0));
+            data_to_write.append((char)(sn >> 8));
+            data_to_write.append((char)(sn >> 16));
+            data_to_write.append((char)(sn >> 24));
+        }
+
+        data_to_write.append(data);
+
+        if (addSerialNumber)
+        {
+            CRC16->CRC16_Add_To_ByteArray(&data_to_write);
+        }
+
+        emit DataForPrint(data_to_write,COM_TX);
+        emit OutData(data_to_write);     // Отправка данных в порт
+        break;
+    }
+
+    case MANUAL_SEND_CONTROL:
+    {
+        emit DataForPrint(data,COM_TX);   // Вывод данных в консоль
+        emit OutData(data);               // Отправка данных в порт
+        break;
+    }
+
+    case MANUAL_CYCLIC_SEND_CONTROL:
+    {
+        if (Repeat_Counter > 0)
+        {
+            repeat_data = data;
+            emit DataForPrint(data,COM_TX);   // Вывод данных в консоль
+            emit OutData(data);               // Отправка данных в порт
+
+            timerManualRepeat->start(Delay_Time);
+            Repeat_Counter--;
+        }
+        else
+        {
+            Repeat_Counter = Repeat_Number;
+            timerManualRepeat->stop();
+            emit noANSWER();
+        }
+        break;
+    }
     }
 }

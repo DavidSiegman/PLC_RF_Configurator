@@ -9,6 +9,7 @@ enum
     CONFIG_SEND_CONTROL,
     CONFIG_SEND_WHITOUT_REPEAT,
     MANUAL_SEND_CONTROL,
+    MANUAL_CYCLIC_SEND_CONTROL,
     COM_OPEN,
     COM_CLOSE,
     COM_TX,
@@ -27,10 +28,10 @@ enum
     IN_SNIFER_PLUS_PREAMBLE,
     CONNECT_HANDLING,
     SEND_AOPEN,
-    SEND_BF_03_00_AC_00, // чтение первой части параметров SI4463
-    SEND_BF_03_21_88_00, // чтение второй части параметров SI4463
-    SEND_BF_AF_00_AC_00, // запись первой части параметров SI4463
-    SEND_BF_8B_21_88_00, // запись второй части параметров SI4463
+    SEND_BF_03_00_AC_00,             // чтение первой части параметров SI4463
+    SEND_BF_03_21_88_00,             // чтение второй части параметров SI4463
+    SEND_BF_AF_00_AC_00,             // запись первой части параметров SI4463
+    SEND_BF_8B_21_88_00,             // запись второй части параметров SI4463
     SEND_RF_RESET,
     SEND_SNIFER_MODE,
     SEND_UPLINC_MODE,
@@ -39,6 +40,7 @@ enum
     SEND_READ_SWITCH_TABLE_ELEMENT,
     SEND_WRITE_SWITCH_TABLE_ELEMENT,
     SEND_LOAD_SWITCH_TABLE_TO_FLASH,
+    SEND_DELET_SWITCH_TABLE_FROM_FLASH,
     SEND_READ_NODE_TYPE,
     SEND_WRITE_NODE_TYPE,
     SEND_READ_SWITCH_LEVEL,
@@ -57,7 +59,14 @@ enum
     SEND_READ_PROPERTYS_FROM_FLASH,
     SEND_LOAD_CALIBPROPS_TO_FLASH,
     SEND_READ_CALIBPROPS_FROM_FLASH,
-    SEND_READ_SI4432_PARAMETERS
+    SEND_READ_SI4432_PARAMETERS,
+    SEND_WRITE_SI4432_PARAMETERS,
+    SEND_READ_SI4432_REGISTER,
+    SEND_WRITE_SI4432_REGISTER,
+    SEND_READ_PLC_FREQ_PARAMS,
+    SEND_WRITE_PLC_FREQ_PARAMS,
+    SEND_READ_MASK_DESTINATION,
+    SEND_WRITE_MASK_DESTINATION
 };
 
 #endif // MESS_ENUM

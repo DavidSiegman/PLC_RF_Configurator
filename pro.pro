@@ -35,8 +35,12 @@ HEADERS += \
     TCP/tcp.h \
     FILE/parceclass.h \
     STYLE/style.h \
-    NET/nettableclass.h \
-    SI4432/si4432class.h
+    SI4432/si4432class.h \
+    FILTER/filter.h \
+    PLC/plcclass.h \
+    UPDATE/update.h \
+    CRC/crc32_class.h \
+    barr_to_string.h
 
 SOURCES += \
     COM/port.cpp \
@@ -56,8 +60,11 @@ SOURCES += \
     TCP/tcp.cpp \
     FILE/parceclass.cpp \
     STYLE/style.cpp \
-    NET/nettableclass.cpp \
-    SI4432/si4432class.cpp
+    SI4432/si4432class.cpp \
+    FILTER/filter.cpp \
+    PLC/plcclass.cpp \
+    UPDATE/update.cpp \
+    CRC/crc32_class.cpp
 
 FORMS += \
     mainwindow.ui

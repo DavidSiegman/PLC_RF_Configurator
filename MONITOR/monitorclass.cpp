@@ -23,6 +23,10 @@ void MonitorClass::handlingMonitor()
     {
         emit SendComand(SEND_READ_RSSI_CURRENT,CONFIG_SEND_WHITOUT_REPEAT);
     }
+    else if (Parameter == 1)
+    {
+        emit SendComand(SEND_READ_RSSI,CONFIG_SEND_WHITOUT_REPEAT);
+    }
     else
     {
 
