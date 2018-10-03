@@ -19,30 +19,40 @@ private:
 
     QFile *file;
     crc32_class *CRC32;
-    uint Writed_PAGES, Current_PAGE, Current_BLOCK, Current_SECTOR;
-    QByteArray Writed_PAGES_CRC32;
+    uint Writed_PAGES, Current_PAGE, Current_BLOCK, Current_SECTOR, nSIZE, Writed_BYTES;
+    QByteArray Writed_PAGES_CRC32, nCRC32;
 
     QByteArray DATA;
 signals:
 
 public slots:
-    setPATCH(QString patch);
+    void setPATCH(QString patch);
+
     QString getPATCH(void);
 
-    setWrited_PAGES(uint new_val);
+    QString getVERSION(void);
+
     uint getWrited_PAGES(void);
 
-    setCurrent_PAGE(uint new_val);
+    uint getWrited_BYTES(void);
+
     uint getCurrent_PAGE(void);
 
-    setCurrent_BLOCK(uint new_val);
     uint getCurrent_BLOCK(void);
 
-    setCurrent_SECTOR(uint new_val);
     uint getCurrent_SECTOR(void);
 
-    setWrited_PAGES_CRC32(uint new_val);
-    uint getWrited_PAGES_CRC32(void);
+    void Compare_Writed_PAGES_CRC32(uint PAGES, uint PAGE_SIZE, uint in_crc32);
+
+    void getCurrent_SECTOR_DATA(QByteArray* DATA);
+
+    void incCurrent_SECTOR(void);
+
+    QByteArray* get_aWrited_PAGES_CRC32(void);
+
+    uint getSIZE(void);
+
+    QByteArray getCRC32(void);
 };
 
 #endif // UPDATE_H

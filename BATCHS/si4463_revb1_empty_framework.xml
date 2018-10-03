@@ -7,7 +7,7 @@
           <Value>0</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudCenterFrequency">
-          <Value>433.92</Value>
+          <Value>433.92000</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudChannelSpacing">
           <Value>50</Value>
@@ -16,12 +16,6 @@
       <grbCrystalControl Type="System.Windows.Forms.GroupBox">
         <DataItem Type="System.Windows.Forms.CheckBox" Name="chbUseExternalTCXO">
           <Checked>False</Checked>
-        </DataItem>
-        <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudCrystalToleranceTX">
-          <Value>10</Value>
-        </DataItem>
-        <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudCrystalToleranceRX">
-          <Value>10</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudCrystalFrequency">
           <Value>30</Value>
@@ -35,7 +29,7 @@
       </DataItem>
       <grbClockOutput Type="System.Windows.Forms.GroupBox">
         <DataItem Type="System.Windows.Forms.ComboBox" Name="cbbClockOutput">
-          <SelectedIndex>6</SelectedIndex>
+          <SelectedIndex>0</SelectedIndex>
         </DataItem>
         <DataItem Type="System.Windows.Forms.ComboBox" Name="cbb32kHzClock">
           <SelectedIndex>0</SelectedIndex>
@@ -62,16 +56,16 @@
           <SelectedIndex>2</SelectedIndex>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudDataRate">
-          <Value>9.600</Value>
+          <Value>4.8</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudDeviation">
-          <Value>9.600</Value>
+          <Value>20</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.CheckBox" Name="chbManualRxBandwidth">
-          <Checked>False</Checked>
+          <Checked>True</Checked>
         </DataItem>
         <DataItem Type="NewWDS.Applications.App_Common.CustomContols.NumericUpDownExtended" Name="nudBandwidth">
-          <Value>1.1</Value>
+          <Value>40.000</Value>
         </DataItem>
         <DataItem Type="System.Windows.Forms.ComboBox" Name="cbbIfMode">
           <SelectedIndex>0</SelectedIndex>
@@ -239,6 +233,9 @@
               </DataItem>
               <DataItem Type="System.Windows.Forms.CheckBox" Name="chbPreambleManchesterEncoded">
                 <Checked>False</Checked>
+              </DataItem>
+              <DataItem Type="System.Windows.Forms.NumericUpDown" Name="nudPreambleRXThreshold">
+                <Value>20</Value>
               </DataItem>
             </grbPreamble>
           </tbpPreamble>

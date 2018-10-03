@@ -109,7 +109,7 @@ private:
     SI4463Class         *SI4463Conf;
     SI4432Class         *SI4432Conf;
     PLCClass            *PLCConf;
-    QTimer              *timer, *timerRepeat, *timerManualRepeat;
+    QTimer              *timer, *timerRepeat, *timerManualRepeat, *BOOT_WAIT;
     CRC16_Class         *CRC16;
     MODEMClass          *MODEM;
     Port                *nPort;
@@ -125,7 +125,8 @@ private:
     RF_Preamble_str     RF_Preamble;
     RF_Preamble_new_str RF_Preamble_new;
     bool                addSerialNumber;
-    unsigned char       SEND_MODE;
+    bool                stop;
+    unsigned char       SEND_MODE, BOOT_WAIT_COUNTER;
 
     SI4463_PROPERTYS_structur* CurrentSI4463_PROPERTYS_structur;
 
@@ -133,10 +134,12 @@ signals:
     void OutData(QByteArray data);
     void DataForPrint(QByteArray data,uint n);
     void LogForPrint(QString data,uint n);
+    void SendLog(QString data, uint n);
     void outConnect(uint n, uint state);
     void outCurrentRSSI(signed short RSSI);
     void outLRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,signed short ANT2_RSSI,double AFC);
     void noANSWER();
+    void outPROGRESS(uint value);
     void STOP();
 
 public slots:
@@ -150,6 +153,7 @@ public slots:
     void ClearOut_DataBuffer(void);
     void ComandHandling(uint n, uint m);
     void STOP_SEND_DATA(bool b);
+    void BOOT_WAITED();
 };
 
 #endif // DATALOGIC_CLASS_H

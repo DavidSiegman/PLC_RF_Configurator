@@ -8,6 +8,8 @@ MODEMClass::MODEMClass(Ui::MainWindow *ui, QObject *parent) : QObject(parent)
     boot_ver = ""; fw_ver = "";
     BOOT_VERSION = 0; FW_VERSION = 0;
     BOOT_VERSION_SNIFER = 0; FW_VERSION_SNIFER = 0;
+    BOOT_SIZE = 0; FW_SIZE = 0;
+    BOOT_CRC32.clear(); FW_CRC32.clear();
     SwitchTable.clear();
 
     SWITCH_MASK             = new RF_Switch_Mask;

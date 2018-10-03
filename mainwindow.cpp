@@ -64,12 +64,14 @@ MainWindow::MainWindow(QWidget *parent) :
     SI4463Config              = new SI4463Class();
     SI4432Config              = new SI4432Class(ui);
     PLCConfig                 = new PLCClass(ui);
+    newUPDATE                 = new UPDATE(ui);
+
     DataLogic                 = new DataLogic_Class(oCRC16,timer_COMBufferClear,SI4463Config,SI4432Config,
                                                     PLCConfig,MODEM,newPort,newTCP,newUPDATE,this);   // Создаём Объект обработки сообщений
-    ConnectHandler            = new ConnectHandlerClass(ui, DataLogic,MODEM);
+    ConnectHandler            = new ConnectHandlerClass(ui, DataLogic, MODEM, newUPDATE);
     scene                     = new myGraphScene(this);
     newFilter                 = new Filter(10);
-    newUPDATE                 = new UPDATE(ui);
+
 
     ui->SI4436_PROPSView      ->setModel(SI4463Config->model);
     ui->SI4436_PROPSView      ->resizeRowsToContents();
@@ -100,6 +102,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(newTCP, SIGNAL(TCP_Error(QString,uint)),      this, SLOT(Print_Log(QString,uint)));   //Лог ошибок
 
     connect(ConnectHandler,    SIGNAL(SendLog(QString,uint)),this, SLOT(Print_Log(QString,uint)));
+    connect(DataLogic,         SIGNAL(SendLog(QString,uint)),this, SLOT(Print_Log(QString,uint)));
 
     connect(ui->COMConnect,    SIGNAL(clicked()),newPort,SLOT(COM_Connect()));
     connect(ui->TCPConnect,    SIGNAL(clicked()),newTCP, SLOT(TCP_Connect()));
@@ -128,12 +131,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this,SIGNAL(READ_SWITCH_TABLE()),           ConnectHandler,SLOT(ReadSWITCH_TABLE()));
     connect(this,SIGNAL(SEND_SWITCH_TABLE_DELETE()),    ConnectHandler,SLOT(SendSWITCH_TABLE_DELETE()));
     connect(this,SIGNAL(WRITE_MASK_DESTINATION()),      ConnectHandler,SLOT(WriteMASK_DESTINATION()));
+    connect(this,SIGNAL(START_UPDATE()),                ConnectHandler,SLOT(StartUPDATE()));
+    connect(this,SIGNAL(START_DELETE()),                ConnectHandler,SLOT(StartDELETE()));
 
     connect(ui->STOP, SIGNAL(clicked(bool)), DataLogic,     SLOT(STOP_SEND_DATA(bool)));
-    connect(DataLogic,SIGNAL(STOP()),        ConnectHandler,SLOT(StopMonitor()));
-    connect(DataLogic,SIGNAL(STOP()),        ConnectHandler,SLOT(STOP()));
-    connect(DataLogic,SIGNAL(noANSWER()),    ConnectHandler,SLOT(StopMonitor()));
-    connect(DataLogic,SIGNAL(noANSWER()),    ConnectHandler,SLOT(aOPEN()));
+    connect(DataLogic,SIGNAL(STOP()),               ConnectHandler,SLOT(StopMonitor()));
+    connect(DataLogic,SIGNAL(STOP()),               ConnectHandler,SLOT(STOP()));
+    connect(DataLogic,SIGNAL(noANSWER()),           ConnectHandler,SLOT(StopMonitor()));
+    connect(DataLogic,SIGNAL(noANSWER()),           ConnectHandler,SLOT(STOP()));
+    connect(DataLogic,SIGNAL(outPROGRESS(uint)),    ConnectHandler,SLOT(setPROGRESS(uint)));
 
     connect(DataLogic,SIGNAL(DataForPrint(QByteArray,uint)),this,SLOT(Print(QByteArray,uint)));
     connect(DataLogic,SIGNAL(LogForPrint(QString,uint)),this, SLOT(Print_Log(QString,uint)));
@@ -2059,5 +2065,10 @@ void MainWindow::on_SWITCH_clicked()
 
 void MainWindow::on_UPDATE_START_clicked()
 {
+    emit START_UPDATE();
+}
 
+void MainWindow::on_CLEAR_clicked()
+{
+    emit START_DELETE();
 }

@@ -19,6 +19,7 @@ DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16,QTimer *t,SI4463Class *SI44
 
     this->timerRepeat           = new QTimer();
     this->timerManualRepeat     = new QTimer();
+    this->BOOT_WAIT             = new QTimer();
 
     connect(this,SIGNAL(OutData(QByteArray)),            this->nPort,SLOT(COM_WriteDATA(QByteArray)));
     connect(this->nPort, SIGNAL(COM_OutDATA(QByteArray)),this, SLOT(In_DataBuffer(QByteArray)));
@@ -26,6 +27,7 @@ DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16,QTimer *t,SI4463Class *SI44
     connect(this->nTCP, SIGNAL(TCP_OutDATA(QByteArray)), this, SLOT(In_DataBuffer(QByteArray)));
     connect(timerRepeat,SIGNAL(timeout()),               this, SLOT(REPEAT_SEND()));
     connect(timerManualRepeat,SIGNAL(timeout()),         this, SLOT(MANUAL_REPEAT_SEND()));
+    connect(BOOT_WAIT,SIGNAL(timeout()),                 this, SLOT(BOOT_WAITED()));
 
 }
 
@@ -432,7 +434,81 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
+    case SEND_ENABLE_BOOT:
+    {
+        int u[9] = {0xFE,0x07,0xE0,0xDC,0xA5,0xF8,0xC9,0x96,0x0C}; length = 9;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
     }
+    case SEND_READ_WRITED_PAGES:
+    {
+        int u[2] = {0xF9,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_FIRMWARE_DATA:
+    {
+        QByteArray VERS;
+        VERS.append(nUPDATE->getVERSION());
+        if (nUPDATE->getSIZE() <= 0xFFFF)
+        {
+            int u[12] = {0xFB,0x0A,
+                        ((int)(VERS.at(0)) & 0xFF),
+                        ((int)(VERS.at(1)) & 0xFF),
+                        ((int)(VERS.at(2)) & 0xFF),
+                        ((int)(VERS.at(3)) & 0xFF),
+                        ((int)(nUPDATE->getSIZE()) >> 0   & 0xFF),
+                        ((int)(nUPDATE->getSIZE()) >> 8   & 0xFF),
+                        ((int)(nUPDATE->getCRC32().at(3)) & 0xFF),
+                        ((int)(nUPDATE->getCRC32().at(2)) & 0xFF),
+                        ((int)(nUPDATE->getCRC32().at(1)) & 0xFF),
+                        ((int)(nUPDATE->getCRC32().at(0)) & 0xFF)
+                        }; length = 12;
+            for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        }
+        else if ((nUPDATE->getSIZE() > 0xFFFF) && (nUPDATE->getSIZE() <= 0xFFFFFFFF))
+        {
+            int u[14] = {0xFB,0x0C,
+                        ((int)(VERS.at(0)) & 0xFF),
+                        ((int)(VERS.at(1)) & 0xFF),
+                        ((int)(VERS.at(2)) & 0xFF),
+                        ((int)(VERS.at(3)) & 0xFF),
+                        ((int)(nUPDATE->getSIZE()) >> 0   & 0xFF),
+                        ((int)(nUPDATE->getSIZE()) >> 8   & 0xFF),
+                        ((int)(nUPDATE->getSIZE()) >> 16  & 0xFF),
+                        ((int)(nUPDATE->getSIZE()) >> 24  & 0xFF),
+                        ((int)(nUPDATE->getCRC32().at(3)) & 0xFF),
+                        ((int)(nUPDATE->getCRC32().at(2)) & 0xFF),
+                        ((int)(nUPDATE->getCRC32().at(1)) & 0xFF),
+                        ((int)(nUPDATE->getCRC32().at(0)) & 0xFF)
+                        }; length = 14;
+            for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        }
+
+        break;
+    }
+    case SEND_WRITE_SECTOR:
+    {
+        emit SendLog(QString::fromUtf8("\r>> ======= Записываем Блок: ") +
+                     QString::number(nUPDATE->getCurrent_BLOCK()) +
+                     QString::fromUtf8(" Сектор: ") +
+                     QString::number(nUPDATE->getCurrent_SECTOR()) +
+                     QString::fromUtf8(" Байт записано: ") +
+                     QString::number(nUPDATE->getWrited_BYTES()) +
+                     QString::fromUtf8("\r"),NONE);
+
+        data.append(0xFC);
+        nUPDATE->getCurrent_SECTOR_DATA(&data);
+        break;
+    }
+    case SEND_DELETE_FIRMWARE:
+    {
+        int u[9] = {0xFA,0x07,0xA5,0xDC,0xE0,0x0C,0x96,0xC9,0xF8}; length = 9;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    }
+    this->stop = false;
     if (data.length() > 0)
     {
         CRC16->CRC16_Add_To_ByteArray(&data);
@@ -558,11 +634,47 @@ void DataLogic_Class::ParceData(uint n)
         {
         case 0xFF: // Запрос версий ПО
         {
-            if (In_Data.length() >= 10+4)
+            if (In_Data.length() >= 19)
             {
                 MODEM->curr_ver     = ComandState;
                 MODEM->boot_ver     = QString::fromUtf8(In_Data.data(),4);
-                MODEM->fw_ver       = QString::fromUtf8(In_Data.data()+10,4);
+
+                if (NumbOfBytes == 0x16)
+                {
+                    MODEM->BOOT_SIZE    = ((In_Data.at(5) & 0xFF) << 8)|((In_Data.at(4) & 0xFF) << 0);
+                    MODEM->BOOT_CRC32.append(In_Data.at(9));
+                    MODEM->BOOT_CRC32.append(In_Data.at(8));
+                    MODEM->BOOT_CRC32.append(In_Data.at(7));
+                    MODEM->BOOT_CRC32.append(In_Data.at(6));
+
+                    MODEM->fw_ver       = QString::fromUtf8(In_Data.data()+10,4);
+
+                    MODEM->FW_SIZE      = ((In_Data.at(15) & 0xFF) << 8)|((In_Data.at(14) & 0xFF) << 0);
+                    MODEM->FW_CRC32.append(In_Data.at(19));
+                    MODEM->FW_CRC32.append(In_Data.at(18));
+                    MODEM->FW_CRC32.append(In_Data.at(17));
+                    MODEM->FW_CRC32.append(In_Data.at(16));
+                }
+                else if (NumbOfBytes == 0x1A)
+                {
+
+                    MODEM->BOOT_SIZE    = ((In_Data.at(7) & 0xFF) << 24)|((In_Data.at(6) & 0xFF) << 16)|
+                                          ((In_Data.at(5) & 0xFF) << 8)|((In_Data.at(4) & 0xFF) << 0);
+                    MODEM->BOOT_CRC32.append(In_Data.at(11));
+                    MODEM->BOOT_CRC32.append(In_Data.at(10));
+                    MODEM->BOOT_CRC32.append(In_Data.at(9));
+                    MODEM->BOOT_CRC32.append(In_Data.at(8));
+
+                    MODEM->fw_ver       = QString::fromUtf8(In_Data.data()+12,4);
+
+                    MODEM->FW_SIZE      = ((In_Data.at(19) & 0xFF) << 24)|((In_Data.at(18) & 0xFF) << 16)|
+                                          ((In_Data.at(17) & 0xFF) << 8)|((In_Data.at(16) & 0xFF) << 0);
+                    MODEM->FW_CRC32.append(In_Data.at(23));
+                    MODEM->FW_CRC32.append(In_Data.at(22));
+                    MODEM->FW_CRC32.append(In_Data.at(21));
+                    MODEM->FW_CRC32.append(In_Data.at(20));
+                }
+
                 MODEM->BOOT_VERSION = MODEM->boot_ver.toDouble();
                 MODEM->FW_VERSION   = MODEM->fw_ver.toDouble();
                 if((MODEM->boot_ver.at(0) == 'R'))
@@ -583,6 +695,141 @@ void DataLogic_Class::ParceData(uint n)
                 {
                     emit outConnect(DataLogicMode,1);
                 }
+            }
+
+            break;
+        }
+        case 0xFE: // Перезагрузка в Бутлоадер
+        {
+            if (ComandState == 1)
+            {
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit SendLog(QString::fromUtf8(">> ======= Ожидание перехода в BOOT:"),NONE);
+                    if (MODEM->curr_ver == 0)
+                    {
+                        BOOT_WAIT_COUNTER = 1;
+                    }
+                    else
+                    {
+                        BOOT_WAIT_COUNTER = 5;
+                    }
+                    emit SendLog(QString::fromUtf8(" > ") + QString::number(BOOT_WAIT_COUNTER),NONE);
+                    BOOT_WAIT->start(1000);
+                }
+            }
+            break;
+        }
+        case 0xFC: // Запись сектора
+        {
+            if (In_Data.length() >= 2)
+            {
+                if ((ComandState == nUPDATE->getCurrent_BLOCK())&&(In_Data.at(0) == nUPDATE->getCurrent_SECTOR())&&(In_Data.at(1) == 1))
+                {
+                    if (nUPDATE->getSIZE() > nUPDATE->getWrited_BYTES())
+                    {
+                        if (this->stop)
+                        {
+                            this->stop = false;
+                            Repeat_Counter = Repeat_Number;
+                            timerRepeat->stop();
+
+                            Repeat_Counter = Repeat_Number;
+                            nUPDATE->incCurrent_SECTOR();
+                        }
+                        else
+                        {
+                            Repeat_Counter = Repeat_Number;
+                            uint progr = 90*nUPDATE->getWrited_BYTES()/nUPDATE->getSIZE();
+                            emit outPROGRESS(progr);
+                            nUPDATE->incCurrent_SECTOR();
+                            ComandHandling(SEND_WRITE_SECTOR,CONFIG_SEND_CONTROL);
+                        }
+
+                    }
+                    else
+                    {
+                        Repeat_Counter = Repeat_Number;
+                        timerRepeat->stop();
+
+                        if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                        {
+                            emit SendLog(QString::fromUtf8(">> ======= Ожидание перехода на обнавлённую прошивку:"),NONE);
+                            if (MODEM->BOOT_VERSION == 0)
+                            {
+                                BOOT_WAIT_COUNTER = 5;
+                            }
+                            else
+                            {
+                                BOOT_WAIT_COUNTER = 15;
+                            }
+                            emit SendLog(QString::fromUtf8(" > ") + QString::number(BOOT_WAIT_COUNTER),NONE);
+                            BOOT_WAIT->start(1000);
+                        }
+                    }
+                }
+                // нет подтверждения удачной записи блока
+                else if ((ComandState == nUPDATE->getCurrent_BLOCK())&&(In_Data.at(0) == nUPDATE->getCurrent_SECTOR())&&(In_Data.at(1) != 1))
+                {
+                    // тогда возвращаемся в самое начало обновления
+                    emit outConnect(DataLogicMode,0);
+                }
+            }
+            break;
+        }
+        case 0xFB: // Запись информации о прошивке
+        {
+            if (ComandState == 1)
+            {
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
+            }
+            break;
+        }
+        case 0xFA: // Удаление прошивки
+        {
+            if (ComandState == 1)
+            {
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                {
+                    emit outConnect(DataLogicMode,ComandState);
+                }
+            }
+            break;
+        }
+        case 0xF9: // Запрос количества записанных страниц и CRC
+        {
+            uint IN_PAGES     = 0;
+            uint IN_PAGE_SIZE = 0;
+            uint IN_CRC32     = 0;
+            if (ComandState == 1)
+            {
+                if (In_Data.length() >= 9)
+                {
+                    IN_PAGES     = (In_Data.at(0) & 0xFF);
+                    IN_PAGE_SIZE = ((In_Data.at(4) & 0xFF) << 24)|((In_Data.at(3) & 0xFF) << 16)|((In_Data.at(2) & 0xFF) << 8)|((In_Data.at(1) & 0xFF) << 0);
+                    IN_CRC32     = ((In_Data.at(8) & 0xFF) << 24)|((In_Data.at(7) & 0xFF) << 16)|((In_Data.at(6) & 0xFF) << 8)|((In_Data.at(5) & 0xFF) << 0);
+                }
+            }
+            nUPDATE->Compare_Writed_PAGES_CRC32(IN_PAGES,IN_PAGE_SIZE,IN_CRC32);
+
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+            {
+                emit outConnect(DataLogicMode,1);
             }
 
             break;
@@ -646,10 +893,21 @@ void DataLogic_Class::ParceData(uint n)
                 uint SWT_Element = ((In_Data.at(0) & 0xFF) << 0)|((In_Data.at(1)& 0xFF) << 8)|((In_Data.at(2)& 0xFF) << 16)|((In_Data.at(3)& 0xFF) << 24);
                 if ((SWT_Element > 0)&&(SWT_Element < 0xFFFFFFFF)&&(MODEM->getCurrent_Index() < 100))
                 {
-                    Repeat_Counter = Repeat_Number;
-                    //uint curr_index =  MODEM->SwitchTable.length();
-                    MODEM->addNewItem(QString::number(SWT_Element));
-                    ComandHandling(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
+                    if (this->stop)
+                    {
+                        this->stop = false;
+                        Repeat_Counter = Repeat_Number;
+                        timerRepeat->stop();
+
+                        Repeat_Counter = Repeat_Number;
+                        MODEM->addNewItem(QString::number(SWT_Element));
+                    }
+                    else
+                    {
+                        Repeat_Counter = Repeat_Number;
+                        MODEM->addNewItem(QString::number(SWT_Element));
+                        ComandHandling(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
+                    }
                 }
                 else
                 {
@@ -670,10 +928,22 @@ void DataLogic_Class::ParceData(uint n)
             {
                 if(MODEM->getCurrent_Index() < MODEM->SwitchTable.length()-1)
                 {
-                    Repeat_Counter = Repeat_Number;
-                    uchar temp = MODEM->getCurrent_Index() + 1;
-                    MODEM->setCurrent_Index(temp);
-                    ComandHandling(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
+                    if (this->stop)
+                    {
+                        this->stop = false;
+                        Repeat_Counter = Repeat_Number;
+                        timerRepeat->stop();
+
+                        uchar temp = MODEM->getCurrent_Index() + 1;
+                        MODEM->setCurrent_Index(temp);
+                    }
+                    else
+                    {
+                        Repeat_Counter = Repeat_Number;
+                        uchar temp = MODEM->getCurrent_Index() + 1;
+                        MODEM->setCurrent_Index(temp);
+                        ComandHandling(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
+                    }
                 }
                 else
                 {
@@ -1166,6 +1436,22 @@ void DataLogic_Class::ParceData(uint n)
     ParceDataBuffer.clear();
 }
 
+void DataLogic_Class::BOOT_WAITED()
+{
+    BOOT_WAIT_COUNTER--;
+    emit SendLog(QString::fromUtf8(" > ") + QString::number(BOOT_WAIT_COUNTER),NONE);
+    if (BOOT_WAIT_COUNTER == 0)
+    {
+        BOOT_WAIT->stop();
+        emit SendLog(QString::fromUtf8("\r"),NONE);
+        emit outConnect(DataLogicMode,1);
+    }
+    else
+    {
+        BOOT_WAIT->start(1000);
+    }
+}
+
 void DataLogic_Class::REPEAT_SEND()
 {
     SEND_DATA(repeat_data, CONFIG_SEND_CONTROL);
@@ -1178,6 +1464,7 @@ void DataLogic_Class::STOP_SEND_DATA(bool b)
 {
     Repeat_Counter = Repeat_Number;
     timerRepeat->stop();
+    this->stop = true;
     emit STOP();
 }
 //+++++++++++++[Процедура ОТПРАВКИ СООБЩЕНИЙ]++++++++++++++++++++++++++++++++++++++++

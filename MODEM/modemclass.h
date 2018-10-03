@@ -42,13 +42,15 @@ class MODEMClass : public QObject
     Q_OBJECT
 public:
     explicit MODEMClass(Ui::MainWindow *ui,QObject *parent = 0);
-    uchar    curr_ver, SWITCH_MODE;
-    uint     SWITCH_TIMEOUT, RX_TIMEOUT, TX_TIMEOUT, LED_LOGIC, CRC_CHECK_DISABLE;
-    uint     RESET_DEVICE_TIMEOUT,UP_LINC, DIRECT_RET, BROADCAST, SNIFER_MODE;
-    QString  boot_ver,fw_ver;
+    uchar           curr_ver, SWITCH_MODE;
+    uint            SWITCH_TIMEOUT, RX_TIMEOUT, TX_TIMEOUT, LED_LOGIC, CRC_CHECK_DISABLE;
+    uint            RESET_DEVICE_TIMEOUT,UP_LINC, DIRECT_RET, BROADCAST, SNIFER_MODE;
+    QString         boot_ver,fw_ver;
     RF_Switch_Mask* SWITCH_MASK, *SWITCH_MASK_DESTINATION;
-    double   BOOT_VERSION, FW_VERSION, BOOT_VERSION_SNIFER, FW_VERSION_SNIFER;
-    QList<QString> SwitchTable;
+    double          BOOT_VERSION, FW_VERSION, BOOT_VERSION_SNIFER, FW_VERSION_SNIFER;
+    uint            BOOT_SIZE, FW_SIZE;
+    QByteArray      BOOT_CRC32, FW_CRC32;
+    QList<QString>  SwitchTable;
 private:
     Ui::MainWindow     *ui;
     QStandardItemModel *model;

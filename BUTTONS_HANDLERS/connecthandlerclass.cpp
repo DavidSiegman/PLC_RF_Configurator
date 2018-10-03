@@ -1,4 +1,5 @@
 #include "connecthandlerclass.h"
+#include "barr_to_string.h"
 
 
 QString String2_2(
@@ -12,13 +13,15 @@ QString String2_3(
                      "}"
                  );
 
-ConnectHandlerClass::ConnectHandlerClass(Ui::MainWindow *ui,DataLogic_Class *DataLogic,MODEMClass *MODEM,QObject *parent) : QObject(parent)
+ConnectHandlerClass::ConnectHandlerClass(Ui::MainWindow *ui,DataLogic_Class *DataLogic,MODEMClass *MODEM,UPDATE *nUPDATE,QObject *parent) : QObject(parent)
 {
     ReadDataProgress = 0;
 
     this->ui        = ui;
     this->DataLogic = DataLogic;
     this->MODEM     = MODEM;
+    this->nUPDATE   = nUPDATE;
+
     connect(this,SIGNAL(SendComand(uint,uint)),this->DataLogic,SLOT(ComandHandling(uint,uint)));
     connect(this->DataLogic,SIGNAL(outConnect(uint,uint)),this,SLOT(ConnectHandling(uint,uint)));
 
@@ -39,10 +42,17 @@ ConnectHandlerClass::ConnectHandlerClass(Ui::MainWindow *ui,DataLogic_Class *Dat
 
 }
 
+void ConnectHandlerClass::setPROGRESS(uint value)
+{
+    ui->progressBar->setValue(value);
+}
+
 void ConnectHandlerClass::STOP()
 {
     ui->RSSIWidget->setEnabled(true);
     ui->tabWidget->setEnabled(true);
+    ui->progressBar->setValue(0);
+    ReadDataProgress = 0;
     emit SendLog(QString::fromUtf8(">> ======= Запрос остановлен\r"),NONE);
 }
 void ConnectHandlerClass::aOPEN()
@@ -68,9 +78,14 @@ void ConnectHandlerClass::aOPEN()
         ui->boot_v->setText("");
         ui->fw_v->setText("");
         ui->DeviceType->setText("");
+        ui->boot_Size->setText("");
+        ui->boot_CRC->setText("");
+        ui->fw_Size->setText("");
+        ui->fw_CRC->setText("");
         ui->boot_v->setStyleSheet(String2_3);
         ui->fw_v->setStyleSheet(String2_3);
 
+        ui->UpgradeWidget->setEnabled(false);
         ui->RSSIWidget->setEnabled(true);
         ui->MANUAL_ENTER->setEnabled(true);
         ui->Interface->setEnabled(true);
@@ -106,6 +121,7 @@ void ConnectHandlerClass::isAOPEN()
         ui->fw_v->setStyleSheet(String2_2);
     }
     ui->RSSIWidget->setEnabled(true);
+    ui->UpgradeWidget->setEnabled(true);
     ui->Interface->setEnabled(false);
     ui->SN->setEnabled(false);
 
@@ -171,6 +187,12 @@ void ConnectHandlerClass::isAOPEN()
         ui->SWITCH->setChecked(true);
         ui->SwitchPropWidget->setEnabled(true);
     }
+
+    ui->boot_Size->setText(QString::number(MODEM->BOOT_SIZE));
+    ui->boot_CRC->setText(QByteAray_To_QString(MODEM->BOOT_CRC32).toUpper());
+    ui->fw_Size->setText(QString::number(MODEM->FW_SIZE));
+    ui->fw_CRC->setText(QByteAray_To_QString(MODEM->FW_CRC32).toUpper());
+
     ui->RXTM->setText(QString("%1").arg(MODEM->RX_TIMEOUT));
     ui->TXTM->setText(QString("%1").arg(MODEM->TX_TIMEOUT));
     ui->RXTM_2->setText(QString("%1").arg(MODEM->RX_TIMEOUT));
@@ -490,6 +512,7 @@ void ConnectHandlerClass::StartMonitor()
         emit MonitorStart();
     }
 }
+
 void ConnectHandlerClass::MonitorComandCounter(uint n, uint state)
 {
     unsigned int counter  = ui->MsgCounter->text().toInt();
@@ -499,6 +522,7 @@ void ConnectHandlerClass::MonitorComandCounter(uint n, uint state)
     counter++;
     ui->MsgCounter->setText(QString::number(counter));
 }
+
 void ConnectHandlerClass::StopMonitor()
 {
     if ((ui->MonitorStart->isEnabled() == false)&&(ui->MonitorStop->isEnabled() == true))
@@ -513,6 +537,45 @@ void ConnectHandlerClass::StopMonitor()
 
         emit MonitorStop();
     }
+}
+
+void ConnectHandlerClass::StartUPDATE()
+{
+    ui->RSSIWidget->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
+
+    ConnectHandling(UPDATE_HANDLING,1);
+}
+void ConnectHandlerClass::isUPDATED()
+{
+    ui->RSSIWidget->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+
+    ui->boot_v->setText(MODEM->boot_ver);
+    ui->fw_v->setText(MODEM->fw_ver);
+    ui->boot_Size->setText(QString::number(MODEM->BOOT_SIZE));
+    ui->boot_CRC->setText(QByteAray_To_QString(MODEM->BOOT_CRC32).toUpper());
+    ui->fw_Size->setText(QString::number(MODEM->FW_SIZE));
+    ui->fw_CRC->setText(QByteAray_To_QString(MODEM->FW_CRC32).toUpper());
+}
+void ConnectHandlerClass::StartDELETE()
+{
+    ui->RSSIWidget->setEnabled(false);
+    ui->tabWidget->setEnabled(false);
+
+    ConnectHandling(DELETE_HANDLING,1);
+}
+void ConnectHandlerClass::isDELETED()
+{
+    ui->RSSIWidget->setEnabled(true);
+    ui->tabWidget->setEnabled(true);
+
+    ui->boot_v->setText(MODEM->boot_ver);
+    ui->fw_v->setText(MODEM->fw_ver);
+    ui->boot_Size->setText(QString::number(MODEM->BOOT_SIZE));
+    ui->boot_CRC->setText(QByteAray_To_QString(MODEM->BOOT_CRC32).toUpper());
+    ui->fw_Size->setText(QString::number(MODEM->FW_SIZE));
+    ui->fw_CRC->setText(QByteAray_To_QString(MODEM->FW_CRC32).toUpper());
 }
 
 void ConnectHandlerClass::ConnectHandling(uint n, uint state)
@@ -1465,7 +1528,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         {
             if (state != 0)
             {
-                ui->progressBar->setValue(0);
+                ui->progressBar->setValue(20);
                 emit SendLog(QString::fromUtf8("\r>> ======= Запись таблицы в RAM\r"),NONE);
                 emit SendComand(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                 ReadDataProgress = 2;
@@ -1476,7 +1539,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         {
             if (state != 0)
             {
-                ui->progressBar->setValue(0);
+                ui->progressBar->setValue(40);
                 emit SendLog(QString::fromUtf8("\r>> ======= Запись таблицы во Flash\r"),NONE);
                 emit SendComand(SEND_LOAD_SWITCH_TABLE_TO_FLASH,CONFIG_SEND_CONTROL);
                 ReadDataProgress = 3;
@@ -1487,7 +1550,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         {
             if (state != 0)
             {
-                ui->progressBar->setValue(0);
+                ui->progressBar->setValue(70);
                 emit SendLog(QString::fromUtf8("\r>> ======= Чтение таблицы\r"),NONE);
                 emit SendComand(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                 ReadDataProgress = 4;
@@ -1575,5 +1638,142 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         }
         }
     }
+    else if (n == UPDATE_HANDLING)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(0);
+                emit SendLog(QString::fromUtf8("\r>> ======= Переключение в BOOT\r"),NONE);
+                emit SendComand(SEND_ENABLE_BOOT,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 1;
+            }
+            break;
+        }
+        case 1:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(3);
+                emit SendLog(QString::fromUtf8("\r>> ======= Cчитываем записанные страницы\r"),NONE);
+                emit SendComand(SEND_READ_WRITED_PAGES,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 2;
+            }
+            break;
+        }
+        case 2:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(2);
+                emit SendLog(QString::fromUtf8("\r>> ======= Запись информации о прошивке\r"),NONE);
+                emit SendComand(SEND_FIRMWARE_DATA,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 3;
+            }
+            break;
+        }
+        case 3:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(5);
+                emit SendLog(QString::fromUtf8("\r>> ======= Старт прошивки\r"),NONE);
+                emit SendComand(SEND_WRITE_SECTOR,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 4;
+            }
+            break;
+        }
+        case 4:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(95);
+                emit SendLog(QString::fromUtf8("\r>> ======= Запрос версии ПО\r"),NONE);
+                emit SendComand(SEND_AOPEN,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 5;
+            }
+            else
+            {
+                emit SendLog(QString::fromUtf8(">> =======  Блок не записан, повтор\r"),NONE);
 
+                ui->progressBar->setValue(0);
+                emit SendLog(QString::fromUtf8("\r>> ======= Переключение в BOOT\r"),NONE);
+                emit SendComand(SEND_ENABLE_BOOT,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 1;
+            }
+
+            break;
+        }
+        case 5:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(100);
+                emit SendLog(QString::fromUtf8(">> ======= Запись прошла успешно\r"),NONE);
+                isUPDATED();
+                ReadDataProgress = 0;
+            }
+            else
+            {
+                emit SendLog(QString::fromUtf8(">> =======  Блок не записан, повтор\r"),NONE);
+
+                ui->progressBar->setValue(0);
+                emit SendLog(QString::fromUtf8("\r>> ======= Переключение в BOOT\r"),NONE);
+                emit SendComand(SEND_ENABLE_BOOT,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 1;
+            }
+            break;
+        }
+        }
+    }
+    else if (n == DELETE_HANDLING)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(0);
+                emit SendLog(QString::fromUtf8("\r>> ======= Переключение в BOOT\r"),NONE);
+                emit SendComand(SEND_ENABLE_BOOT,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 1;
+            }
+            break;
+        }
+        case 1:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(3);
+                emit SendLog(QString::fromUtf8("\r>> ======= Cчитываем записанные страницы\r"),NONE);
+                emit SendComand(SEND_DELETE_FIRMWARE,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 2;
+            }
+            break;
+        }
+        case 2:
+        {
+            ui->progressBar->setValue(95);
+            emit SendLog(QString::fromUtf8("\r>> ======= Запрос версии ПО\r"),NONE);
+            emit SendComand(SEND_AOPEN,CONFIG_SEND_CONTROL);
+            ReadDataProgress = 3;
+            break;
+        }
+        case 3:
+        {
+            if (state != 0)
+            {
+                ui->progressBar->setValue(100);
+                emit SendLog(QString::fromUtf8(">> ======= Стирание прошло успешно\r"),NONE);
+                isDELETED();
+                ReadDataProgress = 0;
+            }
+            break;
+        }
+        }
+    }
 }

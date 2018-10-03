@@ -7,17 +7,19 @@
 #include "MONITOR/monitorclass.h"
 #include "ui_mainwindow.h"
 #include <mess_enum.h>
+#include "UPDATE/update.h"
 
 class ConnectHandlerClass : public QObject
 {
     Q_OBJECT
 public:
-    explicit ConnectHandlerClass(Ui::MainWindow *ui, DataLogic_Class *DataLogic,MODEMClass *MODEM,QObject *parent = 0);
+    explicit ConnectHandlerClass(Ui::MainWindow *ui, DataLogic_Class *DataLogic,MODEMClass *MODEM,UPDATE *nUPDATE,QObject *parent = 0);
 private:
     Ui::MainWindow  *ui;
     DataLogic_Class *DataLogic;
     MODEMClass      *MODEM;
     MonitorClass    *Monitor;
+    UPDATE          *nUPDATE;
 
     QWidget *NetTab, *PLCTab, *RFTab, *RFOldTab, *SniferTab, *RFMonitorTab;
 
@@ -29,6 +31,8 @@ signals:
     void MonitorStart();
     void MonitorStop();
 public slots:
+    void setPROGRESS(uint value);
+
     void STOP();
     void aOPEN();
     void SetSWITCH_MODE();
@@ -48,6 +52,8 @@ public slots:
     void ReadSWITCH_TABLE();
     void SendSWITCH_TABLE_DELETE();
     void WriteMASK_DESTINATION();
+    void StartUPDATE();
+    void StartDELETE();
 
     void ConnectHandling(uint n, uint state);
     void MonitorComandCounter(uint n, uint state);
@@ -67,6 +73,8 @@ public slots:
     void isSWITCH_TABLE();
     void isSWITCH_TABLE_DELETE();
     void isMASK_DESTINATION();
+    void isUPDATED();
+    void isDELETED();
 };
 
 #endif // CONNECTHANDLERCLASS_H

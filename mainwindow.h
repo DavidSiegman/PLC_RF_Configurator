@@ -86,6 +86,8 @@ signals:
     void SEND_SWITCH_TABLE_DELETE();
     void READ_SWITCH_TABLE();
     void WRITE_MASK_DESTINATION();
+    void START_UPDATE();
+    void START_DELETE();
 
     void ADD_NET_TABLE_ITEM(QString value);
     void DEL_NET_TABLE_ITEM();
@@ -229,6 +231,8 @@ private slots:
     void on_SWITCH_clicked();
 
     void on_UPDATE_START_clicked();
+
+    void on_CLEAR_clicked();
 
 protected:
     //virtual void mousePressEvent(QMouseEvent *);

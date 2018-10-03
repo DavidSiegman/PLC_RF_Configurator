@@ -644,6 +644,9 @@
                   <height>160</height>
                  </size>
                 </property>
+                <property name="styleSheet">
+                 <string notr="true"/>
+                </property>
                 <widget class="QWidget" name="layoutWidget">
                  <property name="geometry">
                   <rect>
@@ -1041,7 +1044,7 @@
                           <item>
                            <widget class="QLabel" name="label_21">
                             <property name="sizePolicy">
-                             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                               <horstretch>0</horstretch>
                               <verstretch>0</verstretch>
                              </sizepolicy>
@@ -1054,7 +1057,7 @@
                             </property>
                             <property name="maximumSize">
                              <size>
-                              <width>75</width>
+                              <width>16777215</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1077,9 +1080,15 @@
                               <verstretch>0</verstretch>
                              </sizepolicy>
                             </property>
+                            <property name="minimumSize">
+                             <size>
+                              <width>70</width>
+                              <height>0</height>
+                             </size>
+                            </property>
                             <property name="maximumSize">
                              <size>
-                              <width>60</width>
+                              <width>70</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1098,7 +1107,7 @@
                              <bool>false</bool>
                             </property>
                             <property name="sizePolicy">
-                             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                               <horstretch>0</horstretch>
                               <verstretch>0</verstretch>
                              </sizepolicy>
@@ -1111,7 +1120,7 @@
                             </property>
                             <property name="maximumSize">
                              <size>
-                              <width>75</width>
+                              <width>16777215</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1134,9 +1143,15 @@
                               <verstretch>0</verstretch>
                              </sizepolicy>
                             </property>
+                            <property name="minimumSize">
+                             <size>
+                              <width>70</width>
+                              <height>0</height>
+                             </size>
+                            </property>
                             <property name="maximumSize">
                              <size>
-                              <width>60</width>
+                              <width>70</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1155,7 +1170,7 @@
                              <bool>false</bool>
                             </property>
                             <property name="sizePolicy">
-                             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                               <horstretch>0</horstretch>
                               <verstretch>0</verstretch>
                              </sizepolicy>
@@ -1168,7 +1183,7 @@
                             </property>
                             <property name="maximumSize">
                              <size>
-                              <width>75</width>
+                              <width>16777215</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1191,9 +1206,15 @@
                               <verstretch>0</verstretch>
                              </sizepolicy>
                             </property>
+                            <property name="minimumSize">
+                             <size>
+                              <width>70</width>
+                              <height>0</height>
+                             </size>
+                            </property>
                             <property name="maximumSize">
                              <size>
-                              <width>60</width>
+                              <width>70</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1216,20 +1237,20 @@
                           <item>
                            <widget class="QLabel" name="label_22">
                             <property name="sizePolicy">
-                             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                               <horstretch>0</horstretch>
                               <verstretch>0</verstretch>
                              </sizepolicy>
                             </property>
                             <property name="minimumSize">
                              <size>
-                              <width>75</width>
+                              <width>80</width>
                               <height>15</height>
                              </size>
                             </property>
                             <property name="maximumSize">
                              <size>
-                              <width>75</width>
+                              <width>16777215</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1252,9 +1273,15 @@
                               <verstretch>0</verstretch>
                              </sizepolicy>
                             </property>
+                            <property name="minimumSize">
+                             <size>
+                              <width>70</width>
+                              <height>0</height>
+                             </size>
+                            </property>
                             <property name="maximumSize">
                              <size>
-                              <width>60</width>
+                              <width>70</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1270,20 +1297,20 @@
                           <item>
                            <widget class="QLabel" name="label_107">
                             <property name="sizePolicy">
-                             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                               <horstretch>0</horstretch>
                               <verstretch>0</verstretch>
                              </sizepolicy>
                             </property>
                             <property name="minimumSize">
                              <size>
-                              <width>75</width>
+                              <width>80</width>
                               <height>15</height>
                              </size>
                             </property>
                             <property name="maximumSize">
                              <size>
-                              <width>75</width>
+                              <width>16777215</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1306,9 +1333,15 @@
                               <verstretch>0</verstretch>
                              </sizepolicy>
                             </property>
+                            <property name="minimumSize">
+                             <size>
+                              <width>70</width>
+                              <height>0</height>
+                             </size>
+                            </property>
                             <property name="maximumSize">
                              <size>
-                              <width>60</width>
+                              <width>70</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1324,20 +1357,20 @@
                           <item>
                            <widget class="QLabel" name="label_54">
                             <property name="sizePolicy">
-                             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                             <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
                               <horstretch>0</horstretch>
                               <verstretch>0</verstretch>
                              </sizepolicy>
                             </property>
                             <property name="minimumSize">
                              <size>
-                              <width>75</width>
+                              <width>80</width>
                               <height>15</height>
                              </size>
                             </property>
                             <property name="maximumSize">
                              <size>
-                              <width>75</width>
+                              <width>16777215</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1360,9 +1393,15 @@
                               <verstretch>0</verstretch>
                              </sizepolicy>
                             </property>
+                            <property name="minimumSize">
+                             <size>
+                              <width>70</width>
+                              <height>0</height>
+                             </size>
+                            </property>
                             <property name="maximumSize">
                              <size>
-                              <width>60</width>
+                              <width>70</width>
                               <height>15</height>
                              </size>
                             </property>
@@ -1409,6 +1448,9 @@
               </property>
               <item>
                <widget class="QWidget" name="UpgradeWidget" native="true">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                   <horstretch>0</horstretch>
@@ -1592,9 +1634,15 @@
                         <verstretch>0</verstretch>
                        </sizepolicy>
                       </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>45</width>
+                        <height>0</height>
+                       </size>
+                      </property>
                       <property name="maximumSize">
                        <size>
-                        <width>60</width>
+                        <width>45</width>
                         <height>15</height>
                        </size>
                       </property>
@@ -1686,9 +1734,15 @@
                         <verstretch>0</verstretch>
                        </sizepolicy>
                       </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>70</width>
+                        <height>0</height>
+                       </size>
+                      </property>
                       <property name="maximumSize">
                        <size>
-                        <width>60</width>
+                        <width>70</width>
                         <height>15</height>
                        </size>
                       </property>
@@ -4575,46 +4629,46 @@ background-color: rgba(255, 255, 255, 0);
                          <string notr="true">background-color: rgb(225, 225, 225);</string>
                         </property>
                         <property name="currentIndex">
-                         <number>7</number>
+                         <number>0</number>
                         </property>
                         <item>
                          <property name="text">
-                          <string>+1</string>
+                          <string>5</string>
                          </property>
                         </item>
                         <item>
                          <property name="text">
-                          <string>+2</string>
+                          <string>10</string>
                          </property>
                         </item>
                         <item>
                          <property name="text">
-                          <string>+5</string>
+                          <string>25</string>
                          </property>
                         </item>
                         <item>
                          <property name="text">
-                          <string>+8</string>
+                          <string>40</string>
                          </property>
                         </item>
                         <item>
                          <property name="text">
-                          <string>+11</string>
+                          <string>55</string>
                          </property>
                         </item>
                         <item>
                          <property name="text">
-                          <string>+14</string>
+                          <string>70</string>
                          </property>
                         </item>
                         <item>
                          <property name="text">
-                          <string>+17</string>
+                          <string>85</string>
                          </property>
                         </item>
                         <item>
                          <property name="text">
-                          <string>+20</string>
+                          <string>100</string>
                          </property>
                         </item>
                        </widget>
@@ -4643,7 +4697,7 @@ background-color: rgba(255, 255, 255, 0);
                          <string notr="true">border-style: none;</string>
                         </property>
                         <property name="text">
-                         <string>[dBm]</string>
+                         <string>%</string>
                         </property>
                        </widget>
                       </item>
