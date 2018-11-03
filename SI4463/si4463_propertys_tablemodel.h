@@ -13,7 +13,7 @@ public:
     explicit SI4463_PROPERTYS_TABLEMODEL();
 
 private:
-    TableFilling();
+    void TableFilling(void);
 
 };
 

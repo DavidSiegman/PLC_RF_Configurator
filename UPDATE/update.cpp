@@ -68,15 +68,15 @@ void UPDATE::setPATCH(QString patch)
         ui->UPDATE_START->setEnabled(false);
     }
 }
-void UPDATE::Compare_Writed_PAGES_CRC32(uint PAGES, uint PAGE_SIZE, uint in_crc32)
+void UPDATE::Compare_Writed_PAGES_CRC32(uint pages, uint page_size, uint in_crc32)
 {
-    uint crc = this->CRC32->crc32((unsigned long*)(DATA.data()), PAGES*PAGE_SIZE);
+    uint crc = this->CRC32->crc32((unsigned long*)(DATA.data()), pages*page_size);
     if (crc == in_crc32)
     {
-        this->Current_PAGE   = PAGES;
-        this->Current_BLOCK  = PAGES*PAGE_SIZE/512;
+        this->Current_PAGE   = pages;
+        this->Current_BLOCK  = pages*page_size/512;
         this->Current_SECTOR = 0;
-        this->Writed_BYTES   = PAGES*PAGE_SIZE;
+        this->Writed_BYTES   = pages*page_size;
     }
     else
     {

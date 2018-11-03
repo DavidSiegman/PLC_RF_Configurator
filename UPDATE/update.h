@@ -42,8 +42,6 @@ public slots:
 
     uint getCurrent_SECTOR(void);
 
-    void Compare_Writed_PAGES_CRC32(uint PAGES, uint PAGE_SIZE, uint in_crc32);
-
     void getCurrent_SECTOR_DATA(QByteArray* DATA);
 
     void incCurrent_SECTOR(void);
@@ -53,6 +51,8 @@ public slots:
     uint getSIZE(void);
 
     QByteArray getCRC32(void);
+
+    void Compare_Writed_PAGES_CRC32(uint pages, uint page_size, uint in_crc32);
 };
 
 #endif // UPDATE_H
