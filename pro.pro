@@ -40,7 +40,8 @@ HEADERS += \
     PLC/plcclass.h \
     UPDATE/update.h \
     CRC/crc32_class.h \
-    barr_to_string.h
+    barr_to_string.h \
+    connections_form.h
 
 SOURCES += \
     COM/port.cpp \
@@ -64,10 +65,12 @@ SOURCES += \
     FILTER/filter.cpp \
     PLC/plcclass.cpp \
     UPDATE/update.cpp \
-    CRC/crc32_class.cpp
+    CRC/crc32_class.cpp \
+    connections_form.cpp
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    connections_form.ui
 
 RESOURCES += \
     RESOURCES/images.qrc

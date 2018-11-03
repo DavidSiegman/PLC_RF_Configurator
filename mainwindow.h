@@ -234,6 +234,8 @@ private slots:
 
     void on_CLEAR_clicked();
 
+    void on_TCPDisconnect_clicked();
+
 protected:
     //virtual void mousePressEvent(QMouseEvent *);
     virtual bool eventFilter(QObject *target, QEvent *event);

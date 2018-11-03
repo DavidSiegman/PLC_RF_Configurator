@@ -2072,3 +2072,8 @@ void MainWindow::on_CLEAR_clicked()
 {
     emit START_DELETE();
 }
+
+void MainWindow::on_TCPDisconnect_clicked()
+{
+
+}

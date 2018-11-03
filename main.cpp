@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "connections_form.h"
 #include "STYLE/style.h"
 
 #include <QApplication>
@@ -10,9 +11,11 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName( "QModBus" );
 
     QApplication a(argc, argv);
-    MainWindow w;
+    //MainWindow w;
+    Connections_Form v;
     //w.setStyleSheet(Style::Widget2_StyleSheet);
-    w.show();
+    //w.show();
+    v.show();
     
     return a.exec();
 }
