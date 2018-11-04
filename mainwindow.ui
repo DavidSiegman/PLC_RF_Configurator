@@ -29,14 +29,14 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
+   <property name="tabletTracking">
+    <bool>false</bool>
+   </property>
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
-   </property>
-   <property name="tabletTracking" stdset="0">
-    <bool>false</bool>
    </property>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">

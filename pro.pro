@@ -41,7 +41,10 @@ HEADERS += \
     UPDATE/update.h \
     CRC/crc32_class.h \
     barr_to_string.h \
-    connections_form.h
+    connections_form.h \
+    settings_form.h \
+    open_connection_form.h \
+    hands_enter_form.h
 
 SOURCES += \
     COM/port.cpp \
@@ -66,11 +69,18 @@ SOURCES += \
     PLC/plcclass.cpp \
     UPDATE/update.cpp \
     CRC/crc32_class.cpp \
-    connections_form.cpp
+    connections_form.cpp \
+    settings_form.cpp \
+    open_connection_form.cpp \
+    hands_enter_form.cpp \
+    barr_to_string.cpp
 
 FORMS += \
     mainwindow.ui \
-    connections_form.ui
+    connections_form.ui \
+    settings_form.ui \
+    open_connection_form.ui \
+    hands_enter_form.ui
 
 RESOURCES += \
     RESOURCES/images.qrc
