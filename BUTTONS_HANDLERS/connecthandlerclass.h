@@ -6,22 +6,19 @@
 #include "MODEM/modemclass.h"
 #include "MONITOR/monitorclass.h"
 #include "ui_mainwindow.h"
-#include <mess_enum.h>
+#include <OTHER_FUNCTIONS/mess_enum.h>
 #include "UPDATE/update.h"
 
 class ConnectHandlerClass : public QObject
 {
     Q_OBJECT
 public:
-    explicit ConnectHandlerClass(Ui::MainWindow *ui, DataLogic_Class *DataLogic,MODEMClass *MODEM,UPDATE *nUPDATE,QObject *parent = 0);
+    explicit ConnectHandlerClass(DataLogic_Class *DataLogic,MODEMClass *MODEM,UPDATE *nUPDATE,QObject *parent = 0);
 private:
-    Ui::MainWindow  *ui;
     DataLogic_Class *DataLogic;
     MODEMClass      *MODEM;
     MonitorClass    *Monitor;
     UPDATE          *nUPDATE;
-
-    QWidget *NetTab, *PLCTab, *RFTab, *RFOldTab, *SniferTab, *RFMonitorTab;
 
     uint ReadDataProgress;
 
@@ -30,9 +27,28 @@ signals:
     void SendLog(QString data, uint n);
     void MonitorStart();
     void MonitorStop();
-public slots:
-    void setPROGRESS(uint value);
 
+    void Progress(uint progress);
+
+    void isAOPEN();
+    void isSWITCH_MODE();
+    void isSWITCH_PROP();
+    void isCURRENT_RSSI();
+    void isLRSSI_AFC();
+    void isRF_PARAMS();
+    void isRF_RESET();
+    void isRFSI4432_PARAMS();
+    void isSNIFER_MODE();
+    void isUPLINC_MODE();
+    void isCRC_DISABLE_MODE();
+    void isBROADCAST_MODE();
+    void isSWITCH_TABLE();
+    void isSWITCH_TABLE_DELETE();
+    void isMASK_DESTINATION();
+    void isUPDATED();
+    void isDELETED();
+
+public slots:
     void STOP();
     void aOPEN();
     void SetSWITCH_MODE();
@@ -57,24 +73,6 @@ public slots:
 
     void ConnectHandling(uint n, uint state);
     void MonitorComandCounter(uint n, uint state);
-
-    void isAOPEN();
-    void isSWITCH_MODE();
-    void isSWITCH_PROP();
-    void isCURRENT_RSSI();
-    void isLRSSI_AFC();
-    void isRF_PARAMS();
-    void isRF_RESET();
-    void isRFSI4432_PARAMS();
-    void isSNIFER_MODE();
-    void isUPLINC_MODE();
-    void isCRC_DISABLE_MODE();
-    void isBROADCAST_MODE();
-    void isSWITCH_TABLE();
-    void isSWITCH_TABLE_DELETE();
-    void isMASK_DESTINATION();
-    void isUPDATED();
-    void isDELETED();
 };
 
 #endif // CONNECTHANDLERCLASS_H

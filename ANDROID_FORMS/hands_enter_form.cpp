@@ -1,13 +1,27 @@
 #include "hands_enter_form.h"
 #include "ui_hands_enter_form.h"
-#include "barr_to_string.h"
+#include "OTHER_FUNCTIONS/barr_to_string.h"
 
 Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Hands_Enter_Form)
 {
     ui->setupUi(this);
-    setWindowState(Qt::WindowMaximized);
+
+    SysInfo              = new QSysInfo;
+    QString product_name = SysInfo->prettyProductName();
+
+    RegSystemName        = QRegExp("[A-Za-z]+");
+    RegSystemName.indexIn(product_name,0);
+    if (RegSystemName.cap(0).compare("Android") == 0)
+    {
+        setWindowState(Qt::WindowMaximized);
+    }
+    else if (RegSystemName.cap(0).compare("Windows") == 0)
+    {
+        this->setWindowModality(Qt::WindowModal);
+        this->setFixedSize (340,560);
+    }
 
     oCRC16                    = new CRC16_Class();
 }

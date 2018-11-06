@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QPlainTextEdit>
-#include <mess_enum.h>
+#include <OTHER_FUNCTIONS/mess_enum.h>
 #include "CRC/crc16_class.h"
 
 namespace Ui {
@@ -32,8 +32,10 @@ private slots:
 
 private:
     Ui::Hands_Enter_Form *ui;
+    QSysInfo             *SysInfo;
+    QRegExp               RegSystemName;
 
-    CRC16_Class         *oCRC16;
+    CRC16_Class          *oCRC16;
 };
 
 #endif // HANDS_ENTER_FORM_H

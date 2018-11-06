@@ -22,8 +22,8 @@ HEADERS += \
     DATALOGIC/datalogic_class.h \
     SI4463/si4463_propertys_type.h \
     SI4463/si4463class.h \
-    mainwindow.h \
-    mess_enum.h \
+    WINDOWS_FORMS/mainwindow.h \
+    OTHER_FUNCTIONS/mess_enum.h \
     BUTTONS_HANDLERS/connecthandlerclass.h \
     MODEM/modemclass.h \
     GRAPH/mygraphgrid.h \
@@ -40,19 +40,22 @@ HEADERS += \
     PLC/plcclass.h \
     UPDATE/update.h \
     CRC/crc32_class.h \
-    barr_to_string.h \
-    connections_form.h \
-    settings_form.h \
-    open_connection_form.h \
-    hands_enter_form.h
+    OTHER_FUNCTIONS/barr_to_string.h \
+    ANDROID_FORMS/connections_form.h \
+    ANDROID_FORMS/settings_form.h \
+    ANDROID_FORMS/open_connection_form.h \
+    ANDROID_FORMS/hands_enter_form.h \
+    ANDROID_FORMS/net_settings_form.h \
+    ANDROID_FORMS/plc_settings_form.h \
+    ANDROID_FORMS/si4432_settings_form.h
 
 SOURCES += \
     COM/port.cpp \
     CRC/crc16_class.cpp \
     DATALOGIC/datalogic_class.cpp \
     SI4463/si4463class.cpp \
-    main.cpp \
-    mainwindow.cpp \
+    MAIN/main.cpp \
+    WINDOWS_FORMS/mainwindow.cpp \
     BUTTONS_HANDLERS/connecthandlerclass.cpp \
     MODEM/modemclass.cpp \
     GRAPH/mygraphgrid.cpp \
@@ -69,18 +72,24 @@ SOURCES += \
     PLC/plcclass.cpp \
     UPDATE/update.cpp \
     CRC/crc32_class.cpp \
-    connections_form.cpp \
-    settings_form.cpp \
-    open_connection_form.cpp \
-    hands_enter_form.cpp \
-    barr_to_string.cpp
+    ANDROID_FORMS/connections_form.cpp \
+    ANDROID_FORMS/settings_form.cpp \
+    ANDROID_FORMS/open_connection_form.cpp \
+    ANDROID_FORMS/hands_enter_form.cpp \
+    OTHER_FUNCTIONS/barr_to_string.cpp \
+    ANDROID_FORMS/net_settings_form.cpp \
+    ANDROID_FORMS/plc_settings_form.cpp \
+    ANDROID_FORMS/si4432_settings_form.cpp
 
 FORMS += \
-    mainwindow.ui \
-    connections_form.ui \
-    settings_form.ui \
-    open_connection_form.ui \
-    hands_enter_form.ui
+    WINDOWS_FORMS/mainwindow.ui \
+    ANDROID_FORMS/connections_form.ui \
+    ANDROID_FORMS/settings_form.ui \
+    ANDROID_FORMS/open_connection_form.ui \
+    ANDROID_FORMS/hands_enter_form.ui \
+    ANDROID_FORMS/net_settings_form.ui \
+    ANDROID_FORMS/plc_settings_form.ui \
+    ANDROID_FORMS/si4432_settings_form.ui
 
 RESOURCES += \
     RESOURCES/images.qrc

@@ -16,14 +16,20 @@ public:
     ~Settings_Form();
 signals:
     void Cancel();
-    void Apply();
+    void GetRepeatNumber(uint value);
+    void GetRepeatTimeout(uint value);
 
 private slots:
 
     void on_Cancel_clicked();
 
+    void on_Apply_clicked();
+
 private:
     Ui::Settings_Form *ui;
+
+    QSysInfo          *SysInfo;
+    QRegExp           RegSystemName;
 };
 
 #endif // SETTINGS_FORM_H

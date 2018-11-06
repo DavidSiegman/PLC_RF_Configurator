@@ -12,7 +12,7 @@
 #include "PLC/plcclass.h"
 #include "MODEM/modemclass.h"
 #include "UPDATE/update.h"
-#include <mess_enum.h>
+#include <OTHER_FUNCTIONS/mess_enum.h>
 
 typedef union RF_Message_type {
     struct {
@@ -102,7 +102,6 @@ public:
     uint         Repeat_Counter;
     uint         Delay_Time;
 
-    void setSerialNumberMode(QString S, bool Enable);
     void setCurrentSI4463_PROPERTYS_structur(uint select);
 
 private:
@@ -143,6 +142,9 @@ signals:
     void STOP();
 
 public slots:
+    void setSerialNumberMode(QString S, bool Enable);
+    void setRepeatNumber(uint new_value);
+    void setRepeatTimeout(uint new_value);
     void SEND_DATA(QByteArray data, uint n);
     void REPEAT_SEND();
     void MANUAL_REPEAT_SEND();

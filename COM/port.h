@@ -6,7 +6,7 @@
 #include <qdebug.h>
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
-#include <mess_enum.h>
+#include <OTHER_FUNCTIONS/mess_enum.h>
 
 struct COMSettings {
     QString                  name;

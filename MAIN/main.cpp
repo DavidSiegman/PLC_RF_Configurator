@@ -1,5 +1,5 @@
-#include "mainwindow.h"
-#include "connections_form.h"
+#include "WINDOWS_FORMS/mainwindow.h"
+#include "ANDROID_FORMS/connections_form.h"
 #include "STYLE/style.h"
 
 #include <QApplication>

@@ -5,7 +5,7 @@
 #include <QThread>
 #include <QTcpSocket>
 #include <qdebug.h>
-#include <mess_enum.h>
+#include <OTHER_FUNCTIONS/mess_enum.h>
 
 struct TCPSettings {
     QString                  IP;

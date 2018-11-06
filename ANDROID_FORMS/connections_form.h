@@ -1,7 +1,9 @@
 #ifndef CONNECTIONS_FORM_H
 #define CONNECTIONS_FORM_H
 
+#include <QSysInfo>
 #include <QWidget>
+#include <QScreen>
 #include <QPainter>
 #include <QMouseEvent>
 #include <QEvent>
@@ -26,9 +28,10 @@
 #include "GRAPH/mypoligon.h"
 #include "FILTER/filter.h"
 #include "UPDATE/update.h"
-#include <mess_enum.h>
+#include <OTHER_FUNCTIONS/mess_enum.h>
 #include "settings_form.h"
 #include "hands_enter_form.h"
+#include "open_connection_form.h"
 
 namespace Ui {
 class Connections_Form;
@@ -41,6 +44,7 @@ class Connections_Form : public QWidget
 public:
     explicit Connections_Form(QWidget *parent = 0);
     ~Connections_Form();
+    void resizeEvent(QResizeEvent *event);
 
     SI4463Class         *SI4463Config;                                     //
     SI4432Class         *SI4432Config;                                     //
@@ -68,13 +72,19 @@ private slots:
 
     void on_btnHandsEnter_clicked();
 
+    void on_btnNext_clicked();
+
 private:
     Ui::Connections_Form *ui;
 
-    QPlainTextEdit   *ActiveConsole;
+    QPlainTextEdit         *ActiveConsole;
 
-    Settings_Form    *settings_form;
-    Hands_Enter_Form *hands_enter_form;
+    Settings_Form          *settings_form;
+    Hands_Enter_Form       *hands_enter_form;
+    Open_Connection_Form   *open_connection_form;
+
+    QSysInfo               *SysInfo;
+    QRegExp                 RegSystemName;
 };
 
 #endif // CONNECTIONS_FORM_H

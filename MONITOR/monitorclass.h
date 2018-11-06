@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QThread>
 #include <QTimer>
-#include <mess_enum.h>
+#include <OTHER_FUNCTIONS/mess_enum.h>
 
 class MonitorClass : public QThread
 {

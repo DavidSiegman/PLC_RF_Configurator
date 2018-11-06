@@ -1,5 +1,5 @@
 #include "DATALOGIC/datalogic_class.h"
-#include "barr_to_string.h"
+#include "OTHER_FUNCTIONS/barr_to_string.h"
 //#include "mainwindow.h"
 
 DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16,QTimer *t,SI4463Class *SI4463Conf,SI4432Class *SI4432Conf,
@@ -35,6 +35,17 @@ void DataLogic_Class::setSerialNumberMode(QString S, bool Enable)
 {
     this->SerialNumber    = S;
     this->addSerialNumber = Enable;
+}
+
+void DataLogic_Class::setRepeatNumber(uint new_value)
+{
+    this->Repeat_Number  = new_value;
+    this->Repeat_Counter = new_value;
+}
+
+void DataLogic_Class::setRepeatTimeout(uint new_value)
+{
+    this->Delay_Time     = new_value;
 }
 
 void DataLogic_Class::setCurrentSI4463_PROPERTYS_structur(uint select)
