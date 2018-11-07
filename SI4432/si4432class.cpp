@@ -3,8 +3,43 @@
 
 SI4432Class::SI4432Class(Ui::MainWindow *ui,QObject *parent) : QObject(parent)
 {
-    this->ui = ui;
+    //this->ui = ui;
 
+    unsigned char HD[4]    = {'M','D','R','F'};
+
+    SI4432_Parameters = new RF_Config_struct;
+    RF_RegRead        = new RF_RegRead_struct;
+
+    RF22_SET_MT(1);
+    RF22_SET_PA(7);
+    RF22_SET_DivDR(1);
+    RF22_SET_TXDR(10066);
+    RF22_SET_hb(0);
+    RF22_SET_FC(19);
+    RF22_SET_NFREQ(433920);
+    RF22_SET_Fo(20);
+    RF22_SET_Fd(31);
+    RF22_SET_IFBW(38);
+    RF22_SET_HC(4);
+    RF22_SET_SWC(1);
+
+    SI4432_Parameters->RF_SYNCH_WORD                    = 0x2DD40000;
+
+    SI4432_Parameters->RF_TX_HAEDER                     = (unsigned int)(HD[0]<<24)|(HD[1]<<16)|(HD[2]<<8)|(HD[3]);
+    SI4432_Parameters->RF_RX_HAEDER                     = (unsigned int)(HD[0]<<24)|(HD[1]<<16)|(HD[2]<<8)|(HD[3]);
+
+    RF22_SET_CLOAD (0xB5);
+
+    // РАСЧЁТЫ ПО ДАТАШИТУ ===============================================================================
+    this->RF22_Rb_calc(SI4432_Parameters);
+    this->RF22_IFBW_calc(SI4432_Parameters);
+    this->RF22_IFBW_bits(SI4432_Parameters);
+    this->RF22_RXOSR_calc(SI4432_Parameters);  // !!! без манчестерского кода !!!
+    this->RF22_NCOFF_calc(SI4432_Parameters);  // !!! без манчестерского кода !!!
+    this->RF22_CRGAIN_calc(SI4432_Parameters); // !!! без манчестерского кода !!!
+}
+SI4432Class::SI4432Class(QObject *parent) : QObject(parent)
+{
     unsigned char HD[4]    = {'M','D','R','F'};
 
     SI4432_Parameters = new RF_Config_struct;
@@ -81,9 +116,9 @@ void           SI4432Class::RF22_SET_TXDR  (unsigned short TXDR)
 {
     this->SI4432_Parameters->RF_CONF_REG_1.reg &= ~0xFFFF;
     this->SI4432_Parameters->RF_CONF_REG_1.reg |= (TXDR & 0xFFFF);
-    this->ui->DR->setValue(RF22_GET_TXDR());
+    //this->ui->DR->setValue(RF22_GET_TXDR());
     double n = pow(10,6)/pow(2,16+5*RF22_GET_DivDR())*(TXDR & 0xFFFF);
-    this->ui->DR_BPS->setText(QString::number(n));
+    //this->ui->DR_BPS->setText(QString::number(n));
     this->RF22_Rb_calc(SI4432_Parameters);
     this->RF22_IFBW_bits(SI4432_Parameters);
     this->RF22_RXOSR_calc(SI4432_Parameters);  // !!! без манчестерского кода !!!
@@ -104,17 +139,17 @@ void           SI4432Class::RF22_SET_FC    (unsigned char FC)
     this->SI4432_Parameters->RF_CONF_REG_1.reg &= ~((unsigned int)(0x1F) << 16);
     this->SI4432_Parameters->RF_CONF_REG_1.reg |=  ((unsigned int)(FC & 0x1F) << 16);
 
-    this->ui->FCAR->setCurrentIndex(RF22_GET_FC());
+    //this->ui->FCAR->setCurrentIndex(RF22_GET_FC());
 
     unsigned int min_car = (240000 + RF22_GET_FC()*10000)*(1 + RF22_GET_hb());
     unsigned int max_car = min_car + 10000*(1+RF22_GET_hb());
     unsigned int fnom    = this->RF22_GET_NFREQ ();
-    unsigned int current_dev = fnom - ui->FNOM->minimum()*1000;
-    this->ui->FNOM->setMinimum(min_car/1000);
-    this->ui->FNOM->setMaximum((max_car-1)/1000);
+    //unsigned int current_dev = fnom - ui->FNOM->minimum()*1000;
+    //this->ui->FNOM->setMinimum(min_car/1000);
+    //this->ui->FNOM->setMaximum((max_car-1)/1000);
     if ((fnom >= max_car)||(fnom < min_car))
     {
-        this->RF22_SET_NFREQ (min_car+(current_dev*(1 + RF22_GET_hb())));
+    //    this->RF22_SET_NFREQ (min_car+(current_dev*(1 + RF22_GET_hb())));
     }
 
 }
@@ -127,7 +162,8 @@ void           SI4432Class::RF22_SET_hb    (unsigned char hb)
 {
     this->SI4432_Parameters->RF_CONF_REG_1.reg &= ~((unsigned int)(0x1) << 21);
     this->SI4432_Parameters->RF_CONF_REG_1.reg |=  ((unsigned int)(hb & 0x1) << 21);
-    int curr_index = ui->FCAR->currentIndex();
+    //int curr_index = ui->FCAR->currentIndex();
+    /*
     if (this->RF22_GET_hb() == 0)
     {
         this->ui->FX2->setChecked(false);
@@ -186,11 +222,11 @@ void           SI4432Class::RF22_SET_hb    (unsigned char hb)
         this->ui->FCAR->addItem("920-939,99");
         this->ui->FCAR->addItem("940-960,00");
     }
-
-    this->ui->FCAR->setCurrentIndex(curr_index);
-    this->RF22_SET_FC(curr_index);
+    */
+    //this->ui->FCAR->setCurrentIndex(curr_index);
+    //this->RF22_SET_FC(curr_index);
     double f_ofset = 0.15625*(RF22_GET_hb() + 1)*RF22_GET_Fo();
-    this->ui->FOFF_KHZ->setText(QString::number(f_ofset));
+    //this->ui->FOFF_KHZ->setText(QString::number(f_ofset));
 }
 unsigned char  SI4432Class::RF22_GET_hb    (void)
 {
@@ -203,11 +239,11 @@ void           SI4432Class::RF22_SET_DivDR (unsigned char DivDR)
     this->SI4432_Parameters->RF_CONF_REG_1.reg |=  ((unsigned int)(DivDR & 0x1) << 22);
     if (this->RF22_GET_DivDR() == 0)
     {
-        this->ui->DIV_DR->setChecked(false);
+    //    this->ui->DIV_DR->setChecked(false);
     }
     else if (this->RF22_GET_DivDR() == 1)
     {
-        this->ui->DIV_DR->setChecked(true);
+    //    this->ui->DIV_DR->setChecked(true);
     }
     this->RF22_SET_TXDR  (this->RF22_GET_TXDR());
 }
@@ -220,7 +256,7 @@ void           SI4432Class::RF22_SET_PA    (unsigned char PA)
 {
     this->SI4432_Parameters->RF_CONF_REG_1.reg &= ~((unsigned int)(0x7) << 23);
     this->SI4432_Parameters->RF_CONF_REG_1.reg |=  ((unsigned int)(PA & 0x7) << 23);
-    this->ui->PA->setCurrentIndex(this->RF22_GET_PA());
+    //this->ui->PA->setCurrentIndex(this->RF22_GET_PA());
 }
 unsigned char  SI4432Class::RF22_GET_PA    (void)
 {
@@ -231,7 +267,7 @@ void           SI4432Class::RF22_SET_MT    (unsigned char MT)
 {
     this->SI4432_Parameters->RF_CONF_REG_1.reg &= ~((unsigned int)(0x1) << 26);
     this->SI4432_Parameters->RF_CONF_REG_1.reg |=  ((unsigned int)(MT & 0x1) << 26);
-    this->ui->MT->setCurrentIndex(this->RF22_GET_MT());
+   // this->ui->MT->setCurrentIndex(this->RF22_GET_MT());
 }
 unsigned char  SI4432Class::RF22_GET_MT    (void)
 {
@@ -242,9 +278,9 @@ void           SI4432Class::RF22_SET_Fo    (signed  short Fo)
 {
     this->SI4432_Parameters->RF_CONF_REG_2.reg &= ~(0x3FF);
     this->SI4432_Parameters->RF_CONF_REG_2.reg |=  (unsigned int)(Fo & 0x3FF);
-    this->ui->FOFF->setValue(this->RF22_GET_Fo());
+    //this->ui->FOFF->setValue(this->RF22_GET_Fo());
     double f_ofset = 0.15625*(this->RF22_GET_hb() + 1)*this->RF22_GET_Fo();
-    this->ui->FOFF_KHZ->setText(QString::number(f_ofset));
+    //this->ui->FOFF_KHZ->setText(QString::number(f_ofset));
 }
 signed  short  SI4432Class::RF22_GET_Fo    (void)
 {
@@ -259,7 +295,7 @@ void           SI4432Class::RF22_SET_IFBW  (unsigned char IFBW)
 {
     this->SI4432_Parameters->RF_CONF_REG_2.reg &= ~((unsigned int)(0x3F) << 10);
     this->SI4432_Parameters->RF_CONF_REG_2.reg |=  ((unsigned int)(IFBW & 0x3F) << 10);
-    this->ui->BW->setCurrentIndex(RF22_GET_IFBW());
+    //this->ui->BW->setCurrentIndex(RF22_GET_IFBW());
     this->RF22_Rb_calc(SI4432_Parameters);
     this->RF22_IFBW_bits(SI4432_Parameters);
     this->RF22_RXOSR_calc(SI4432_Parameters);  // !!! без манчестерского кода !!!
@@ -275,9 +311,9 @@ void           SI4432Class::RF22_SET_Fd    (unsigned short Fd)
 {
     this->SI4432_Parameters->RF_CONF_REG_2.reg &= ~((unsigned int)(0x1FF) << 16);
     this->SI4432_Parameters->RF_CONF_REG_2.reg |= ((unsigned int)(Fd & 0x1FF) << 16);
-    this->ui->DV->setValue(this->RF22_GET_Fd());
+    //this->ui->DV->setValue(this->RF22_GET_Fd());
     double dev = this->RF22_GET_Fd()*625;
-    this->ui->DV_HZ->setText(QString::number(dev));
+    //this->ui->DV_HZ->setText(QString::number(dev));
     this->RF22_Rb_calc(SI4432_Parameters);
     this->RF22_IFBW_bits(SI4432_Parameters);
     this->RF22_RXOSR_calc(SI4432_Parameters);  // !!! без манчестерского кода !!!
@@ -293,7 +329,7 @@ void           SI4432Class::RF22_SET_HC    (unsigned char HC)
 {
     this->SI4432_Parameters->RF_CONF_REG_2.reg &= ~((unsigned int)(0xF) << 25);
     this->SI4432_Parameters->RF_CONF_REG_2.reg |= ((unsigned int)(HC & 0xF) << 25);
-    this->ui->HEAD_N->setCurrentIndex(this->RF22_GET_HC());
+    //this->ui->HEAD_N->setCurrentIndex(this->RF22_GET_HC());
 }
 unsigned char  SI4432Class::RF22_GET_HC    (void)
 {
@@ -304,7 +340,7 @@ void           SI4432Class::RF22_SET_SWC   (unsigned char SWC)
 {
     this->SI4432_Parameters->RF_CONF_REG_2.reg &= ~((unsigned int)(0x7) << 29);
     this->SI4432_Parameters->RF_CONF_REG_2.reg |= ((unsigned int)(SWC & 0x7) << 29);
-    this->ui->SNW_N->setCurrentIndex(this->RF22_GET_SWC());
+    //this->ui->SNW_N->setCurrentIndex(this->RF22_GET_SWC());
 }
 unsigned char  SI4432Class::RF22_GET_SWC   (void)
 {
@@ -315,13 +351,13 @@ void           SI4432Class::RF22_SET_NFREQ (unsigned int NFREQ)
 {
     this->SI4432_Parameters->RF_NOM_FREQUENC = NFREQ;
     unsigned int val = this->SI4432_Parameters->RF_NOM_FREQUENC;
-    this->ui->FNOM->setValue((double)(val)/1000);
+    //this->ui->FNOM->setValue((double)(val)/1000);
 }
 unsigned int   SI4432Class::RF22_GET_NFREQ (void)
 {
-    double val = this->ui->FNOM->value() + 0.0005f;
-    val = val*1000;
-    this->SI4432_Parameters->RF_NOM_FREQUENC = (int)(val);
+    //double val = this->ui->FNOM->value() + 0.0005f;
+    //val = val*1000;
+    //this->SI4432_Parameters->RF_NOM_FREQUENC = (int)(val);
     return this->SI4432_Parameters->RF_NOM_FREQUENC;
 }
 void           SI4432Class::RF22_SET_CLOAD (unsigned char CLOAD)
@@ -329,7 +365,7 @@ void           SI4432Class::RF22_SET_CLOAD (unsigned char CLOAD)
     this->SI4432_Parameters->RF_CONF_REG_3.reg &= ~0xFF;
     this->SI4432_Parameters->RF_CONF_REG_3.reg |= CLOAD & 0xFF;
     RF22_CLOAD_calc(SI4432_Parameters);
-    this->ui->CLOAD_PF->setText(QString::number((double)(this->SI4432_Parameters->RF_COscill_CLoad)/10));
+    //this->ui->CLOAD_PF->setText(QString::number((double)(this->SI4432_Parameters->RF_COscill_CLoad)/10));
 }
 unsigned char  SI4432Class::RF22_GET_CLOAD (void)
 {
@@ -387,7 +423,7 @@ void SI4432Class::RF22_RXOSR_calc(struct RF_Config_struct *config_structur) // !
     result = (unsigned int)(res);
 
     config_structur->RXOSR = result;
-    this->ui->RXOSR->setText(QString::number(config_structur->RXOSR));
+    //this->ui->RXOSR->setText(QString::number(config_structur->RXOSR));
 }
 void SI4432Class::RF22_NCOFF_calc(struct RF_Config_struct *config_structur) // !!! без манчестерского кода !!!
 {
@@ -402,7 +438,7 @@ void SI4432Class::RF22_NCOFF_calc(struct RF_Config_struct *config_structur) // !
     result = (unsigned int)(res);
 
     config_structur->NCOFF = result;
-    this->ui->NCOFF->setText(QString::number(config_structur->NCOFF));
+    //this->ui->NCOFF->setText(QString::number(config_structur->NCOFF));
 }
 void SI4432Class::RF22_CRGAIN_calc(struct RF_Config_struct *config_structur) // !!! без манчестерского кода !!!
 {
@@ -417,7 +453,7 @@ void SI4432Class::RF22_CRGAIN_calc(struct RF_Config_struct *config_structur) // 
     result = 2+(unsigned int)(res);
 
     config_structur->CRGAIN = result;
-    this->ui->CRGAIN->setText(QString::number(config_structur->CRGAIN));
+    //this->ui->CRGAIN->setText(QString::number(config_structur->CRGAIN));
 }
 void SI4432Class::RF22_IFBW_calc(struct RF_Config_struct *config_structur)
 {
@@ -547,7 +583,7 @@ void SI4432Class::RF22_IFBW_bits(struct RF_Config_struct *config_structur)
          case 56: config_structur->ndec = 0; config_structur->dwn3 = 1; config_structur->filset = 14; break;//620.7
          default: config_structur->ndec = 0; config_structur->dwn3 = 0; config_structur->filset = 4; break; //95.3
      }
-     ui->ndec->setText(QString::number(config_structur->ndec));
-     ui->dwn3->setText(QString::number(config_structur->dwn3));
-     ui->filset->setText(QString::number(config_structur->filset));
+     //ui->ndec->setText(QString::number(config_structur->ndec));
+     //ui->dwn3->setText(QString::number(config_structur->dwn3));
+     //ui->filset->setText(QString::number(config_structur->filset));
 }

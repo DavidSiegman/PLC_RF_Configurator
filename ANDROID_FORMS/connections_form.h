@@ -45,6 +45,7 @@ public:
     explicit Connections_Form(QWidget *parent = 0);
     ~Connections_Form();
     void resizeEvent(QResizeEvent *event);
+    bool eventFilter(QObject *target, QEvent *event);
 
     SI4463Class         *SI4463Config;                                     //
     SI4432Class         *SI4432Config;                                     //
@@ -60,9 +61,11 @@ public:
     Filter              *newFilter;
     UPDATE              *newUPDATE;
 
+
 private slots:
     void Print    (QByteArray data, uint n);
     void Print_Log(QString    data, uint n);
+    void start_COM_Init();
 
     void Set_ActiveConsole(QPlainTextEdit*);
 
@@ -73,6 +76,10 @@ private slots:
     void on_btnHandsEnter_clicked();
 
     void on_btnNext_clicked();
+
+    void on_PortNameBox_currentIndexChanged(const QString &arg1);
+
+    void on_COMConnect_clicked();
 
 private:
     Ui::Connections_Form *ui;
@@ -85,6 +92,7 @@ private:
 
     QSysInfo               *SysInfo;
     QRegExp                 RegSystemName;
+
 };
 
 #endif // CONNECTIONS_FORM_H

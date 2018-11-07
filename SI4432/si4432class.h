@@ -53,11 +53,11 @@ class SI4432Class : public QObject
     Q_OBJECT
 public:
     explicit SI4432Class(Ui::MainWindow *ui,QObject *parent = 0);
+    explicit SI4432Class(QObject *parent = 0);
 
     RF_Config_struct*        aSI4432_RF_Config_struct(void);
     RF_RegRead_struct*       aSI4432_RF_RegRead_struct(void);
 private:
-    Ui::MainWindow    *ui;
     RF_Config_struct  *SI4432_Parameters;
     RF_RegRead_struct *RF_RegRead;
 

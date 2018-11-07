@@ -1,5 +1,6 @@
 #include "open_connection_form.h"
 #include "ui_open_connection_form.h"
+#include "OTHER_FUNCTIONS/barr_to_string.h"
 
 Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     QWidget(parent),
@@ -127,6 +128,60 @@ void Open_Connection_Form::isOPEND()
 {
 
 }
+
+void Open_Connection_Form::SetCurrentFitmwareToUI(uchar new_value)
+{
+    QString String2_2(
+                         "QWidget{"
+                         "background-color: rgb(186, 229, 202);"
+                         "}"
+                     );
+    QString String2_3(
+                         "QWidget{"
+                         "background: rgba(100,50,00,0);"
+                         "}"
+                     );
+
+    // Бутлоадер
+    if (new_value == 0)
+    {
+        this->ui->boot_v->setStyleSheet(String2_2);
+        this->ui->fw_v->setStyleSheet(String2_3);
+    }
+    // Обновляемая
+    else if (new_value == 1)
+    {
+        this->ui->boot_v->setStyleSheet(String2_3);
+        this->ui->fw_v->setStyleSheet(String2_2);
+    }
+
+}
+void Open_Connection_Form::SetBootloaderVersionToUI(QString new_value)
+{
+    this->ui->boot_v->setText(new_value);
+}
+void Open_Connection_Form::SetBootloaderSizeToUI(uint new_value)
+{
+    this->ui->boot_Size->setText(QString::number(new_value));
+}
+void Open_Connection_Form::SetBootloaderCRCToUI(QByteArray new_value)
+{
+    this->ui->boot_CRC->setText(QByteAray_To_QString(new_value).toUpper());
+}
+void Open_Connection_Form::SetUpgradableVersionToUI(QString new_value)
+{
+    this->ui->fw_v->setText(new_value);
+}
+void Open_Connection_Form::SetUpgradableSizeToUI(uint new_value)
+{
+    this->ui->fw_Size->setText(QString::number(new_value));
+}
+void Open_Connection_Form::SetUpgradableCRCToUI(QByteArray new_value)
+{
+    this->ui->fw_CRC->setText(QByteAray_To_QString(new_value).toUpper());
+}
+
+
 
 void Open_Connection_Form::on_Back_clicked()
 {

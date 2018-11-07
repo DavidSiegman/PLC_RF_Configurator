@@ -192,7 +192,8 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     }
     case SEND_WRITE_NODE_TYPE:
     {
-        int u[10] = {0xEF,0x07,MODEM->SWITCH_MODE,0xE0,0x96,0xF8,0xA5,0xC9,0xDC,0x0C}; length = 10;
+        uchar SWITCH_MODE = MODEM->getSWITCH_MODE();
+        int u[10] = {0xEF,0x07,SWITCH_MODE,0xE0,0x96,0xF8,0xA5,0xC9,0xDC,0x0C}; length = 10;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
@@ -210,23 +211,25 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     }
     case SEND_RELOAD_DEVICE:
     {
-        if (MODEM->RESET_DEVICE_TIMEOUT == 0)
+        uint RESET_DEVICE_TIMEOUT = MODEM->getRESET_DEVICE_TIMEOUT();
+        if (RESET_DEVICE_TIMEOUT == 0)
         {
             int u[3] = {0xE4,0x00};length = 2;
             for(int i = 0; i < length; i++){data.append((char)u[i]);}
         }
         else
         {
-            int u[6] = {0xE4,0x04,((int)(MODEM->RESET_DEVICE_TIMEOUT >> 0)  & 0xFF),((int)(MODEM->RESET_DEVICE_TIMEOUT >> 8) & 0xFF),
-                                  ((int)(MODEM->RESET_DEVICE_TIMEOUT >> 16) & 0xFF),((int)(MODEM->RESET_DEVICE_TIMEOUT >> 24) & 0xFF)};length = 6;
+            int u[6] = {0xE4,0x04,((int)(RESET_DEVICE_TIMEOUT >> 0)  & 0xFF),((int)(RESET_DEVICE_TIMEOUT >> 8) & 0xFF),
+                                  ((int)(RESET_DEVICE_TIMEOUT >> 16) & 0xFF),((int)(RESET_DEVICE_TIMEOUT >> 24) & 0xFF)};length = 6;
             for(int i = 0; i < length; i++){data.append((char)u[i]);}
         }
         break;
     }
     case SEND_WRITE_SWITCH_TIMEOUT:
     {
-        int u[6] = {0xE3,0x04,((int)(MODEM->SWITCH_TIMEOUT >> 0)  & 0xFF),((int)(MODEM->SWITCH_TIMEOUT >> 8) & 0xFF),
-                              ((int)(MODEM->SWITCH_TIMEOUT >> 16) & 0xFF),((int)(MODEM->SWITCH_TIMEOUT >> 24) & 0xFF)};length = 6;
+        uint SWITCH_TIMEOUT = MODEM->getSWITCH_TIMEOUT();
+        int u[6] = {0xE3,0x04,((int)(SWITCH_TIMEOUT >> 0)  & 0xFF),((int)(SWITCH_TIMEOUT >> 8) & 0xFF),
+                              ((int)(SWITCH_TIMEOUT >> 16) & 0xFF),((int)(SWITCH_TIMEOUT >> 24) & 0xFF)};length = 6;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
@@ -324,31 +327,36 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     }
     case SEND_SNIFER_MODE:
     {
-        int u[3] = {0xD9,0x01,(int)(MODEM->SNIFER_MODE)}; length = 3;
+        uchar SNIFER_MODE = MODEM->getSNIFER_MODE();
+        int u[3] = {0xD9,0x01,(int)(SNIFER_MODE)}; length = 3;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
     case SEND_UPLINC_MODE:
     {
-        int u[3] = {0xDA,0x01,(int)(MODEM->UP_LINC)}; length = 3;
+        uchar UP_LINC = MODEM->getUP_LINC();
+        int u[3] = {0xDA,0x01,(int)(UP_LINC)}; length = 3;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
     case SEND_CRC_CHECK_MODE:
     {
-        int u[3] = {0xBC,0x01,(int)(MODEM->CRC_CHECK_DISABLE)}; length = 3;
+        uchar CRC_CHECK_DISABLE = MODEM->getCRC_CHECK_DISABLE();
+        int u[3] = {0xBC,0x01,(int)(CRC_CHECK_DISABLE)}; length = 3;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
     case SEND_BROADCASTING_MODE:
     {
-        int u[3] = {0xD8,0x01,(int)(MODEM->BROADCAST)}; length = 3;
+        uchar BROADCAST = MODEM->getBROADCAST();
+        int u[3] = {0xD8,0x01,(int)(BROADCAST)}; length = 3;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
     case SEND_READ_SWITCH_TABLE_ELEMENT:
     {
-        int u[3] = {0xEB,0x01,(int)(MODEM->SwitchTable.length())}; length = 3;
+        QList<QString> SwitchTable = MODEM->getSwitchTable();
+        int u[3] = {0xEB,0x01,(int)(SwitchTable.length())}; length = 3;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
@@ -360,7 +368,8 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     }
     case SEND_WRITE_SWITCH_TABLE_ELEMENT:
     {
-        uint switchelement = MODEM->SwitchTable.at(MODEM->getCurrent_Index()).toInt();
+        QList<QString> SwitchTable = MODEM->getSwitchTable();
+        uint switchelement = SwitchTable.at(MODEM->getCurrent_Index()).toInt();
         int u[14] = {0xEA,0x0C,(int)(MODEM->getCurrent_Index()),(int)(switchelement >> 0)&0xFF,(int)(switchelement >> 8)&0xFF,(int)(switchelement >> 16)&0xFF,(int)(switchelement >> 24)&0xFF,0xF8,0xC9,0xDC,0xA5,0x96,0xE0,0x0C}; length = 14;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
 
@@ -435,7 +444,7 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     }
     case SEND_WRITE_MASK_DESTINATION:
     {
-        uint mask =  *(uint*)(MODEM->SWITCH_MASK_DESTINATION);
+        uint mask =  MODEM->getSWITCH_LEVEL_DESTINATION();
         int u[6] = {0xD6,0x04,
                    (int)(mask >> 0)  &0xFF,
                    (int)(mask >> 8)  &0xFF,
@@ -645,58 +654,81 @@ void DataLogic_Class::ParceData(uint n)
         {
         case 0xFF: // Запрос версий ПО
         {
+            QByteArray BOOT_CRC32, FW_CRC32;
+
             if (In_Data.length() >= 19)
             {
-                MODEM->curr_ver     = ComandState;
-                MODEM->boot_ver     = QString::fromUtf8(In_Data.data(),4);
+                MODEM->setCURRENT_FIRMWARE_VERSION(ComandState);
+                MODEM->setString_BOOTLOADER_VERSION(QString::fromUtf8(In_Data.data(),4));
 
                 if (NumbOfBytes == 0x16)
                 {
-                    MODEM->BOOT_SIZE    = ((In_Data.at(5) & 0xFF) << 8)|((In_Data.at(4) & 0xFF) << 0);
-                    MODEM->BOOT_CRC32.append(In_Data.at(9));
-                    MODEM->BOOT_CRC32.append(In_Data.at(8));
-                    MODEM->BOOT_CRC32.append(In_Data.at(7));
-                    MODEM->BOOT_CRC32.append(In_Data.at(6));
+                    MODEM->setBOOTLOADER_SIZE(((In_Data.at(5) & 0xFF) << 8)|((In_Data.at(4) & 0xFF) << 0));
 
-                    MODEM->fw_ver       = QString::fromUtf8(In_Data.data()+10,4);
+                    BOOT_CRC32.append(In_Data.at(9));
+                    BOOT_CRC32.append(In_Data.at(8));
+                    BOOT_CRC32.append(In_Data.at(7));
+                    BOOT_CRC32.append(In_Data.at(6));
 
-                    MODEM->FW_SIZE      = ((In_Data.at(15) & 0xFF) << 8)|((In_Data.at(14) & 0xFF) << 0);
-                    MODEM->FW_CRC32.append(In_Data.at(19));
-                    MODEM->FW_CRC32.append(In_Data.at(18));
-                    MODEM->FW_CRC32.append(In_Data.at(17));
-                    MODEM->FW_CRC32.append(In_Data.at(16));
+                    MODEM->setBOOTLOADER_CRC32(BOOT_CRC32);
+
+                    MODEM->setString_UPGRADABLE_VERSION(QString::fromUtf8(In_Data.data()+10,4));
+                    MODEM->setUPGRADABLE_SIZE(((In_Data.at(15) & 0xFF) << 8)|((In_Data.at(14) & 0xFF) << 0));
+
+                    FW_CRC32.append(In_Data.at(19));
+                    FW_CRC32.append(In_Data.at(18));
+                    FW_CRC32.append(In_Data.at(17));
+                    FW_CRC32.append(In_Data.at(16));
+
+                    MODEM->setUPGRADABLE_CRC32(FW_CRC32);
                 }
                 else if (NumbOfBytes == 0x1A)
                 {
 
-                    MODEM->BOOT_SIZE    = ((In_Data.at(7) & 0xFF) << 24)|((In_Data.at(6) & 0xFF) << 16)|
-                                          ((In_Data.at(5) & 0xFF) << 8)|((In_Data.at(4) & 0xFF) << 0);
-                    MODEM->BOOT_CRC32.append(In_Data.at(11));
-                    MODEM->BOOT_CRC32.append(In_Data.at(10));
-                    MODEM->BOOT_CRC32.append(In_Data.at(9));
-                    MODEM->BOOT_CRC32.append(In_Data.at(8));
+                    MODEM->setBOOTLOADER_SIZE(((In_Data.at(7) & 0xFF) << 24)|((In_Data.at(6) & 0xFF) << 16)|
+                                              ((In_Data.at(5) & 0xFF) << 8)|((In_Data.at(4) & 0xFF) << 0));
 
-                    MODEM->fw_ver       = QString::fromUtf8(In_Data.data()+12,4);
+                    BOOT_CRC32.append(In_Data.at(11));
+                    BOOT_CRC32.append(In_Data.at(10));
+                    BOOT_CRC32.append(In_Data.at(9));
+                    BOOT_CRC32.append(In_Data.at(8));
 
-                    MODEM->FW_SIZE      = ((In_Data.at(19) & 0xFF) << 24)|((In_Data.at(18) & 0xFF) << 16)|
-                                          ((In_Data.at(17) & 0xFF) << 8)|((In_Data.at(16) & 0xFF) << 0);
-                    MODEM->FW_CRC32.append(In_Data.at(23));
-                    MODEM->FW_CRC32.append(In_Data.at(22));
-                    MODEM->FW_CRC32.append(In_Data.at(21));
-                    MODEM->FW_CRC32.append(In_Data.at(20));
+                    MODEM->setBOOTLOADER_CRC32(BOOT_CRC32);
+
+                    MODEM->setString_UPGRADABLE_VERSION(QString::fromUtf8(In_Data.data()+12,4));
+
+                    MODEM->setUPGRADABLE_SIZE(((In_Data.at(19) & 0xFF) << 24)|((In_Data.at(18) & 0xFF) << 16)|
+                                              ((In_Data.at(17) & 0xFF) << 8)|((In_Data.at(16) & 0xFF) << 0));
+
+                    FW_CRC32.append(In_Data.at(23));
+                    FW_CRC32.append(In_Data.at(22));
+                    FW_CRC32.append(In_Data.at(21));
+                    FW_CRC32.append(In_Data.at(20));
+
+                    MODEM->setUPGRADABLE_CRC32(FW_CRC32);
                 }
 
-                MODEM->BOOT_VERSION = MODEM->boot_ver.toDouble();
-                MODEM->FW_VERSION   = MODEM->fw_ver.toDouble();
-                if((MODEM->boot_ver.at(0) == 'R'))
+                MODEM->setBOOTLOADER_VERSION(MODEM->getString_BOOTLOADER_VERSION().toDouble());
+                MODEM->setUPGRADABLE_VERSION(MODEM->getString_UPGRADABLE_VERSION().toDouble());
+                if((MODEM->getString_BOOTLOADER_VERSION().at(0) == 'R'))
                 {
-                    QString s; s.append(MODEM->boot_ver.at(2)); s.append(MODEM->boot_ver.at(3));
-                    MODEM->BOOT_VERSION_SNIFER = s.toDouble();
+                    QString s; s.append(MODEM->getString_BOOTLOADER_VERSION().at(2)); s.append(MODEM->getString_BOOTLOADER_VERSION().at(3));
+                    MODEM->setBOOTLOADER_VERSION_SNIFER(s.toDouble());
                 }
-                if((MODEM->fw_ver.at(0) == 'R'))
+                if((MODEM->getString_UPGRADABLE_VERSION().at(0) == 'R'))
                 {
-                    QString s; s.append(MODEM->boot_ver.at(2)); s.append(MODEM->boot_ver.at(3));
-                    MODEM->FW_VERSION_SNIFER = s.toDouble();
+                    QString s; s.append(MODEM->getString_UPGRADABLE_VERSION().at(2)); s.append(MODEM->getString_UPGRADABLE_VERSION().at(3));
+                    MODEM->setUPGRADABLE_VERSION_SNIFER(s.toDouble());
+                }
+                if((MODEM->getString_BOOTLOADER_VERSION().at(0) == 'T'))
+                {
+                    QString s; s.append(MODEM->getString_BOOTLOADER_VERSION().at(2)); s.append(MODEM->getString_BOOTLOADER_VERSION().at(3));
+                    MODEM->setBOOTLOADER_VERSION_TERMINAL(s.toDouble());
+                }
+                if((MODEM->getString_UPGRADABLE_VERSION().at(0) == 'T'))
+                {
+                    QString s; s.append(MODEM->getString_UPGRADABLE_VERSION().at(2)); s.append(MODEM->getString_UPGRADABLE_VERSION().at(3));
+                    MODEM->setUPGRADABLE_VERSION_TERMINAL(s.toDouble());
                 }
 
                 Repeat_Counter = Repeat_Number;
@@ -720,7 +752,7 @@ void DataLogic_Class::ParceData(uint n)
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
                     emit SendLog(QString::fromUtf8(">> ======= Ожидание перехода в BOOT:"),NONE);
-                    if (MODEM->curr_ver == 0)
+                    if (MODEM->getCURRENT_FIRMWARE_VERSION() == 0)
                     {
                         BOOT_WAIT_COUNTER = 1;
                     }
@@ -769,7 +801,7 @@ void DataLogic_Class::ParceData(uint n)
                         if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                         {
                             emit SendLog(QString::fromUtf8(">> ======= Ожидание перехода на обнавлённую прошивку:"),NONE);
-                            if (MODEM->BOOT_VERSION == 0)
+                            if (MODEM->getBOOTLOADER_VERSION() == 0)
                             {
                                 BOOT_WAIT_COUNTER = 5;
                             }
@@ -847,7 +879,7 @@ void DataLogic_Class::ParceData(uint n)
         }
         case 0xF0: // Запрос режима ретрансляции
         {
-            MODEM->SWITCH_MODE     = ComandState;
+            MODEM->setSWITCH_MODE(ComandState);
 
             Repeat_Counter = Repeat_Number;
             timerRepeat->stop();
@@ -937,7 +969,7 @@ void DataLogic_Class::ParceData(uint n)
         {
             if (ComandState == 1)
             {
-                if(MODEM->getCurrent_Index() < MODEM->SwitchTable.length()-1)
+                if(MODEM->getCurrent_Index() < MODEM->getSwitchTable().length()-1)
                 {
                     if (this->stop)
                     {
@@ -1134,8 +1166,10 @@ void DataLogic_Class::ParceData(uint n)
         {
             if ((NumbOfBytes == 6)&&(In_Data.length() >= 4))
             {
-                MODEM->SWITCH_TIMEOUT     = 0;
-                MODEM->SWITCH_TIMEOUT    |= *((uint*)(In_Data.data()));
+                uint SWITCH_TIMEOUT     = 0;
+                SWITCH_TIMEOUT    |= *((uint*)(In_Data.data()));
+
+                MODEM->setSWITCH_TIMEOUT(SWITCH_TIMEOUT);
 
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
@@ -1164,8 +1198,10 @@ void DataLogic_Class::ParceData(uint n)
         {
             if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
             {
-                MODEM->RX_TIMEOUT       = 0;
-                MODEM->RX_TIMEOUT      |= *((uint*)(In_Data.data()));
+                uint RX_TIMEOUT       = 0;
+                RX_TIMEOUT           |= *((uint*)(In_Data.data()));
+
+                MODEM->setRX_TIMEOUT(RX_TIMEOUT);
 
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
@@ -1191,8 +1227,10 @@ void DataLogic_Class::ParceData(uint n)
         {
             if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
             {
-                MODEM->TX_TIMEOUT       = 0;
-                MODEM->TX_TIMEOUT      |= *((uint*)(In_Data.data()));
+                uint TX_TIMEOUT       = 0;
+                TX_TIMEOUT           |= *((uint*)(In_Data.data()));
+
+                MODEM->setTX_TIMEOUT(TX_TIMEOUT);
 
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();

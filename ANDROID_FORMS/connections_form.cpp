@@ -29,13 +29,13 @@ Connections_Form::Connections_Form(QWidget *parent) :
 
     timer_COMBufferClear      = new QTimer();
     timer_ConnectionsPanel    = new QTimer();
-    //MODEM                     = new MODEMClass(ui);
+    MODEM                     = new MODEMClass();
     newPort                   = new Port();                                                                   // Создаем Поток обработки портов
     newTCP                    = new TCP();
     oCRC16                    = new CRC16_Class();                                                            // Создаём Объект расчёта CRC
     newParcer                 = new ParceClass();
     SI4463Config              = new SI4463Class();
-    //SI4432Config              = new SI4432Class(ui);
+    SI4432Config              = new SI4432Class();
     //PLCConfig                 = new PLCClass(ui);
     //newUPDATE                 = new UPDATE(ui);
 
@@ -53,6 +53,11 @@ Connections_Form::Connections_Form(QWidget *parent) :
 
     DataLogic->setRepeatNumber(3);
     DataLogic->setRepeatTimeout(3000);
+
+    ui->PortNameBox           ->installEventFilter(this);
+
+    newPort->start();
+    newTCP ->start();
 }
 void Connections_Form::resizeEvent(QResizeEvent *event)
 {
@@ -101,6 +106,25 @@ void Connections_Form::resizeEvent(QResizeEvent *event)
     ui->btnSettings->setMinimumHeight(btn_size);
     ui->btnSettings->setIconSize(icon_size);
 }
+
+
+bool Connections_Form::eventFilter(QObject *target, QEvent *event)
+{
+    if (target == ui->PortNameBox && event->type() == QEvent::MouseButtonPress)
+    {
+       if (ui->PortNameBox->isEnabled())
+       {
+           ui->PortNameBox->clear();
+           foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts())
+           {
+              ui->PortNameBox->addItem(info.portName());
+              ui->COMConnect->setEnabled(true);
+           }
+       }
+    }
+    return false;
+}
+
 Connections_Form::~Connections_Form()
 {
     delete ui;
@@ -124,6 +148,42 @@ void Connections_Form::on_TCPConnect_clicked()
 
         ui->TCPConnect->setText("Подключить");
     }
+}
+
+void Connections_Form::on_COMConnect_clicked()
+{
+    Set_ActiveConsole(ui->consol);
+
+    if(ui->COMConnect->text() == "Открыть")
+    {
+        newPort->COM_Connect();
+
+        ui->COMConnect->setText("Закрыть");
+    }
+    else
+    {
+        newPort->COM_Disconnect();
+
+        ui->COMConnect->setText("Открыть");
+    }
+}
+
+
+void Connections_Form::start_COM_Init(void)
+{
+    newPort->COM_SetBaudRate(QSerialPort::Baud9600);
+    newPort->COM_SetDataBits(QSerialPort::Data8);
+    newPort->COM_SetParity(QSerialPort::NoParity);
+    //newPort->COM_SetParity(QSerialPort::EvenParity);
+    //newPort->COM_SetParity(QSerialPort::OddParity);
+    //newPort->COM_SetParity(QSerialPort::MarkParity);
+    //newPort->COM_SetParity(QSerialPort::SpaceParity);
+    newPort->COM_SetStopBits(QSerialPort::OneStop);
+    //newPort->COM_SetStopBits(QSerialPort::OneAndHalfStop);
+    //newPort->COM_SetStopBits(QSerialPort::TwoStop);
+    newPort->COM_SetFlowControl(QSerialPort::NoFlowControl);
+    //newPort->COM_SetFlowControl(QSerialPort::HardwareControl);
+    //newPort->COM_SetFlowControl(QSerialPort::SoftwareControl);
 }
 
 void Connections_Form::on_btnSettings_clicked()
@@ -154,11 +214,18 @@ void Connections_Form::on_btnNext_clicked()
     open_connection_form = new Open_Connection_Form;
 
     connect(open_connection_form,SIGNAL(Cancel()),this,SLOT(show()));
-    connect(open_connection_form,SIGNAL(Get_Console(QPlainTextEdit*)),   this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
-    connect(open_connection_form,SIGNAL(SendSerialNumber(QString,bool)), DataLogic,             SLOT(setSerialNumberMode(QString,bool)));
-    connect(open_connection_form,SIGNAL(AOPEN()),                        ConnectHandler,        SLOT(aOPEN()));
-    connect(ConnectHandler,      SIGNAL(isAOPEN()),                      open_connection_form,  SLOT(isOPEND()));
-    connect(ConnectHandler,      SIGNAL(Progress(uint)),                 open_connection_form,  SLOT(SetProgress(uint)));
+    connect(open_connection_form,SIGNAL(Get_Console(QPlainTextEdit*)),       this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(open_connection_form,SIGNAL(SendSerialNumber(QString,bool)),     DataLogic,             SLOT(setSerialNumberMode(QString,bool)));
+    connect(open_connection_form,SIGNAL(AOPEN()),                            ConnectHandler,        SLOT(aOPEN()));
+    connect(ConnectHandler,      SIGNAL(isAOPEN()),                          open_connection_form,  SLOT(isOPEND()));
+    connect(ConnectHandler,      SIGNAL(Progress(uint)),                     open_connection_form,  SLOT(SetProgress(uint)));
+    connect(MODEM         ,      SIGNAL(String_BOOTLOADER_VERSION(QString)), open_connection_form,  SLOT(SetBootloaderVersionToUI(QString)));
+    connect(MODEM         ,      SIGNAL(BOOTLOADER_SIZE(uint)),              open_connection_form,  SLOT(SetBootloaderSizeToUI(uint)));
+    connect(MODEM         ,      SIGNAL(BOOTLOADER_CRC32(QByteArray)),       open_connection_form,  SLOT(SetBootloaderCRCToUI(QByteArray)));
+    connect(MODEM         ,      SIGNAL(String_UPGRADABLE_VERSION(QString)), open_connection_form,  SLOT(SetUpgradableVersionToUI(QString)));
+    connect(MODEM         ,      SIGNAL(UPGRADABLE_SIZE(uint)),              open_connection_form,  SLOT(SetUpgradableSizeToUI(uint)));
+    connect(MODEM         ,      SIGNAL(UPGRADABLE_CRC32(QByteArray)),       open_connection_form,  SLOT(SetUpgradableCRCToUI(QByteArray)));
+    connect(MODEM         ,      SIGNAL(CURRENT_FIRMWARE_VERSION (uchar)),   open_connection_form,  SLOT(SetCurrentFitmwareToUI(uchar)));
 
     this->hide();
     open_connection_form->show();
@@ -201,4 +268,9 @@ void Connections_Form::Print_Log(QString data, uint n)
 void Connections_Form::Set_ActiveConsole(QPlainTextEdit * new_active_console)
 {
     ActiveConsole = new_active_console;
+}
+
+void Connections_Form::on_PortNameBox_currentIndexChanged(const QString &arg1)
+{
+   newPort->COM_SetPortName(arg1);
 }

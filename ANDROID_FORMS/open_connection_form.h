@@ -21,6 +21,13 @@ public:
 public slots:
     void SetProgress(uint progress);
     void isOPEND(void);
+    void SetCurrentFitmwareToUI(uchar);
+    void SetBootloaderVersionToUI(QString);
+    void SetBootloaderSizeToUI(uint);
+    void SetBootloaderCRCToUI(QByteArray);
+    void SetUpgradableVersionToUI(QString);
+    void SetUpgradableSizeToUI(uint);
+    void SetUpgradableCRCToUI(QByteArray);
 
 signals:
     void Cancel(void);

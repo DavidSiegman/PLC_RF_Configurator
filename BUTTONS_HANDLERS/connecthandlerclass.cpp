@@ -1,18 +1,6 @@
 #include "connecthandlerclass.h"
 #include "OTHER_FUNCTIONS/barr_to_string.h"
 
-
-QString String2_2(
-                     "QWidget{"
-                     "background-color: rgb(186, 229, 202);"
-                     "}"
-                 );
-QString String2_3(
-                     "QWidget{"
-                     "background: rgba(100,50,00,0);"
-                     "}"
-                 );
-
 ConnectHandlerClass::ConnectHandlerClass(DataLogic_Class *DataLogic,MODEMClass *MODEM,UPDATE *nUPDATE,QObject *parent) : QObject(parent)
 {
     ReadDataProgress = 0;
@@ -46,6 +34,7 @@ void ConnectHandlerClass::SetSWITCH_MODE()
 
 void ConnectHandlerClass::SetSWITCH_PROP()
 {
+    /*
     if ((MODEM->BOOT_VERSION == 0))
     {
         if ((MODEM->BOOT_VERSION_SNIFER > 0)&&(MODEM->BOOT_VERSION_SNIFER < 20))
@@ -69,7 +58,7 @@ void ConnectHandlerClass::SetSWITCH_PROP()
     {
 
     }
-
+    */
     ReadDataProgress = 0;
     ConnectHandling(SEND_WRITE_SWITCH_LEVEL,1);
 }
@@ -146,7 +135,7 @@ void ConnectHandlerClass::SendBROADCAST_MODE()
 
 void ConnectHandlerClass::WriteSWITCH_TABLE()
 {
-    if (MODEM->SwitchTable.length() > 0)
+    if (MODEM->getSwitchTable().length() > 0)
     {
 
         MODEM->setCurrent_Index(0);
@@ -222,28 +211,28 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         }
         else
         {
-            if ((MODEM->BOOT_VERSION == 0))
+            if ((MODEM->getBOOTLOADER_VERSION() == 0))
             {
                 //ui->tabWidget->addTab(SniferTab,     "USB/RF Преобразователь");
-                if ((MODEM->BOOT_VERSION_SNIFER > 0)&&(MODEM->BOOT_VERSION_SNIFER < 20))
+                if ((MODEM->getBOOTLOADER_VERSION_SNIFER() > 0)&&(MODEM->getBOOTLOADER_VERSION_SNIFER() < 20))
                 {
                     n = RF_SNIFFER_OLD_READ_DATA;
                 }
-                else if(MODEM->BOOT_VERSION_SNIFER >= 20)
+                else if(MODEM->getBOOTLOADER_VERSION_SNIFER() >= 20)
                 {
                     n = RF_SNIFFER_READ_DATA;
                 }
                // ui->tabWidget->addTab(RFMonitorTab,  "RF RSSI Монитор");
             }
-            else if ((MODEM->BOOT_VERSION > 0)&(MODEM->BOOT_VERSION < 3))
+            else if ((MODEM->getBOOTLOADER_VERSION() > 0)&(MODEM->getBOOTLOADER_VERSION() < 3))
             {
                 n = PLC_READ_DATA;
             }
-            else if ((MODEM->BOOT_VERSION >= 3) & (MODEM->BOOT_VERSION < 5))
+            else if ((MODEM->getBOOTLOADER_VERSION() >= 3) & (MODEM->getBOOTLOADER_VERSION() < 5))
             {
                 n = RF_OLD_READ_DATA;
             }
-            else if ((MODEM->BOOT_VERSION >= 5) & (MODEM->BOOT_VERSION < 6))
+            else if ((MODEM->getBOOTLOADER_VERSION() >= 5) & (MODEM->getBOOTLOADER_VERSION() < 6))
             {
                 n = RF_READ_DATA;
             }
@@ -487,7 +476,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
                         emit Progress(72);
                         emit SendLog(QString::fromUtf8("\r>> ======= Cчитывание таймаутов\r"),NONE);
                         emit SendComand(SEND_READ_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
-                        if (MODEM->BOOT_VERSION >= 4)
+                        if (MODEM->getBOOTLOADER_VERSION() >= 4)
                         {
                             ReadDataProgress = 5;
                         }
@@ -802,7 +791,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         {
             if (state != 0)
             {
-                if ((MODEM->BOOT_VERSION >= 4)||(MODEM->BOOT_VERSION == 0))
+                if ((MODEM->getBOOTLOADER_VERSION() >= 4)||(MODEM->getBOOTLOADER_VERSION() == 0))
                 {
                     emit Progress(0);
                     emit SendLog(QString::fromUtf8("\r>> ======= Запись уровня/маски ретранслятора\r"),NONE);
@@ -826,7 +815,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
                 emit Progress(30);
                 emit SendLog(QString::fromUtf8("\r>> ======= Чтение уровня/маски ретранслятора\r"),NONE);
                 emit SendComand(SEND_READ_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
-                if (MODEM->BOOT_VERSION == 0)
+                if (MODEM->getBOOTLOADER_VERSION() == 0)
                 {
                     ReadDataProgress = 4;
                 }

@@ -1312,7 +1312,7 @@ void MainWindow::on_RF_RESET_clicked()
 
 void MainWindow::on_comboBox_currentIndexChanged(int index)
 {
-    MODEM->SNIFER_MODE = index;
+    //MODEM->SNIFER_MODE = index;
     emit SEND_SNIFER_MODE();
 }
 
@@ -1320,11 +1320,11 @@ void MainWindow::on_checkBox_3_stateChanged(int arg1)
 {
     if (arg1 == 0)
     {
-        MODEM->UP_LINC = 0;
+    //    MODEM->UP_LINC = 0;
     }
     else
     {
-        MODEM->UP_LINC = 1;
+    //    MODEM->UP_LINC = 1;
     }
 
     emit SEND_UPLINC_MODE();
@@ -1334,11 +1334,11 @@ void MainWindow::on_checkBox_5_stateChanged(int arg1)
 {
     if (arg1 == 0)
     {
-        MODEM->CRC_CHECK_DISABLE = 0;
+    //    MODEM->CRC_CHECK_DISABLE = 0;
     }
     else
     {
-        MODEM->CRC_CHECK_DISABLE = 1;
+    //    MODEM->CRC_CHECK_DISABLE = 1;
     }
     emit SEND_CRC_DISABLE_MODE();
 }
@@ -1347,11 +1347,11 @@ void MainWindow::on_checkBox_4_stateChanged(int arg1)
 {
     if (arg1 == 0)
     {
-        MODEM->BROADCAST = 0;
+    //    MODEM->BROADCAST = 0;
     }
     else
     {
-        MODEM->BROADCAST = 1;
+    //    MODEM->BROADCAST = 1;
     }
     emit SEND_BROADCAST_MODE();
 }
@@ -1497,7 +1497,7 @@ void MainWindow::on_TCPConnect_clicked()
 
 void MainWindow::on_LVL0_DIS_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL0 = arg1;
+    //MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL0 = arg1;
 
     if (arg1 > 0)
     {
@@ -1515,23 +1515,23 @@ void MainWindow::on_LVL0_DIS_valueChanged(int arg1)
         ui->LVL8_DIS->setEnabled(false); ui->LVL8_DIS->setValue(0);
         ui->LVL9_DIS->setEnabled(false); ui->LVL9_DIS->setValue(0);
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL1 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL4 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL1 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL4 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL2 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL3 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL2 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL3 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+     //   MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
+    //ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
 }
 
 void MainWindow::on_LVL1_DIS_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL1 = arg1;
+    //MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL1 = arg1;
 
     if (arg1 > 0)
     {
@@ -1548,22 +1548,22 @@ void MainWindow::on_LVL1_DIS_valueChanged(int arg1)
         ui->LVL8_DIS->setEnabled(false); ui->LVL8_DIS->setValue(0);
         ui->LVL9_DIS->setEnabled(false); ui->LVL9_DIS->setValue(0);
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL4 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL4 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = 0;
+     //   MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL2 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL3 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL2 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL3 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
+    //ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
 }
 
 void MainWindow::on_LVL2_DIS_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL2 = arg1;
+    //MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL2 = arg1;
 
     if (arg1 > 0)
     {
@@ -1579,21 +1579,21 @@ void MainWindow::on_LVL2_DIS_valueChanged(int arg1)
         ui->LVL8_DIS->setEnabled(false); ui->LVL8_DIS->setValue(0);
         ui->LVL9_DIS->setEnabled(false); ui->LVL9_DIS->setValue(0);
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL4 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+     //   MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL4 = 0;
+     //   MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = 0;
+     //   MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL3 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+     //   MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL3 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
+    //ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
 }
 
 void MainWindow::on_LVL3_DIS_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL3 = arg1;
+    //MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL3 = arg1;
 
     if (arg1 > 0)
     {
@@ -1608,20 +1608,20 @@ void MainWindow::on_LVL3_DIS_valueChanged(int arg1)
         ui->LVL8_DIS->setEnabled(false); ui->LVL8_DIS->setValue(0);
         ui->LVL9_DIS->setEnabled(false); ui->LVL9_DIS->setValue(0);
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL4 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL4 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
+    //ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
 }
 
 void MainWindow::on_LVL4_DIS_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL4 = arg1;
+    //MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL4 = arg1;
 
     if (arg1 > 0)
     {
@@ -1635,19 +1635,19 @@ void MainWindow::on_LVL4_DIS_valueChanged(int arg1)
         ui->LVL8_DIS->setEnabled(false); ui->LVL8_DIS->setValue(0);
         ui->LVL9_DIS->setEnabled(false); ui->LVL9_DIS->setValue(0);
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+     //   MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
+    //ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
 }
 
 void MainWindow::on_LVL5_DIS_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = arg1;
+    //MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL5 = arg1;
 
     if (arg1 > 0)
     {
@@ -1660,18 +1660,18 @@ void MainWindow::on_LVL5_DIS_valueChanged(int arg1)
         ui->LVL8_DIS->setEnabled(false); ui->LVL8_DIS->setValue(0);
         ui->LVL9_DIS->setEnabled(false); ui->LVL9_DIS->setValue(0);
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
+    //ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
 }
 
 void MainWindow::on_LVL6_DIS_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = arg1;
+    //MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL6 = arg1;
 
     if (arg1 > 0)
     {
@@ -1683,17 +1683,17 @@ void MainWindow::on_LVL6_DIS_valueChanged(int arg1)
         ui->LVL8_DIS->setEnabled(false); ui->LVL8_DIS->setValue(0);
         ui->LVL9_DIS->setEnabled(false); ui->LVL9_DIS->setValue(0);
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
+   // ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
 }
 
 void MainWindow::on_LVL7_DIS_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = arg1;
+   // MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL7 = arg1;
 
     if (arg1 > 0)
     {
@@ -1704,16 +1704,16 @@ void MainWindow::on_LVL7_DIS_valueChanged(int arg1)
         ui->LVL8_DIS->setEnabled(false); ui->LVL8_DIS->setValue(0);
         ui->LVL9_DIS->setEnabled(false); ui->LVL9_DIS->setValue(0);
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
+   // ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
 }
 
 void MainWindow::on_LVL8_DIS_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = arg1;
+   // MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_0.Field.LVL8 = arg1;
 
     if (arg1 > 0)
     {
@@ -1723,15 +1723,15 @@ void MainWindow::on_LVL8_DIS_valueChanged(int arg1)
     {
         ui->LVL9_DIS->setEnabled(false); ui->LVL9_DIS->setValue(0);
 
-        MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
+    //ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
 }
 
 void MainWindow::on_LVL9_DIS_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = arg1;
-    ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
+    //MODEM->SWITCH_MASK_DESTINATION->Field.Retranslation_MASK_1.Field.LVL9 = arg1;
+    //ui->NetDestination->setText(QString::number(*(unsigned int*)(MODEM->SWITCH_MASK_DESTINATION)));
 }
 
 void MainWindow::on_SetDestinationMASK_clicked()
@@ -1741,7 +1741,7 @@ void MainWindow::on_SetDestinationMASK_clicked()
 
 void MainWindow::on_LVL0_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL0 = arg1;
+    //MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL0 = arg1;
     if (arg1 > 0)
     {
         ui->LVL1->setEnabled(true);
@@ -1758,24 +1758,24 @@ void MainWindow::on_LVL0_valueChanged(int arg1)
         ui->LVL8->setEnabled(false); ui->LVL8->setValue(0);
         ui->LVL9->setEnabled(false); ui->LVL9->setValue(0);
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL1 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL4 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL1 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL4 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL2 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL3 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL2 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL3 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+     //   MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
-    ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
+    //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
+    //ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL1_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL1 = arg1;
+    //MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL1 = arg1;
     if (arg1 > 0)
     {
         ui->LVL2->setEnabled(true);
@@ -1791,23 +1791,23 @@ void MainWindow::on_LVL1_valueChanged(int arg1)
         ui->LVL8->setEnabled(false); ui->LVL8->setValue(0);
         ui->LVL9->setEnabled(false); ui->LVL9->setValue(0);
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL4 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL4 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL2 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL3 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL2 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL3 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
-    ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
+    //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
+    //ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL2_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL2 = arg1;
+    //MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL2 = arg1;
     if (arg1 > 0)
     {
         ui->LVL3->setEnabled(true);
@@ -1822,22 +1822,22 @@ void MainWindow::on_LVL2_valueChanged(int arg1)
         ui->LVL8->setEnabled(false); ui->LVL8->setValue(0);
         ui->LVL9->setEnabled(false); ui->LVL9->setValue(0);
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL4 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL4 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL3 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL3 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
+    //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
     ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL3_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL3 = arg1;
+    //MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL3 = arg1;
     if (arg1 > 0)
     {
         ui->LVL4->setEnabled(true);
@@ -1851,21 +1851,21 @@ void MainWindow::on_LVL3_valueChanged(int arg1)
         ui->LVL8->setEnabled(false); ui->LVL8->setValue(0);
         ui->LVL9->setEnabled(false); ui->LVL9->setValue(0);
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL4 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL4 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
+   // MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
     ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL4_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL4 = arg1;
+    //MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL4 = arg1;
     if (arg1 > 0)
     {
         ui->LVL5->setEnabled(true);
@@ -1878,20 +1878,20 @@ void MainWindow::on_LVL4_valueChanged(int arg1)
         ui->LVL8->setEnabled(false); ui->LVL8->setValue(0);
         ui->LVL9->setEnabled(false); ui->LVL9->setValue(0);
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
+    //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
     ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL5_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = arg1;
+    //MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL5 = arg1;
     if (arg1 > 0)
     {
         ui->LVL6->setEnabled(true);
@@ -1903,19 +1903,19 @@ void MainWindow::on_LVL5_valueChanged(int arg1)
         ui->LVL8->setEnabled(false); ui->LVL8->setValue(0);
         ui->LVL9->setEnabled(false); ui->LVL9->setValue(0);
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
+    //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
     ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL6_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = arg1;
+    //MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL6 = arg1;
     if (arg1 > 0)
     {
         ui->LVL7->setEnabled(true);
@@ -1926,18 +1926,18 @@ void MainWindow::on_LVL6_valueChanged(int arg1)
         ui->LVL8->setEnabled(false); ui->LVL8->setValue(0);
         ui->LVL9->setEnabled(false); ui->LVL9->setValue(0);
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
+    //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
     ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL7_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = arg1;
+    //MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL7 = arg1;
     if (arg1 > 0)
     {
         ui->LVL8->setEnabled(true);
@@ -1947,17 +1947,17 @@ void MainWindow::on_LVL7_valueChanged(int arg1)
         ui->LVL8->setEnabled(false); ui->LVL8->setValue(0);
         ui->LVL9->setEnabled(false); ui->LVL9->setValue(0);
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = 0;
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
+    //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
     ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL8_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = arg1;
+    //MODEM->SWITCH_MASK->Field.Retranslation_MASK_0.Field.LVL8 = arg1;
     if (arg1 > 0)
     {
         ui->LVL9->setEnabled(true);
@@ -1966,16 +1966,16 @@ void MainWindow::on_LVL8_valueChanged(int arg1)
     {
         ui->LVL9->setEnabled(false); ui->LVL9->setValue(0);
 
-        MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
+    //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
-    MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
+    //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
     ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL9_valueChanged(int arg1)
 {
-    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = arg1;
-    MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
+    //MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = arg1;
+    //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
     ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
