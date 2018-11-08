@@ -18,16 +18,16 @@
     <number>0</number>
    </property>
    <property name="leftMargin">
-    <number>1</number>
+    <number>5</number>
    </property>
    <property name="topMargin">
-    <number>1</number>
+    <number>5</number>
    </property>
    <property name="rightMargin">
-    <number>1</number>
+    <number>5</number>
    </property>
    <property name="bottomMargin">
-    <number>1</number>
+    <number>5</number>
    </property>
    <item>
     <widget class="QLabel" name="label">
@@ -39,6 +39,7 @@
      </property>
      <property name="font">
       <font>
+       <family>Microsoft YaHei UI</family>
        <pointsize>24</pointsize>
        <weight>75</weight>
        <bold>true</bold>
@@ -63,6 +64,11 @@
        <height>25</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+      </font>
+     </property>
      <property name="text">
       <string>Настройки COM Порта</string>
      </property>
@@ -83,9 +89,14 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>0</width>
+         <width>150</width>
          <height>20</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
        </property>
        <property name="text">
         <string>Кол-во повторений: [раз]</string>
@@ -106,6 +117,11 @@
          <height>20</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
        <property name="text">
         <string>3</string>
        </property>
@@ -125,9 +141,14 @@
       <widget class="QLabel" name="label_3">
        <property name="minimumSize">
         <size>
-         <width>0</width>
+         <width>150</width>
          <height>20</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
        </property>
        <property name="text">
         <string>Период повторений: [мс]</string>
@@ -147,6 +168,11 @@
          <width>0</width>
          <height>20</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
        </property>
        <property name="text">
         <string>3000</string>
@@ -191,7 +217,17 @@
         </size>
        </property>
        <property name="text">
-        <string>&lt;&lt;&lt;</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../RESOURCES/images.qrc">
+         <normaloff>:/new/icons/images/BACK_2.png</normaloff>:/new/icons/images/BACK_2.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -209,6 +245,11 @@
          <height>25</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
        <property name="text">
         <string>Принять</string>
        </property>
@@ -218,6 +259,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../RESOURCES/images.qrc"/>
+ </resources>
  <connections/>
 </ui>

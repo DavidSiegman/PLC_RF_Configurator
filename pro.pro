@@ -47,7 +47,8 @@ HEADERS += \
     ANDROID_FORMS/hands_enter_form.h \
     ANDROID_FORMS/net_settings_form.h \
     ANDROID_FORMS/plc_settings_form.h \
-    ANDROID_FORMS/si4432_settings_form.h
+    ANDROID_FORMS/si4432_settings_form.h \
+    ANDROID_FORMS/sniffer_settings_form.h
 
 SOURCES += \
     COM/port.cpp \
@@ -79,7 +80,8 @@ SOURCES += \
     OTHER_FUNCTIONS/barr_to_string.cpp \
     ANDROID_FORMS/net_settings_form.cpp \
     ANDROID_FORMS/plc_settings_form.cpp \
-    ANDROID_FORMS/si4432_settings_form.cpp
+    ANDROID_FORMS/si4432_settings_form.cpp \
+    ANDROID_FORMS/sniffer_settings_form.cpp
 
 FORMS += \
     WINDOWS_FORMS/mainwindow.ui \
@@ -89,7 +91,8 @@ FORMS += \
     ANDROID_FORMS/hands_enter_form.ui \
     ANDROID_FORMS/net_settings_form.ui \
     ANDROID_FORMS/plc_settings_form.ui \
-    ANDROID_FORMS/si4432_settings_form.ui
+    ANDROID_FORMS/si4432_settings_form.ui \
+    ANDROID_FORMS/sniffer_settings_form.ui
 
 RESOURCES += \
     RESOURCES/images.qrc

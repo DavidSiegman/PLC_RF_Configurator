@@ -18,19 +18,19 @@
     <number>0</number>
    </property>
    <property name="leftMargin">
-    <number>1</number>
+    <number>5</number>
    </property>
    <property name="topMargin">
-    <number>1</number>
+    <number>5</number>
    </property>
    <property name="rightMargin">
-    <number>1</number>
+    <number>5</number>
    </property>
    <property name="bottomMargin">
-    <number>1</number>
+    <number>5</number>
    </property>
    <item>
-    <widget class="QLabel" name="label_8">
+    <widget class="QLabel" name="label_1">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
        <horstretch>0</horstretch>
@@ -45,6 +45,7 @@
      </property>
      <property name="font">
       <font>
+       <family>Microsoft YaHei UI</family>
        <pointsize>24</pointsize>
        <weight>75</weight>
        <bold>true</bold>
@@ -67,7 +68,7 @@
       <enum>QLayout::SetMinimumSize</enum>
      </property>
      <item>
-      <widget class="QLabel" name="label_5">
+      <widget class="QLabel" name="label_2">
        <property name="enabled">
         <bool>true</bool>
        </property>
@@ -85,6 +86,7 @@
        </property>
        <property name="font">
         <font>
+         <family>Microsoft YaHei UI</family>
          <pointsize>18</pointsize>
          <weight>75</weight>
          <bold>true</bold>
@@ -142,6 +144,11 @@
            <height>20</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei UI</family>
+          </font>
+         </property>
          <property name="text">
           <string>0000000000</string>
          </property>
@@ -163,7 +170,7 @@
       <enum>QLayout::SetMaximumSize</enum>
      </property>
      <item>
-      <widget class="QLabel" name="label_4">
+      <widget class="QLabel" name="label_3">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
          <horstretch>0</horstretch>
@@ -178,6 +185,7 @@
        </property>
        <property name="font">
         <font>
+         <family>Microsoft YaHei UI</family>
          <pointsize>18</pointsize>
          <weight>75</weight>
          <bold>true</bold>
@@ -208,6 +216,11 @@
          <height>20</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
       </widget>
      </item>
     </layout>
@@ -236,6 +249,11 @@
          <width>16777215</width>
          <height>16777215</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
        </property>
        <property name="text">
         <string>CRC16</string>
@@ -268,6 +286,11 @@
          <height>16777215</height>
         </size>
        </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
+       </property>
        <property name="text">
         <string>CRC16</string>
        </property>
@@ -298,6 +321,11 @@
        <height>16777215</height>
       </size>
      </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+      </font>
+     </property>
      <property name="text">
       <string>Send</string>
      </property>
@@ -325,6 +353,11 @@
        <width>16777215</width>
        <height>16777215</height>
       </size>
+     </property>
+     <property name="font">
+      <font>
+       <family>Microsoft YaHei UI</family>
+      </font>
      </property>
      <property name="text">
       <string>Cyclic</string>
@@ -356,6 +389,12 @@
      </property>
      <item>
       <widget class="QPushButton" name="Back">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
@@ -363,17 +402,38 @@
         </size>
        </property>
        <property name="text">
-        <string>&lt;&lt;&lt;</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../RESOURCES/images.qrc">
+         <normaloff>:/new/icons/images/BACK_2.png</normaloff>:/new/icons/images/BACK_2.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
          <width>0</width>
          <height>25</height>
         </size>
+       </property>
+       <property name="font">
+        <font>
+         <family>Microsoft YaHei UI</family>
+        </font>
        </property>
        <property name="text">
         <string>Clear log</string>
@@ -384,6 +444,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../RESOURCES/images.qrc"/>
+ </resources>
  <connections/>
 </ui>

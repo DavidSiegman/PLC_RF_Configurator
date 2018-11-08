@@ -31,6 +31,7 @@ public slots:
 
 signals:
     void Cancel(void);
+    void Next(void);
     void Get_Console(QPlainTextEdit* console);
     void SendSerialNumber(QString, bool);
     void AOPEN(void);
@@ -42,6 +43,8 @@ private slots:
     void on_Interface_currentIndexChanged(int index);
 
     void on_Connect_clicked();
+    void on_Next_clicked();
+
 private:
     Ui::Open_Connection_Form *ui;
     QSysInfo                 *SysInfo;

@@ -197,7 +197,7 @@
          </property>
          <property name="font">
           <font>
-           <family>Microsoft JhengHei UI</family>
+           <family>Microsoft YaHei UI</family>
           </font>
          </property>
          <property name="text">
@@ -413,6 +413,7 @@
         <widget class="QPlainTextEdit" name="consol">
          <property name="font">
           <font>
+           <family>Microsoft YaHei UI</family>
            <pointsize>7</pointsize>
           </font>
          </property>
@@ -438,7 +439,7 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>25</height>
+         <height>35</height>
         </size>
        </property>
        <property name="maximumSize">
@@ -449,7 +450,7 @@
        </property>
        <property name="font">
         <font>
-         <family>Microsoft YaHei UI Light</family>
+         <family>Microsoft JhengHei UI</family>
          <pointsize>12</pointsize>
          <weight>75</weight>
          <bold>true</bold>
@@ -471,7 +472,7 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>25</height>
+         <height>35</height>
         </size>
        </property>
        <property name="maximumSize">
@@ -506,7 +507,7 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>25</height>
+         <height>35</height>
         </size>
        </property>
        <property name="maximumSize">

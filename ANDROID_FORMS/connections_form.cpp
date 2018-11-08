@@ -51,6 +51,10 @@ Connections_Form::Connections_Form(QWidget *parent) :
     connect(DataLogic,SIGNAL(LogForPrint(QString,uint)),      this, SLOT(Print_Log(QString,uint)));
     connect(DataLogic,SIGNAL(DataForPrint(QByteArray,uint)),  this, SLOT(Print(QByteArray,uint)));
 
+    connect(ui->btnSettings,   SIGNAL(clicked()),             this, SLOT(Create_And_Show_Settings_Form()));
+    connect(ui->btnHandsEnter, SIGNAL(clicked()),             this, SLOT(Create_And_Show_Hands_Enter_Form()));
+    connect(ui->btnNext,       SIGNAL(clicked()),             this, SLOT(Create_And_Show_Open_Connection_Form()));
+
     DataLogic->setRepeatNumber(3);
     DataLogic->setRepeatTimeout(3000);
 
@@ -168,7 +172,6 @@ void Connections_Form::on_COMConnect_clicked()
     }
 }
 
-
 void Connections_Form::start_COM_Init(void)
 {
     newPort->COM_SetBaudRate(QSerialPort::Baud9600);
@@ -186,35 +189,53 @@ void Connections_Form::start_COM_Init(void)
     //newPort->COM_SetFlowControl(QSerialPort::SoftwareControl);
 }
 
-void Connections_Form::on_btnSettings_clicked()
+void Connections_Form::Create_And_Show_Net_Settings_Form(void)
+{
+    net_settings_form = new Net_Settings_Form;
+
+    connect(net_settings_form,SIGNAL(Cancel()),                             open_connection_form,  SLOT(show()));
+    connect(net_settings_form,SIGNAL(Send_Data(QByteArray,uint)),           DataLogic,             SLOT(SEND_DATA(QByteArray,uint)));
+    connect(net_settings_form,SIGNAL(Get_Console(QPlainTextEdit*)),         this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(net_settings_form,SIGNAL(isCreated()),                          MODEM,                 SLOT(getSWITCH_MODE()));
+    connect(net_settings_form,SIGNAL(isCreated()),                          MODEM,                 SLOT(getSWITCH_LEVEL()));
+    connect(net_settings_form,SIGNAL(isCreated()),                          MODEM,                 SLOT(getSWITCH_TIMEOUT()));
+    connect(MODEM,            SIGNAL(SWITCH_MODE(uchar)),                   net_settings_form,     SLOT(SetSwitchModeToUI(uchar)));
+    connect(MODEM,            SIGNAL(SWITCH_LEVEL(uint)),                   net_settings_form,     SLOT(SetSwitchLevelToUI(uint)));
+    connect(MODEM,            SIGNAL(SWITCH_TIMEOUT(uint)),                 net_settings_form,     SLOT(SetSwitchTimeoutToUI(uint)));
+
+    open_connection_form->hide();
+    net_settings_form ->show();
+}
+
+void Connections_Form::Create_And_Show_Settings_Form(void)
 {
     settings_form = new Settings_Form;
     connect(settings_form,SIGNAL(Cancel()),this,SLOT(show()));
-    connect(settings_form,SIGNAL(GetRepeatNumber(uint)),DataLogic,SLOT(setRepeatNumber(uint)));
-    connect(settings_form,SIGNAL(GetRepeatTimeout(uint)),DataLogic,SLOT(setRepeatTimeout(uint)));
+    connect(settings_form,SIGNAL(GetRepeatNumber(uint)),                     DataLogic,            SLOT(setRepeatNumber(uint)));
+    connect(settings_form,SIGNAL(GetRepeatTimeout(uint)),                    DataLogic,            SLOT(setRepeatTimeout(uint)));
 
     this->hide();
     settings_form->show();
 }
 
-void Connections_Form::on_btnHandsEnter_clicked()
+void Connections_Form::Create_And_Show_Hands_Enter_Form(void)
 {
     hands_enter_form = new Hands_Enter_Form;
     connect(hands_enter_form,SIGNAL(Cancel()),this,SLOT(show()));
-    connect(hands_enter_form,SIGNAL(Send_Data(QByteArray,uint)),DataLogic,SLOT(SEND_DATA(QByteArray,uint)));
-    connect(hands_enter_form,SIGNAL(Get_Console(QPlainTextEdit*)),this,SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(hands_enter_form,SIGNAL(Send_Data(QByteArray,uint)),             DataLogic,            SLOT(SEND_DATA(QByteArray,uint)));
+    connect(hands_enter_form,SIGNAL(Get_Console(QPlainTextEdit*)),           this,                 SLOT(Set_ActiveConsole(QPlainTextEdit*)));
 
     this->hide();
     hands_enter_form->show();
 }
 
-
-void Connections_Form::on_btnNext_clicked()
+void Connections_Form::Create_And_Show_Open_Connection_Form(void)
 {
     open_connection_form = new Open_Connection_Form;
 
-    connect(open_connection_form,SIGNAL(Cancel()),this,SLOT(show()));
+    connect(open_connection_form,SIGNAL(Cancel()),                           this,                  SLOT(show()));
     connect(open_connection_form,SIGNAL(Get_Console(QPlainTextEdit*)),       this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(open_connection_form,SIGNAL(Next()),                             this,                  SLOT(Create_And_Show_Net_Settings_Form()));
     connect(open_connection_form,SIGNAL(SendSerialNumber(QString,bool)),     DataLogic,             SLOT(setSerialNumberMode(QString,bool)));
     connect(open_connection_form,SIGNAL(AOPEN()),                            ConnectHandler,        SLOT(aOPEN()));
     connect(ConnectHandler,      SIGNAL(isAOPEN()),                          open_connection_form,  SLOT(isOPEND()));

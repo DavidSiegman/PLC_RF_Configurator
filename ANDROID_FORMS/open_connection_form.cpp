@@ -225,3 +225,8 @@ void Open_Connection_Form::on_Connect_clicked()
     emit AOPEN();
     emit STOP_MONITOR();
 }
+
+void Open_Connection_Form::on_Next_clicked()
+{
+    emit Next();
+}

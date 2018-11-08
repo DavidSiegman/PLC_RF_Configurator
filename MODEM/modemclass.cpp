@@ -97,8 +97,8 @@ void MODEMClass::clearNetTable()
 
 uchar      MODEMClass::getCURRENT_FIRMWARE_VERSION(void)
 {
-    return this->MODEM_Propertys.CURRENT_FIRMWARE_VERSION;
     emit CURRENT_FIRMWARE_VERSION(this->MODEM_Propertys.CURRENT_FIRMWARE_VERSION);
+    return this->MODEM_Propertys.CURRENT_FIRMWARE_VERSION;
 }
 void       MODEMClass::setCURRENT_FIRMWARE_VERSION(uchar new_value)
 {
@@ -108,9 +108,8 @@ void       MODEMClass::setCURRENT_FIRMWARE_VERSION(uchar new_value)
 
 QString    MODEMClass::getString_BOOTLOADER_VERSION(void)
 {
-    return this->MODEM_Propertys.String_BOOTLOADER_VERSION;
     emit String_BOOTLOADER_VERSION(this->MODEM_Propertys.String_BOOTLOADER_VERSION);
-
+    return this->MODEM_Propertys.String_BOOTLOADER_VERSION;
 }
 void       MODEMClass::setString_BOOTLOADER_VERSION(QString new_value)
 {
@@ -120,8 +119,8 @@ void       MODEMClass::setString_BOOTLOADER_VERSION(QString new_value)
 
 QString    MODEMClass::getString_UPGRADABLE_VERSION(void)
 {
-    return this->MODEM_Propertys.String_UPGRADABLE_VERSION;
     emit String_UPGRADABLE_VERSION(this->MODEM_Propertys.String_UPGRADABLE_VERSION);
+    return this->MODEM_Propertys.String_UPGRADABLE_VERSION;
 }
 void       MODEMClass::setString_UPGRADABLE_VERSION(QString new_value)
 {
@@ -131,8 +130,8 @@ void       MODEMClass::setString_UPGRADABLE_VERSION(QString new_value)
 
 double     MODEMClass::getBOOTLOADER_VERSION(void)
 {
-    return this->MODEM_Propertys.BOOTLOADER_VERSION;
     emit BOOTLOADER_VERSION(this->MODEM_Propertys.BOOTLOADER_VERSION);
+    return this->MODEM_Propertys.BOOTLOADER_VERSION;
 }
 void       MODEMClass::setBOOTLOADER_VERSION(double new_value)
 {
@@ -142,8 +141,8 @@ void       MODEMClass::setBOOTLOADER_VERSION(double new_value)
 
 double     MODEMClass::getUPGRADABLE_VERSION(void)
 {
-    return this->MODEM_Propertys.UPGRADABLE_VERSION;
     emit UPGRADABLE_VERSION(this->MODEM_Propertys.UPGRADABLE_VERSION);
+    return this->MODEM_Propertys.UPGRADABLE_VERSION;
 }
 void       MODEMClass::setUPGRADABLE_VERSION(double new_value)
 {
@@ -153,8 +152,8 @@ void       MODEMClass::setUPGRADABLE_VERSION(double new_value)
 
 double     MODEMClass::getBOOTLOADER_VERSION_SNIFER(void)
 {
-    return this->MODEM_Propertys.BOOTLOADER_VERSION_SNIFER;
     emit BOOTLOADER_VERSION_SNIFER(this->MODEM_Propertys.BOOTLOADER_VERSION_SNIFER);
+    return this->MODEM_Propertys.BOOTLOADER_VERSION_SNIFER;
 }
 void       MODEMClass::setBOOTLOADER_VERSION_SNIFER(double new_value)
 {
@@ -164,8 +163,8 @@ void       MODEMClass::setBOOTLOADER_VERSION_SNIFER(double new_value)
 
 double     MODEMClass::getUPGRADABLE_VERSION_SNIFER(void)
 {
-    return this->MODEM_Propertys.UPGRADABLE_VERSION_SNIFER;
     emit UPGRADABLE_VERSION_SNIFER(this->MODEM_Propertys.UPGRADABLE_VERSION_SNIFER);
+    return this->MODEM_Propertys.UPGRADABLE_VERSION_SNIFER;
 }
 void       MODEMClass::setUPGRADABLE_VERSION_SNIFER(double new_value)
 {
@@ -175,8 +174,8 @@ void       MODEMClass::setUPGRADABLE_VERSION_SNIFER(double new_value)
 
 double     MODEMClass::getBOOTLOADER_VERSION_TERMINAL(void)
 {
-    return this->MODEM_Propertys.BOOTLOADER_VERSION_TERMINAL;
     emit BOOTLOADER_VERSION_TERMINAL(this->MODEM_Propertys.BOOTLOADER_VERSION_TERMINAL);
+    return this->MODEM_Propertys.BOOTLOADER_VERSION_TERMINAL;
 }
 void       MODEMClass::setBOOTLOADER_VERSION_TERMINAL(double new_value)
 {
@@ -186,8 +185,8 @@ void       MODEMClass::setBOOTLOADER_VERSION_TERMINAL(double new_value)
 
 double     MODEMClass::getUPGRADABLE_VERSION_TERMINAL(void)
 {
-    return this->MODEM_Propertys.UPGRADABLE_VERSION_TERMINAL;
     emit UPGRADABLE_VERSION_TERMINAL(this->MODEM_Propertys.UPGRADABLE_VERSION_TERMINAL);
+    return this->MODEM_Propertys.UPGRADABLE_VERSION_TERMINAL;
 }
 void       MODEMClass::setUPGRADABLE_VERSION_TERMINAL(double new_value)
 {
@@ -197,8 +196,8 @@ void       MODEMClass::setUPGRADABLE_VERSION_TERMINAL(double new_value)
 
 uint       MODEMClass::getBOOTLOADER_SIZE(void)
 {
-    return this->MODEM_Propertys.BOOTLOADER_SIZE;
     emit BOOTLOADER_SIZE(this->MODEM_Propertys.BOOTLOADER_SIZE);
+    return this->MODEM_Propertys.BOOTLOADER_SIZE;
 }
 void       MODEMClass::setBOOTLOADER_SIZE(uint new_value)
 {
@@ -208,8 +207,8 @@ void       MODEMClass::setBOOTLOADER_SIZE(uint new_value)
 
 uint       MODEMClass::getUPGRADABLE_SIZE(void)
 {
-    return this->MODEM_Propertys.UPGRADABLE_SIZE;
     emit UPGRADABLE_SIZE(this->MODEM_Propertys.UPGRADABLE_SIZE);
+    return this->MODEM_Propertys.UPGRADABLE_SIZE;
 }
 void       MODEMClass::setUPGRADABLE_SIZE(uint new_value)
 {
@@ -219,8 +218,8 @@ void       MODEMClass::setUPGRADABLE_SIZE(uint new_value)
 
 QByteArray MODEMClass::getBOOTLOADER_CRC32(void)
 {
-    return this->MODEM_Propertys.BOOTLOADER_CRC32;
     emit BOOTLOADER_CRC32(this->MODEM_Propertys.BOOTLOADER_CRC32);
+    return this->MODEM_Propertys.BOOTLOADER_CRC32;
 }
 void       MODEMClass::setBOOTLOADER_CRC32(QByteArray new_value)
 {
@@ -230,8 +229,8 @@ void       MODEMClass::setBOOTLOADER_CRC32(QByteArray new_value)
 
 QByteArray MODEMClass::getUPGRADABLE_CRC32(void)
 {
-    return this->MODEM_Propertys.UPGRADABLE_CRC32;
     emit UPGRADABLE_CRC32(this->MODEM_Propertys.UPGRADABLE_CRC32);
+    return this->MODEM_Propertys.UPGRADABLE_CRC32;
 }
 void       MODEMClass::setUPGRADABLE_CRC32(QByteArray new_value)
 {
@@ -241,29 +240,35 @@ void       MODEMClass::setUPGRADABLE_CRC32(QByteArray new_value)
 
 uchar      MODEMClass::getSWITCH_MODE(void)
 {
-
+    emit SWITCH_MODE(this->MODEM_Propertys.SWITCH_MODE);
+    return this->MODEM_Propertys.SWITCH_MODE;
 }
-void       MODEMClass::setSWITCH_MODE(uchar)
+void       MODEMClass::setSWITCH_MODE(uchar new_value)
 {
-
+    this->MODEM_Propertys.SWITCH_MODE = new_value;
+    emit SWITCH_MODE(this->MODEM_Propertys.SWITCH_MODE);
 }
 
 uint       MODEMClass::getSWITCH_TIMEOUT(void)
 {
-
+    emit SWITCH_TIMEOUT(this->MODEM_Propertys.SWITCH_TIMEOUT);
+    return this->MODEM_Propertys.SWITCH_TIMEOUT;
 }
-void       MODEMClass::setSWITCH_TIMEOUT(uint)
+void       MODEMClass::setSWITCH_TIMEOUT(uint new_value)
 {
-
+    this->MODEM_Propertys.SWITCH_TIMEOUT = new_value;
+    emit SWITCH_TIMEOUT(this->MODEM_Propertys.SWITCH_TIMEOUT);
 }
 
 uint       MODEMClass::getSWITCH_LEVEL(void)
 {
-
+    emit SWITCH_LEVEL(this->MODEM_Propertys.SWITCH_LEVEL);
+    return this->MODEM_Propertys.SWITCH_LEVEL;
 }
-void       MODEMClass::setSWITCH_LEVEL(uint)
+void       MODEMClass::setSWITCH_LEVEL(uint new_value)
 {
-
+    this->MODEM_Propertys.SWITCH_LEVEL = new_value;
+    emit SWITCH_LEVEL(this->MODEM_Propertys.SWITCH_LEVEL);
 }
 
 uint       MODEMClass::getSWITCH_LEVEL_DESTINATION(void)

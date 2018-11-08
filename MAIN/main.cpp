@@ -3,6 +3,7 @@
 #include "STYLE/style.h"
 
 #include <QApplication>
+#include <qdebug.h>
 
 int main(int argc, char *argv[])
 {
@@ -11,6 +12,7 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName( "QModBus" );
 
     QApplication a(argc, argv);
+
     //MainWindow w;
     Connections_Form v;
     //w.setStyleSheet(Style::Widget2_StyleSheet);

@@ -32,6 +32,7 @@
 #include "settings_form.h"
 #include "hands_enter_form.h"
 #include "open_connection_form.h"
+#include "net_settings_form.h"
 
 namespace Ui {
 class Connections_Form;
@@ -61,7 +62,6 @@ public:
     Filter              *newFilter;
     UPDATE              *newUPDATE;
 
-
 private slots:
     void Print    (QByteArray data, uint n);
     void Print_Log(QString    data, uint n);
@@ -69,13 +69,15 @@ private slots:
 
     void Set_ActiveConsole(QPlainTextEdit*);
 
+    void Create_And_Show_Net_Settings_Form(void);
+
+    void Create_And_Show_Settings_Form(void);
+
+    void Create_And_Show_Hands_Enter_Form(void);
+
+    void Create_And_Show_Open_Connection_Form(void);
+
     void on_TCPConnect_clicked();
-
-    void on_btnSettings_clicked();
-
-    void on_btnHandsEnter_clicked();
-
-    void on_btnNext_clicked();
 
     void on_PortNameBox_currentIndexChanged(const QString &arg1);
 
@@ -89,6 +91,7 @@ private:
     Settings_Form          *settings_form;
     Hands_Enter_Form       *hands_enter_form;
     Open_Connection_Form   *open_connection_form;
+    Net_Settings_Form      *net_settings_form;
 
     QSysInfo               *SysInfo;
     QRegExp                 RegSystemName;
