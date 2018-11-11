@@ -76,26 +76,27 @@ void Port :: COM_Connect(void)
         {
             if (this->thisPort->isOpen())
             {
-                emit COM_Error(">> ======= Порт " + this->SettingsPort.name.toLocal8Bit() + " Открыт!\r",COM_OPEN);
+                emit COM_Log(">> ======= Порт " + this->SettingsPort.name.toLocal8Bit() + " Открыт!\r",COM_OPEN);
+                emit COM_Opend();
             }
         }
         else
         {
             this->thisPort->close();
-            emit COM_Error(this->thisPort->errorString().toLocal8Bit() + "\r",NONE);
+            emit COM_Log(this->thisPort->errorString().toLocal8Bit() + "\r",NONE);
         }
     }
     else
     {
         this->thisPort->close();
-        emit COM_Error(this->thisPort->errorString().toLocal8Bit() + "\r",NONE);
+        emit COM_Log(this->thisPort->errorString().toLocal8Bit() + "\r",NONE);
     }
 }
 
 void Port::COM_ErrorHandler(QSerialPort::SerialPortError error)//
 {
     if ( (this->thisPort->isOpen()) && (error == QSerialPort::ResourceError)) {
-        emit COM_Error(this->thisPort->errorString().toLocal8Bit() + "\r",NONE);
+        emit COM_Log(this->thisPort->errorString().toLocal8Bit() + "\r",NONE);
         COM_Disconnect();
     }
     QString s = "Error: "; s += error;
@@ -105,7 +106,7 @@ void Port::COM_ErrorHandler(QSerialPort::SerialPortError error)//
 void  Port::COM_Disconnect(){
     if(this->thisPort->isOpen()){
         this->thisPort->close();
-        emit COM_Error(">> ======= Порт " + this->SettingsPort.name.toLocal8Bit() + " Закрыт!\r",COM_CLOSE);
+        emit COM_Log(">> ======= Порт " + this->SettingsPort.name.toLocal8Bit() + " Закрыт!\r",COM_CLOSE);
     }
 }
 

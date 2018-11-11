@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>340</width>
-    <height>558</height>
+    <height>560</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -97,7 +97,7 @@
            <x>0</x>
            <y>0</y>
            <width>311</width>
-           <height>288</height>
+           <height>547</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -105,16 +105,16 @@
            <number>0</number>
           </property>
           <property name="leftMargin">
-           <number>2</number>
+           <number>1</number>
           </property>
           <property name="topMargin">
-           <number>2</number>
+           <number>1</number>
           </property>
           <property name="rightMargin">
-           <number>2</number>
+           <number>1</number>
           </property>
           <property name="bottomMargin">
-           <number>2</number>
+           <number>1</number>
           </property>
           <item>
            <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -336,8 +336,21 @@
               <height>16777215</height>
              </size>
             </property>
+            <property name="font">
+             <font>
+              <family>Microsoft YaHei UI</family>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">color: rgb(3, 116, 12);</string>
+            </property>
             <property name="text">
              <string/>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
@@ -835,96 +848,157 @@
             </item>
            </layout>
           </item>
+          <item>
+           <widget class="QProgressBar" name="progress">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>9</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>9</height>
+             </size>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="value">
+             <number>0</number>
+            </property>
+            <property name="textVisible">
+             <bool>false</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <property name="spacing">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="Connect">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <pointsize>8</pointsize>
+               </font>
+              </property>
+              <property name="text">
+               <string>Соединение</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="Stop">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
+              <property name="text">
+               <string>Стоп</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="Reset">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>25</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
+              <property name="text">
+               <string>Modem Reset</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPlainTextEdit" name="console">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>200</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft YaHei UI</family>
+              <pointsize>7</pointsize>
+             </font>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ClearConsole">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>25</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft YaHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Очистить Лог</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
-       </widget>
-      </item>
-      <item>
-       <widget class="QProgressBar" name="progress">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>9</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>9</height>
-         </size>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="value">
-         <number>0</number>
-        </property>
-        <property name="textVisible">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="Connect">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>Microsoft YaHei UI</family>
-          <pointsize>8</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Соединение</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPlainTextEdit" name="console">
-        <property name="font">
-         <font>
-          <family>Microsoft YaHei UI</family>
-          <pointsize>7</pointsize>
-         </font>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="ClearConsole">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>25</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>Microsoft YaHei UI</family>
-          <pointsize>8</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Очистить Лог</string>
-        </property>
        </widget>
       </item>
       <item>
@@ -963,6 +1037,9 @@
         </item>
         <item>
          <widget class="QPushButton" name="Next">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
             <horstretch>0</horstretch>

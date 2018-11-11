@@ -389,44 +389,50 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     }
     case SEND_WRITE_SI4432_PARAMETERS:
     {
+        RF_Config_struct RF_Config;
+
         int u[26] = {0xE7,0x18,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_1.reg >> 0) &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_1.reg >> 8) &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_1.reg >> 16)&0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_1.reg >> 24)&0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_2.reg >> 0) &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_2.reg >> 8) &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_2.reg >> 16)&0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_2.reg >> 24)&0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_NOM_FREQUENC >> 0)   &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_NOM_FREQUENC >> 8)   &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_NOM_FREQUENC >> 16)  &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_NOM_FREQUENC >> 24)  &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_SYNCH_WORD >> 0)     &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_SYNCH_WORD >> 8)     &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_SYNCH_WORD >> 16)    &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_SYNCH_WORD >> 24)    &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_RX_HAEDER  >> 0)     &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_RX_HAEDER  >> 8)     &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_RX_HAEDER  >> 16)    &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_RX_HAEDER  >> 24)    &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_TX_HAEDER  >> 0)     &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_TX_HAEDER  >> 8)     &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_TX_HAEDER  >> 16)    &0xFF,
-                    (int)(SI4432Conf->aSI4432_RF_Config_struct()->RF_TX_HAEDER  >> 24)    &0xFF,
+                    (int)(RF_Config.RF_CONF_REG_1.reg >> 0) &0xFF,
+                    (int)(RF_Config.RF_CONF_REG_1.reg >> 8) &0xFF,
+                    (int)(RF_Config.RF_CONF_REG_1.reg >> 16)&0xFF,
+                    (int)(RF_Config.RF_CONF_REG_1.reg >> 24)&0xFF,
+                    (int)(RF_Config.RF_CONF_REG_2.reg >> 0) &0xFF,
+                    (int)(RF_Config.RF_CONF_REG_2.reg >> 8) &0xFF,
+                    (int)(RF_Config.RF_CONF_REG_2.reg >> 16)&0xFF,
+                    (int)(RF_Config.RF_CONF_REG_2.reg >> 24)&0xFF,
+                    (int)(RF_Config.RF_NOM_FREQUENC >> 0)   &0xFF,
+                    (int)(RF_Config.RF_NOM_FREQUENC >> 8)   &0xFF,
+                    (int)(RF_Config.RF_NOM_FREQUENC >> 16)  &0xFF,
+                    (int)(RF_Config.RF_NOM_FREQUENC >> 24)  &0xFF,
+                    (int)(RF_Config.RF_SYNCH_WORD >> 0)     &0xFF,
+                    (int)(RF_Config.RF_SYNCH_WORD >> 8)     &0xFF,
+                    (int)(RF_Config.RF_SYNCH_WORD >> 16)    &0xFF,
+                    (int)(RF_Config.RF_SYNCH_WORD >> 24)    &0xFF,
+                    (int)(RF_Config.RF_RX_HAEDER  >> 0)     &0xFF,
+                    (int)(RF_Config.RF_RX_HAEDER  >> 8)     &0xFF,
+                    (int)(RF_Config.RF_RX_HAEDER  >> 16)    &0xFF,
+                    (int)(RF_Config.RF_RX_HAEDER  >> 24)    &0xFF,
+                    (int)(RF_Config.RF_TX_HAEDER  >> 0)     &0xFF,
+                    (int)(RF_Config.RF_TX_HAEDER  >> 8)     &0xFF,
+                    (int)(RF_Config.RF_TX_HAEDER  >> 16)    &0xFF,
+                    (int)(RF_Config.RF_TX_HAEDER  >> 24)    &0xFF,
                    }; length = 26;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
     case SEND_READ_SI4432_REGISTER:
     {
-        int u[4] = {0xBB,0x02,SI4432Conf->aSI4432_RF_RegRead_struct()->MODE,SI4432Conf->aSI4432_RF_RegRead_struct()->REG}; length = 4;
+        RF_RegRead_struct RF_RegRead = SI4432Conf->getSI4432_RF_RegRead();
+
+        int u[4] = {0xBB,0x02,RF_RegRead.MODE,RF_RegRead.REG}; length = 4;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
     case SEND_WRITE_SI4432_REGISTER:
     {
-        int u[5] = {0xBB,0x03,SI4432Conf->aSI4432_RF_RegRead_struct()->MODE,SI4432Conf->aSI4432_RF_RegRead_struct()->REG,SI4432Conf->aSI4432_RF_RegRead_struct()->VALUE}; length = 5;
+        RF_RegRead_struct RF_RegRead = SI4432Conf->getSI4432_RF_RegRead();
+
+        int u[5] = {0xBB,0x03,RF_RegRead.MODE,RF_RegRead.REG,RF_RegRead.VALUE}; length = 5;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
@@ -715,21 +721,39 @@ void DataLogic_Class::ParceData(uint n)
                     QString s; s.append(MODEM->getString_BOOTLOADER_VERSION().at(2)); s.append(MODEM->getString_BOOTLOADER_VERSION().at(3));
                     MODEM->setBOOTLOADER_VERSION_SNIFER(s.toDouble());
                 }
+                else
+                {
+                    MODEM->setBOOTLOADER_VERSION_SNIFER(0);
+                }
                 if((MODEM->getString_UPGRADABLE_VERSION().at(0) == 'R'))
                 {
                     QString s; s.append(MODEM->getString_UPGRADABLE_VERSION().at(2)); s.append(MODEM->getString_UPGRADABLE_VERSION().at(3));
                     MODEM->setUPGRADABLE_VERSION_SNIFER(s.toDouble());
+                }
+                else
+                {
+                    MODEM->setUPGRADABLE_VERSION_SNIFER(0);
                 }
                 if((MODEM->getString_BOOTLOADER_VERSION().at(0) == 'T'))
                 {
                     QString s; s.append(MODEM->getString_BOOTLOADER_VERSION().at(2)); s.append(MODEM->getString_BOOTLOADER_VERSION().at(3));
                     MODEM->setBOOTLOADER_VERSION_TERMINAL(s.toDouble());
                 }
+                else
+                {
+                    MODEM->setBOOTLOADER_VERSION_TERMINAL(0);
+                }
                 if((MODEM->getString_UPGRADABLE_VERSION().at(0) == 'T'))
                 {
                     QString s; s.append(MODEM->getString_UPGRADABLE_VERSION().at(2)); s.append(MODEM->getString_UPGRADABLE_VERSION().at(3));
                     MODEM->setUPGRADABLE_VERSION_TERMINAL(s.toDouble());
                 }
+                else
+                {
+                    MODEM->setUPGRADABLE_VERSION_TERMINAL(0);
+                }
+
+                MODEM->Define_Device_Name();
 
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
@@ -1050,14 +1074,18 @@ void DataLogic_Class::ParceData(uint n)
             {
                 if (In_Data.length() >= NumbOfBytes-3)
                 {
-                    SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_1.reg = (((uint)(In_Data.at(0)) &0xFF) << 0)|(((uint)(In_Data.at(1)) &0xFF) << 8)|(((uint)(In_Data.at(2)) &0xFF) << 16)|(((uint)(In_Data.at(3)) &0xFF) << 24);
-                    SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_2.reg = (((uint)(In_Data.at(4)) &0xFF) << 0)|(((uint)(In_Data.at(5)) &0xFF) << 8)|(((uint)(In_Data.at(6)) &0xFF) << 16)|(((uint)(In_Data.at(7)) &0xFF) << 24);
-                    SI4432Conf->aSI4432_RF_Config_struct()->RF_NOM_FREQUENC   = (((uint)(In_Data.at(8)) &0xFF) << 0)|(((uint)(In_Data.at(9)) &0xFF) << 8)|(((uint)(In_Data.at(10))&0xFF) << 16)|(((uint)(In_Data.at(11))&0xFF) << 24);
-                    SI4432Conf->aSI4432_RF_Config_struct()->RF_SYNCH_WORD     = (((uint)(In_Data.at(12))&0xFF) << 0)|(((uint)(In_Data.at(13))&0xFF) << 8)|(((uint)(In_Data.at(14))&0xFF) << 16)|(((uint)(In_Data.at(15))&0xFF) << 24);
-                    SI4432Conf->aSI4432_RF_Config_struct()->RF_RX_HAEDER      = (((uint)(In_Data.at(16))&0xFF) << 0)|(((uint)(In_Data.at(17))&0xFF) << 8)|(((uint)(In_Data.at(18))&0xFF) << 16)|(((uint)(In_Data.at(19))&0xFF) << 24);
-                    SI4432Conf->aSI4432_RF_Config_struct()->RF_TX_HAEDER      = (((uint)(In_Data.at(20))&0xFF) << 0)|(((uint)(In_Data.at(21))&0xFF) << 8)|(((uint)(In_Data.at(22))&0xFF) << 16)|(((uint)(In_Data.at(23))&0xFF) << 24);
+                    RF_Config_struct RF_Config;
 
-                    SI4432Conf->REFRASH_UI_DATA();
+                    RF_Config.RF_CONF_REG_1.reg = (((uint)(In_Data.at(0)) &0xFF) << 0)|(((uint)(In_Data.at(1)) &0xFF) << 8)|(((uint)(In_Data.at(2)) &0xFF) << 16)|(((uint)(In_Data.at(3)) &0xFF) << 24);
+                    RF_Config.RF_CONF_REG_2.reg = (((uint)(In_Data.at(4)) &0xFF) << 0)|(((uint)(In_Data.at(5)) &0xFF) << 8)|(((uint)(In_Data.at(6)) &0xFF) << 16)|(((uint)(In_Data.at(7)) &0xFF) << 24);
+                    RF_Config.RF_NOM_FREQUENC   = (((uint)(In_Data.at(8)) &0xFF) << 0)|(((uint)(In_Data.at(9)) &0xFF) << 8)|(((uint)(In_Data.at(10))&0xFF) << 16)|(((uint)(In_Data.at(11))&0xFF) << 24);
+                    RF_Config.RF_SYNCH_WORD     = (((uint)(In_Data.at(12))&0xFF) << 0)|(((uint)(In_Data.at(13))&0xFF) << 8)|(((uint)(In_Data.at(14))&0xFF) << 16)|(((uint)(In_Data.at(15))&0xFF) << 24);
+                    RF_Config.RF_RX_HAEDER      = (((uint)(In_Data.at(16))&0xFF) << 0)|(((uint)(In_Data.at(17))&0xFF) << 8)|(((uint)(In_Data.at(18))&0xFF) << 16)|(((uint)(In_Data.at(19))&0xFF) << 24);
+                    RF_Config.RF_TX_HAEDER      = (((uint)(In_Data.at(20))&0xFF) << 0)|(((uint)(In_Data.at(21))&0xFF) << 8)|(((uint)(In_Data.at(22))&0xFF) << 16)|(((uint)(In_Data.at(23))&0xFF) << 24);
+
+                    SI4432Conf->setIN_SI4432_RF_Config(RF_Config);
+
+                    //SI4432Conf->REFRASH_UI_DATA();
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
 
@@ -1433,35 +1461,46 @@ void DataLogic_Class::ParceData(uint n)
           {
               if (ComandState == 1)
               {
-                SI4432Conf->aSI4432_RF_RegRead_struct()->MODE = 0x01;          // Запись
-                SI4432Conf->aSI4432_RF_RegRead_struct()->REG  = In_Data.at(0); // Адрес
-                Repeat_Counter = Repeat_Number;
-                timerRepeat->stop();
-                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
-                {
-                    emit outConnect(DataLogicMode,ComandState);
-                }
+                  RF_RegRead_struct RF_RegRead = SI4432Conf->getSI4432_RF_RegRead();
+
+                  RF_RegRead.MODE = 0x01;           // Запись
+                  RF_RegRead.REG  = In_Data.at(0);  // Адрес
+
+                  SI4432Conf->setSI4432_RF_RegRead(RF_RegRead);
+
+                  Repeat_Counter = Repeat_Number;
+                  timerRepeat->stop();
+                  if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                  {
+                      emit outConnect(DataLogicMode,ComandState);
+                  }
               }
           }
           if(In_Data.length() == 2) //Чтение регистров SI4432
           {
               if (ComandState == 1)
               {
-                SI4432Conf->aSI4432_RF_RegRead_struct()->MODE  = 0x00;          // Чтение
-                SI4432Conf->aSI4432_RF_RegRead_struct()->REG   = In_Data.at(0); // Адрес
-                SI4432Conf->aSI4432_RF_RegRead_struct()->VALUE = In_Data.at(1); // Значение
+                  RF_RegRead_struct RF_RegRead = SI4432Conf->getSI4432_RF_RegRead();
 
-                Repeat_Counter = Repeat_Number;
-                timerRepeat->stop();
+                  RF_RegRead.MODE  = 0x00;          // Чтение
+                  RF_RegRead.REG   = In_Data.at(0); // Адрес
+                  RF_RegRead.VALUE = In_Data.at(1); // Значение
 
-                if(SI4432Conf->aSI4432_RF_RegRead_struct()->REG == 0x09)
-                {
-                    SI4432Conf->aSI4432_RF_Config_struct()->RF_CONF_REG_3.reg = SI4432Conf->aSI4432_RF_RegRead_struct()->VALUE;
-                }
-                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
-                {
-                    emit outConnect(DataLogicMode,ComandState);
-                }
+                  SI4432Conf->setSI4432_RF_RegRead(RF_RegRead);
+
+                  Repeat_Counter = Repeat_Number;
+                  timerRepeat->stop();
+
+                  if(RF_RegRead.REG == 0x09)
+                  {
+                      RF_Config_struct RF_Config = SI4432Conf->getIN_SI4432_RF_Config();
+                      RF_Config.RF_CONF_REG_3.reg = RF_RegRead.VALUE;
+                      SI4432Conf->setIN_SI4432_RF_Config(RF_Config);
+                  }
+                  if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+                  {
+                      emit outConnect(DataLogicMode,ComandState);
+                  }
               }
           }
           if(In_Data.length() == 2) // Чтение Current RSSI SI4463

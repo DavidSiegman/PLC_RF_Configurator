@@ -33,9 +33,10 @@ private:
 
 signals:
     void COM_Finished(); //
-    void COM_Error(QString err, uint n);
+    void COM_Log(QString err, uint n);
     void COM_OutDATA(QByteArray data);
     void COM_Started();
+    void COM_Opend();
 
 public slots:
     void COM_Disconnect();

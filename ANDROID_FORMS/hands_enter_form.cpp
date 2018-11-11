@@ -33,6 +33,7 @@ Hands_Enter_Form::~Hands_Enter_Form()
 
 void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
 {
+    /*
     QScreen *Screen = QApplication::primaryScreen();
 
     int DotsPerInch = Screen->logicalDotsPerInch();
@@ -58,6 +59,7 @@ void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
     ui->label_1->setFont(font_1);
     ui->label_2->setFont(font_2);
     ui->label_3->setFont(font_2);
+    */
 }
 
 void Hands_Enter_Form::on_Back_clicked()

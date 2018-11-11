@@ -8,20 +8,29 @@ Net_Settings_Form::Net_Settings_Form(QWidget *parent) :
     ui->setupUi(this);
 }
 
-void Net_Settings_Form::resizeEvent(QResizeEvent *event)
-{
-    emit isCreated();
-}
-
 Net_Settings_Form::~Net_Settings_Form()
 {
     delete ui;
 }
 
+void Net_Settings_Form::resizeEvent(QResizeEvent *event)
+{
+    emit isCreated();
+}
+
 void Net_Settings_Form::on_Back_clicked()
 {
     emit Cancel();
-    this->deleteLater();
+}
+
+void Net_Settings_Form::on_Next_clicked()
+{
+    emit Next();
+}
+
+void Net_Settings_Form::SetProgress(uint progress)
+{
+    ui->progress->setValue(progress);
 }
 
 void Net_Settings_Form::SetSwitchModeToUI(uchar new_value)

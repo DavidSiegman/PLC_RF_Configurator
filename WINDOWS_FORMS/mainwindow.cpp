@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     Class_init_state = 0;
-    QString s = Style::ToolTip_StyleSheet + Style::Widget1_StyleSheet;
+    //QString s = Style::ToolTip_StyleSheet + Style::Widget1_StyleSheet;
 
     ui->setupUi(this);
     ui->centralWidget         ->setLayout(ui->CentralLayout);
@@ -1382,11 +1382,11 @@ void MainWindow::on_DIV_DR_stateChanged(int arg1)
     {
         if (arg1 == 0)
         {
-            SI4432Config->RF22_SET_DivDR(0);
+            //SI4432Config->setSI4432_DivDR(0);
         }
         else
         {
-            SI4432Config->RF22_SET_DivDR(1);
+            //SI4432Config->setSI4432_DivDR(1);
         }
     }
 }
@@ -1397,17 +1397,17 @@ void MainWindow::on_FX2_stateChanged(int arg1)
     {
         if (arg1 == 0)
         {
-            unsigned int fnom    = SI4432Config->RF22_GET_NFREQ ();
-            fnom /= 2;
-            SI4432Config->RF22_SET_hb(0);
-            SI4432Config->RF22_SET_NFREQ (fnom);
+            //unsigned int fnom    = SI4432Config->getSI4432_NFREQ ();
+            //fnom /= 2;
+            //SI4432Config->setSI4432_hb(0);
+            //SI4432Config->setSI4432_NFREQ (fnom);
         }
         else
         {
-            unsigned int fnom    = SI4432Config->RF22_GET_NFREQ ();
-            fnom *= 2;
-            SI4432Config->RF22_SET_hb(1);
-            SI4432Config->RF22_SET_NFREQ (fnom);
+            //unsigned int fnom    = SI4432Config->getSI4432_NFREQ ();
+            //fnom *= 2;
+            //SI4432Config->setSI4432_hb(1);
+            //SI4432Config->setSI4432_NFREQ (fnom);
         }
     }
 }
@@ -1416,7 +1416,7 @@ void MainWindow::on_FCAR_currentIndexChanged(int index)
 {
     if ((index >= 0)&&(SI4432Config != NULL)&&(Class_init_state == 1))
     {
-        SI4432Config->RF22_SET_FC(index);
+        //SI4432Config->setSI4432_FC(index);
     }
 }
 
@@ -1424,7 +1424,7 @@ void MainWindow::on_MT_currentIndexChanged(int index)
 {
     if ((index >= 0)&&(SI4432Config != NULL)&&(Class_init_state == 1))
     {
-        SI4432Config->RF22_SET_MT(index);
+        //SI4432Config->setSI4432_MT(index);
     }
 }
 
@@ -1432,7 +1432,7 @@ void MainWindow::on_PA_currentIndexChanged(int index)
 {
     if ((index >= 0)&&(SI4432Config != NULL)&&(Class_init_state == 1))
     {
-        SI4432Config->RF22_SET_PA(index);
+        //SI4432Config->setSI4432_PA(index);
     }
 }
 
@@ -1440,7 +1440,7 @@ void MainWindow::on_DR_valueChanged(int arg1)
 {
     if ((SI4432Config != NULL)&&(Class_init_state == 1))
     {
-        SI4432Config->RF22_SET_TXDR(arg1);
+        //SI4432Config->setSI4432_TXDR(arg1);
     }
 }
 
@@ -1448,7 +1448,7 @@ void MainWindow::on_FOFF_valueChanged(int arg1)
 {
     if ((SI4432Config != NULL)&&(Class_init_state == 1))
     {
-       SI4432Config->RF22_SET_Fo(arg1);
+       //SI4432Config->setSI4432_Fo(arg1);
     }
 }
 
@@ -1456,7 +1456,7 @@ void MainWindow::on_DV_valueChanged(int arg1)
 {
     if ((SI4432Config != NULL)&&(Class_init_state == 1))
     {
-        SI4432Config->RF22_SET_Fd(arg1);
+        //SI4432Config->setSI4432_Fd(arg1);
     }
 }
 
@@ -1464,7 +1464,7 @@ void MainWindow::on_BW_currentIndexChanged(int index)
 {
     if ((index >= 0)&&(SI4432Config != NULL)&&(Class_init_state == 1))
     {
-        SI4432Config->RF22_SET_IFBW(index);
+        //SI4432Config->setSI4432_IFBW(index);
     }
 }
 
@@ -1485,7 +1485,7 @@ void MainWindow::on_FNOM_valueChanged(double arg1)
     {
         int arg = (int)((arg1+0.0005)*1000);
 
-        SI4432Config->RF22_SET_NFREQ (arg);
+        //SI4432Config->setSI4432_NFREQ (arg);
     }
 }
 

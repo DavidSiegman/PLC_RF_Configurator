@@ -33,6 +33,8 @@
 #include "hands_enter_form.h"
 #include "open_connection_form.h"
 #include "net_settings_form.h"
+#include "sniffer_settings_form.h"
+#include "si4432_settings_form.h"
 
 namespace Ui {
 class Connections_Form;
@@ -66,16 +68,26 @@ private slots:
     void Print    (QByteArray data, uint n);
     void Print_Log(QString    data, uint n);
     void start_COM_Init();
+    void TCP_Is_Connected(void);
+    void COM_Is_Opend(void);
+
+    void Define_Next_Form(void);
+
+    void Define_Pre_Form(void);
 
     void Set_ActiveConsole(QPlainTextEdit*);
-
-    void Create_And_Show_Net_Settings_Form(void);
 
     void Create_And_Show_Settings_Form(void);
 
     void Create_And_Show_Hands_Enter_Form(void);
 
     void Create_And_Show_Open_Connection_Form(void);
+
+    void Create_And_Show_Net_Settings_Form(void);
+
+    void Create_And_Show_Sniffer_Settings_Form(void);
+
+    void Create_And_Show_SI4432_Settings_Form(void);
 
     void on_TCPConnect_clicked();
 
@@ -92,6 +104,8 @@ private:
     Hands_Enter_Form       *hands_enter_form;
     Open_Connection_Form   *open_connection_form;
     Net_Settings_Form      *net_settings_form;
+    Sniffer_Settings_Form  *sniffer_settings_form;
+    SI4432_Settings_Form   *si4432_settings_form;
 
     QSysInfo               *SysInfo;
     QRegExp                 RegSystemName;

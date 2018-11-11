@@ -12,3 +12,23 @@ PLC_Settings_Form::~PLC_Settings_Form()
 {
     delete ui;
 }
+
+void PLC_Settings_Form::resizeEvent(QResizeEvent *event)
+{
+    emit isCreated();
+}
+
+void PLC_Settings_Form::on_Back_clicked()
+{
+    emit Cancel();
+}
+
+void PLC_Settings_Form::on_Next_clicked()
+{
+    emit Next();
+}
+
+void PLC_Settings_Form::SetProgress(uint progress)
+{
+    ui->progress->setValue(progress);
+}

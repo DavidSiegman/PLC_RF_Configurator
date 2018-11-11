@@ -23,17 +23,21 @@ public:
     void resizeEvent(QResizeEvent *event);
 signals:
     void Cancel(void);
+    void Next(void);
     void isCreated(void);
-    void Send_Data(QByteArray data, uint n);
     void Get_Console(QPlainTextEdit* console);
+    void Send_Data(QByteArray data, uint n);
 
 public slots:
+    void SetProgress(uint progress);
     void SetSwitchModeToUI(uchar);
     void SetSwitchLevelToUI(uint);
     void SetSwitchTimeoutToUI(uint);
 
 private slots:
     void on_Back_clicked();
+
+    void on_Next_clicked();
 
 private:
     Ui::Net_Settings_Form *ui;

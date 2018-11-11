@@ -6,6 +6,15 @@
 #include <QStandardItemModel>
 #include "ui_mainwindow.h"
 
+#define PLC_MODEM         "PLC_MODEM"
+#define RF_MODEM_SI4432   "RF_MODEM_SI4432"
+#define RF_MODEM_SI4463   "RF_MODEM_SI4463"
+#define RF_SNIFFER_SI4432 "RF_SNIFFER_SI4432"
+#define RF_SNIFFER_SI4463 "RF_SNIFFER_SI4463"
+#define RF_PLC_MODEM      "RF_PLC_MODEM"
+#define RF_PLC_SNIFFER    "RF_PLC_SNIFFER"
+#define TERMINAL          "TERMINAL"
+
 typedef union RF_Switch_Mask_Type {
 struct
 {
@@ -71,6 +80,8 @@ typedef struct MODEMClass_Propertys_Type
     RF_Switch_Mask  *SWITCH_MASK;
     RF_Switch_Mask  *SWITCH_MASK_DESTINATION;
 
+    QString         Device_Name;
+
     QList<QString>  SwitchTable;
 
 }MODEMClass_Propertys;
@@ -115,6 +126,7 @@ signals:
     void DIRECT_RET(uchar);
     void BROADCAST(uint);
     void SNIFER_MODE(uchar);
+    void Device_Name(QString);
 
 public slots:
     void       addNewItem(QString);
@@ -205,8 +217,16 @@ public slots:
     uchar      getSNIFER_MODE(void);
     void       setSNIFER_MODE(uchar);
 
+    QString    getDevice_Name(void);
+    void       setDevice_Name(QString);
+
     QList<QString>  getSwitchTable(void);
     void  setSwitchTable(QList<QString>);
+
+    void Define_Device_Name(void);
+
+private slots:
+
 
 };
 

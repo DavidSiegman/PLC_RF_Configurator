@@ -2,6 +2,8 @@
 #include "ui_open_connection_form.h"
 #include "OTHER_FUNCTIONS/barr_to_string.h"
 
+#include "STYLE/style.h"
+
 Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Open_Connection_Form)
@@ -26,6 +28,7 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
 
 void Open_Connection_Form::resizeEvent(QResizeEvent *event)
 {
+    /*
     QScreen *Screen = QApplication::primaryScreen();
 
     int DotsPerInch = Screen->logicalDotsPerInch();
@@ -112,11 +115,23 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->label_11->setMinimumHeight(label_size);
     ui->label_11->setMinimumWidth(label_9_width);
     ui->label_11->setMaximumWidth(label_9_width);
+    */
 }
 
 Open_Connection_Form::~Open_Connection_Form()
 {
     delete ui;
+}
+
+void Open_Connection_Form::on_Back_clicked()
+{
+    emit Cancel();
+    this->deleteLater();
+}
+
+void Open_Connection_Form::on_Next_clicked()
+{
+    emit Next();
 }
 
 void Open_Connection_Form::SetProgress(uint progress)
@@ -126,67 +141,118 @@ void Open_Connection_Form::SetProgress(uint progress)
 
 void Open_Connection_Form::isOPEND()
 {
-
+    ui->Next->setEnabled(true);
 }
 
 void Open_Connection_Form::SetCurrentFitmwareToUI(uchar new_value)
 {
-    QString String2_2(
-                         "QWidget{"
-                         "background-color: rgb(186, 229, 202);"
-                         "}"
-                     );
-    QString String2_3(
-                         "QWidget{"
-                         "background: rgba(100,50,00,0);"
-                         "}"
-                     );
-
     // Бутлоадер
     if (new_value == 0)
     {
-        this->ui->boot_v->setStyleSheet(String2_2);
-        this->ui->fw_v->setStyleSheet(String2_3);
+        this->ui->boot_v->setStyleSheet(Background_Green);
+        this->ui->fw_v->setStyleSheet(Background_Grey);
     }
     // Обновляемая
     else if (new_value == 1)
     {
-        this->ui->boot_v->setStyleSheet(String2_3);
-        this->ui->fw_v->setStyleSheet(String2_2);
+        this->ui->boot_v->setStyleSheet(Background_Grey);
+        this->ui->fw_v->setStyleSheet(Background_Green);
+    }
+    else if (new_value == 2)
+    {
+        this->ui->boot_v->setStyleSheet(Background_Grey);
+        this->ui->fw_v->setStyleSheet(Background_Grey);
     }
 
 }
 void Open_Connection_Form::SetBootloaderVersionToUI(QString new_value)
 {
-    this->ui->boot_v->setText(new_value);
+    if (new_value.compare("0.00") != 0)
+    {
+        this->ui->boot_v->setText(new_value);
+    }
+    else
+    {
+        this->ui->boot_v->setText("");
+    }
 }
 void Open_Connection_Form::SetBootloaderSizeToUI(uint new_value)
 {
-    this->ui->boot_Size->setText(QString::number(new_value));
+    if (new_value > 0)
+    {
+        this->ui->boot_Size->setText(QString::number(new_value));
+    }
+    else
+    {
+        this->ui->boot_Size->setText("");
+    }
 }
 void Open_Connection_Form::SetBootloaderCRCToUI(QByteArray new_value)
 {
-    this->ui->boot_CRC->setText(QByteAray_To_QString(new_value).toUpper());
+    if (new_value.length() == 4)
+    {
+        if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
+            (new_value.at(2) == 0) && (new_value.at(3) == 0))
+        {
+            this->ui->boot_CRC->setText("");
+        }
+        else
+        {
+            this->ui->boot_CRC->setText(QByteAray_To_QString(new_value).toUpper());
+        }
+
+    }
+    else
+    {
+        this->ui->boot_CRC->setText("");
+    }
 }
 void Open_Connection_Form::SetUpgradableVersionToUI(QString new_value)
 {
-    this->ui->fw_v->setText(new_value);
+    if (new_value.compare("0.00") != 0)
+    {
+        this->ui->fw_v->setText(new_value);
+    }
+    else
+    {
+        this->ui->fw_v->setText("");
+    }
 }
 void Open_Connection_Form::SetUpgradableSizeToUI(uint new_value)
 {
-    this->ui->fw_Size->setText(QString::number(new_value));
+    if (new_value > 0)
+    {
+        this->ui->fw_Size->setText(QString::number(new_value));
+    }
+    else
+    {
+        this->ui->fw_Size->setText("");
+    }
 }
 void Open_Connection_Form::SetUpgradableCRCToUI(QByteArray new_value)
 {
-    this->ui->fw_CRC->setText(QByteAray_To_QString(new_value).toUpper());
+    if (new_value.length() == 4)
+    {
+        if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
+            (new_value.at(2) == 0) && (new_value.at(3) == 0))
+        {
+            this->ui->fw_CRC->setText("");
+        }
+        else
+        {
+            this->ui->fw_CRC->setText(QByteAray_To_QString(new_value).toUpper());
+        }
+
+    }
+    else
+    {
+        this->ui->fw_CRC->setText("");
+    }
 }
 
-
-
-void Open_Connection_Form::on_Back_clicked()
+void Open_Connection_Form::SetDeviceNameToUI(QString new_value)
 {
-    emit Cancel();
-    this->deleteLater();
+   this->ui->DeviceType->setText(new_value);
 }
 
 void Open_Connection_Form::on_Interface_currentIndexChanged(int index)
@@ -211,6 +277,7 @@ void Open_Connection_Form::on_Interface_currentIndexChanged(int index)
 
 void Open_Connection_Form::on_Connect_clicked()
 {
+    Clear_Form();
     emit Get_Console(ui->console);
 
     if (ui->Interface->currentIndex() == 0)
@@ -226,7 +293,16 @@ void Open_Connection_Form::on_Connect_clicked()
     emit STOP_MONITOR();
 }
 
-void Open_Connection_Form::on_Next_clicked()
+void Open_Connection_Form::Clear_Form(void)
 {
-    emit Next();
+    ui->Next->setEnabled(false);
+
+    SetCurrentFitmwareToUI(2);
+    SetBootloaderVersionToUI("");
+    SetBootloaderSizeToUI(0);
+    SetBootloaderCRCToUI(0);
+    SetUpgradableVersionToUI("");
+    SetUpgradableSizeToUI(0);
+    SetUpgradableCRCToUI(0);
+    SetDeviceNameToUI("");
 }

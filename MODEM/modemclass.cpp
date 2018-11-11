@@ -364,9 +364,100 @@ void       MODEMClass::setSNIFER_MODE(uchar)
 
 QList<QString>  MODEMClass::getSwitchTable(void)
 {
-
+    return this->MODEM_Propertys.SwitchTable;
 }
-void  MODEMClass::setSwitchTable(QList<QString>)
+void  MODEMClass::setSwitchTable(QList<QString> new_value)
 {
+    this->MODEM_Propertys.SwitchTable = new_value;
+}
 
+QString    MODEMClass::getDevice_Name(void)
+{
+    emit Device_Name(this->MODEM_Propertys.Device_Name);
+    return this->MODEM_Propertys.Device_Name;
+}
+void       MODEMClass::setDevice_Name(QString new_value)
+{
+    this->MODEM_Propertys.Device_Name = new_value;
+    emit Device_Name(this->MODEM_Propertys.Device_Name);
+}
+
+void MODEMClass::Define_Device_Name(void)
+{
+    setDevice_Name("");
+    // если активная прошивка - бутлоадер
+    if(this->getCURRENT_FIRMWARE_VERSION() == 0)
+    {
+        // если первый символ версии бутлоадера буква
+        if (this->getBOOTLOADER_VERSION() == 0)
+        {
+            // если версия бутлоадера соответствует RF снифферу на SI4443
+            if ((this->getBOOTLOADER_VERSION_SNIFER() > 0) && (this->getBOOTLOADER_VERSION_SNIFER() < 20))
+            {
+                setDevice_Name(RF_SNIFFER_SI4432);
+            }
+            // если версия бутлоадера соответствует RF-PLC снифферу
+            else if(this->getBOOTLOADER_VERSION_SNIFER() >= 20)
+            {
+                setDevice_Name(RF_PLC_SNIFFER);
+            }
+            // если версия бутлоадера соответствует терминалу
+            else if (this->getBOOTLOADER_VERSION_TERMINAL() > 0)
+            {
+                setDevice_Name(TERMINAL);
+            }
+        }
+        // если версия бутлоадера соответствует PLC модему
+        else if ((this->getBOOTLOADER_VERSION() > 0) && (this->getBOOTLOADER_VERSION() < 3))
+        {
+            setDevice_Name(PLC_MODEM);
+        }
+        // если версия бутлоадера соответствует RF модему на SI4432
+        else if ((this->getBOOTLOADER_VERSION() >= 3) && (this->getBOOTLOADER_VERSION() < 5))
+        {
+            setDevice_Name(RF_MODEM_SI4432);
+        }
+        // если версия бутлоадера соответствует RF-PLC модему
+        else if ((this->getBOOTLOADER_VERSION() >= 5) && (this->getBOOTLOADER_VERSION() < 6))
+        {
+            setDevice_Name(RF_PLC_MODEM);
+        }
+    }
+    else if (this->getCURRENT_FIRMWARE_VERSION() == 1)
+    {
+        // если первый символ версии обновляемой прошивки буква
+        if (this->getUPGRADABLE_VERSION() == 0)
+        {
+            // если версия обновляемой прошивки соответствует RF снифферу на SI4443
+            if ((this->getUPGRADABLE_VERSION_SNIFER() > 0) && (this->getUPGRADABLE_VERSION_SNIFER() < 20))
+            {
+                setDevice_Name(RF_SNIFFER_SI4432);
+            }
+            // если версия обновляемой прошивки соответствует RF-PLC снифферу
+            else if(this->getUPGRADABLE_VERSION_SNIFER() >= 20)
+            {
+                setDevice_Name(RF_PLC_SNIFFER);
+            }
+            // если версия обновляемой прошивки соответствует терминалу
+            else if (this->getUPGRADABLE_VERSION_TERMINAL() > 0)
+            {
+                setDevice_Name(TERMINAL);
+            }
+        }
+        // если версия обновляемой прошивки соответствует PLC модему
+        else if ((this->getUPGRADABLE_VERSION() > 0) && (this->getUPGRADABLE_VERSION() < 3))
+        {
+            setDevice_Name(PLC_MODEM);
+        }
+        // если версия обновляемой прошивки соответствует RF модему на SI4432
+        else if ((this->getUPGRADABLE_VERSION() >= 3) && (this->getUPGRADABLE_VERSION() < 5))
+        {
+            setDevice_Name(RF_MODEM_SI4432);
+        }
+        // если версия обновляемой прошивки соответствует RF-PLC модему
+        else if ((this->getUPGRADABLE_VERSION() >= 5) && (this->getUPGRADABLE_VERSION() < 6))
+        {
+            setDevice_Name(RF_PLC_MODEM);
+        }
+    }
 }

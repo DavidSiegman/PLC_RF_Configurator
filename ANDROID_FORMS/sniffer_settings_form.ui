@@ -61,6 +61,9 @@
    </item>
    <item>
     <widget class="QScrollArea" name="scrollArea">
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
@@ -70,7 +73,7 @@
         <x>0</x>
         <y>0</y>
         <width>328</width>
-        <height>204</height>
+        <height>459</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -96,6 +99,12 @@
          </property>
          <item>
           <widget class="QLabel" name="label_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="font">
             <font>
              <family>Microsoft YaHei UI</family>
@@ -104,12 +113,21 @@
             </font>
            </property>
            <property name="text">
-            <string>Режим преобразователя</string>
+            <string>Режим преобразователя:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QComboBox" name="comboBox">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="font">
             <font>
              <family>Microsoft YaHei UI</family>
@@ -138,6 +156,12 @@
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <item>
           <widget class="QCheckBox" name="checkBox_3">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="font">
             <font>
              <family>Microsoft YaHei UI</family>
@@ -152,6 +176,12 @@
          </item>
          <item>
           <widget class="QCheckBox" name="checkBox_5">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="font">
             <font>
              <family>Microsoft YaHei UI</family>
@@ -166,6 +196,12 @@
          </item>
          <item>
           <widget class="QCheckBox" name="checkBox_4">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="font">
             <font>
              <family>Microsoft YaHei UI</family>
@@ -182,11 +218,18 @@
        </item>
        <item>
         <widget class="QLabel" name="label_3">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="font">
           <font>
            <family>Microsoft YaHei UI</family>
-           <weight>75</weight>
-           <bold>true</bold>
+           <pointsize>8</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="text">
@@ -204,6 +247,12 @@
          </property>
          <item>
           <widget class="QSpinBox" name="LVL0">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -227,6 +276,12 @@
           <widget class="QSpinBox" name="LVL1">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
@@ -252,6 +307,12 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -276,6 +337,12 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -299,6 +366,12 @@
           <widget class="QSpinBox" name="LVL4">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
@@ -331,6 +404,12 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -354,6 +433,12 @@
           <widget class="QSpinBox" name="LVL7">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
@@ -379,6 +464,12 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -402,6 +493,12 @@
           <widget class="QSpinBox" name="LVL5">
            <property name="enabled">
             <bool>false</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="minimumSize">
             <size>
@@ -427,6 +524,12 @@
            <property name="enabled">
             <bool>false</bool>
            </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="minimumSize">
             <size>
              <width>0</width>
@@ -450,11 +553,18 @@
        </item>
        <item>
         <widget class="QLabel" name="label_4">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="font">
           <font>
            <family>Microsoft YaHei UI</family>
-           <weight>75</weight>
-           <bold>true</bold>
+           <pointsize>8</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="text">
@@ -509,8 +619,9 @@
          <property name="font">
           <font>
            <family>Microsoft YaHei UI</family>
-           <weight>75</weight>
-           <bold>true</bold>
+           <pointsize>8</pointsize>
+           <weight>50</weight>
+           <bold>false</bold>
           </font>
          </property>
          <property name="text">
@@ -554,6 +665,119 @@
          </property>
         </widget>
        </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <property name="spacing">
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QPushButton" name="Write">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Microsoft YaHei UI</family>
+            </font>
+           </property>
+           <property name="text">
+            <string>Записать</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="Stop">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Microsoft YaHei UI</family>
+            </font>
+           </property>
+           <property name="text">
+            <string>Стоп</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="Reset">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>25</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Microsoft YaHei UI</family>
+            </font>
+           </property>
+           <property name="text">
+            <string>Modem Reset</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="console">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>200</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>7</pointsize>
+          </font>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="ClearConsole">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>25</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei UI</family>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>Очистить Лог</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>
@@ -580,61 +804,6 @@
      </property>
      <property name="textVisible">
       <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="Write">
-     <property name="enabled">
-      <bool>true</bool>
-     </property>
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>25</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>Microsoft YaHei UI</family>
-      </font>
-     </property>
-     <property name="text">
-      <string>Записать</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPlainTextEdit" name="console">
-     <property name="font">
-      <font>
-       <pointsize>7</pointsize>
-      </font>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QPushButton" name="ClearConsole">
-     <property name="minimumSize">
-      <size>
-       <width>0</width>
-       <height>25</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <family>Microsoft YaHei UI</family>
-       <pointsize>8</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Очистить Лог</string>
      </property>
     </widget>
    </item>

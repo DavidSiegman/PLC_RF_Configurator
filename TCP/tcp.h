@@ -27,9 +27,11 @@ private:
 
 signals:
     void TCP_Finished();
-    void TCP_Error(QString err, uint n);
+    void TCP_Log(QString err, uint n);
     void TCP_OutDATA(QByteArray data);
     void TCP_Started();
+    void TCP_Connected();
+
 public slots:
     void TCP_Disconnect();
     void TCP_Connect();

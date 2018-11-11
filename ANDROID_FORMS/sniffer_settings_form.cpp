@@ -12,3 +12,23 @@ Sniffer_Settings_Form::~Sniffer_Settings_Form()
 {
     delete ui;
 }
+
+void Sniffer_Settings_Form::resizeEvent(QResizeEvent *event)
+{
+    emit isCreated();
+}
+
+void Sniffer_Settings_Form::on_Back_clicked()
+{
+    emit Cancel();
+}
+
+void Sniffer_Settings_Form::on_Next_clicked()
+{
+    emit Next();
+}
+
+void Sniffer_Settings_Form::SetProgress(uint progress)
+{
+    ui->progress->setValue(progress);
+}

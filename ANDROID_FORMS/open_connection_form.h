@@ -28,6 +28,7 @@ public slots:
     void SetUpgradableVersionToUI(QString);
     void SetUpgradableSizeToUI(uint);
     void SetUpgradableCRCToUI(QByteArray);
+    void SetDeviceNameToUI(QString);
 
 signals:
     void Cancel(void);
@@ -43,7 +44,10 @@ private slots:
     void on_Interface_currentIndexChanged(int index);
 
     void on_Connect_clicked();
+
     void on_Next_clicked();
+
+    void Clear_Form(void);
 
 private:
     Ui::Open_Connection_Form *ui;
