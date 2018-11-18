@@ -4,6 +4,7 @@
 #include <QObject>
 #include "DATALOGIC/datalogic_class.h"
 #include "MODEM/modemclass.h"
+#include "MODEM/FirmwareInformationClass.h"
 #include "MONITOR/monitorclass.h"
 #include "ui_mainwindow.h"
 #include <OTHER_FUNCTIONS/mess_enum.h>

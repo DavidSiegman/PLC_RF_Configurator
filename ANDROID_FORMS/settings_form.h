@@ -16,6 +16,7 @@ public:
     ~Settings_Form();
 signals:
     void Cancel();
+    void Get_Geometry(QRect);
     void GetRepeatNumber(uint value);
     void GetRepeatTimeout(uint value);
 

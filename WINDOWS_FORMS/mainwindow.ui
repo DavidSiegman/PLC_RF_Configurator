@@ -585,7 +585,7 @@
           <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>3</number>
          </property>
          <widget class="QWidget" name="tab">
           <property name="styleSheet">
@@ -2736,7 +2736,7 @@
              <x>0</x>
              <y>-1</y>
              <width>551</width>
-             <height>411</height>
+             <height>381</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="RFTab_Layout">
@@ -3803,7 +3803,7 @@
              <x>0</x>
              <y>0</y>
              <width>551</width>
-             <height>411</height>
+             <height>381</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="RFOldLayout">

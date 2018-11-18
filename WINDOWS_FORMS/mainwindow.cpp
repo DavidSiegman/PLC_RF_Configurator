@@ -134,12 +134,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(this,SIGNAL(START_UPDATE()),                ConnectHandler,SLOT(StartUPDATE()));
     connect(this,SIGNAL(START_DELETE()),                ConnectHandler,SLOT(StartDELETE()));
 
-    connect(ui->STOP, SIGNAL(clicked(bool)), DataLogic,     SLOT(STOP_SEND_DATA(bool)));
-    connect(DataLogic,SIGNAL(STOP()),               ConnectHandler,SLOT(StopMonitor()));
-    connect(DataLogic,SIGNAL(STOP()),               ConnectHandler,SLOT(STOP()));
-    connect(DataLogic,SIGNAL(noANSWER()),           ConnectHandler,SLOT(StopMonitor()));
-    connect(DataLogic,SIGNAL(noANSWER()),           ConnectHandler,SLOT(STOP()));
-    connect(DataLogic,SIGNAL(outPROGRESS(uint)),    ConnectHandler,SLOT(setPROGRESS(uint)));
+    connect(ui->STOP, SIGNAL(clicked(bool)),            DataLogic,     SLOT(STOP_SEND_DATA(bool)));
+    connect(DataLogic,SIGNAL(STOP()),                   ConnectHandler,SLOT(StopMonitor()));
+    connect(DataLogic,SIGNAL(STOP()),                   ConnectHandler,SLOT(STOP()));
+    connect(DataLogic,SIGNAL(noANSWER()),               ConnectHandler,SLOT(StopMonitor()));
+    connect(DataLogic,SIGNAL(noANSWER()),               ConnectHandler,SLOT(STOP()));
+    connect(DataLogic,SIGNAL(outPROGRESS(uint)),        ConnectHandler,SLOT(setPROGRESS(uint)));
 
     connect(DataLogic,SIGNAL(DataForPrint(QByteArray,uint)),  this,SLOT(Print(QByteArray,uint)));
     connect(DataLogic,SIGNAL(LogForPrint(QString,uint)),      this, SLOT(Print_Log(QString,uint)));
@@ -1296,7 +1296,7 @@ void MainWindow::on_Read_NetTable_clicked()
 
 void MainWindow::on_Write_NetTable_clicked()
 {
-    MODEM->setCurrent_Index(0);
+    //MODEM->setCurrent_Index(0);
     emit WRITE_SWITCH_TABLE();
 }
 
@@ -1366,8 +1366,8 @@ void MainWindow::on_SetDeviceMonitorSN_clicked()
     int numb = ui->DeviceMonitorSN->text().toInt();
     if (numb > 0)
     {
-        MODEM->clearNetTable();
-        MODEM->addNewItem(ui->DeviceMonitorSN->text());
+        //MODEM->clearNetTable();
+        //MODEM->addNewItem(ui->DeviceMonitorSN->text());
         emit WRITE_SWITCH_TABLE();
     }
     else
@@ -1832,7 +1832,7 @@ void MainWindow::on_LVL2_valueChanged(int arg1)
     //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
     //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
-    ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
+    //ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL3_valueChanged(int arg1)
@@ -1860,7 +1860,7 @@ void MainWindow::on_LVL3_valueChanged(int arg1)
     //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
    // MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
-    ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
+   // ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL4_valueChanged(int arg1)
@@ -1886,7 +1886,7 @@ void MainWindow::on_LVL4_valueChanged(int arg1)
     //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
     //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
-    ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
+    //ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL5_valueChanged(int arg1)
@@ -1910,7 +1910,7 @@ void MainWindow::on_LVL5_valueChanged(int arg1)
     //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
     //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
-    ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
+    //ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL6_valueChanged(int arg1)
@@ -1932,7 +1932,7 @@ void MainWindow::on_LVL6_valueChanged(int arg1)
     //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
     //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
-    ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
+    //ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL7_valueChanged(int arg1)
@@ -1952,7 +1952,7 @@ void MainWindow::on_LVL7_valueChanged(int arg1)
     //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
     //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
-    ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
+    //ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL8_valueChanged(int arg1)
@@ -1969,14 +1969,14 @@ void MainWindow::on_LVL8_valueChanged(int arg1)
     //    MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = 0;
     }
     //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
-    ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
+    //ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_LVL9_valueChanged(int arg1)
 {
     //MODEM->SWITCH_MASK->Field.Retranslation_MASK_1.Field.LVL9 = arg1;
     //MODEM->setSWITCH_LEVEL(*(unsigned int*)(MODEM->SWITCH_MASK));
-    ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
+    //ui->SWITCHLVL->setText(QString::number(MODEM->getSWITCH_LEVEL()));
 }
 
 void MainWindow::on_SWITCH_clicked()
@@ -1998,3 +1998,4 @@ void MainWindow::on_TCPDisconnect_clicked()
 {
 
 }
+

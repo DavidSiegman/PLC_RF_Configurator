@@ -46,7 +46,7 @@
      <property name="font">
       <font>
        <family>Microsoft YaHei UI</family>
-       <pointsize>24</pointsize>
+       <pointsize>18</pointsize>
        <weight>75</weight>
        <bold>true</bold>
       </font>
@@ -71,9 +71,9 @@
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>0</y>
+        <y>-175</y>
         <width>311</width>
-        <height>641</height>
+        <height>648</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -81,16 +81,16 @@
         <number>0</number>
        </property>
        <property name="leftMargin">
-        <number>0</number>
+        <number>2</number>
        </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>2</number>
        </property>
        <property name="rightMargin">
-        <number>0</number>
+        <number>2</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>2</number>
        </property>
        <item>
         <widget class="QCheckBox" name="SWITCH">
@@ -917,18 +917,9 @@
           </layout>
          </item>
          <item>
-          <widget class="QPlainTextEdit" name="console">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>200</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Microsoft YaHei UI</family>
-             <pointsize>7</pointsize>
-            </font>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
            </property>
           </widget>
          </item>
@@ -948,6 +939,22 @@
            </property>
            <property name="text">
             <string>Очистить Лог</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPlainTextEdit" name="console">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>200</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Microsoft YaHei UI</family>
+             <pointsize>7</pointsize>
+            </font>
            </property>
           </widget>
          </item>
@@ -982,6 +989,44 @@
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
          <normaloff>:/new/icons/images/BACK_2.png</normaloff>:/new/icons/images/BACK_2.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btnSettings">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>40</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../RESOURCES/images.qrc">
+         <normaloff>:/new/icons/images/Settings.png</normaloff>:/new/icons/images/Settings.png</iconset>
        </property>
        <property name="iconSize">
         <size>

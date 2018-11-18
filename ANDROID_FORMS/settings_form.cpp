@@ -30,6 +30,7 @@ Settings_Form::~Settings_Form()
 
 void Settings_Form::on_Cancel_clicked()
 {
+    emit Get_Geometry(this->geometry());
     emit Cancel();
     this->deleteLater();
 }

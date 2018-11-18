@@ -24,6 +24,8 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
     }
 
     oCRC16                    = new CRC16_Class();
+
+    connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
 
 Hands_Enter_Form::~Hands_Enter_Form()
@@ -129,9 +131,4 @@ void Hands_Enter_Form::on_cBtnSend_clicked()
             //DataLogic->SEND_DATA(data_to_write,MANUAL_SEND_CONTROL);
         }
     }
-}
-
-void Hands_Enter_Form::on_pushButton_clicked()
-{
-    ui->console->clear();
 }

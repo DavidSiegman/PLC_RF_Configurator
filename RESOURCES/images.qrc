@@ -3,5 +3,6 @@
         <file>images/NEXT_2.png</file>
         <file>images/Settings.png</file>
         <file>images/BACK_2.png</file>
+        <file>images/ManualMode.png</file>
     </qresource>
 </RCC>

@@ -8,6 +8,8 @@ SI4432_Settings_Form::SI4432_Settings_Form(QWidget *parent) :
     ui(new Ui::SI4432_Settings_Form)
 {
     ui->setupUi(this);
+
+    connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
 
 SI4432_Settings_Form::~SI4432_Settings_Form()
@@ -22,12 +24,12 @@ void SI4432_Settings_Form::resizeEvent(QResizeEvent *event)
 
 void SI4432_Settings_Form::on_Back_clicked()
 {
-    emit Cancel();
+    emit Cancel(this->geometry());
 }
 
 void SI4432_Settings_Form::on_Next_clicked()
 {
-    emit Next();
+    emit Next(this->geometry());
 }
 
 void SI4432_Settings_Form::SetProgress(uint progress)
@@ -35,43 +37,57 @@ void SI4432_Settings_Form::SetProgress(uint progress)
     ui->progress->setValue(progress);
 }
 
-void SI4432_Settings_Form::setIN_SI4432_Parameters(RF_Config_struct new_value)
+void SI4432_Settings_Form::setOut_SI4432_Parameters(SI4432ConfigurationClass* new_value)
 {
-    IN_SI4432_Parameters = new_value;
+    Out_SI4432_Parameters = new_value;
+}
 
-    setMTToUI(getSI4432_MT(&IN_SI4432_Parameters));
-    setPAToUI(getSI4432_PA(&IN_SI4432_Parameters));
-    setDIV_DRToUI(getSI4432_DivDR(&IN_SI4432_Parameters));
-    setDRToUI(getSI4432_TXDR(&IN_SI4432_Parameters));
-    setHBToUI(getSI4432_hb(&IN_SI4432_Parameters));
-    setFCToUI(getSI4432_FC(&IN_SI4432_Parameters));
-    setFNOMToUI(getSI4432_NFREQ(&IN_SI4432_Parameters));
-    setFOFFToUI(getSI4432_Fo(&IN_SI4432_Parameters));
-    setDVToUI(getSI4432_Fd(&IN_SI4432_Parameters));
-    setIFBWToUI(getSI4432_IFBW(&IN_SI4432_Parameters));
-    setSNW_NToUI(getSI4432_SWC(&IN_SI4432_Parameters));
-    setHEAD_NToUI(getSI4432_HC(&IN_SI4432_Parameters));
-    setSNWToUI(IN_SI4432_Parameters.RF_SYNCH_WORD);
-    setHEAD_TXToUI(IN_SI4432_Parameters.RF_TX_HAEDER);
-    setHEAD_RXToUI(IN_SI4432_Parameters.RF_RX_HAEDER);
+void SI4432_Settings_Form::setIn_SI4432_Parameters(SI4432ConfigurationClass* new_value)
+{
+    In_SI4432_Parameters = new_value;
 
-    setCLOADToUI(getSI4432_CLOAD(&IN_SI4432_Parameters));
-    setCLOAD_PFToUI(IN_SI4432_Parameters.RF_COscill_CLoad);
-    setRXOSRToUI(IN_SI4432_Parameters.RXOSR);
-    setNCOFFToUI(IN_SI4432_Parameters.NCOFF);
-    setCRGAINToUI(IN_SI4432_Parameters.CRGAIN);
-    setNdecToUI(IN_SI4432_Parameters.ndec);
-    setDwn3ToUI(IN_SI4432_Parameters.dwn3);
-    setFilsetToUI(IN_SI4432_Parameters.filset);
+    In_SI4432_Parameters->calcSI4432_CLOAD();
+    In_SI4432_Parameters->calcSI4432_Rb();
+    //In_SI4432_Parameters->calcSI4432_IFBW();
+    In_SI4432_Parameters->calcSI4432_IFBW_bits();
+    In_SI4432_Parameters->calcSI4432_RXOSR();  // !!! без манчестерского кода !!!
+    In_SI4432_Parameters->calcSI4432_NCOFF();  // !!! без манчестерского кода !!!
+    In_SI4432_Parameters->calcSI4432_CRGAIN(); // !!! без манчестерского кода !!!
 
-    OUT_SI4432_Parameters = IN_SI4432_Parameters;
+    setMTToUI(In_SI4432_Parameters->getSI4432_MT());
+    setPAToUI(In_SI4432_Parameters->getSI4432_PA());
+    setDIV_DRToUI(In_SI4432_Parameters->getSI4432_DivDR());
+    setDRToUI(In_SI4432_Parameters->getSI4432_TXDR());
+    setHBToUI(In_SI4432_Parameters->getSI4432_hb());
+    setFCToUI(In_SI4432_Parameters->getSI4432_FC());
+    setFNOMToUI(In_SI4432_Parameters->getSI4432_NFREQ());
+    setFOFFToUI(In_SI4432_Parameters->getSI4432_Fo());
+    setDVToUI(In_SI4432_Parameters->getSI4432_Fd());
+    setIFBWToUI(In_SI4432_Parameters->getSI4432_IFBW());
+    setSNW_NToUI(In_SI4432_Parameters->getSI4432_SWC());
+    setHEAD_NToUI(In_SI4432_Parameters->getSI4432_HC());
+    setSNWToUI(In_SI4432_Parameters->getSYNCH_WORD());
+    setHEAD_TXToUI(In_SI4432_Parameters->getTX_HAEDER());
+    setHEAD_RXToUI(In_SI4432_Parameters->getRX_HAEDER());
+
+    setCLOADToUI(In_SI4432_Parameters->getSI4432_CLOAD());
+    setCLOAD_PFToUI(In_SI4432_Parameters->getCOscill_CLoad());
+
+    setRXOSRToUI(In_SI4432_Parameters->getRXOSR());
+    setNCOFFToUI(In_SI4432_Parameters->getNCOFF());
+    setCRGAINToUI(In_SI4432_Parameters->getCRGAIN());
+    setNdecToUI(In_SI4432_Parameters->getndec());
+    setDwn3ToUI(In_SI4432_Parameters->getdwn3());
+    setFilsetToUI(In_SI4432_Parameters->getfilset());
+
+    Out_SI4432_Parameters->setRF_Config_struct(In_SI4432_Parameters->getRF_Config_struct());
 }
 
 void SI4432_Settings_Form::on_MT_currentIndexChanged(int index)
 {
     if (index >= 0)
     {
-        setSI4432_MT(&OUT_SI4432_Parameters,index);
+        Out_SI4432_Parameters->setSI4432_MT(index);
 
         //emit MT_CHANGED((unsigned char)(index),setSI4432_Property_From_Form);
     }
@@ -85,7 +101,7 @@ void SI4432_Settings_Form::on_PA_currentIndexChanged(int index)
 {
     if (index >= 0)
     {
-        setSI4432_PA(&OUT_SI4432_Parameters,index);
+        Out_SI4432_Parameters->setSI4432_PA(index);
         //emit PA_CHANGED((unsigned char)(index),setSI4432_Property_From_Form);
     }
 }
@@ -102,7 +118,7 @@ void SI4432_Settings_Form::on_DIV_DR_stateChanged(int arg1)
     {
         result = 1;
     }
-    setSI4432_DivDR(&OUT_SI4432_Parameters,result);
+    Out_SI4432_Parameters->setSI4432_DivDR(result);
     CalculateDR_BPS();
     //emit DIV_DR_CHANGED(result,setSI4432_Property_From_Form);
 }
@@ -122,7 +138,7 @@ void SI4432_Settings_Form::setDIV_DRToUI(unsigned char new_value)
 
 void SI4432_Settings_Form::on_DR_valueChanged(int arg1)
 {
-    setSI4432_TXDR(&OUT_SI4432_Parameters,(unsigned short)(arg1));
+    Out_SI4432_Parameters->setSI4432_TXDR((unsigned short)(arg1));
     CalculateDR_BPS();
     //emit DR_CHANGED((unsigned short)(arg1),setSI4432_Property_From_Form);
 }
@@ -141,20 +157,20 @@ void SI4432_Settings_Form::CalculateDR_BPS(void)
 
     ui->DR_BPS->setText(QString::number(DR_BPS));
 
-    calcSI4432_Rb(&OUT_SI4432_Parameters);
-    calcSI4432_IFBW(&OUT_SI4432_Parameters);
-    calcSI4432_IFBW_bits(&OUT_SI4432_Parameters);
-    calcSI4432_RXOSR(&OUT_SI4432_Parameters);  // !!! без манчестерского кода !!!
-    calcSI4432_NCOFF(&OUT_SI4432_Parameters);  // !!! без манчестерского кода !!!
-    calcSI4432_CRGAIN(&OUT_SI4432_Parameters); // !!! без манчестерского кода !!!
+    Out_SI4432_Parameters->calcSI4432_Rb();
+    Out_SI4432_Parameters->calcSI4432_IFBW();
+    Out_SI4432_Parameters->calcSI4432_IFBW_bits();
+    Out_SI4432_Parameters->calcSI4432_RXOSR();  // !!! без манчестерского кода !!!
+    Out_SI4432_Parameters->calcSI4432_NCOFF();  // !!! без манчестерского кода !!!
+    Out_SI4432_Parameters->calcSI4432_CRGAIN(); // !!! без манчестерского кода !!!
 
-    setRXOSRToUI(OUT_SI4432_Parameters.RXOSR);
-    setIFBWToUI(getSI4432_IFBW(&OUT_SI4432_Parameters));
-    setNCOFFToUI(OUT_SI4432_Parameters.NCOFF);
-    setCRGAINToUI(OUT_SI4432_Parameters.CRGAIN);
-    setNdecToUI(OUT_SI4432_Parameters.ndec);
-    setDwn3ToUI(OUT_SI4432_Parameters.dwn3);
-    setFilsetToUI(OUT_SI4432_Parameters.filset);
+    setRXOSRToUI(Out_SI4432_Parameters->getRXOSR());
+    setIFBWToUI(Out_SI4432_Parameters->getSI4432_IFBW());
+    setNCOFFToUI(Out_SI4432_Parameters->getNCOFF());
+    setCRGAINToUI(Out_SI4432_Parameters->getCRGAIN());
+    setNdecToUI(Out_SI4432_Parameters->getndec());
+    setDwn3ToUI(Out_SI4432_Parameters->getdwn3());
+    setFilsetToUI(Out_SI4432_Parameters->getfilset());
 }
 
 void SI4432_Settings_Form::on_FX2_stateChanged(int arg1)
@@ -168,7 +184,7 @@ void SI4432_Settings_Form::on_FX2_stateChanged(int arg1)
     CalculateFNOM(1);
     CalculateFo();
 
-    setSI4432_hb(&OUT_SI4432_Parameters,result);
+    Out_SI4432_Parameters->setSI4432_hb(result);
     //emit HB_CHANGED(result,setSI4432_Property_From_Form);
 }
 
@@ -190,7 +206,7 @@ void SI4432_Settings_Form::setHBToUI(unsigned char new_value)
 void SI4432_Settings_Form::on_FCAR_currentIndexChanged(int index)
 {
     CalculateFNOM(0);
-    setSI4432_FC(&OUT_SI4432_Parameters,(unsigned char)(index));
+    Out_SI4432_Parameters->setSI4432_FC((unsigned char)(index));
     //emit FC_CHANGED((unsigned char)(index),setSI4432_Property_From_Form);
 }
 
@@ -297,7 +313,7 @@ void SI4432_Settings_Form::CalculateFNOM(unsigned char hb_canged_flag)
 void SI4432_Settings_Form::on_FNOM_valueChanged(double arg1)
 {
     int arg = (int)((arg1+0.0005)*1000);
-    setSI4432_NFREQ(&OUT_SI4432_Parameters,arg);
+    Out_SI4432_Parameters->setSI4432_NFREQ(arg);
     //emit FNOM_CHANGED(arg,setSI4432_Property_From_Form);
 }
 
@@ -308,7 +324,7 @@ void SI4432_Settings_Form::setFNOMToUI(unsigned int new_value)
 
 void SI4432_Settings_Form::on_FOFF_valueChanged(int arg1)
 {
-    setSI4432_Fo(&OUT_SI4432_Parameters,(signed   short)(arg1));
+    Out_SI4432_Parameters->setSI4432_Fo((signed   short)(arg1));
     CalculateFo();
     //emit FOFF_CHANGED((signed   short)(arg1),setSI4432_Property_From_Form);
 }
@@ -337,7 +353,7 @@ void SI4432_Settings_Form::CalculateFo(void)
 void SI4432_Settings_Form::on_DV_valueChanged(int arg1)
 {
 
-    setSI4432_Fd(&OUT_SI4432_Parameters,(unsigned short)(arg1));
+    Out_SI4432_Parameters->setSI4432_Fd((unsigned short)(arg1));
     CalculateFd();
 
     //emit DV_CHANGED((unsigned short)(arg1),setSI4432_Property_From_Form);
@@ -356,38 +372,38 @@ void SI4432_Settings_Form::CalculateFd(void)
 
     this->ui->DV_HZ->setText(0xB1 + QString::number(dev));
 
-    calcSI4432_Rb(&OUT_SI4432_Parameters);
-    calcSI4432_IFBW(&OUT_SI4432_Parameters);
-    calcSI4432_IFBW_bits(&OUT_SI4432_Parameters);
-    calcSI4432_RXOSR(&OUT_SI4432_Parameters);  // !!! без манчестерского кода !!!
-    calcSI4432_NCOFF(&OUT_SI4432_Parameters);  // !!! без манчестерского кода !!!
-    calcSI4432_CRGAIN(&OUT_SI4432_Parameters); // !!! без манчестерского кода !!!
+    Out_SI4432_Parameters->calcSI4432_Rb();
+    Out_SI4432_Parameters->calcSI4432_IFBW();
+    Out_SI4432_Parameters->calcSI4432_IFBW_bits();
+    Out_SI4432_Parameters->calcSI4432_RXOSR();  // !!! без манчестерского кода !!!
+    Out_SI4432_Parameters->calcSI4432_NCOFF();  // !!! без манчестерского кода !!!
+    Out_SI4432_Parameters->calcSI4432_CRGAIN(); // !!! без манчестерского кода !!!
 
-    setRXOSRToUI(OUT_SI4432_Parameters.RXOSR);
-    setIFBWToUI(getSI4432_IFBW(&OUT_SI4432_Parameters));
-    setNCOFFToUI(OUT_SI4432_Parameters.NCOFF);
-    setCRGAINToUI(OUT_SI4432_Parameters.CRGAIN);
-    setNdecToUI(OUT_SI4432_Parameters.ndec);
-    setDwn3ToUI(OUT_SI4432_Parameters.dwn3);
-    setFilsetToUI(OUT_SI4432_Parameters.filset);
+    setRXOSRToUI(Out_SI4432_Parameters->getRXOSR());
+    setIFBWToUI(Out_SI4432_Parameters->getSI4432_IFBW());
+    setNCOFFToUI(Out_SI4432_Parameters->getNCOFF());
+    setCRGAINToUI(Out_SI4432_Parameters->getCRGAIN());
+    setNdecToUI(Out_SI4432_Parameters->getndec());
+    setDwn3ToUI(Out_SI4432_Parameters->getdwn3());
+    setFilsetToUI(Out_SI4432_Parameters->getfilset());
 }
 
 void SI4432_Settings_Form::on_BW_currentIndexChanged(int index)
 {
-    setSI4432_IFBW(&OUT_SI4432_Parameters,(unsigned char)(index));
+    Out_SI4432_Parameters->setSI4432_IFBW((unsigned char)(index));
 
-    calcSI4432_Rb(&OUT_SI4432_Parameters);
-    calcSI4432_IFBW_bits(&OUT_SI4432_Parameters);
-    calcSI4432_RXOSR(&OUT_SI4432_Parameters);  // !!! без манчестерского кода !!!
-    calcSI4432_NCOFF(&OUT_SI4432_Parameters);  // !!! без манчестерского кода !!!
-    calcSI4432_CRGAIN(&OUT_SI4432_Parameters); // !!! без манчестерского кода !!!
+    Out_SI4432_Parameters->calcSI4432_Rb();
+    Out_SI4432_Parameters->calcSI4432_IFBW_bits();
+    Out_SI4432_Parameters->calcSI4432_RXOSR();  // !!! без манчестерского кода !!!
+    Out_SI4432_Parameters->calcSI4432_NCOFF();  // !!! без манчестерского кода !!!
+    Out_SI4432_Parameters->calcSI4432_CRGAIN(); // !!! без манчестерского кода !!!
 
-    setRXOSRToUI(OUT_SI4432_Parameters.RXOSR);
-    setNCOFFToUI(OUT_SI4432_Parameters.NCOFF);
-    setCRGAINToUI(OUT_SI4432_Parameters.CRGAIN);
-    setNdecToUI(OUT_SI4432_Parameters.ndec);
-    setDwn3ToUI(OUT_SI4432_Parameters.dwn3);
-    setFilsetToUI(OUT_SI4432_Parameters.filset);
+    setRXOSRToUI(Out_SI4432_Parameters->getRXOSR());
+    setNCOFFToUI(Out_SI4432_Parameters->getNCOFF());
+    setCRGAINToUI(Out_SI4432_Parameters->getCRGAIN());
+    setNdecToUI(Out_SI4432_Parameters->getndec());
+    setDwn3ToUI(Out_SI4432_Parameters->getdwn3());
+    setFilsetToUI(Out_SI4432_Parameters->getfilset());
 
     //IFBW_CHANGED((unsigned char)(index),setSI4432_Property_From_Form);
 }
@@ -402,9 +418,24 @@ void SI4432_Settings_Form::setSNW_NToUI(unsigned char new_value)
     this->ui->SNW_N->setCurrentIndex(new_value);
 }
 
+void SI4432_Settings_Form::on_SNW_N_currentIndexChanged(int index)
+{
+    Out_SI4432_Parameters->setSI4432_SWC((unsigned char)(index));
+
+    setSNWToUI(Out_SI4432_Parameters->getSYNCH_WORD());
+}
+
 void SI4432_Settings_Form::setHEAD_NToUI(unsigned char new_value)
 {
     this->ui->HEAD_N->setCurrentIndex(new_value);
+}
+
+void SI4432_Settings_Form::on_HEAD_N_currentIndexChanged(int index)
+{
+    Out_SI4432_Parameters->setSI4432_HC((unsigned char)(index));
+
+    setHEAD_TXToUI(Out_SI4432_Parameters->getTX_HAEDER());
+    setHEAD_RXToUI(Out_SI4432_Parameters->getRX_HAEDER());
 }
 
 void SI4432_Settings_Form::setSNWToUI(unsigned int new_value)
@@ -431,6 +462,60 @@ void SI4432_Settings_Form::setSNWToUI(unsigned int new_value)
     ui->SNW->setText(QByteAray_To_QString(SNW).toUpper());
 }
 
+void SI4432_Settings_Form::on_SNW_textEdited(const QString &arg1)
+{
+    QByteArray SNW;
+    ui->SNW->setStyleSheet(Background_Red);
+    ui->Write->setEnabled(false);
+    ui->Stop->setEnabled(false);
+
+    if (arg1.length() > (2*(2*ui->SNW_N->currentIndex()+1) - 1))
+    {
+        QString arg;
+        arg.append(arg1.data(),(2*(2*ui->SNW_N->currentIndex()+1) - 1));
+        ui->SNW->setText(arg);
+    }
+    int pos = 0;
+    QRegExp cload_RegExp = QRegExp("([0-9A-Fa-f]){2,2}");
+
+    while ((pos = cload_RegExp.indexIn(arg1,pos)) != -1)
+    {
+        SNW.append(QString_To_QByteAray(cload_RegExp.cap(0), false, NULL));
+
+        pos += cload_RegExp.matchedLength();
+
+    }
+
+    if (SNW.length() == ui->SNW_N->currentIndex()+1)
+    {
+        ui->SNW->setStyleSheet(Background_White);
+
+        unsigned int RF_SYNCH_WORD = 0;
+
+        if (SNW.length() >= 1)
+        {
+            RF_SYNCH_WORD |= (((unsigned int)(SNW.at(0)) & 0xFF) << 24);
+        }
+        if (SNW.length() >= 2)
+        {
+            RF_SYNCH_WORD |= (((unsigned int)(SNW.at(1)) & 0xFF) << 16);
+        }
+        if (SNW.length() >= 3)
+        {
+            RF_SYNCH_WORD |= (((unsigned int)(SNW.at(2)) & 0xFF) << 8);
+        }
+        if (SNW.length() >= 4)
+        {
+            RF_SYNCH_WORD |= (((unsigned int)(SNW.at(3)) & 0xFF) << 0);
+        }
+
+        Out_SI4432_Parameters->setSYNCH_WORD(RF_SYNCH_WORD);
+
+        ui->Write->setEnabled(true);
+        ui->Stop->setEnabled(true);
+    }
+}
+
 void SI4432_Settings_Form::setHEAD_TXToUI(unsigned int new_value)
 {
     QByteArray HEAD_TX;
@@ -453,6 +538,59 @@ void SI4432_Settings_Form::setHEAD_TXToUI(unsigned int new_value)
     }
 
     ui->HEAD_TX->setText(QByteAray_To_QString(HEAD_TX).toUpper());
+}
+
+void SI4432_Settings_Form::on_HEAD_TX_textEdited(const QString &arg1)
+{
+    QByteArray HEAD_TX;
+    ui->HEAD_TX->setStyleSheet(Background_Red);
+    ui->Write->setEnabled(false);
+    ui->Stop->setEnabled(false);
+
+    if (arg1.length() > (2*ui->HEAD_N->currentIndex() + ui->HEAD_N->currentIndex() - 1))
+    {
+        QString arg;
+        arg.append(arg1.data(),(2*ui->HEAD_N->currentIndex() + ui->HEAD_N->currentIndex() - 1));
+        ui->HEAD_TX->setText(arg);
+    }
+    int pos = 0;
+    QRegExp cload_RegExp = QRegExp("([0-9A-Fa-f]){2,2}");
+
+    while ((pos = cload_RegExp.indexIn(arg1,pos)) != -1)
+    {
+        HEAD_TX.append(QString_To_QByteAray(cload_RegExp.cap(0), false, NULL));
+
+        pos += cload_RegExp.matchedLength();
+
+    }
+
+    if (HEAD_TX.length() == ui->HEAD_N->currentIndex())
+    {
+        ui->HEAD_TX->setStyleSheet(Background_White);
+
+        unsigned int RF_TX_HAEDER = 0;
+        if (HEAD_TX.length() >= 1)
+        {
+            RF_TX_HAEDER |= (((unsigned int)(HEAD_TX.at(0)) & 0xFF) << 24);
+        }
+        if (HEAD_TX.length() >= 2)
+        {
+            RF_TX_HAEDER |= (((unsigned int)(HEAD_TX.at(1)) & 0xFF) << 16);
+        }
+        if (HEAD_TX.length() >= 3)
+        {
+            RF_TX_HAEDER |= (((unsigned int)(HEAD_TX.at(2)) & 0xFF) << 8);
+        }
+        if (HEAD_TX.length() >= 4)
+        {
+            RF_TX_HAEDER |= (((unsigned int)(HEAD_TX.at(3)) & 0xFF) << 0);
+        }
+
+        Out_SI4432_Parameters->setTX_HAEDER(RF_TX_HAEDER);
+
+        ui->Write->setEnabled(true);
+        ui->Stop->setEnabled(true);
+    }
 }
 
 void SI4432_Settings_Form::setHEAD_RXToUI(unsigned int new_value)
@@ -479,10 +617,64 @@ void SI4432_Settings_Form::setHEAD_RXToUI(unsigned int new_value)
     ui->HEAD_RX->setText(QByteAray_To_QString(HEAD_RX).toUpper());
 }
 
+void SI4432_Settings_Form::on_HEAD_RX_textEdited(const QString &arg1)
+{
+    QByteArray HEAD_RX;
+    ui->HEAD_RX->setStyleSheet(Background_Red);
+    ui->Write->setEnabled(false);
+    ui->Stop->setEnabled(false);
+
+    if (arg1.length() > (2*ui->HEAD_N->currentIndex() + ui->HEAD_N->currentIndex() - 1))
+    {
+        QString arg;
+        arg.append(arg1.data(),(2*ui->HEAD_N->currentIndex() + ui->HEAD_N->currentIndex() - 1));
+        ui->HEAD_RX->setText(arg);
+    }
+    int pos = 0;
+    QRegExp cload_RegExp = QRegExp("([0-9A-Fa-f]){2,2}");
+
+    while ((pos = cload_RegExp.indexIn(arg1,pos)) != -1)
+    {
+        HEAD_RX.append(QString_To_QByteAray(cload_RegExp.cap(0), false, NULL));
+
+        pos += cload_RegExp.matchedLength();
+
+    }
+
+    if (HEAD_RX.length() == ui->HEAD_N->currentIndex())
+    {
+        ui->HEAD_RX->setStyleSheet(Background_White);
+
+        unsigned int RF_RX_HAEDER = 0;
+        if (HEAD_RX.length() >= 1)
+        {
+            RF_RX_HAEDER |= (((unsigned int)(HEAD_RX.at(0)) & 0xFF) << 24);
+        }
+        if (HEAD_RX.length() >= 2)
+        {
+            RF_RX_HAEDER |= (((unsigned int)(HEAD_RX.at(1)) & 0xFF) << 16);
+        }
+        if (HEAD_RX.length() >= 3)
+        {
+            RF_RX_HAEDER |= (((unsigned int)(HEAD_RX.at(2)) & 0xFF) << 8);
+        }
+        if (HEAD_RX.length() >= 4)
+        {
+            RF_RX_HAEDER |= (((unsigned int)(HEAD_RX.at(3)) & 0xFF) << 0);
+        }
+
+        Out_SI4432_Parameters->setRX_HAEDER(RF_RX_HAEDER);
+
+        ui->Write->setEnabled(true);
+        ui->Stop->setEnabled(true);
+    }
+}
+
 void SI4432_Settings_Form::on_CLOAD_textEdited(const QString &arg1)
 {
     ui->CLOAD->setStyleSheet(Background_Red);
-
+    ui->Write->setEnabled(false);
+    ui->Stop->setEnabled(false);
     if (arg1.length() > 2)
     {
         QString arg;
@@ -497,8 +689,15 @@ void SI4432_Settings_Form::on_CLOAD_textEdited(const QString &arg1)
         ui->CLOAD->setStyleSheet(Background_White);
         QByteArray cload_barr = QString_To_QByteAray(arg1, false, NULL);
 
-        setSI4432_CLOAD(&OUT_SI4432_Parameters,cload_barr.at(0));
+        Out_SI4432_Parameters->setSI4432_CLOAD(cload_barr.at(0));
+
+        Out_SI4432_Parameters->calcSI4432_CLOAD();
+
+        setCLOAD_PFToUI(Out_SI4432_Parameters->getCOscill_CLoad());
+
         //CLOAD_CHANGED(cload_barr.at(0),setSI4432_Property_From_Form);
+        ui->Write->setEnabled(true);
+        ui->Stop->setEnabled(true);
     }
 }
 
@@ -542,4 +741,81 @@ void SI4432_Settings_Form::setDwn3ToUI(unsigned char new_value)
 void SI4432_Settings_Form::setFilsetToUI(unsigned char new_value)
 {
     ui->filset->setText(QString::number(new_value));
+}
+
+void SI4432_Settings_Form::on_Write_clicked()
+{
+    emit Get_Console(ui->console);
+
+    ui->Stop->setEnabled(true);
+    ui->Write->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->SettingsWidget->setEnabled(false);
+
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+
+    emit Write_SI4432_Parameters();
+}
+
+void SI4432_Settings_Form::isStopped(void)
+{
+    ui->Stop->setEnabled(false);
+    ui->Write->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->SettingsWidget->setEnabled(true);
+
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+}
+
+void SI4432_Settings_Form::isSI4432_Parameters(void)
+{
+    In_SI4432_Parameters->calcSI4432_CLOAD();
+    In_SI4432_Parameters->calcSI4432_Rb();
+    //In_SI4432_Parameters->calcSI4432_IFBW();
+    In_SI4432_Parameters->calcSI4432_IFBW_bits();
+    In_SI4432_Parameters->calcSI4432_RXOSR();  // !!! без манчестерского кода !!!
+    In_SI4432_Parameters->calcSI4432_NCOFF();  // !!! без манчестерского кода !!!
+    In_SI4432_Parameters->calcSI4432_CRGAIN(); // !!! без манчестерского кода !!!
+
+    setMTToUI(In_SI4432_Parameters->getSI4432_MT());
+    setPAToUI(In_SI4432_Parameters->getSI4432_PA());
+    setDIV_DRToUI(In_SI4432_Parameters->getSI4432_DivDR());
+    setDRToUI(In_SI4432_Parameters->getSI4432_TXDR());
+    setHBToUI(In_SI4432_Parameters->getSI4432_hb());
+    setFCToUI(In_SI4432_Parameters->getSI4432_FC());
+    setFNOMToUI(In_SI4432_Parameters->getSI4432_NFREQ());
+    setFOFFToUI(In_SI4432_Parameters->getSI4432_Fo());
+    setDVToUI(In_SI4432_Parameters->getSI4432_Fd());
+    setIFBWToUI(In_SI4432_Parameters->getSI4432_IFBW());
+    setSNW_NToUI(In_SI4432_Parameters->getSI4432_SWC());
+    setHEAD_NToUI(In_SI4432_Parameters->getSI4432_HC());
+    setSNWToUI(In_SI4432_Parameters->getSYNCH_WORD());
+    setHEAD_TXToUI(In_SI4432_Parameters->getTX_HAEDER());
+    setHEAD_RXToUI(In_SI4432_Parameters->getRX_HAEDER());
+
+    setCLOADToUI(In_SI4432_Parameters->getSI4432_CLOAD());
+    setCLOAD_PFToUI(In_SI4432_Parameters->getCOscill_CLoad());
+
+    setRXOSRToUI(In_SI4432_Parameters->getRXOSR());
+    setNCOFFToUI(In_SI4432_Parameters->getNCOFF());
+    setCRGAINToUI(In_SI4432_Parameters->getCRGAIN());
+    setNdecToUI(In_SI4432_Parameters->getndec());
+    setDwn3ToUI(In_SI4432_Parameters->getdwn3());
+    setFilsetToUI(In_SI4432_Parameters->getfilset());
+
+    ui->Stop->setEnabled(false);
+    ui->Write->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->SettingsWidget->setEnabled(true);
+
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+}
+
+
+void SI4432_Settings_Form::on_Stop_clicked()
+{
+    emit Stop_Send_Data();
 }

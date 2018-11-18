@@ -21,17 +21,23 @@ public:
 
     void resizeEvent(QResizeEvent *event);
 signals:
-    void Cancel(void);
-    void Next(void);
+    void Cancel(QRect);
+    void Next(QRect);
     void isCreated(void);
+    void Stop_Send_Data(void);
     void Get_Console(QPlainTextEdit* console);
 
-    void OUT_SI4432_Parameters_CHANGED(RF_Config_struct);
+    void Out_SI4432_Parameters_Changed(SI4432ConfigurationClass*);
+    void Write_SI4432_Parameters(void);
 
 public slots:
     void SetProgress(uint progress);
 
-    void setIN_SI4432_Parameters(RF_Config_struct);
+    void isStopped(void);
+    void isSI4432_Parameters(void);
+
+    void setIn_SI4432_Parameters(SI4432ConfigurationClass*);
+    void setOut_SI4432_Parameters(SI4432ConfigurationClass*);
 
 private slots:
     void on_Back_clicked();
@@ -93,11 +99,25 @@ private slots:
     void setDwn3ToUI(unsigned char);
     void setFilsetToUI(unsigned char);
 
+    void on_SNW_N_currentIndexChanged(int index);
+
+    void on_HEAD_N_currentIndexChanged(int index);
+
+    void on_SNW_textEdited(const QString &arg1);
+
+    void on_HEAD_TX_textEdited(const QString &arg1);
+
+    void on_HEAD_RX_textEdited(const QString &arg1);
+
+    void on_Write_clicked();
+
+    void on_Stop_clicked();
+
 private:
     Ui::SI4432_Settings_Form *ui;
 
-    RF_Config_struct  IN_SI4432_Parameters;
-    RF_Config_struct  OUT_SI4432_Parameters;
+    SI4432ConfigurationClass  *In_SI4432_Parameters;
+    SI4432ConfigurationClass  *Out_SI4432_Parameters;
 };
 
 #endif // SI4432_SETTINGS_FORM_H

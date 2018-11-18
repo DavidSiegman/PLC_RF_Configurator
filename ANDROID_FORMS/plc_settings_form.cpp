@@ -6,6 +6,8 @@ PLC_Settings_Form::PLC_Settings_Form(QWidget *parent) :
     ui(new Ui::PLC_Settings_Form)
 {
     ui->setupUi(this);
+
+    connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
 
 PLC_Settings_Form::~PLC_Settings_Form()

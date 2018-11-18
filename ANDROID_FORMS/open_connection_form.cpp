@@ -24,6 +24,8 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
         this->setWindowModality(Qt::WindowModal);
         //this->setFixedSize (340,560);
     }
+
+    connect(ui->ClearConsole, SIGNAL(clicked(bool)), ui->console, SLOT(clear()));
 }
 
 void Open_Connection_Form::resizeEvent(QResizeEvent *event)
@@ -123,15 +125,67 @@ Open_Connection_Form::~Open_Connection_Form()
     delete ui;
 }
 
+void Open_Connection_Form::Set_In_Firmware_Information(FirmwareInformationClass *FirmwareInformation)
+{
+    In_Firmware_Information = FirmwareInformation;
+
+    SetDeviceNameToUI(In_Firmware_Information->getDevice_Name());
+    SetCurrentFitmwareToUI(In_Firmware_Information->getCurrent_Firmware_Version());
+    SetBootloaderVersionToUI(In_Firmware_Information->getString_Bootloader_Version());
+    SetBootloaderSizeToUI(In_Firmware_Information->getBootloader_Size());
+    SetBootloaderCRCToUI(In_Firmware_Information->getBootloader_CRC32());
+    SetUpgradableVersionToUI(In_Firmware_Information->getString_Upgradable_Version());
+    SetUpgradableSizeToUI(In_Firmware_Information->getUpgradable_Size());
+    SetUpgradableCRCToUI(In_Firmware_Information->getUpgradable_CRC32());
+
+}
+
 void Open_Connection_Form::on_Back_clicked()
 {
+    emit Get_Geometry(this->geometry());
     emit Cancel();
     this->deleteLater();
 }
 
 void Open_Connection_Form::on_Next_clicked()
 {
-    emit Next();
+    emit Next(this->geometry());
+}
+
+void Open_Connection_Form::on_Connect_clicked()
+{
+    Clear_Form();
+    emit Get_Console(ui->console);
+
+    ui->Stop->setEnabled(true);
+    ui->Connect->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->InterfaceWidget->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->Next->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+
+    if (ui->Interface->currentIndex() == 0)
+    {
+        emit SendSerialNumber(ui->SN->text(), false);
+    }
+    else if (ui->Interface->currentIndex() == 1)
+    {
+        emit SendSerialNumber(ui->SN->text(), true);
+    }
+
+    emit AOPEN();
+    emit STOP_MONITOR();
+}
+
+void Open_Connection_Form::on_btnSettings_clicked()
+{
+    emit Settings(this);
+}
+
+void Open_Connection_Form::on_Stop_clicked()
+{
+    emit STOP_SEND_DATA();
 }
 
 void Open_Connection_Form::SetProgress(uint progress)
@@ -141,7 +195,41 @@ void Open_Connection_Form::SetProgress(uint progress)
 
 void Open_Connection_Form::isOPEND()
 {
+    ui->Stop->setEnabled(false);
+    ui->Connect->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->InterfaceWidget->setEnabled(true);
+    ui->Back->setEnabled(true);
     ui->Next->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+}
+
+void Open_Connection_Form::isRESET()
+{
+    ui->Stop->setEnabled(false);
+    ui->Connect->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->InterfaceWidget->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->Next->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+}
+
+void Open_Connection_Form::isSTOPPED(void)
+{
+    SetProgress(0);
+    ui->Stop->setEnabled(false);
+    ui->Connect->setEnabled(true);
+    ui->Reset->setEnabled(false);
+    ui->InterfaceWidget->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->Next->setEnabled(false);
+    ui->btnSettings->setEnabled(true);
+}
+
+void Open_Connection_Form::Set_Geometry(QRect new_value)
+{
+    this->setGeometry(new_value);
 }
 
 void Open_Connection_Form::SetCurrentFitmwareToUI(uchar new_value)
@@ -257,6 +345,8 @@ void Open_Connection_Form::SetDeviceNameToUI(QString new_value)
 
 void Open_Connection_Form::on_Interface_currentIndexChanged(int index)
 {
+    Clear_Form();
+
     switch (index)
     {
         case 0:
@@ -275,27 +365,11 @@ void Open_Connection_Form::on_Interface_currentIndexChanged(int index)
     }
 }
 
-void Open_Connection_Form::on_Connect_clicked()
-{
-    Clear_Form();
-    emit Get_Console(ui->console);
-
-    if (ui->Interface->currentIndex() == 0)
-    {
-        emit SendSerialNumber(ui->SN->text(), false);
-    }
-    else if (ui->Interface->currentIndex() == 1)
-    {
-        emit SendSerialNumber(ui->SN->text(), true);
-    }
-
-    emit AOPEN();
-    emit STOP_MONITOR();
-}
-
 void Open_Connection_Form::Clear_Form(void)
 {
     ui->Next->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    SetProgress(0);
 
     SetCurrentFitmwareToUI(2);
     SetBootloaderVersionToUI("");
@@ -306,3 +380,20 @@ void Open_Connection_Form::Clear_Form(void)
     SetUpgradableCRCToUI(0);
     SetDeviceNameToUI("");
 }
+
+
+void Open_Connection_Form::on_Reset_clicked()
+{
+    emit Get_Console(ui->console);
+
+    ui->Stop->setEnabled(true);
+    ui->Connect->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Next->setEnabled(false);
+    ui->InterfaceWidget->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+
+    emit SEND_RF_RESET();
+}
+

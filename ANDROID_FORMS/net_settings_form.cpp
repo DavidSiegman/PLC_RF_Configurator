@@ -6,6 +6,8 @@ Net_Settings_Form::Net_Settings_Form(QWidget *parent) :
     ui(new Ui::Net_Settings_Form)
 {
     ui->setupUi(this);
+
+    connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
 
 Net_Settings_Form::~Net_Settings_Form()
@@ -20,12 +22,12 @@ void Net_Settings_Form::resizeEvent(QResizeEvent *event)
 
 void Net_Settings_Form::on_Back_clicked()
 {
-    emit Cancel();
+    emit Cancel(this->geometry());
 }
 
 void Net_Settings_Form::on_Next_clicked()
 {
-    emit Next();
+    emit Next(this->geometry());
 }
 
 void Net_Settings_Form::SetProgress(uint progress)

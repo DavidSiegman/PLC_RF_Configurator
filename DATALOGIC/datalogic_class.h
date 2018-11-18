@@ -14,6 +14,7 @@
 #include "UPDATE/update.h"
 #include <OTHER_FUNCTIONS/mess_enum.h>
 
+
 typedef union RF_Message_type {
     struct {
         uchar  Msg_Length;                     //1
@@ -118,13 +119,12 @@ private:
     QByteArray          InDataBuffer;
     QByteArray          OutDataBuffer;
     QByteArray          ParceDataBuffer;
-    QByteArray          repeat_data;
 
     QString             SerialNumber;
     RF_Preamble_str     RF_Preamble;
     RF_Preamble_new_str RF_Preamble_new;
     bool                addSerialNumber;
-    bool                stop;
+    bool                Stop_Parceing;
     unsigned char       SEND_MODE, BOOT_WAIT_COUNTER;
 
     SI4463_PROPERTYS_structur* CurrentSI4463_PROPERTYS_structur;
@@ -139,7 +139,7 @@ signals:
     void outLRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,signed short ANT2_RSSI,double AFC);
     void noANSWER();
     void outPROGRESS(uint value);
-    void STOP();
+    void STOPPED();
 
 public slots:
     void setSerialNumberMode(QString S, bool Enable);
@@ -149,12 +149,12 @@ public slots:
     void REPEAT_SEND();
     void MANUAL_REPEAT_SEND();
     void In_DataBuffer(QByteArray data);
-    void Parce_DataBuffer(QByteArray data, uint n);
+    void Parce_DataBuffer();
     void ParceData(uint n);
     void ClearIn_DataBuffer(void);
     void ClearOut_DataBuffer(void);
     void ComandHandling(uint n, uint m);
-    void STOP_SEND_DATA(bool b);
+    void STOP_SEND_DATA(void);
     void BOOT_WAITED();
 };
 

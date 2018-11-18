@@ -22,8 +22,8 @@ public:
 
     void resizeEvent(QResizeEvent *event);
 signals:
-    void Cancel(void);
-    void Next(void);
+    void Cancel(QRect);
+    void Next(QRect);
     void isCreated(void);
     void Get_Console(QPlainTextEdit* console);
     void Send_Data(QByteArray data, uint n);

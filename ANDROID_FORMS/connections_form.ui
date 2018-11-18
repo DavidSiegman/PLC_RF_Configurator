@@ -31,6 +31,9 @@
    </property>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="spacing">
+      <number>0</number>
+     </property>
      <item>
       <widget class="QLabel" name="label_1">
        <property name="sizePolicy">
@@ -77,7 +80,7 @@
         <x>0</x>
         <y>0</y>
         <width>328</width>
-        <height>475</height>
+        <height>473</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -431,7 +434,21 @@
         </widget>
        </item>
        <item>
-        <widget class="QPlainTextEdit" name="consol">
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="ClearConsole">
+         <property name="text">
+          <string>Очистить Лог</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="console">
          <property name="font">
           <font>
            <family>Microsoft YaHei UI</family>
@@ -462,8 +479,8 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>0</width>
-         <height>35</height>
+         <width>40</width>
+         <height>40</height>
         </size>
        </property>
        <property name="maximumSize">
@@ -481,7 +498,17 @@
         </font>
        </property>
        <property name="text">
-        <string>Manual</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../RESOURCES/images.qrc">
+         <normaloff>:/new/icons/images/ManualMode.png</normaloff>:/new/icons/images/ManualMode.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -495,15 +522,18 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>0</width>
-         <height>35</height>
+         <width>40</width>
+         <height>40</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>16777215</width>
-         <height>16777215</height>
+         <width>80</width>
+         <height>40</height>
         </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
        </property>
        <property name="text">
         <string/>
@@ -533,8 +563,8 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>0</width>
-         <height>35</height>
+         <width>40</width>
+         <height>40</height>
         </size>
        </property>
        <property name="maximumSize">

@@ -31,8 +31,6 @@ private slots:
 
     void on_cBtnSend_clicked();
 
-    void on_pushButton_clicked();
-
 private:
     Ui::Hands_Enter_Form *ui;
     QSysInfo             *SysInfo;

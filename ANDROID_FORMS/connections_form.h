@@ -70,30 +70,33 @@ private slots:
     void start_COM_Init();
     void TCP_Is_Connected(void);
     void COM_Is_Opend(void);
+    void Set_Geometry(QRect);
 
-    void Define_Next_Form(void);
+    void Define_Next_Form(QRect);
 
-    void Define_Pre_Form(void);
+    void Define_Pre_Form(QRect);
 
     void Set_ActiveConsole(QPlainTextEdit*);
 
-    void Create_And_Show_Settings_Form(void);
+    void Create_And_Show_Settings_Form(QWidget*);
 
     void Create_And_Show_Hands_Enter_Form(void);
 
     void Create_And_Show_Open_Connection_Form(void);
 
-    void Create_And_Show_Net_Settings_Form(void);
+    void Create_And_Show_Net_Settings_Form(QRect);
 
-    void Create_And_Show_Sniffer_Settings_Form(void);
+    void Create_And_Show_Sniffer_Settings_Form(QRect);
 
-    void Create_And_Show_SI4432_Settings_Form(void);
+    void Create_And_Show_SI4432_Settings_Form(QRect);
 
     void on_TCPConnect_clicked();
 
     void on_PortNameBox_currentIndexChanged(const QString &arg1);
 
     void on_COMConnect_clicked();
+
+    void on_btnSettings_clicked();
 
 private:
     Ui::Connections_Form *ui;
