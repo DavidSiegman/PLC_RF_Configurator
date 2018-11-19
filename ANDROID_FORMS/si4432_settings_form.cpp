@@ -32,9 +32,19 @@ void SI4432_Settings_Form::on_Next_clicked()
     emit Next(this->geometry());
 }
 
+void SI4432_Settings_Form::on_btnSettings_clicked()
+{
+    emit Settings(this);
+}
+
 void SI4432_Settings_Form::SetProgress(uint progress)
 {
     ui->progress->setValue(progress);
+}
+
+void SI4432_Settings_Form::Set_Geometry(QRect new_value)
+{
+    this->setGeometry(new_value);
 }
 
 void SI4432_Settings_Form::setOut_SI4432_Parameters(SI4432ConfigurationClass* new_value)
@@ -758,17 +768,6 @@ void SI4432_Settings_Form::on_Write_clicked()
     emit Write_SI4432_Parameters();
 }
 
-void SI4432_Settings_Form::isStopped(void)
-{
-    ui->Stop->setEnabled(false);
-    ui->Write->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->SettingsWidget->setEnabled(true);
-
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-}
-
 void SI4432_Settings_Form::isSI4432_Parameters(void)
 {
     In_SI4432_Parameters->calcSI4432_CLOAD();
@@ -819,3 +818,39 @@ void SI4432_Settings_Form::on_Stop_clicked()
 {
     emit Stop_Send_Data();
 }
+
+
+void SI4432_Settings_Form::isStopped(void)
+{
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
+
+void SI4432_Settings_Form::on_Reset_clicked()
+{
+    emit Get_Console(ui->console);
+
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
+
+    emit Send_RF_Reset();
+}
+
+void SI4432_Settings_Form::isRF_Reset()
+{
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
+

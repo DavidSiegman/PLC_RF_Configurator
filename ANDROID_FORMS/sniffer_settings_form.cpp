@@ -30,9 +30,19 @@ void Sniffer_Settings_Form::on_Next_clicked()
     emit Next(this->geometry());
 }
 
+void Sniffer_Settings_Form::on_btnSettings_clicked()
+{
+    emit Settings(this);
+}
+
 void Sniffer_Settings_Form::SetProgress(uint progress)
 {
     ui->progress->setValue(progress);
+}
+
+void Sniffer_Settings_Form::Set_Geometry(QRect new_value)
+{
+    this->setGeometry(new_value);
 }
 
 void Sniffer_Settings_Form::Set_Out_Sniffer_Properties(SnifferPropertiesClass* new_data)
@@ -291,6 +301,7 @@ void Sniffer_Settings_Form::isStopped(void)
     ui->btnSettings->setEnabled(true);
     ui->Next->setEnabled(true);
 }
+
 void Sniffer_Settings_Form::isSnifferMode(void)
 {
     ui->Stop->setEnabled(false);
@@ -677,3 +688,4 @@ void Sniffer_Settings_Form::on_Stop_clicked()
 {
     emit Stop_Send_Data();
 }
+

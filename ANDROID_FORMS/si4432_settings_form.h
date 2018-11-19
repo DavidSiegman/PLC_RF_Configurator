@@ -23,17 +23,21 @@ public:
 signals:
     void Cancel(QRect);
     void Next(QRect);
+    void Settings(QWidget*);
     void isCreated(void);
     void Stop_Send_Data(void);
     void Get_Console(QPlainTextEdit* console);
+    void Send_RF_Reset(void);
 
     void Out_SI4432_Parameters_Changed(SI4432ConfigurationClass*);
     void Write_SI4432_Parameters(void);
 
 public slots:
     void SetProgress(uint progress);
+    void Set_Geometry(QRect);
 
     void isStopped(void);
+    void isRF_Reset(void);
     void isSI4432_Parameters(void);
 
     void setIn_SI4432_Parameters(SI4432ConfigurationClass*);
@@ -112,6 +116,10 @@ private slots:
     void on_Write_clicked();
 
     void on_Stop_clicked();
+
+    void on_Reset_clicked();
+
+    void on_btnSettings_clicked();
 
 private:
     Ui::SI4432_Settings_Form *ui;

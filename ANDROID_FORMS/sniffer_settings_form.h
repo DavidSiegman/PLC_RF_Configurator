@@ -21,6 +21,7 @@ public:
 signals:
     void Cancel(QRect);
     void Next(QRect);
+    void Settings(QWidget*);
     void isCreated(void);
     void Stop_Send_Data(void);
     void Get_Console(QPlainTextEdit* console);
@@ -39,6 +40,7 @@ signals:
 
 public slots:
     void SetProgress(uint progress);
+    void Set_Geometry(QRect);
 
     void Set_In_Sniffer_Properties(SnifferPropertiesClass*);
     void Set_Out_Sniffer_Properties(SnifferPropertiesClass*);
@@ -110,6 +112,8 @@ private slots:
     //void Write_Item_To_Switch_Table(QString);
 
     void on_Stop_clicked();
+
+    void on_btnSettings_clicked();
 
 private:
     Ui::Sniffer_Settings_Form *ui;
