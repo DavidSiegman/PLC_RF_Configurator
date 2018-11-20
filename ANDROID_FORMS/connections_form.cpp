@@ -65,6 +65,8 @@ Connections_Form::Connections_Form(QWidget *parent) :
     connect(ui->btnNext,       SIGNAL(clicked()),             this, SLOT(Create_And_Show_Open_Connection_Form()));
     connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 
+    connect(newParcer,         SIGNAL(PARCE_End()),           SI4463Config,SLOT(request_Prameters_handling()));
+
     DataLogic->setRepeatNumber(3);
     DataLogic->setRepeatTimeout(3000);
 
@@ -237,6 +239,11 @@ void Connections_Form::COM_Is_Opend(void)
 void Connections_Form::Set_Geometry(QRect new_value)
 {
     this->setGeometry(new_value);
+}
+
+void Connections_Form::Start_Parcer(QString file_name)
+{
+    newParcer->PARCE_Start(file_name, SI4463Config);
 }
 
 void Connections_Form::Define_Next_Form(QRect curren_geometry)
@@ -506,6 +513,12 @@ void Connections_Form::Create_And_Show_SI4463_Settings_Form(QRect current_geomet
     connect(ConnectHandler,      SIGNAL(isRF_RESET()),                     si4463_settings_form,  SLOT(isRF_Reset()));
 
     connect(ConnectHandler,      SIGNAL(Progress(uint)),                   si4463_settings_form,  SLOT(SetProgress(uint)));
+
+    connect(si4463_settings_form,SIGNAL(isCreated()),                      SI4463Config,          SLOT(request_Model_handling()));
+    connect(SI4463Config,        SIGNAL(get_Model(QStandardItemModel*)),   si4463_settings_form,  SLOT(Set_Model(QStandardItemModel*)));
+    connect(SI4463Config,        SIGNAL(get_Prameters(QList<Params>*)),    si4463_settings_form,  SLOT(Set_Prameters(QList<Params>*)));
+
+    connect(si4463_settings_form,SIGNAL(Start_Parcer(QString)),            this,                  SLOT(Start_Parcer(QString)));
 
     this->hide();
     si4463_settings_form->setGeometry(current_geometry);

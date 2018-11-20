@@ -389,6 +389,16 @@ uchar SI4463Class::aSI4463_GET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PRO
     return *(uchar*)(group_adress + PROP_COUNTER);
 }
 
+void SI4463Class::request_Model_handling()
+{
+    emit get_Model(model);
+}
+
+void SI4463Class::request_Prameters_handling()
+{
+    emit get_Prameters(&Parameters);
+}
+
 SI4463_PROPERTYS_structur*        SI4463Class::aSI4463_PROPERTYS(void)
 {
     return &SI4463_PROPERTYS;

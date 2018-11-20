@@ -72,6 +72,7 @@ private slots:
     void TCP_Is_Connected(void);
     void COM_Is_Opend(void);
     void Set_Geometry(QRect);
+    void Start_Parcer(QString);
 
     void Define_Next_Form(QRect);
 

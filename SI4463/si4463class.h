@@ -52,8 +52,13 @@ private:
     QColor *Color1, *Color2;
 
 signals:
+    void get_Model(QStandardItemModel *model);
+    void get_Prameters(QList<Params> *params);
 
 public slots:
+    void request_Model_handling(void);
+    void request_Prameters_handling(void);
+
     SI4463_PROPERTYS_structur*     aSI4463_PROPERTYS(void);
     SI4463_PROPERTYS_structur*     aSI4463_PROPERTYS_FROM_FILE(void);
     SI4463_PROPERTYS_structur*     aSI4463_PROPERTYS_CALIB(void);

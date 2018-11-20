@@ -157,6 +157,11 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
               <property name="text">
                <string>Открыть Файл</string>
               </property>
@@ -165,7 +170,7 @@
             <item>
              <widget class="QLabel" name="FileName">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <sizepolicy hsizetype="Ignored" vsizetype="Minimum">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -176,8 +181,22 @@
                 <height>25</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <pointsize>8</pointsize>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
+              </property>
               <property name="text">
                <string/>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
               </property>
               <property name="indent">
                <number>-1</number>
@@ -202,6 +221,7 @@
             </property>
             <property name="font">
              <font>
+              <family>Microsoft YaHei UI</family>
               <pointsize>10</pointsize>
               <weight>75</weight>
               <bold>true</bold>
@@ -237,6 +257,16 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -264,6 +294,16 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
               </property>
               <property name="text">
                <string/>
@@ -293,6 +333,11 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
               <property name="text">
                <string>Freq.(MHz):</string>
               </property>
@@ -320,6 +365,11 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
               </property>
               <property name="text">
                <string>Fdev(Hz):</string>
@@ -349,6 +399,11 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
               <property name="text">
                <string>WB filter:</string>
               </property>
@@ -376,6 +431,11 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
               </property>
               <property name="text">
                <string>DataRate:</string>
@@ -405,6 +465,11 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
               <property name="text">
                <string>BW =</string>
               </property>
@@ -432,6 +497,11 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
               </property>
               <property name="text">
                <string>RXBW(Hz):</string>
@@ -461,6 +531,16 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -488,6 +568,16 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
               </property>
               <property name="text">
                <string/>
@@ -517,6 +607,16 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -544,6 +644,11 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
               </property>
               <property name="text">
                <string>ANT_DIV</string>
@@ -573,6 +678,11 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
               <property name="text">
                <string>NB-filter:</string>
               </property>
@@ -600,6 +710,16 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
               </property>
               <property name="text">
                <string/>
@@ -629,6 +749,11 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
               <property name="text">
                <string>BW =</string>
               </property>
@@ -656,6 +781,16 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
               </property>
               <property name="text">
                <string/>
@@ -685,6 +820,16 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -712,6 +857,11 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
               </property>
               <property name="text">
                <string>AFC</string>
@@ -741,6 +891,16 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -768,6 +928,16 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
               </property>
               <property name="text">
                <string/>
@@ -797,6 +967,11 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
               <property name="text">
                <string>Mod. type</string>
               </property>
@@ -824,6 +999,16 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
               </property>
               <property name="text">
                <string/>
@@ -853,6 +1038,11 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
               <property name="text">
                <string>Mod. index</string>
               </property>
@@ -880,6 +1070,16 @@
                 <width>16777215</width>
                 <height>16777215</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">color: rgb(0, 115, 10);</string>
               </property>
               <property name="text">
                <string/>
@@ -923,6 +1123,9 @@
             </property>
             <item>
              <widget class="QPushButton" name="Write">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                 <horstretch>0</horstretch>
@@ -1029,7 +1232,7 @@
             <item>
              <widget class="QTableView" name="SI4436_PROPSView">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -1037,8 +1240,23 @@
               <property name="minimumSize">
                <size>
                 <width>0</width>
-                <height>300</height>
+                <height>230</height>
                </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+                <pointsize>7</pointsize>
+               </font>
+              </property>
+              <property name="verticalScrollBarPolicy">
+               <enum>Qt::ScrollBarAsNeeded</enum>
+              </property>
+              <property name="horizontalScrollBarPolicy">
+               <enum>Qt::ScrollBarAsNeeded</enum>
+              </property>
+              <property name="sizeAdjustPolicy">
+               <enum>QAbstractScrollArea::AdjustIgnored</enum>
               </property>
              </widget>
             </item>
@@ -1074,6 +1292,12 @@
        </item>
        <item>
         <widget class="QPlainTextEdit" name="console">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="minimumSize">
           <size>
            <width>0</width>

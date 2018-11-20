@@ -2,7 +2,11 @@
 #define SI4463_SETTINGS_FORM_H
 
 #include <QWidget>
+#include <QFileDialog>
 #include <QPlainTextEdit>
+#include <QStandardItemModel>
+
+#include "SI4463/si4463class.h"
 
 namespace Ui {
 class SI4463_Settings_Form;
@@ -24,11 +28,14 @@ signals:
     void isCreated(void);
     void Stop_Send_Data(void);
     void Get_Console(QPlainTextEdit* console);
+    void Start_Parcer(QString);
     void Send_RF_Reset(void);
 
 public slots:
     void SetProgress(uint progress);
     void Set_Geometry(QRect);
+    void Set_Model(QStandardItemModel *model);
+    void Set_Prameters(QList<Params> *params);
 
     void isStopped();
     void isRF_Reset();
@@ -43,6 +50,8 @@ private slots:
     void on_Stop_clicked();
 
     void on_Reset_clicked();
+
+    void on_FileOpen_clicked();
 
 private:
     Ui::SI4463_Settings_Form *ui;
