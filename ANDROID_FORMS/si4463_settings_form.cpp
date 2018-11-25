@@ -118,6 +118,8 @@ void SI4463_Settings_Form::Set_Prameters(QList<Params> *params)
 
 void SI4463_Settings_Form::on_Stop_clicked()
 {
+    emit Get_Console(ui->console);
+
     emit Stop_Send_Data();
 }
 
@@ -155,6 +157,16 @@ void SI4463_Settings_Form::isRF_Reset()
     ui->Next->setEnabled(true);
 }
 
+void SI4463_Settings_Form::isSI4463_Parameters()
+{
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
+
 
 void SI4463_Settings_Form::on_FileOpen_clicked()
 {
@@ -176,4 +188,16 @@ void SI4463_Settings_Form::on_FileOpen_clicked()
     ui->FileName->setText(s);
 
     emit Start_Parcer(str);
+}
+
+void SI4463_Settings_Form::on_Write_clicked()
+{
+    emit Get_Console(ui->console);
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
+    emit Write_SI4463_Parameters();
 }

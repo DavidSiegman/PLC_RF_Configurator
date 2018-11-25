@@ -1,4 +1,5 @@
 #include "si4432_settings_form.h"
+#include "connections_form.h"
 #include "ui_si4432_settings_form.h"
 
 #include "STYLE/style.h"
@@ -8,6 +9,29 @@ SI4432_Settings_Form::SI4432_Settings_Form(QWidget *parent) :
     ui(new Ui::SI4432_Settings_Form)
 {
     ui->setupUi(this);
+    this->setWindowTitle(APPLICATION_NAME);
+
+    this->setStyleSheet(Main_Widget_Style);
+    ui->label_1->setStyleSheet(Titel_Widget_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+
+    ui->Write->setStyleSheet(Basic_Buttons_Style);
+    ui->Stop->setStyleSheet(Basic_Buttons_Style);
+    ui->Reset->setStyleSheet(Basic_Buttons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+
+    ui->Back->setStyleSheet(Buttons_Style);
+    ui->btnSettings->setStyleSheet(Buttons_Style);
+    ui->Next->setStyleSheet(Buttons_Style);
+
+    ui->MT->setStyleSheet(Background_White);       ui->PA->setStyleSheet(Background_White);       ui->DR->setStyleSheet(Background_White);
+    ui->DR_BPS->setStyleSheet(Background_White);   ui->FCAR->setStyleSheet(Background_White);     ui->FNOM->setStyleSheet(Background_White);
+    ui->FOFF->setStyleSheet(Background_White);     ui->FOFF_KHZ->setStyleSheet(Background_White); ui->DV->setStyleSheet(Background_White);
+    ui->BW->setStyleSheet(Background_White);       ui->SNW->setStyleSheet(Background_White);      ui->SNW_N->setStyleSheet(Background_White);
+    ui->HEAD_TX->setStyleSheet(Background_White);  ui->HEAD_N->setStyleSheet(Background_White);   ui->HEAD_RX->setStyleSheet(Background_White);
+    ui->CLOAD->setStyleSheet(Background_White);    ui->CLOAD_PF->setStyleSheet(Background_White); ui->RXOSR->setStyleSheet(Background_White);
+    ui->NCOFF->setStyleSheet(Background_White);    ui->CRGAIN->setStyleSheet(Background_White);   ui->ndec->setStyleSheet(Background_White);
+    ui->dwn3->setStyleSheet(Background_White);     ui->filset->setStyleSheet(Background_White);
 
     connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
@@ -20,6 +44,174 @@ SI4432_Settings_Form::~SI4432_Settings_Form()
 void SI4432_Settings_Form::resizeEvent(QResizeEvent *event)
 {
     emit isCreated();
+    this->resizing_going = 1;
+    resize_calculating.set_form_geometry(this->geometry());
+
+    int text_size_1 = resize_calculating.get_text_size_1();
+    //int text_size_2 = resize_calculating.get_text_size_2();
+    int text_size_3 = resize_calculating.get_text_size_3();
+    //int text_size_4 = resize_calculating.get_text_size_4();
+    int text_size_5 = resize_calculating.get_text_size_5();
+
+    QSize icons_size;
+    icons_size.setWidth(resize_calculating.get_icons_size());
+    icons_size.setHeight(resize_calculating.get_icons_size());
+
+    QFont font_1 = ui->label_1->font();     font_1.setPixelSize(text_size_1);
+    QFont font_2 = ui->label_2->font();     font_2.setPixelSize(text_size_5);
+    QFont font_3 = ui->Write->font();       font_3.setPixelSize(text_size_3);
+//    QFont font_4 = ui->Up_Link->font();     font_4.setPixelSize(text_size_4);
+    QFont font_5 = ui->console->font();     font_5.setPixelSize(text_size_5);
+
+    ui->label_1->setFont(font_1);  ui->label_11->setFont(font_2); ui->label_21->setFont(font_2);
+    ui->label_2->setFont(font_2);  ui->label_12->setFont(font_2); ui->label_22->setFont(font_2);
+    ui->label_3->setFont(font_2);  ui->label_13->setFont(font_2); ui->label_23->setFont(font_2);
+    ui->label_4->setFont(font_2);  ui->label_14->setFont(font_2); ui->label_24->setFont(font_2);
+    ui->label_5->setFont(font_2);  ui->label_15->setFont(font_2); ui->label_25->setFont(font_2);
+    ui->label_6->setFont(font_2);  ui->label_16->setFont(font_2); ui->label_26->setFont(font_2);
+    ui->label_7->setFont(font_2);  ui->label_17->setFont(font_2); ui->label_27->setFont(font_2);
+    ui->label_8->setFont(font_2);  ui->label_18->setFont(font_2); ui->label_28->setFont(font_2);
+    ui->label_9->setFont(font_2);  ui->label_19->setFont(font_2); ui->label_29->setFont(font_2);
+    ui->label_10->setFont(font_2); ui->label_20->setFont(font_2);
+
+    ui->MT->setFont(font_2);       ui->PA->setFont(font_2);       ui->DR->setFont(font_2);
+    ui->DR_BPS->setFont(font_2);   ui->FCAR->setFont(font_2);     ui->FNOM->setFont(font_2);
+    ui->FOFF->setFont(font_2);     ui->FOFF_KHZ->setFont(font_2); ui->DV->setFont(font_2);
+    ui->BW->setFont(font_2);       ui->SNW->setFont(font_2);      ui->SNW_N->setFont(font_2);
+    ui->HEAD_TX->setFont(font_2);  ui->HEAD_N->setFont(font_2);   ui->HEAD_RX->setFont(font_2);
+    ui->CLOAD->setFont(font_2);    ui->CLOAD_PF->setFont(font_2); ui->RXOSR->setFont(font_2);
+    ui->NCOFF->setFont(font_2);    ui->CRGAIN->setFont(font_2);   ui->ndec->setFont(font_2);
+    ui->dwn3->setFont(font_2);     ui->filset->setFont(font_2);
+
+    ui->Write->setFont(font_3);
+    ui->Stop->setFont(font_3);
+    ui->Reset->setFont(font_3);
+    ui->ClearConsole->setFont(font_3);
+
+    ui->console->setFont(font_5);
+
+    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
+
+    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
+
+    ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
+    int current_index;
+
+    current_index = ui->PA->currentIndex();
+    ui->PA->clear();
+    this->ui->PA->addItem("5");
+    this->ui->PA->addItem("10");
+    this->ui->PA->addItem("25");
+    this->ui->PA->addItem("40");
+    this->ui->PA->addItem("55");
+    this->ui->PA->addItem("70");
+    this->ui->PA->addItem("85");
+    this->ui->PA->addItem("100");
+    ui->PA->setCurrentIndex(current_index);
+
+    current_index = ui->MT->currentIndex();
+    ui->MT->clear();
+    this->ui->MT->addItem("FSK");
+    this->ui->MT->addItem("GFSK");
+    ui->MT->setCurrentIndex(current_index);
+
+    current_index = ui->SNW_N->currentIndex();
+    ui->SNW_N->clear();
+    this->ui->SNW_N->addItem("1 Байт");
+    this->ui->SNW_N->addItem("2 Байта");
+    this->ui->SNW_N->addItem("3 Байта");
+    this->ui->SNW_N->addItem("4 Байта");
+    ui->SNW_N->setCurrentIndex(current_index);
+
+    current_index = ui->HEAD_N->currentIndex();
+    ui->HEAD_N->clear();
+    this->ui->HEAD_N->addItem("нет");
+    this->ui->HEAD_N->addItem("1 Байт");
+    this->ui->HEAD_N->addItem("2 Байта");
+    this->ui->HEAD_N->addItem("3 Байта");
+    this->ui->HEAD_N->addItem("4 Байта");
+    ui->HEAD_N->setCurrentIndex(current_index);
+
+    current_index = ui->BW->currentIndex();
+    ui->BW->clear();
+    ui->BW->addItem("2,6");   ui->BW->addItem("2,8");   ui->BW->addItem("3,1");   ui->BW->addItem("3,2");
+    ui->BW->addItem("3,7");   ui->BW->addItem("4,2");   ui->BW->addItem("4,5");   ui->BW->addItem("4,9");
+    ui->BW->addItem("5,4");   ui->BW->addItem("5,9");   ui->BW->addItem("6,1");   ui->BW->addItem("7,2");
+    ui->BW->addItem("8,2");   ui->BW->addItem("8,8");   ui->BW->addItem("9,5");   ui->BW->addItem("10,6");
+    ui->BW->addItem("11,5");  ui->BW->addItem("12,1");  ui->BW->addItem("14,2");  ui->BW->addItem("16,2");
+    ui->BW->addItem("17,5");  ui->BW->addItem("18,9");  ui->BW->addItem("21,0");  ui->BW->addItem("22,7");
+    ui->BW->addItem("24,0");  ui->BW->addItem("28,2");  ui->BW->addItem("32,2");  ui->BW->addItem("34,7");
+    ui->BW->addItem("37,7");  ui->BW->addItem("41,7");  ui->BW->addItem("45,2");  ui->BW->addItem("47,9");
+    ui->BW->addItem("56,2");  ui->BW->addItem("64,1");  ui->BW->addItem("69,2");  ui->BW->addItem("75,2");
+    ui->BW->addItem("83,2");  ui->BW->addItem("90,0");  ui->BW->addItem("95,3");  ui->BW->addItem("112,1");
+    ui->BW->addItem("127,9"); ui->BW->addItem("137,9"); ui->BW->addItem("142,8"); ui->BW->addItem("167,8");
+    ui->BW->addItem("181,1"); ui->BW->addItem("191,5"); ui->BW->addItem("225,1"); ui->BW->addItem("248,8");
+    ui->BW->addItem("269,3"); ui->BW->addItem("284,9"); ui->BW->addItem("335,5"); ui->BW->addItem("361,8");
+    ui->BW->addItem("420,2"); ui->BW->addItem("468,4"); ui->BW->addItem("518,8"); ui->BW->addItem("577,0");
+    ui->BW->addItem("620,7");
+    ui->BW->setCurrentIndex(current_index);
+
+    current_index = ui->FCAR->currentIndex();
+    ui->FCAR->clear();
+    if (ui->FX2->isChecked() == true)
+    {
+        this->ui->FCAR->addItem("480-499,99");
+        this->ui->FCAR->addItem("500-519,99");
+        this->ui->FCAR->addItem("520-539,99");
+        this->ui->FCAR->addItem("540-559,99");
+        this->ui->FCAR->addItem("560-579,99");
+        this->ui->FCAR->addItem("580-599,99");
+        this->ui->FCAR->addItem("600-619,99");
+        this->ui->FCAR->addItem("620-639,99");
+        this->ui->FCAR->addItem("640-659,99");
+        this->ui->FCAR->addItem("660-679,99");
+        this->ui->FCAR->addItem("680-699,99");
+        this->ui->FCAR->addItem("700-719,99");
+        this->ui->FCAR->addItem("720-739,99");
+        this->ui->FCAR->addItem("740-759,99");
+        this->ui->FCAR->addItem("760-779,99");
+        this->ui->FCAR->addItem("780-799,99");
+        this->ui->FCAR->addItem("800-819,99");
+        this->ui->FCAR->addItem("820-839,99");
+        this->ui->FCAR->addItem("840-859,99");
+        this->ui->FCAR->addItem("860-879,99");
+        this->ui->FCAR->addItem("880-899,99");
+        this->ui->FCAR->addItem("900-919,99");
+        this->ui->FCAR->addItem("920-939,99");
+        this->ui->FCAR->addItem("940-960,00");
+    }
+    else
+    {
+        this->ui->FCAR->addItem("240-249,99");
+        this->ui->FCAR->addItem("250-259,99");
+        this->ui->FCAR->addItem("260-269,99");
+        this->ui->FCAR->addItem("270-279,99");
+        this->ui->FCAR->addItem("280-289,99");
+        this->ui->FCAR->addItem("290-299,99");
+        this->ui->FCAR->addItem("300-309,99");
+        this->ui->FCAR->addItem("310-319,99");
+        this->ui->FCAR->addItem("320-329,99");
+        this->ui->FCAR->addItem("330-339,99");
+        this->ui->FCAR->addItem("340-349,99");
+        this->ui->FCAR->addItem("350-359,99");
+        this->ui->FCAR->addItem("360-369,99");
+        this->ui->FCAR->addItem("370-379,99");
+        this->ui->FCAR->addItem("380-389,99");
+        this->ui->FCAR->addItem("390-399,99");
+        this->ui->FCAR->addItem("400-409,99");
+        this->ui->FCAR->addItem("410-419,99");
+        this->ui->FCAR->addItem("420-429,99");
+        this->ui->FCAR->addItem("430-439,99");
+        this->ui->FCAR->addItem("440-449,99");
+        this->ui->FCAR->addItem("450-459,99");
+        this->ui->FCAR->addItem("460-469,99");
+        this->ui->FCAR->addItem("470-479,99");
+    }
+    ui->FCAR->setCurrentIndex(current_index);
+    this->resizing_going = 0;
 }
 
 void SI4432_Settings_Form::on_Back_clicked()
@@ -95,7 +287,7 @@ void SI4432_Settings_Form::setIn_SI4432_Parameters(SI4432ConfigurationClass* new
 
 void SI4432_Settings_Form::on_MT_currentIndexChanged(int index)
 {
-    if (index >= 0)
+    if ((index >= 0)&&(index < 2)&&(this->resizing_going == 0))
     {
         Out_SI4432_Parameters->setSI4432_MT(index);
 
@@ -109,7 +301,7 @@ void SI4432_Settings_Form::setMTToUI(unsigned char new_value)
 
 void SI4432_Settings_Form::on_PA_currentIndexChanged(int index)
 {
-    if (index >= 0)
+    if ((index >= 0)&&(index < 8)&&(this->resizing_going == 0))
     {
         Out_SI4432_Parameters->setSI4432_PA(index);
         //emit PA_CHANGED((unsigned char)(index),setSI4432_Property_From_Form);
@@ -215,9 +407,12 @@ void SI4432_Settings_Form::setHBToUI(unsigned char new_value)
 
 void SI4432_Settings_Form::on_FCAR_currentIndexChanged(int index)
 {
-    CalculateFNOM(0);
-    Out_SI4432_Parameters->setSI4432_FC((unsigned char)(index));
-    //emit FC_CHANGED((unsigned char)(index),setSI4432_Property_From_Form);
+    if ((index >= 0)&&(index < 24)&&(this->resizing_going == 0))
+    {
+        CalculateFNOM(0);
+        Out_SI4432_Parameters->setSI4432_FC((unsigned char)(index));
+        //emit FC_CHANGED((unsigned char)(index),setSI4432_Property_From_Form);
+    }
 }
 
 void SI4432_Settings_Form::setFCToUI(unsigned char new_value)
@@ -400,20 +595,23 @@ void SI4432_Settings_Form::CalculateFd(void)
 
 void SI4432_Settings_Form::on_BW_currentIndexChanged(int index)
 {
-    Out_SI4432_Parameters->setSI4432_IFBW((unsigned char)(index));
+    if ((index >= 0)&&(index < 57)&&(this->resizing_going == 0))
+    {
+        Out_SI4432_Parameters->setSI4432_IFBW((unsigned char)(index));
 
-    Out_SI4432_Parameters->calcSI4432_Rb();
-    Out_SI4432_Parameters->calcSI4432_IFBW_bits();
-    Out_SI4432_Parameters->calcSI4432_RXOSR();  // !!! без манчестерского кода !!!
-    Out_SI4432_Parameters->calcSI4432_NCOFF();  // !!! без манчестерского кода !!!
-    Out_SI4432_Parameters->calcSI4432_CRGAIN(); // !!! без манчестерского кода !!!
+        Out_SI4432_Parameters->calcSI4432_Rb();
+        Out_SI4432_Parameters->calcSI4432_IFBW_bits();
+        Out_SI4432_Parameters->calcSI4432_RXOSR();  // !!! без манчестерского кода !!!
+        Out_SI4432_Parameters->calcSI4432_NCOFF();  // !!! без манчестерского кода !!!
+        Out_SI4432_Parameters->calcSI4432_CRGAIN(); // !!! без манчестерского кода !!!
 
-    setRXOSRToUI(Out_SI4432_Parameters->getRXOSR());
-    setNCOFFToUI(Out_SI4432_Parameters->getNCOFF());
-    setCRGAINToUI(Out_SI4432_Parameters->getCRGAIN());
-    setNdecToUI(Out_SI4432_Parameters->getndec());
-    setDwn3ToUI(Out_SI4432_Parameters->getdwn3());
-    setFilsetToUI(Out_SI4432_Parameters->getfilset());
+        setRXOSRToUI(Out_SI4432_Parameters->getRXOSR());
+        setNCOFFToUI(Out_SI4432_Parameters->getNCOFF());
+        setCRGAINToUI(Out_SI4432_Parameters->getCRGAIN());
+        setNdecToUI(Out_SI4432_Parameters->getndec());
+        setDwn3ToUI(Out_SI4432_Parameters->getdwn3());
+        setFilsetToUI(Out_SI4432_Parameters->getfilset());
+    }
 
     //IFBW_CHANGED((unsigned char)(index),setSI4432_Property_From_Form);
 }
@@ -430,9 +628,12 @@ void SI4432_Settings_Form::setSNW_NToUI(unsigned char new_value)
 
 void SI4432_Settings_Form::on_SNW_N_currentIndexChanged(int index)
 {
-    Out_SI4432_Parameters->setSI4432_SWC((unsigned char)(index));
+    if ((index >= 0)&&(index < 4)&&(this->resizing_going == 0))
+    {
+        Out_SI4432_Parameters->setSI4432_SWC((unsigned char)(index));
 
-    setSNWToUI(Out_SI4432_Parameters->getSYNCH_WORD());
+        setSNWToUI(Out_SI4432_Parameters->getSYNCH_WORD());
+    }
 }
 
 void SI4432_Settings_Form::setHEAD_NToUI(unsigned char new_value)
@@ -442,10 +643,13 @@ void SI4432_Settings_Form::setHEAD_NToUI(unsigned char new_value)
 
 void SI4432_Settings_Form::on_HEAD_N_currentIndexChanged(int index)
 {
-    Out_SI4432_Parameters->setSI4432_HC((unsigned char)(index));
+    if ((index >= 0)&&(index < 5)&&(this->resizing_going == 0))
+    {
+        Out_SI4432_Parameters->setSI4432_HC((unsigned char)(index));
 
-    setHEAD_TXToUI(Out_SI4432_Parameters->getTX_HAEDER());
-    setHEAD_RXToUI(Out_SI4432_Parameters->getRX_HAEDER());
+        setHEAD_TXToUI(Out_SI4432_Parameters->getTX_HAEDER());
+        setHEAD_RXToUI(Out_SI4432_Parameters->getRX_HAEDER());
+    }
 }
 
 void SI4432_Settings_Form::setSNWToUI(unsigned int new_value)

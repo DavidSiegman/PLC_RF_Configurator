@@ -1,4 +1,5 @@
 #include "hands_enter_form.h"
+#include "connections_form.h"
 #include "ui_hands_enter_form.h"
 #include "OTHER_FUNCTIONS/barr_to_string.h"
 
@@ -7,6 +8,33 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
     ui(new Ui::Hands_Enter_Form)
 {
     ui->setupUi(this);
+    this->setWindowTitle(APPLICATION_NAME);
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+
+    ui->SN_ENABLE->setChecked(settings.value(MANUAL_SETTINGS_SN_ENABLE).toBool());
+    ui->SN_TEXT->setText(settings.value(MANUAL_SETTINGS_SN).toString());
+    ui->cEnterText->setText(settings.value(MANUAL_SETTINGS_MESSAGE).toString());
+    if (ui->SN_ENABLE->isChecked()){ui->SN_TEXT->setEnabled(true);}
+
+    this->setStyleSheet(Main_Widget_Style);
+    ui->label_1->setStyleSheet(Titel_Widget_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style);
+
+    ui->label_2->setStyleSheet(Basic_Text_Style);
+    ui->label_3->setStyleSheet(Basic_Text_Style);
+    ui->CRC_OUT->setStyleSheet(Basic_Text_Style);
+    ui->CRC16_2->setStyleSheet(Basic_Text_Style);
+
+    ui->cBtnSend->setStyleSheet(Basic_Buttons_Style);
+    ui->Cyclic->setStyleSheet(Basic_Buttons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+
+    ui->Back->setStyleSheet(Buttons_Style);
+    ui->btnSettings->setStyleSheet(Buttons_Style);
+    ui->Next->setStyleSheet(Buttons_Style);
+
+    ui->SN_TEXT->setStyleSheet(Background_White+Basic_Text_Style);
+    ui->cEnterText->setStyleSheet(Background_White+Basic_Text_Style);
 
     SysInfo              = new QSysInfo;
     QString product_name = SysInfo->prettyProductName();
@@ -20,7 +48,7 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
     else if (RegSystemName.cap(0).compare("Windows") == 0)
     {
         this->setWindowModality(Qt::WindowModal);
-        this->setFixedSize (340,560);
+        //this->setFixedSize (340,560);
     }
 
     oCRC16                    = new CRC16_Class();
@@ -35,37 +63,53 @@ Hands_Enter_Form::~Hands_Enter_Form()
 
 void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
 {
-    /*
-    QScreen *Screen = QApplication::primaryScreen();
+    resize_calculating.set_form_geometry(this->geometry());
 
-    int DotsPerInch = Screen->logicalDotsPerInch();
+    int text_size_1 = resize_calculating.get_text_size_1();
+    int text_size_2 = resize_calculating.get_text_size_2();
+    int text_size_3 = resize_calculating.get_text_size_3();
+    int text_size_4 = resize_calculating.get_text_size_4();
+    int text_size_5 = resize_calculating.get_text_size_5();
 
-    QSize this_size      = this->size();
+    QSize icons_size;
+    icons_size.setWidth(resize_calculating.get_icons_size());
+    icons_size.setHeight(resize_calculating.get_icons_size());
 
-    float w_to_dpi_index = float(this_size.width())/DotsPerInch;
-
-    float size_1         = w_to_dpi_index*6;  if (size_1     > 38) {size_1     = 38;}
-    float size_2         = w_to_dpi_index*4;  if (size_2     > 24) {size_2     = 24;}
-    float size_3         = w_to_dpi_index*3;  if (size_3     > 16) {size_3     = 16;}
-
-    float btn_size       = w_to_dpi_index*10; if (btn_size   > 40) {btn_size   = 40;}
-    float label_size     = w_to_dpi_index*6;  if (label_size > 38) {label_size = 38;}
-
-    QSize icon_size;     icon_size.setHeight(btn_size); icon_size.setWidth(btn_size);
-
-    QFont font_1, font_2, font_3;
-    font_1.setPointSize(size_1);
-    font_2.setPointSize(size_2);
-    font_3.setPointSize(size_3);
+    QFont font_1 = ui->label_1->font();    font_1.setPixelSize(text_size_1);
+    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_2);
+    QFont font_3 = ui->cBtnSend->font();   font_3.setPixelSize(text_size_3);
+    //QFont font_4 = ui->label_4->font();  font_4.setPixelSize(text_size_4);
+    QFont font_5 = ui->console->font();    font_5.setPixelSize(text_size_5);
 
     ui->label_1->setFont(font_1);
     ui->label_2->setFont(font_2);
     ui->label_3->setFont(font_2);
-    */
+
+    ui->SN_TEXT->setFont(font_3);
+    ui->cEnterText->setFont(font_3);
+
+    ui->cBtnSend->setFont(font_3);
+    ui->Cyclic->setFont(font_3);
+    ui->ClearConsole->setFont(font_3);
+    ui->console->setFont(font_5);
+
+    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
+
+    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
+
+    ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+}
+
+void Hands_Enter_Form::Set_Geometry(QRect new_value)
+{
+    this->setGeometry(new_value);
 }
 
 void Hands_Enter_Form::on_Back_clicked()
 {
+    emit Get_Geometry(this->geometry());
     emit Cancel();
     this->deleteLater();
 }
@@ -73,6 +117,13 @@ void Hands_Enter_Form::on_Back_clicked()
 void Hands_Enter_Form::on_cBtnSend_clicked()
 {
     emit Get_Console(ui->console);
+
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+
+    settings.setValue(MANUAL_SETTINGS_SN_ENABLE, ui->SN_ENABLE->isChecked());
+    settings.setValue(MANUAL_SETTINGS_SN, ui->SN_TEXT->text());
+    settings.setValue(MANUAL_SETTINGS_MESSAGE, ui->cEnterText->text());
+    settings.sync();
 
     QByteArray data_to_write; // Текстовая переменная
     int sn = 0;
@@ -130,5 +181,17 @@ void Hands_Enter_Form::on_cBtnSend_clicked()
             emit Send_Data(data_to_write,MANUAL_SEND_CONTROL);
             //DataLogic->SEND_DATA(data_to_write,MANUAL_SEND_CONTROL);
         }
+    }
+}
+
+void Hands_Enter_Form::on_SN_ENABLE_stateChanged(int arg1)
+{
+    if (arg1 == 2)
+    {
+        ui->SN_TEXT->setEnabled(true);
+    }
+    else
+    {
+        ui->SN_TEXT->setEnabled(false);
     }
 }

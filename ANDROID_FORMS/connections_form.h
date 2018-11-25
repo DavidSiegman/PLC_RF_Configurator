@@ -10,6 +10,8 @@
 #include <QFileDialog>
 #include <QInputDialog>
 #include <QTextCodec>
+#include <QScrollBar>
+#include <QSettings>
 #include <QTimer>
 #include "TCP/tcp.h"
 #include <QtSerialPort/QSerialPort>
@@ -29,6 +31,9 @@
 #include "FILTER/filter.h"
 #include "UPDATE/update.h"
 #include <OTHER_FUNCTIONS/mess_enum.h>
+#include "RESIZE_CALCULATING/resizecalculating.h"
+#include "STYLE/style.h"
+
 #include "settings_form.h"
 #include "hands_enter_form.h"
 #include "open_connection_form.h"
@@ -36,6 +41,14 @@
 #include "sniffer_settings_form.h"
 #include "si4432_settings_form.h"
 #include "si4463_settings_form.h"
+
+/* Defining */
+#define ORGANIZATION_NAME "MILANDR"
+#define ORGANIZATION_DOMAIN "www.milandr.ru"
+#define APPLICATION_NAME "RF-PLC Configurator"
+
+#define TCP_SETTINGS_IP                 "TCP_Settings/IP"
+#define TCP_SETTINGS_PORT               "TCP_Settings/PORT"
 
 namespace Ui {
 class Connections_Form;
@@ -82,7 +95,7 @@ private slots:
 
     void Create_And_Show_Settings_Form(QWidget*);
 
-    void Create_And_Show_Hands_Enter_Form(void);
+    void Create_And_Show_Hands_Enter_Form(QWidget*);
 
     void Create_And_Show_Open_Connection_Form(void);
 
@@ -102,6 +115,8 @@ private slots:
 
     void on_btnSettings_clicked();
 
+    void on_btnHandsEnter_clicked();
+
 private:
     Ui::Connections_Form *ui;
 
@@ -117,6 +132,8 @@ private:
 
     QSysInfo               *SysInfo;
     QRegExp                 RegSystemName;
+
+    ResizeCalculating       resize_calculating;
 
 };
 

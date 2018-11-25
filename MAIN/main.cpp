@@ -7,9 +7,9 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication::setOrganizationName( "АО ПКК Миландр" );
-    QApplication::setOrganizationDomain( "___________" );
-    QApplication::setApplicationName( "QModBus" );
+    QCoreApplication::setOrganizationName(ORGANIZATION_NAME);
+    QCoreApplication::setOrganizationDomain(ORGANIZATION_DOMAIN);
+    QCoreApplication::setApplicationName(APPLICATION_NAME);
 
     QApplication a(argc, argv);
 

@@ -1999,3 +1999,8 @@ void MainWindow::on_TCPDisconnect_clicked()
 
 }
 
+
+void MainWindow::on_SN_ENABLE_stateChanged(int arg1)
+{
+
+}

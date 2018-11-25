@@ -1,11 +1,47 @@
 #include "sniffer_settings_form.h"
+#include "connections_form.h"
 #include "ui_sniffer_settings_form.h"
+
+#include "STYLE/style.h"
 
 Sniffer_Settings_Form::Sniffer_Settings_Form(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Sniffer_Settings_Form)
 {
     ui->setupUi(this);
+    this->setWindowTitle(APPLICATION_NAME);
+
+    this->setStyleSheet(Main_Widget_Style);
+    ui->label_1->setStyleSheet(Titel_Widget_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+
+    ui->SetDestinationMASK->setStyleSheet(Basic_Buttons_Style);
+    ui->SetNetLevel->setStyleSheet(Basic_Buttons_Style);
+    ui->SetDeviceMonitorSN->setStyleSheet(Basic_Buttons_Style);
+    ui->Write->setStyleSheet(Basic_Buttons_Style);
+    ui->Stop->setStyleSheet(Basic_Buttons_Style);
+    ui->Reset->setStyleSheet(Basic_Buttons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+
+    ui->Back->setStyleSheet(Buttons_Style);
+    ui->btnSettings->setStyleSheet(Buttons_Style);
+    ui->Next->setStyleSheet(Buttons_Style);
+
+    ui->Sniffer_Mode->setStyleSheet(Background_White);
+    ui->LVL0->setStyleSheet(Background_White);
+    ui->LVL1->setStyleSheet(Background_White);
+    ui->LVL2->setStyleSheet(Background_White);
+    ui->LVL3->setStyleSheet(Background_White);
+    ui->LVL4->setStyleSheet(Background_White);
+    ui->LVL5->setStyleSheet(Background_White);
+    ui->LVL6->setStyleSheet(Background_White);
+    ui->LVL7->setStyleSheet(Background_White);
+    ui->LVL8->setStyleSheet(Background_White);
+    ui->LVL9->setStyleSheet(Background_White);
+
+    ui->NetLevel->setStyleSheet(Background_White+Basic_Text_Style);
+    ui->DeviceMonitorSN->setStyleSheet(Background_White+Basic_Text_Style);
+
 
     connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
@@ -18,6 +54,71 @@ Sniffer_Settings_Form::~Sniffer_Settings_Form()
 void Sniffer_Settings_Form::resizeEvent(QResizeEvent *event)
 {
     emit isCreated();
+    this->resizing_going = 1;
+
+    resize_calculating.set_form_geometry(this->geometry());
+
+    int text_size_1 = resize_calculating.get_text_size_1();
+    int text_size_2 = resize_calculating.get_text_size_2();
+    int text_size_3 = resize_calculating.get_text_size_3();
+    int text_size_4 = resize_calculating.get_text_size_4();
+    int text_size_5 = resize_calculating.get_text_size_5();
+
+    QSize icons_size;
+    icons_size.setWidth(resize_calculating.get_icons_size());
+    icons_size.setHeight(resize_calculating.get_icons_size());
+
+    QFont font_1 = ui->label_1->font();     font_1.setPixelSize(text_size_1);
+    QFont font_2 = ui->label_2->font();     font_2.setPixelSize(text_size_4);
+    QFont font_3 = ui->Write->font();       font_3.setPixelSize(text_size_3);
+    QFont font_4 = ui->Up_Link->font();     font_4.setPixelSize(text_size_4);
+    QFont font_5 = ui->console->font();     font_5.setPixelSize(text_size_5);
+
+    ui->label_1->setFont(font_1);
+    ui->label_2->setFont(font_2);
+
+    ui->Sniffer_Mode->setFont(font_4);
+    int current_index = ui->Sniffer_Mode->currentIndex();
+    ui->Sniffer_Mode->clear();
+    ui->Sniffer_Mode->addItem("Normal");
+    ui->Sniffer_Mode->addItem("Sniffer");
+    ui->Sniffer_Mode->addItem("Sniffer + Preamble");
+    ui->Sniffer_Mode->setCurrentIndex(current_index);
+
+    ui->Up_Link->setFont(font_4);
+    ui->Disable_CRC->setFont(font_4);
+    ui->Broadcasting->setFont(font_4);
+
+    ui->LVL0->setFont(font_4);
+    ui->LVL1->setFont(font_4);
+    ui->LVL2->setFont(font_4);
+    ui->LVL3->setFont(font_4);
+    ui->LVL4->setFont(font_4);
+    ui->LVL5->setFont(font_4);
+    ui->LVL6->setFont(font_4);
+    ui->LVL7->setFont(font_4);
+    ui->LVL8->setFont(font_4);
+    ui->LVL9->setFont(font_4);
+
+    ui->SetDestinationMASK->setFont(font_3);
+    ui->SetNetLevel->setFont(font_3);
+    ui->SetDeviceMonitorSN->setFont(font_3);
+    ui->Write->setFont(font_3);
+    ui->Stop->setFont(font_3);
+    ui->Reset->setFont(font_3);
+    ui->ClearConsole->setFont(font_3);
+
+    ui->console->setFont(font_5);
+
+    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
+
+    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
+
+    ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
+    this->resizing_going = 0;
 }
 
 void Sniffer_Settings_Form::on_Back_clicked()
@@ -115,17 +216,20 @@ uint  Sniffer_Settings_Form::Get_Mask_Destination(void)
 
 void Sniffer_Settings_Form::on_Sniffer_Mode_currentIndexChanged(int index)
 {
-    emit Get_Console(ui->console);
-    emit Set_SnifferMode((uchar)(index));
+    if ((index >= 0)&&(index < 3)&&(this->resizing_going == 0))
+    {
+        emit Get_Console(ui->console);
+        emit Set_SnifferMode((uchar)(index));
 
-    ui->Stop->setEnabled(true);
-    ui->SettingsWidget->setEnabled(false);
-    ui->Reset->setEnabled(false);
-    ui->Back->setEnabled(false);
-    ui->btnSettings->setEnabled(false);
-    ui->Next->setEnabled(false);
+        ui->Stop->setEnabled(true);
+        ui->SettingsWidget->setEnabled(false);
+        ui->Reset->setEnabled(false);
+        ui->Back->setEnabled(false);
+        ui->btnSettings->setEnabled(false);
+        ui->Next->setEnabled(false);
 
-    emit Send_Sniffer_Mode();
+        emit Send_Sniffer_Mode();
+    }
 }
 
 void Sniffer_Settings_Form::on_Up_Link_stateChanged(int arg1)

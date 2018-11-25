@@ -1,4 +1,5 @@
 #include "open_connection_form.h"
+#include "connections_form.h"
 #include "ui_open_connection_form.h"
 #include "OTHER_FUNCTIONS/barr_to_string.h"
 
@@ -9,6 +10,26 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     ui(new Ui::Open_Connection_Form)
 {
     ui->setupUi(this);
+    this->setWindowTitle(APPLICATION_NAME);
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+
+    ui->SN->setText(settings.value(CONNECTION_SETTINGS_SN).toString());
+
+    this->setStyleSheet(Main_Widget_Style);
+    ui->label_1->setStyleSheet(Titel_Widget_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+
+    ui->Connect->setStyleSheet(Basic_Buttons_Style);
+    ui->Stop->setStyleSheet(Basic_Buttons_Style);
+    ui->Reset->setStyleSheet(Basic_Buttons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+
+    ui->Back->setStyleSheet(Buttons_Style);
+    ui->btnSettings->setStyleSheet(Buttons_Style);
+    ui->Next->setStyleSheet(Buttons_Style);
+
+    ui->Interface->setStyleSheet(Background_White);
+    ui->SN->setStyleSheet(Background_White);
 
     SysInfo              = new QSysInfo;
     QString product_name = SysInfo->prettyProductName();
@@ -30,94 +51,68 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
 
 void Open_Connection_Form::resizeEvent(QResizeEvent *event)
 {
-    /*
-    QScreen *Screen = QApplication::primaryScreen();
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
-    int DotsPerInch = Screen->logicalDotsPerInch();
+    resize_calculating.set_form_geometry(this->geometry());
 
-    QSize this_size      = this->size();
+    int text_size_1 = resize_calculating.get_text_size_1();
+    int text_size_2 = resize_calculating.get_text_size_2();
+    int text_size_3 = resize_calculating.get_text_size_3();
+    int text_size_4 = resize_calculating.get_text_size_4();
+    int text_size_5 = resize_calculating.get_text_size_5();
 
-    float w_to_dpi_index = float(this_size.width())/DotsPerInch;
+    QSize icons_size;
+    icons_size.setWidth(resize_calculating.get_icons_size());
+    icons_size.setHeight(resize_calculating.get_icons_size());
 
-    float size_1         = w_to_dpi_index*6;  if (size_1     > 38) {size_1     = 38;}
-    float size_2         = w_to_dpi_index*4;  if (size_2     > 24) {size_2     = 24;}
-    float size_3         = w_to_dpi_index*3;  if (size_3     > 16) {size_3     = 16;}
-
-    float btn_size       = w_to_dpi_index*10; if (btn_size   > 40) {btn_size   = 40;}
-    float label_size     = w_to_dpi_index*6;  if (label_size > 38) {label_size = 38;}
-
-    QSize icon_size;     icon_size.setHeight(btn_size); icon_size.setWidth(btn_size);
-
-    QFont font_1, font_2, font_3;
-    font_1.setPointSize(size_1);
-    font_2.setPointSize(size_2);
-    font_3.setPointSize(size_3);
-
-    ui->boot_CRC->setFont(font_3);
-    ui->boot_CRC->setMinimumHeight(label_size);
-    ui->boot_Size->setFont(font_3);
-    ui->boot_Size->setMinimumHeight(label_size);
-    ui->boot_v->setFont(font_3);
-    ui->boot_v->setMinimumHeight(label_size);
-    ui->DeviceType->setFont(font_3);
-    ui->DeviceType->setMinimumHeight(label_size);
-    ui->fw_CRC->setFont(font_3);
-    ui->fw_CRC->setMinimumHeight(label_size);
-    ui->fw_Size->setFont(font_3);
-    ui->fw_Size->setMinimumHeight(label_size);
-    ui->fw_v->setFont(font_3);
-    ui->fw_v->setMinimumHeight(label_size);
-    ui->Interface->setFont(font_3);
-    ui->Interface->setMinimumHeight(label_size);
-    ui->SN->setFont(font_3);
-    ui->SN->setMinimumHeight(label_size);
-
-    ui->Back->setFont(font_3);
-    ui->Back->setMinimumHeight(btn_size);
-    ui->Back->setIconSize(icon_size);
-    ui->ClearConsole->setFont(font_3);
-    ui->ClearConsole->setMinimumHeight(btn_size);
-    ui->Connect->setFont(font_3);
-    ui->Connect->setMinimumHeight(btn_size);
-    ui->Next->setFont(font_3);
-    ui->Next->setMinimumHeight(btn_size);
-    ui->Next->setIconSize(icon_size);
-
-    ui->label_9->setFont(font_3);
-    ui->label_9->setMinimumHeight(label_size);
-
-    float label_9_width = ui->label_9->geometry().width();
+    QFont font_1 = ui->label_1->font();    font_1.setPixelSize(text_size_1);
+    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_2);
+    QFont font_3 = ui->Connect->font();    font_3.setPixelSize(text_size_3);
+    QFont font_4_1 = ui->label_2->font();  font_4_1.setPixelSize(text_size_4);
+    QFont font_4_2 = ui->label_6->font();  font_4_2.setPixelSize(text_size_4);
+    QFont font_5 = ui->console->font();    font_5.setPixelSize(text_size_5);
 
     ui->label_1->setFont(font_1);
-    ui->label_2->setFont(font_3);
-    ui->label_2->setMinimumHeight(label_size);
-    ui->label_3->setFont(font_3);
-    ui->label_3->setMinimumHeight(label_size);
-    ui->label_4->setFont(font_3);
-    ui->label_4->setMinimumHeight(label_size);
-    ui->label_5->setFont(font_3);
-    ui->label_5->setMinimumHeight(label_size);
-    ui->label_6->setFont(font_3);
-    ui->label_6->setMinimumHeight(label_size);
-    ui->label_6->setMinimumWidth(label_9_width);
-    ui->label_6->setMaximumWidth(label_9_width);
-    ui->label_7->setFont(font_3);
-    ui->label_7->setMinimumHeight(label_size);
-    ui->label_7->setMinimumWidth(label_9_width);
-    ui->label_7->setMaximumWidth(label_9_width);
-    ui->label_8->setFont(font_3);
-    ui->label_8->setMinimumHeight(label_size);
-    ui->label_8->setMinimumWidth(label_9_width);
-    ui->label_8->setMaximumWidth(label_9_width);
-    ui->label_10->setFont(font_3);
-    ui->label_10->setMinimumHeight(label_size);
-    ui->label_10->setMinimumWidth(label_9_width);
-    ui->label_10->setMaximumWidth(label_9_width);
-    ui->label_11->setFont(font_3);
-    ui->label_11->setMinimumHeight(label_size);
-    ui->label_11->setMinimumWidth(label_9_width);
-    ui->label_11->setMaximumWidth(label_9_width);
-    */
+    ui->label_2->setFont(font_4_1);
+    ui->label_3->setFont(font_4_1);
+    ui->label_4->setFont(font_4_1);
+    ui->label_5->setFont(font_4_1);
+    ui->label_6->setFont(font_4_2);
+    ui->label_7->setFont(font_4_2);
+    ui->label_8->setFont(font_4_2);
+    ui->label_9->setFont(font_4_2);
+    ui->label_10->setFont(font_4_2);
+    ui->label_11->setFont(font_4_2);
+
+    ui->Interface->setFont(font_4_2);
+    ui->Interface->clear();
+    ui->Interface->addItem("COM/УСО (Оптопорт)");
+    ui->Interface->addItem("PLC/RF");
+    ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
+
+    ui->SN->setFont(font_4_2);
+    ui->DeviceType->setFont(font_4_2);
+
+    ui->Connect->setFont(font_3);
+    ui->Stop->setFont(font_3);
+    ui->Reset->setFont(font_3);
+    ui->ClearConsole->setFont(font_3);
+
+    ui->console->setFont(font_5);
+    ui->boot_v->setFont(font_5);
+    ui->boot_Size->setFont(font_5);
+    ui->boot_CRC->setFont(font_5);
+    ui->fw_v->setFont(font_5);
+    ui->fw_Size->setFont(font_5);
+    ui->fw_CRC->setFont(font_5);
+
+    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
+
+    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
+
+    ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 }
 
 Open_Connection_Form::~Open_Connection_Form()
@@ -142,6 +137,10 @@ void Open_Connection_Form::Set_In_Firmware_Information(FirmwareInformationClass 
 
 void Open_Connection_Form::on_Back_clicked()
 {
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.sync();
     emit Get_Geometry(this->geometry());
     emit Cancel();
     this->deleteLater();
@@ -149,11 +148,20 @@ void Open_Connection_Form::on_Back_clicked()
 
 void Open_Connection_Form::on_Next_clicked()
 {
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.sync();
     emit Next(this->geometry());
 }
 
 void Open_Connection_Form::on_Connect_clicked()
 {
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.sync();
+
     Clear_Form();
     emit Get_Console(ui->console);
 
@@ -180,6 +188,10 @@ void Open_Connection_Form::on_Connect_clicked()
 
 void Open_Connection_Form::on_btnSettings_clicked()
 {
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.sync();
     emit Settings(this);
 }
 
@@ -363,6 +375,8 @@ void Open_Connection_Form::on_Interface_currentIndexChanged(int index)
 
         }
     }
+
+
 }
 
 void Open_Connection_Form::Clear_Form(void)

@@ -3,8 +3,15 @@
 
 #include <QWidget>
 #include <QScreen>
+#include <QScrollBar>
+#include <QSettings>
 #include <QPlainTextEdit>
 #include "MODEM/firmwareinformationclass.h"
+#include "RESIZE_CALCULATING/resizecalculating.h"
+#include "STYLE/style.h"
+
+#define CONNECTION_SETTINGS_INTERFACE   "Connection_Settings/INTERFACE"
+#define CONNECTION_SETTINGS_SN          "Connection_Settings/SN"
 
 namespace Ui {
 class Open_Connection_Form;
@@ -72,6 +79,7 @@ private:
     QRegExp                   RegSystemName;
 
     FirmwareInformationClass *In_Firmware_Information;
+    ResizeCalculating         resize_calculating;
 };
 
 #endif // OPEN_CONNECTION_FORM_H

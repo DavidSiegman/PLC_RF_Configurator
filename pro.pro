@@ -54,7 +54,8 @@ HEADERS += \
     MODEM/snifferpropertiesclass.h \
     MODEM/modempropertiesclass.h \
     SI4432/si4432configurationclass.h \
-    ANDROID_FORMS/si4463_settings_form.h
+    ANDROID_FORMS/si4463_settings_form.h \
+    RESIZE_CALCULATING/resizecalculating.h
 
 SOURCES += \
     COM/port.cpp \
@@ -93,7 +94,8 @@ SOURCES += \
     MODEM/snifferpropertiesclass.cpp \
     MODEM/modempropertiesclass.cpp \
     SI4432/si4432configurationclass.cpp \
-    ANDROID_FORMS/si4463_settings_form.cpp
+    ANDROID_FORMS/si4463_settings_form.cpp \
+    RESIZE_CALCULATING/resizecalculating.cpp
 
 FORMS += \
     WINDOWS_FORMS/mainwindow.ui \

@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPlainTextEdit>
 #include "MODEM/modemclass.h"
+#include "RESIZE_CALCULATING/resizecalculating.h"
 
 namespace Ui {
 class Sniffer_Settings_Form;
@@ -124,6 +125,8 @@ private:
     RetranslatorPropertiesClass*  In_Retranslator_Properties;
     RetranslatorPropertiesClass*  Out_Retranslator_Properties;
 
+    ResizeCalculating             resize_calculating;
+    uchar                         resizing_going;
 };
 
 #endif // SNIFFER_SETTINGS_FORM_H

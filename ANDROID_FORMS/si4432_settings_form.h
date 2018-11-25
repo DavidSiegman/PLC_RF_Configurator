@@ -6,6 +6,7 @@
 
 #include "SI4432/si4432class.h"
 #include "OTHER_FUNCTIONS/barr_to_string.h"
+#include "RESIZE_CALCULATING/resizecalculating.h"
 
 namespace Ui {
 class SI4432_Settings_Form;
@@ -126,6 +127,9 @@ private:
 
     SI4432ConfigurationClass  *In_SI4432_Parameters;
     SI4432ConfigurationClass  *Out_SI4432_Parameters;
+
+    ResizeCalculating          resize_calculating;
+    uchar                      resizing_going;
 };
 
 #endif // SI4432_SETTINGS_FORM_H

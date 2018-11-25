@@ -1,4 +1,5 @@
 #include "connections_form.h"
+#include "settings_form.h"
 #include "ui_connections_form.h"
 #include <QDesktopWidget>
 #include <QApplication>
@@ -10,6 +11,38 @@ Connections_Form::Connections_Form(QWidget *parent) :
     ui(new Ui::Connections_Form)
 {
     ui->setupUi(this);
+    this->setWindowTitle(APPLICATION_NAME);
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+
+    if (settings.value(CONNECTION_SETTINGS_REPEATE).toString() == "")
+    {
+        settings.setValue(CONNECTION_SETTINGS_REPEATE, "3");
+        settings.sync();
+    }
+    if (settings.value(CONNECTION_SETTINGS_PERIODE).toString() == "")
+    {
+        settings.setValue(CONNECTION_SETTINGS_PERIODE, "3000");
+        settings.sync();
+    }
+
+    ui->IPInput->setText(settings.value(TCP_SETTINGS_IP).toString());
+    ui->PORTInput->setText(settings.value(TCP_SETTINGS_PORT).toString());
+
+    this->setStyleSheet(Main_Widget_Style);
+    ui->label_1->setStyleSheet(Titel_Widget_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+
+    ui->COMConnect->setStyleSheet(Basic_Buttons_Style);
+    ui->TCPConnect->setStyleSheet(Basic_Buttons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+
+    ui->btnHandsEnter->setStyleSheet(Buttons_Style);
+    ui->btnSettings->setStyleSheet(Buttons_Style);
+    ui->btnNext->setStyleSheet(Buttons_Style);
+
+    ui->PortNameBox->setStyleSheet(Background_White);
+    ui->IPInput->setStyleSheet(Background_White);
+    ui->PORTInput->setStyleSheet(Background_White);
 
     SysInfo              = new QSysInfo;
     QString product_name = SysInfo->prettyProductName();
@@ -61,14 +94,13 @@ Connections_Form::Connections_Form(QWidget *parent) :
 
     connect(ConnectHandler,    SIGNAL(SendLog(QString,uint)), this, SLOT(Print_Log(QString,uint)));
 
-    connect(ui->btnHandsEnter, SIGNAL(clicked()),             this, SLOT(Create_And_Show_Hands_Enter_Form()));
     connect(ui->btnNext,       SIGNAL(clicked()),             this, SLOT(Create_And_Show_Open_Connection_Form()));
     connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 
     connect(newParcer,         SIGNAL(PARCE_End()),           SI4463Config,SLOT(request_Prameters_handling()));
 
-    DataLogic->setRepeatNumber(3);
-    DataLogic->setRepeatTimeout(3000);
+    DataLogic->setRepeatNumber(settings.value(CONNECTION_SETTINGS_REPEATE).toInt());
+    DataLogic->setRepeatTimeout(settings.value(CONNECTION_SETTINGS_PERIODE).toInt());
 
     ui->PortNameBox           ->installEventFilter(this);
 
@@ -77,52 +109,48 @@ Connections_Form::Connections_Form(QWidget *parent) :
 }
 void Connections_Form::resizeEvent(QResizeEvent *event)
 {
-    /*
-    QScreen *Screen = QApplication::primaryScreen();
 
-    int DotsPerInch = Screen->logicalDotsPerInch();
+    resize_calculating.set_form_geometry(this->geometry());
 
-    QSize this_size      = this->size();
+    int text_size_1 = resize_calculating.get_text_size_1();
+    int text_size_2 = resize_calculating.get_text_size_2();
+    int text_size_3 = resize_calculating.get_text_size_3();
+    int text_size_4 = resize_calculating.get_text_size_4();
+    int text_size_5 = resize_calculating.get_text_size_5();
 
-    float w_to_dpi_index = float(this_size.width())/DotsPerInch;
+    QSize icons_size;
+    icons_size.setWidth(resize_calculating.get_icons_size());
+    icons_size.setHeight(resize_calculating.get_icons_size());
 
-    float size_1         = w_to_dpi_index*6;  if (size_1     > 38) {size_1     = 38;}
-    float size_2         = w_to_dpi_index*4;  if (size_2     > 24) {size_2     = 24;}
-    float size_3         = w_to_dpi_index*3;  if (size_3     > 16) {size_3     = 16;}
-
-    float btn_size       = w_to_dpi_index*10; if (btn_size   > 40) {btn_size   = 40;}
-    float label_size     = w_to_dpi_index*6;  if (label_size > 38) {label_size = 38;}
-
-    QSize icon_size;     icon_size.setHeight(btn_size); icon_size.setWidth(btn_size);
-
-    QFont font_1, font_2, font_3;
-    font_1.setPointSize(size_1);
-    font_2.setPointSize(size_2);
-    font_3.setPointSize(size_3);
+    QFont font_1 = ui->label_1->font();    font_1.setPixelSize(text_size_1);
+    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_2);
+    QFont font_3 = ui->COMConnect->font(); font_3.setPixelSize(text_size_3);
+    QFont font_4 = ui->label_4->font();    font_4.setPixelSize(text_size_4);
+    QFont font_5 = ui->console->font();    font_5.setPixelSize(text_size_5);
 
     ui->label_1->setFont(font_1);
     ui->label_2->setFont(font_2);
     ui->label_3->setFont(font_2);
-    ui->label_4->setFont(font_3);
-    ui->label_5->setFont(font_3);
-    ui->label_6->setFont(font_3);
+    ui->label_4->setFont(font_4);
+    ui->label_5->setFont(font_4);
+    ui->label_6->setFont(font_4);
 
-    ui->IPInput->setFont(font_3);
-    ui->PORTInput->setFont(font_3);
     ui->PortNameBox->setFont(font_3);
     ui->COMConnect->setFont(font_3);
-    ui->COMConnect->setMinimumHeight(btn_size);
+    ui->IPInput->setFont(font_3);
+    ui->PORTInput->setFont(font_3);
     ui->TCPConnect->setFont(font_3);
-    ui->TCPConnect->setMinimumHeight(btn_size);
-    ui->btnHandsEnter->setFont(font_3);
-    ui->btnHandsEnter->setMinimumHeight(btn_size);
-    ui->btnNext->setFont(font_3);
-    ui->btnNext->setMinimumHeight(btn_size);
-    ui->btnNext->setIconSize(icon_size);
-    ui->btnSettings->setFont(font_3);
-    ui->btnSettings->setMinimumHeight(btn_size);
-    ui->btnSettings->setIconSize(icon_size);
-    */
+    ui->ClearConsole->setFont(font_3);
+
+    ui->console->setFont(font_5);
+
+    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
+
+    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
+
+    ui->btnNext->setIconSize(icons_size); ui->btnNext->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->btnHandsEnter->setIconSize(icons_size); ui->btnHandsEnter->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 }
 
 
@@ -139,6 +167,10 @@ bool Connections_Form::eventFilter(QObject *target, QEvent *event)
               ui->COMConnect->setEnabled(true);
            }
        }
+    }
+    if (event->type() == QEvent::TouchUpdate)
+    {
+        QTouchDevice touchscreen;
     }
     return false;
 }
@@ -219,6 +251,11 @@ void Connections_Form::start_COM_Init(void)
 
 void Connections_Form::TCP_Is_Connected(void)
 {
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(TCP_SETTINGS_IP, ui->IPInput->text());
+    settings.setValue(TCP_SETTINGS_PORT, ui->PORTInput->text());
+    settings.sync();
+
     ui->btnHandsEnter->setEnabled(true);
     ui->btnNext->setEnabled(true);
     ui->COMConnect->setEnabled(false);
@@ -370,14 +407,16 @@ void Connections_Form::Create_And_Show_Settings_Form(QWidget *parent)
     settings_form->show();
 }
 
-void Connections_Form::Create_And_Show_Hands_Enter_Form(void)
+void Connections_Form::Create_And_Show_Hands_Enter_Form(QWidget *parent)
 {
     hands_enter_form = new Hands_Enter_Form;
-    connect(hands_enter_form,SIGNAL(Cancel()),                               this,                  SLOT(show()));
+    connect(hands_enter_form,SIGNAL(Cancel()),                               parent,                SLOT(show()));
+    connect(hands_enter_form,SIGNAL(Get_Geometry(QRect)),                    parent,                SLOT(Set_Geometry(QRect)));
     connect(hands_enter_form,SIGNAL(Send_Data(QByteArray,uint)),             DataLogic,             SLOT(SEND_DATA(QByteArray,uint)));
     connect(hands_enter_form,SIGNAL(Get_Console(QPlainTextEdit*)),           this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
 
-    this->hide();
+    parent->hide();
+    hands_enter_form->setGeometry(parent->geometry());
     hands_enter_form->show();
 }
 
@@ -511,6 +550,8 @@ void Connections_Form::Create_And_Show_SI4463_Settings_Form(QRect current_geomet
     connect(DataLogic,           SIGNAL(STOPPED()),                        si4463_settings_form,  SLOT(isSTOPPED()));
     connect(si4463_settings_form,SIGNAL(Send_RF_Reset()),                  ConnectHandler,        SLOT(SendRF_RESET()));
     connect(ConnectHandler,      SIGNAL(isRF_RESET()),                     si4463_settings_form,  SLOT(isRF_Reset()));
+    connect(si4463_settings_form,SIGNAL(Write_SI4463_Parameters()),        ConnectHandler,        SLOT(WriteRF_PARAMS()));
+    connect(ConnectHandler,      SIGNAL(isRF_PARAMS()),                    si4463_settings_form,  SLOT(isSI4463_Parameters()));
 
     connect(ConnectHandler,      SIGNAL(Progress(uint)),                   si4463_settings_form,  SLOT(SetProgress(uint)));
 
@@ -572,4 +613,9 @@ void Connections_Form::on_PortNameBox_currentIndexChanged(const QString &arg1)
 void Connections_Form::on_btnSettings_clicked()
 {
     Create_And_Show_Settings_Form(this);
+}
+
+void Connections_Form::on_btnHandsEnter_clicked()
+{
+    Create_And_Show_Hands_Enter_Form(this);
 }

@@ -30,6 +30,7 @@ signals:
     void Get_Console(QPlainTextEdit* console);
     void Start_Parcer(QString);
     void Send_RF_Reset(void);
+    void Write_SI4463_Parameters(void);
 
 public slots:
     void SetProgress(uint progress);
@@ -37,8 +38,9 @@ public slots:
     void Set_Model(QStandardItemModel *model);
     void Set_Prameters(QList<Params> *params);
 
-    void isStopped();
-    void isRF_Reset();
+    void isStopped(void);
+    void isRF_Reset(void);
+    void isSI4463_Parameters(void);
 
 private slots:
     void on_Back_clicked();
@@ -52,6 +54,8 @@ private slots:
     void on_Reset_clicked();
 
     void on_FileOpen_clicked();
+
+    void on_Write_clicked();
 
 private:
     Ui::SI4463_Settings_Form *ui;

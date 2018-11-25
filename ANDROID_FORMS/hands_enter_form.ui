@@ -32,7 +32,7 @@
    <item>
     <widget class="QLabel" name="label_1">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -40,7 +40,7 @@
      <property name="minimumSize">
       <size>
        <width>0</width>
-       <height>40</height>
+       <height>0</height>
       </size>
      </property>
      <property name="font">
@@ -73,12 +73,12 @@
         <x>0</x>
         <y>0</y>
         <width>328</width>
-        <height>466</height>
+        <height>468</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <property name="spacing">
-        <number>0</number>
+        <number>2</number>
        </property>
        <property name="leftMargin">
         <number>2</number>
@@ -98,7 +98,7 @@
           <bool>true</bool>
          </property>
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -106,7 +106,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>20</height>
+           <height>0</height>
           </size>
          </property>
          <property name="font">
@@ -127,6 +127,9 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <property name="spacing">
+          <number>2</number>
+         </property>
          <item>
           <widget class="QCheckBox" name="SN_ENABLE">
            <property name="enabled">
@@ -141,7 +144,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>20</height>
+             <height>0</height>
             </size>
            </property>
            <property name="text">
@@ -155,10 +158,10 @@
          <item>
           <widget class="QLineEdit" name="SN_TEXT">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -166,7 +169,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>20</height>
+             <height>0</height>
             </size>
            </property>
            <property name="font">
@@ -187,7 +190,7 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -195,7 +198,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>20</height>
+           <height>0</height>
           </size>
          </property>
          <property name="font">
@@ -216,13 +219,16 @@
        </item>
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
+         <property name="spacing">
+          <number>2</number>
+         </property>
          <item>
           <widget class="QLineEdit" name="cEnterText">
            <property name="enabled">
             <bool>true</bool>
            </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -230,7 +236,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>20</height>
+             <height>0</height>
             </size>
            </property>
            <property name="font">
@@ -254,7 +260,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>20</height>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -284,7 +290,7 @@
           <bool>true</bool>
          </property>
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -292,7 +298,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>20</height>
+           <height>0</height>
           </size>
          </property>
          <property name="maximumSize">
@@ -326,7 +332,7 @@
             <bool>true</bool>
            </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -334,7 +340,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>25</height>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -354,12 +360,12 @@
           </widget>
          </item>
          <item>
-          <widget class="QToolButton" name="Cyclic">
+          <widget class="QPushButton" name="Cyclic">
            <property name="enabled">
             <bool>false</bool>
            </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -367,7 +373,7 @@
            <property name="minimumSize">
             <size>
              <width>0</width>
-             <height>25</height>
+             <height>0</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -390,9 +396,6 @@
            <property name="checked">
             <bool>false</bool>
            </property>
-           <property name="popupMode">
-            <enum>QToolButton::DelayedPopup</enum>
-           </property>
           </widget>
          </item>
         </layout>
@@ -407,7 +410,7 @@
        <item>
         <widget class="QPushButton" name="ClearConsole">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -415,7 +418,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>25</height>
+           <height>0</height>
           </size>
          </property>
          <property name="font">
@@ -435,6 +438,12 @@
            <pointsize>7</pointsize>
           </font>
          </property>
+         <property name="styleSheet">
+          <string notr="true">border: none;</string>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
@@ -449,7 +458,7 @@
      <item>
       <widget class="QPushButton" name="Back">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -457,7 +466,7 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>25</height>
+         <height>0</height>
         </size>
        </property>
        <property name="text">
@@ -478,20 +487,20 @@
      <item>
       <widget class="QPushButton" name="btnSettings">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
        <property name="minimumSize">
         <size>
-         <width>40</width>
-         <height>40</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>80</width>
+         <width>16777215</width>
          <height>16777215</height>
         </size>
        </property>
@@ -519,7 +528,7 @@
         <bool>false</bool>
        </property>
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+        <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -527,7 +536,7 @@
        <property name="minimumSize">
         <size>
          <width>0</width>
-         <height>35</height>
+         <height>0</height>
         </size>
        </property>
        <property name="text">
