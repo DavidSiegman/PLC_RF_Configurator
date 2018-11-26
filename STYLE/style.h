@@ -21,19 +21,17 @@ const QString Work_Area_Style                     (
                                                     "color: rgb(150, 80, 0);"
                                                    "}"
                                                   );
-
 const QString Basic_Text_Style                    (
                                                    "QWidget{"
                                                     "color: rgb(50, 20, 20);"
                                                    "}"
                                                    "QWidget:disabled{"
-                                                    "color: rgb(200, 200, 200);"
+                                                    "color: rgb(100, 100, 100);"
                                                    "}"
                                                    "QWidget:enabled{"
                                                     "color: rgb(50, 20, 20);"
                                                    "}"
                                                   );
-
 const QString Background_Green                    (
                                                    "QWidget{"
                                                    "background-color: rgb(186, 229, 202);"
@@ -44,13 +42,11 @@ const QString Background_Grey                     (
                                                     "background: rgba(0,0,0,0);"
                                                    "}"
                                                   );
-
 const QString Background_Red                      (
                                                    "QWidget{"
                                                     "background: rgb(253,184,179);"
                                                    "}"
                                                   );
-
 const QString Background_White                    (
                                                    "QWidget{"
                                                     "background: rgb(255,255,255);"
@@ -66,21 +62,25 @@ const QString Text_Green                          (
                                                    "QWidget{"
                                                    "color: rgb(0, 115, 10);"
                                                    "}"
+                                                   "QWidget:disabled{"
+                                                    "color: rgb(100, 100, 100);"
+                                                   "}"
+                                                   "QWidget:enabled{"
+                                                    "color: rgb(0, 115, 10);"
+                                                   "}"
                                                   );
-
 const QString ScrollBar_Style                     (
                                                    "QScrollBar:vertical {"
                                                     "width: 10px;"
                                                    "}"
                                                   );
-
 const QString Basic_Buttons_Style                 (
                                                    "QPushButton{"
                                                     "border: none;"
                                                    "}"
                                                    "QPushButton:disabled {"
                                                     "border: none;"
-                                                    "color: rgb(180, 180, 180);"
+                                                    "color: rgb(100, 100, 100);"
                                                    "}"
                                                    "QPushButton:enabled {"
                                                     "border: none;"

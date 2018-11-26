@@ -429,6 +429,7 @@ void Connections_Form::Create_And_Show_Open_Connection_Form(void)
     connect(open_connection_form,SIGNAL(Get_Console(QPlainTextEdit*)),       this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
     connect(open_connection_form,SIGNAL(Next(QRect)),                        this,                  SLOT(Define_Next_Form(QRect)));
     connect(open_connection_form,SIGNAL(Settings(QWidget*)),                 this,                  SLOT(Create_And_Show_Settings_Form(QWidget*)));
+    connect(open_connection_form,SIGNAL(Updating(QWidget*)),                 this,                  SLOT(Create_And_Show_Firmware_Updating_Form(QWidget*)));
     connect(open_connection_form,SIGNAL(SendSerialNumber(QString,bool)),     DataLogic,             SLOT(setSerialNumberMode(QString,bool)));
     connect(open_connection_form,SIGNAL(STOP_SEND_DATA()),                   DataLogic,             SLOT(STOP_SEND_DATA()));
     connect(open_connection_form,SIGNAL(SEND_RF_RESET()),                    ConnectHandler,        SLOT(SendRF_RESET()));
@@ -564,6 +565,23 @@ void Connections_Form::Create_And_Show_SI4463_Settings_Form(QRect current_geomet
     this->hide();
     si4463_settings_form->setGeometry(current_geometry);
     si4463_settings_form->show();
+}
+
+void Connections_Form::Create_And_Show_Firmware_Updating_Form(QWidget *parent)
+{
+    firmware_updating_form = new Firmware_Updating_Form;
+
+    connect(firmware_updating_form,SIGNAL(Cancel()),                         parent,                SLOT(show()));
+    connect(firmware_updating_form,SIGNAL(Get_Geometry(QRect)),              parent,                SLOT(Set_Geometry(QRect)));
+    connect(firmware_updating_form,SIGNAL(Get_Console(QPlainTextEdit*)),     this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(firmware_updating_form,SIGNAL(Stop_Send_Data()),                 DataLogic,             SLOT(STOP_SEND_DATA()));
+    connect(DataLogic,           SIGNAL(STOPPED()),                          firmware_updating_form,SLOT(isSTOPPED()));
+    connect(firmware_updating_form,SIGNAL(Send_RF_Reset()),                  ConnectHandler,        SLOT(SendRF_RESET()));
+    connect(ConnectHandler,      SIGNAL(isRF_RESET()),                       firmware_updating_form,SLOT(isRF_Reset()));
+
+    parent->hide();
+    firmware_updating_form->setGeometry(parent->geometry());
+    firmware_updating_form->show();
 }
 
 //+++++++++++++[Процедура вывода данных в консоль]++++++++++++++++++++++++++++++++++++++++

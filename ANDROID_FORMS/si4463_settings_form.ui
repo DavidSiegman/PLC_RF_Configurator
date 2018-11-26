@@ -190,7 +190,7 @@
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true">color: rgb(0, 115, 10);</string>
+               <string notr="true"/>
               </property>
               <property name="text">
                <string/>

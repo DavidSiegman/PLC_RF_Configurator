@@ -55,7 +55,8 @@ HEADERS += \
     MODEM/modempropertiesclass.h \
     SI4432/si4432configurationclass.h \
     ANDROID_FORMS/si4463_settings_form.h \
-    RESIZE_CALCULATING/resizecalculating.h
+    RESIZE_CALCULATING/resizecalculating.h \
+    ANDROID_FORMS/firmware_updating_form.h
 
 SOURCES += \
     COM/port.cpp \
@@ -95,7 +96,8 @@ SOURCES += \
     MODEM/modempropertiesclass.cpp \
     SI4432/si4432configurationclass.cpp \
     ANDROID_FORMS/si4463_settings_form.cpp \
-    RESIZE_CALCULATING/resizecalculating.cpp
+    RESIZE_CALCULATING/resizecalculating.cpp \
+    ANDROID_FORMS/firmware_updating_form.cpp
 
 FORMS += \
     WINDOWS_FORMS/mainwindow.ui \
@@ -107,7 +109,8 @@ FORMS += \
     ANDROID_FORMS/plc_settings_form.ui \
     ANDROID_FORMS/si4432_settings_form.ui \
     ANDROID_FORMS/sniffer_settings_form.ui \
-    ANDROID_FORMS/si4463_settings_form.ui
+    ANDROID_FORMS/si4463_settings_form.ui \
+    ANDROID_FORMS/firmware_updating_form.ui
 
 RESOURCES += \
     RESOURCES/images.qrc

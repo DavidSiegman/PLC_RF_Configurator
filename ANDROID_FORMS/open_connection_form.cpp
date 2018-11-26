@@ -3,8 +3,6 @@
 #include "ui_open_connection_form.h"
 #include "OTHER_FUNCTIONS/barr_to_string.h"
 
-#include "STYLE/style.h"
-
 Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Open_Connection_Form)
@@ -19,6 +17,7 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
 
+    ui->Update->setStyleSheet(Basic_Buttons_Style);
     ui->Connect->setStyleSheet(Basic_Buttons_Style);
     ui->Stop->setStyleSheet(Basic_Buttons_Style);
     ui->Reset->setStyleSheet(Basic_Buttons_Style);
@@ -30,6 +29,8 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
 
     ui->Interface->setStyleSheet(Background_White);
     ui->SN->setStyleSheet(Background_White);
+
+    ui->DeviceType->setStyleSheet(Work_Area_Style + Text_Green);
 
     SysInfo              = new QSysInfo;
     QString product_name = SysInfo->prettyProductName();
@@ -65,12 +66,13 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     icons_size.setWidth(resize_calculating.get_icons_size());
     icons_size.setHeight(resize_calculating.get_icons_size());
 
-    QFont font_1 = ui->label_1->font();    font_1.setPixelSize(text_size_1);
-    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_2);
-    QFont font_3 = ui->Connect->font();    font_3.setPixelSize(text_size_3);
+    QFont font_1   = ui->label_1->font();  font_1.setPixelSize(text_size_1);
+    QFont font_2   = ui->label_2->font();  font_2.setPixelSize(text_size_2);
+    QFont font_2_1 = ui->label_2->font();  font_2_1.setPixelSize(text_size_3);
+    QFont font_3   = ui->Connect->font();  font_3.setPixelSize(text_size_3);
     QFont font_4_1 = ui->label_2->font();  font_4_1.setPixelSize(text_size_4);
     QFont font_4_2 = ui->label_6->font();  font_4_2.setPixelSize(text_size_4);
-    QFont font_5 = ui->console->font();    font_5.setPixelSize(text_size_5);
+    QFont font_5   = ui->console->font();  font_5.setPixelSize(text_size_5);
 
     ui->label_1->setFont(font_1);
     ui->label_2->setFont(font_4_1);
@@ -79,10 +81,6 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->label_5->setFont(font_4_1);
     ui->label_6->setFont(font_4_2);
     ui->label_7->setFont(font_4_2);
-    ui->label_8->setFont(font_4_2);
-    ui->label_9->setFont(font_4_2);
-    ui->label_10->setFont(font_4_2);
-    ui->label_11->setFont(font_4_2);
 
     ui->Interface->setFont(font_4_2);
     ui->Interface->clear();
@@ -91,8 +89,9 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
 
     ui->SN->setFont(font_4_2);
-    ui->DeviceType->setFont(font_4_2);
+    ui->DeviceType->setFont(font_2_1);
 
+    ui->Update->setFont(font_3);
     ui->Connect->setFont(font_3);
     ui->Stop->setFont(font_3);
     ui->Reset->setFont(font_3);
@@ -166,6 +165,7 @@ void Open_Connection_Form::on_Connect_clicked()
     emit Get_Console(ui->console);
 
     ui->Stop->setEnabled(true);
+    ui->Update->setEnabled(false);
     ui->Connect->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->InterfaceWidget->setEnabled(false);
@@ -195,8 +195,18 @@ void Open_Connection_Form::on_btnSettings_clicked()
     emit Settings(this);
 }
 
+void Open_Connection_Form::on_Update_clicked()
+{
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.sync();
+    emit Updating(this);
+}
+
 void Open_Connection_Form::on_Stop_clicked()
 {
+    emit STOP_MONITOR();
     emit STOP_SEND_DATA();
 }
 
@@ -210,6 +220,7 @@ void Open_Connection_Form::isOPEND()
     ui->Stop->setEnabled(false);
     ui->Connect->setEnabled(true);
     ui->Reset->setEnabled(true);
+    ui->Update->setEnabled(true);
     ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(true);
@@ -221,6 +232,7 @@ void Open_Connection_Form::isRESET()
     ui->Stop->setEnabled(false);
     ui->Connect->setEnabled(true);
     ui->Reset->setEnabled(true);
+    ui->Update->setEnabled(true);
     ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(true);
@@ -233,6 +245,7 @@ void Open_Connection_Form::isSTOPPED(void)
     ui->Stop->setEnabled(false);
     ui->Connect->setEnabled(true);
     ui->Reset->setEnabled(false);
+    ui->Update->setEnabled(false);
     ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(false);
@@ -402,6 +415,7 @@ void Open_Connection_Form::on_Reset_clicked()
 
     ui->Stop->setEnabled(true);
     ui->Connect->setEnabled(false);
+    ui->Update->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Next->setEnabled(false);
     ui->InterfaceWidget->setEnabled(false);
@@ -410,4 +424,3 @@ void Open_Connection_Form::on_Reset_clicked()
 
     emit SEND_RF_RESET();
 }
-

@@ -7,10 +7,10 @@
 #define PLC_MODEM         "PLC_MODEM"
 #define RF_MODEM_SI4432   "RF_MODEM_SI4432"
 #define RF_MODEM_SI4463   "RF_MODEM_SI4463"
-#define RF_SNIFFER_SI4432 "RF_SNIFFER_SI4432"
-#define RF_SNIFFER_SI4463 "RF_SNIFFER_SI4463"
+#define RF_SNIFFER_SI4432 "Милур IC U/Z (SI4432)"
+#define RF_SNIFFER_SI4463 "Милур IC U/Z (SI4463)"
 #define RF_PLC_MODEM      "RF_PLC_MODEM"
-#define RF_PLC_SNIFFER    "RF_PLC_SNIFFER"
+#define RF_PLC_SNIFFER    "Милур IC U/Z/P (SI4463)"
 #define TERMINAL          "TERMINAL"
 
 typedef struct Firmware_Information_Type

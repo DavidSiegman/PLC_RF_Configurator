@@ -32,12 +32,13 @@ public slots:
     void isRESET(void);
     void isSTOPPED(void);
     void Set_Geometry(QRect);
-    void Set_In_Firmware_Information(FirmwareInformationClass *);
+    void Set_In_Firmware_Information(FirmwareInformationClass*);
 
 signals:
     void Cancel(void);
     void Next(QRect);
     void Settings(QWidget*);
+    void Updating(QWidget*);
     void Get_Geometry(QRect);
     void Get_Console(QPlainTextEdit* console);
     void SendSerialNumber(QString, bool);
@@ -63,6 +64,8 @@ private slots:
     void on_btnSettings_clicked();
 
     void on_Reset_clicked();
+
+    void on_Update_clicked();
 
     void SetCurrentFitmwareToUI(uchar);
     void SetBootloaderVersionToUI(QString);
