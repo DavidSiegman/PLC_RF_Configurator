@@ -70,7 +70,7 @@ Connections_Form::Connections_Form(QWidget *parent) :
     SI4463Config              = new SI4463Class();
     SI4432Config              = new SI4432Class();
     //PLCConfig                 = new PLCClass(ui);
-    //newUPDATE                 = new UPDATE(ui);
+    newUPDATE                 = new UPDATE();
 
     DataLogic                 = new DataLogic_Class(oCRC16,timer_COMBufferClear,SI4463Config,SI4432Config,
                                                     PLCConfig,MODEM,newPort,newTCP,newUPDATE,this);           // Создаём Объект обработки сообщений
@@ -523,7 +523,7 @@ void Connections_Form::Create_And_Show_SI4432_Settings_Form(QRect current_geomet
     connect(si4432_settings_form,SIGNAL(Send_RF_Reset()),                      ConnectHandler,       SLOT(SendRF_RESET()));
     connect(ConnectHandler,      SIGNAL(isRF_RESET()),                         si4432_settings_form, SLOT(isRF_Reset()));
 
-    connect(ConnectHandler,       SIGNAL(Progress(uint)),                      si4432_settings_form,  SLOT(SetProgress(uint)));
+    connect(ConnectHandler,      SIGNAL(Progress(uint)),                       si4432_settings_form,  SLOT(SetProgress(uint)));
 
     connect(si4432_settings_form,SIGNAL(isCreated()),                          SI4432Config,         SLOT(getOut_SI4432_RF_Config()));
     connect(si4432_settings_form,SIGNAL(isCreated()),                          SI4432Config,         SLOT(getIn_SI4432_RF_Config()));
@@ -575,9 +575,19 @@ void Connections_Form::Create_And_Show_Firmware_Updating_Form(QWidget *parent)
     connect(firmware_updating_form,SIGNAL(Get_Geometry(QRect)),              parent,                SLOT(Set_Geometry(QRect)));
     connect(firmware_updating_form,SIGNAL(Get_Console(QPlainTextEdit*)),     this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
     connect(firmware_updating_form,SIGNAL(Stop_Send_Data()),                 DataLogic,             SLOT(STOP_SEND_DATA()));
-    connect(DataLogic,           SIGNAL(STOPPED()),                          firmware_updating_form,SLOT(isSTOPPED()));
-    connect(firmware_updating_form,SIGNAL(Send_RF_Reset()),                  ConnectHandler,        SLOT(SendRF_RESET()));
-    connect(ConnectHandler,      SIGNAL(isRF_RESET()),                       firmware_updating_form,SLOT(isRF_Reset()));
+    connect(DataLogic,             SIGNAL(STOPPED()),                        firmware_updating_form,SLOT(isStopped()));
+    connect(firmware_updating_form,SIGNAL(Start_Update()),                   ConnectHandler,        SLOT(StartUPDATE()));
+    connect(ConnectHandler,        SIGNAL(isUPDATED()),                      firmware_updating_form,SLOT(isUpdated()));
+    connect(firmware_updating_form,SIGNAL(Start_Delete()),                   ConnectHandler,        SLOT(StartDELETE()));
+    connect(ConnectHandler,        SIGNAL(isDELETED()),                      firmware_updating_form,SLOT(isDeleted()));
+
+    connect(ConnectHandler,        SIGNAL(Progress(uint)),                   firmware_updating_form,SLOT(SetProgress(uint)));
+    connect(DataLogic,             SIGNAL(outPROGRESS(uint)),                firmware_updating_form,SLOT(SetProgress(uint)));
+
+    connect(firmware_updating_form,SIGNAL(Get_FirmwareData(QString,QByteArray)),newUPDATE,             SLOT(setDATA(QString,QByteArray)));
+
+    connect(firmware_updating_form,SIGNAL(isCreated()),                      MODEM,                 SLOT(getIn_Firmware_Information()));
+    connect(MODEM,                 SIGNAL(sIn_Firmware_Information(FirmwareInformationClass*)), firmware_updating_form,  SLOT(Set_In_Firmware_Information(FirmwareInformationClass *)));
 
     parent->hide();
     firmware_updating_form->setGeometry(parent->geometry());

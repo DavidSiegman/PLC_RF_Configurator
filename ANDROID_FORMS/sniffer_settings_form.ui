@@ -57,7 +57,7 @@
         </font>
        </property>
        <property name="text">
-        <string>SNIFFER НАСТРОЙКИ</string>
+        <string>CЕТЕВЫЕ НАСТРОЙКИ</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -80,7 +80,7 @@
         <x>0</x>
         <y>0</y>
         <width>328</width>
-        <height>466</height>
+        <height>476</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">

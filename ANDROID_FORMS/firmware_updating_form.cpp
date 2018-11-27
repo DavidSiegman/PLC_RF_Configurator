@@ -1,6 +1,8 @@
 #include "firmware_updating_form.h"
 #include "connections_form.h"
 #include "ui_firmware_updating_form.h"
+#include "OTHER_FUNCTIONS/barr_to_string.h"
+#include "CRC/crc32_class.h"
 
 Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
     QWidget(parent),
@@ -41,11 +43,17 @@ Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
     }
 
     connect(ui->ClearConsole, SIGNAL(clicked(bool)), ui->console, SLOT(clear()));
+
+    ui->new_v->setText("NAN");
+    ui->new_Size->setText("NAN");
+    ui->new_CRC->setText("NAN");
 }
 
 
 void Firmware_Updating_Form::resizeEvent(QResizeEvent *event)
 {
+    emit isCreated();
+
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     resize_calculating.set_form_geometry(this->geometry());
@@ -111,17 +119,13 @@ void Firmware_Updating_Form::Set_Geometry(QRect new_value)
     this->setGeometry(new_value);
 }
 
-
-void Firmware_Updating_Form::isSTOPPED(void)
+void Firmware_Updating_Form::Set_In_Firmware_Information(FirmwareInformationClass *FirmwareInformation)
 {
-    SetProgress(0);
-    ui->Stop->setEnabled(false);
-    ui->OpenBin->setEnabled(true);
-    ui->UpdateStart->setEnabled(true);
-    ui->Clear->setEnabled(false);
-    ui->Back->setEnabled(true);
-    ui->Next->setEnabled(false);
-    ui->btnSettings->setEnabled(true);
+    In_Firmware_Information = FirmwareInformation;
+
+    SetUpgradableVersionToUI(In_Firmware_Information->getString_Upgradable_Version());
+    SetUpgradableSizeToUI(In_Firmware_Information->getUpgradable_Size());
+    SetUpgradableCRCToUI(In_Firmware_Information->getUpgradable_CRC32());
 }
 
 void Firmware_Updating_Form::on_Back_clicked()
@@ -138,20 +142,46 @@ void Firmware_Updating_Form::on_btnSettings_clicked()
 
 void Firmware_Updating_Form::on_Stop_clicked()
 {
-    emit STOP_MONITOR();
-    emit STOP_SEND_DATA();
+    emit Stop_Send_Data();
+}
+
+void Firmware_Updating_Form::isStopped()
+{
+    SetProgress(0);
+    ui->Stop->setEnabled(false);
+    ui->OpenBin->setEnabled(true);
+    if ((ui->new_v->text().compare("NAN") != 0)&&(ui->new_v->text().length() > 0))
+    {
+        ui->UpdateStart->setEnabled(true);
+    }
+    if ((ui->curr_v->text().compare("NAN") != 0)&&(ui->curr_v->text().length() > 0))
+    {
+        ui->Clear->setEnabled(true);
+    }
+    ui->Back->setEnabled(true);
+    ui->Next->setEnabled(false);
+    ui->btnSettings->setEnabled(true);
 }
 
 void Firmware_Updating_Form::on_OpenBin_clicked()
 {
-    QString str = QFileDialog::getOpenFileName(0, "Open File", "", "*.bin");
+    QRegExp RegVER; RegVER      = QRegExp("ver");
+    QFile *file; file = NULL;
+    uint pos = 0;
+    uint nSIZE = 0;
+    QByteArray Data; Data.clear();
+    QByteArray nCRC32; nCRC32.clear();
+    QString VERSION = "";
+    crc32_class CRC32;
+
+    QString patch = QFileDialog::getOpenFileName(0, "Open File", "", "*.bin");
 
     QString s = "";
-    for(uint i = (str.length()); i > 0; i--)
+    for(uint i = (patch.length()); i > 0; i--)
     {
-        if (str.at(i-1) != '/')
+        if (patch.at(i-1) != '/')
         {
-            s.push_front(str.at(i-1));
+            s.push_front(patch.at(i-1));
         }
         else
         {
@@ -160,5 +190,130 @@ void Firmware_Updating_Form::on_OpenBin_clicked()
     }
 
     ui->PatchBin->setText(s);
-    //newUPDATE->setPATCH(str);
+
+    if (RegVER.indexIn(patch,0) != -1)
+    {
+        pos = RegVER.indexIn(patch,pos) + 3;
+        VERSION.clear();
+        VERSION.append(patch.data() + pos,4);
+        ui->new_v->setText(VERSION);
+        ui->UpdateStart->setEnabled(true);
+
+        if (patch.length() != 0)
+        {
+            file = new QFile(patch);
+            if(file->exists())
+            {
+                if (file->open(QIODevice::ReadOnly))
+                {
+                   Data = file->readAll();
+                   file->close();
+
+                   nSIZE = Data.length();
+
+                   uint crc = CRC32.crc32((unsigned long*)(Data.data()), Data.length());
+                   nCRC32.append((char)(crc >> 24));
+                   nCRC32.append((char)(crc >> 16));
+                   nCRC32.append((char)(crc >> 8));
+                   nCRC32.append((char)(crc >> 0));
+
+                   ui->new_CRC->setText(QByteAray_To_QString(nCRC32).toUpper());
+                   ui->new_Size->setText(QString::number(nSIZE));
+
+                   emit Get_FirmwareData(VERSION, Data);
+
+                }
+            }
+        }
+    }
+    else
+    {
+        ui->new_v->setText("NAN");
+        ui->new_Size->setText("NAN");
+        ui->new_CRC->setText("NAN");
+        ui->UpdateStart->setEnabled(false);
+    }
+}
+void Firmware_Updating_Form::SetUpgradableVersionToUI(QString new_value)
+{
+    this->ui->curr_v->setText("NAN");
+    if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0))
+    {
+        this->ui->curr_v->setText(new_value);
+        this->ui->Clear->setEnabled(true);
+    }
+}
+void Firmware_Updating_Form::SetUpgradableSizeToUI(uint new_value)
+{
+    this->ui->curr_Size->setText("NAN");
+    if (new_value > 0)
+    {
+        this->ui->curr_Size->setText(QString::number(new_value));
+    }
+}
+void Firmware_Updating_Form::SetUpgradableCRCToUI(QByteArray new_value)
+{
+    this->ui->curr_CRC->setText("NAN");
+    if (new_value.length() == 4)
+    {
+        if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
+            (new_value.at(2) == 0) && (new_value.at(3) == 0))
+        {
+            this->ui->curr_CRC->setText("NAN");
+        }
+        else
+        {
+            this->ui->curr_CRC->setText(QByteAray_To_QString(new_value).toUpper());
+        }
+
+    }
+}
+
+void Firmware_Updating_Form::on_Clear_clicked()
+{
+    emit Get_Console(ui->console);
+
+    ui->Stop->setEnabled(true);
+    ui->OpenBin->setEnabled(false);
+    ui->UpdateStart->setEnabled(false);
+    ui->Clear->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+
+    emit Start_Delete();
+}
+void Firmware_Updating_Form::isDeleted(void)
+{
+    ui->Stop->setEnabled(false);
+    ui->OpenBin->setEnabled(true);
+    ui->UpdateStart->setEnabled(false);
+    if ((ui->new_v->text().compare("NAN") != 0)&&(ui->new_v->text().length() > 0))
+    {
+        ui->UpdateStart->setEnabled(true);
+    }
+    ui->Clear->setEnabled(false);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+}
+void Firmware_Updating_Form::on_UpdateStart_clicked()
+{
+    emit Get_Console(ui->console);
+
+    ui->Stop->setEnabled(true);
+    ui->OpenBin->setEnabled(false);
+    ui->UpdateStart->setEnabled(false);
+    ui->Clear->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+
+    emit Start_Update();
+}
+void Firmware_Updating_Form::isUpdated(void)
+{
+    ui->Stop->setEnabled(false);
+    ui->OpenBin->setEnabled(true);
+    ui->UpdateStart->setEnabled(true);
+    ui->Clear->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
 }

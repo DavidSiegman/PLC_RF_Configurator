@@ -9,15 +9,13 @@ class UPDATE : public QObject
     Q_OBJECT
 public:
     explicit UPDATE(Ui::MainWindow *ui,QObject *parent = 0);
+    explicit UPDATE(QObject *parent = 0);
 
 private:
     Ui::MainWindow    *ui;
 
-    QString PATCH;
     QString VERSION;
-    QRegExp RegVER;
 
-    QFile *file;
     crc32_class *CRC32;
     uint Writed_PAGES, Current_PAGE, Current_BLOCK, Current_SECTOR, nSIZE, Writed_BYTES;
     QByteArray Writed_PAGES_CRC32, nCRC32;
@@ -26,9 +24,7 @@ private:
 signals:
 
 public slots:
-    void setPATCH(QString patch);
-
-    QString getPATCH(void);
+    void setDATA(QString,QByteArray);
 
     QString getVERSION(void);
 

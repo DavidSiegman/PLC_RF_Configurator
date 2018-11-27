@@ -4,10 +4,7 @@
 UPDATE::UPDATE(Ui::MainWindow *ui,QObject *parent) : QObject(parent)
 {
     this->CRC32 = new crc32_class();
-    this->file = NULL;
-    this->PATCH.clear();
     this->ui = ui;
-    this->RegVER      = QRegExp("ver");
 
     this->Current_PAGE   = 0;
     this->Current_BLOCK  = 0;
@@ -18,56 +15,35 @@ UPDATE::UPDATE(Ui::MainWindow *ui,QObject *parent) : QObject(parent)
     this->Writed_PAGES   = 0;
 }
 
-void UPDATE::setPATCH(QString patch)
+UPDATE::UPDATE(QObject *parent)
 {
-    if (this->file != NULL)
-    {
-        if (this->file->isOpen())
-        {
-            this->file->close();
-        }
-    }
-    int pos = 0;
-    this->PATCH   = patch;
+    this->CRC32 = new crc32_class();
 
-    if (this->RegVER.indexIn(patch,0) != -1)
-    {
-        DATA.clear();
-        this->nCRC32.clear();
-        pos = RegVER.indexIn(patch,pos) + 3;
-        this->VERSION.clear();
-        this->VERSION.append(this->PATCH.data() + pos,4);
-        ui->new_v->setText(this->VERSION);
-        ui->UPDATE_START->setEnabled(true);
+    this->Current_PAGE   = 0;
+    this->Current_BLOCK  = 0;
+    this->Current_SECTOR = 0;
 
-        if (this->PATCH.length() != 0)
-        {
-            this->file = new QFile(this->PATCH);
-            if(this->file->exists())
-            {
-                if (this->file->open(QIODevice::ReadOnly))
-                {
-                   DATA = file->readAll();
-                   uint crc = this->CRC32->crc32((unsigned long*)(DATA.data()), DATA.length());
-                   nCRC32.append((char)(crc >> 24));
-                   nCRC32.append((char)(crc >> 16));
-                   nCRC32.append((char)(crc >> 8));
-                   nCRC32.append((char)(crc >> 0));
-
-                   nSIZE = DATA.length();
-
-                   ui->new_CRC->setText(QByteAray_To_QString(nCRC32).toUpper());
-                   ui->new_Size->setText(QString::number(nSIZE));
-                }
-            }
-        }
-    }
-    else
-    {
-        ui->new_v->setText("NAN");
-        ui->UPDATE_START->setEnabled(false);
-    }
+    this->Writed_PAGES_CRC32.clear();
+    this->nCRC32.clear();
+    this->Writed_PAGES   = 0;
 }
+
+void UPDATE::setDATA(QString vers,QByteArray new_DATA)
+{
+    this->VERSION = vers;
+
+    DATA.clear();
+    DATA = new_DATA;
+    nSIZE = DATA.length();
+
+    this->nCRC32.clear();
+    uint crc = this->CRC32->crc32((unsigned long*)(DATA.data()), DATA.length());
+    nCRC32.append((char)(crc >> 24));
+    nCRC32.append((char)(crc >> 16));
+    nCRC32.append((char)(crc >> 8));
+    nCRC32.append((char)(crc >> 0));
+}
+
 void UPDATE::Compare_Writed_PAGES_CRC32(uint pages, uint page_size, uint in_crc32)
 {
     uint crc = this->CRC32->crc32((unsigned long*)(DATA.data()), pages*page_size);
@@ -127,11 +103,6 @@ uint UPDATE::getSIZE(void)
 QByteArray UPDATE::getCRC32(void)
 {
     return this->nCRC32;
-}
-
-QString UPDATE::getPATCH(void)
-{
-    return this->PATCH;
 }
 
 QString UPDATE::getVERSION(void)

@@ -1261,7 +1261,7 @@ void MainWindow::on_OpenBin_clicked()
 {
    QString str = QFileDialog::getOpenFileName(0, "Open File", "", "*.bin");
    ui->PatchBin->setText(str);
-   newUPDATE->setPATCH(str);
+   //newUPDATE->setPATCH(str);
 }
 
 void MainWindow::on_Add_NetItem_clicked()

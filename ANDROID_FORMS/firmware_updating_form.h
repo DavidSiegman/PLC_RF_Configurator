@@ -6,6 +6,7 @@
 #include <QScrollBar>
 #include <QSettings>
 #include <QPlainTextEdit>
+#include "MODEM/firmwareinformationclass.h"
 #include "RESIZE_CALCULATING/resizecalculating.h"
 #include "STYLE/style.h"
 
@@ -23,21 +24,31 @@ public:
     ~Firmware_Updating_Form();
 
 public slots:
+    void isStopped(void);
+    void isDeleted(void);
+    void isUpdated(void);
     void SetProgress(uint progress);
-    void isSTOPPED(void);
     void Set_Geometry(QRect);
 
+    void Set_In_Firmware_Information(FirmwareInformationClass *FirmwareInformation);
 signals:
     void Cancel(void);
+    void isCreated(void);
     void Next(QRect);
     void Settings(QWidget*);
     void Get_Geometry(QRect);
     void Get_Console(QPlainTextEdit* console);
+    void Get_FirmwareData(QString,QByteArray);
 
-    void STOP_SEND_DATA(void );
-    void STOP_MONITOR(void);
+    void Stop_Send_Data(void);
+    void Start_Delete(void);
+    void Start_Update(void);
 
 private slots:
+    void SetUpgradableVersionToUI(QString);
+    void SetUpgradableSizeToUI(uint);
+    void SetUpgradableCRCToUI(QByteArray);
+
     void on_Back_clicked();
 
     void on_btnSettings_clicked();
@@ -46,12 +57,17 @@ private slots:
 
     void on_OpenBin_clicked();
 
+    void on_Clear_clicked();
+
+    void on_UpdateStart_clicked();
+
 private:
     Ui::Firmware_Updating_Form *ui;
     QSysInfo                   *SysInfo;
     QRegExp                     RegSystemName;
 
     ResizeCalculating           resize_calculating;
+    FirmwareInformationClass   *In_Firmware_Information;
 };
 
 #endif // FIRMWARE_UPDATING_FORM_H
