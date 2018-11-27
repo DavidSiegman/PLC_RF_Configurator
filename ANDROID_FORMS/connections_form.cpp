@@ -298,6 +298,11 @@ void Connections_Form::Define_Next_Form(QRect curren_geometry)
             open_connection_form->hide();
             Create_And_Show_Net_Settings_Form(curren_geometry);
         }
+        else if(net_settings_form->isHidden() == false)
+        {
+            net_settings_form->hide();
+            Create_And_Show_SI4432_Settings_Form(curren_geometry);
+        }
     }
     else if (In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4432) == 0)
     {
@@ -344,7 +349,22 @@ void Connections_Form::Define_Pre_Form(QRect curren_geometry)
     }
     else if (In_Firmware_Information->getDevice_Name().compare(RF_MODEM_SI4432) == 0)
     {
-
+        if(net_settings_form->isHidden() == false)
+        {
+            net_settings_form->deleteLater();
+            open_connection_form->setGeometry(curren_geometry);
+            open_connection_form->show();
+        }
+        else if(si4432_settings_form->isHidden() == false)
+        {
+            si4432_settings_form->deleteLater();
+            net_settings_form->setGeometry(curren_geometry);
+            net_settings_form->show();
+        }
+        else if (settings_form->isHidden() == false)
+        {
+            settings_form->deleteLater();
+        }
     }
     else if (In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4432) == 0)
     {
@@ -514,25 +534,25 @@ void Connections_Form::Create_And_Show_SI4432_Settings_Form(QRect current_geomet
 {
     si4432_settings_form = new SI4432_Settings_Form;
 
-    connect(si4432_settings_form,SIGNAL(Cancel(QRect)),                        this,                 SLOT(Define_Pre_Form(QRect)));
-    connect(si4432_settings_form,SIGNAL(Next(QRect)),                          this,                 SLOT(Define_Next_Form(QRect)));
-    connect(si4432_settings_form,SIGNAL(Settings(QWidget*)),                   this,                 SLOT(Create_And_Show_Settings_Form(QWidget*)));
-    connect(si4432_settings_form,SIGNAL(Get_Console(QPlainTextEdit*)),         this,                 SLOT(Set_ActiveConsole(QPlainTextEdit*)));
-    connect(si4432_settings_form,SIGNAL(Stop_Send_Data()),                     DataLogic,            SLOT(STOP_SEND_DATA()));
-    connect(DataLogic,           SIGNAL(STOPPED()),                            si4432_settings_form, SLOT(isSTOPPED()));
-    connect(si4432_settings_form,SIGNAL(Send_RF_Reset()),                      ConnectHandler,       SLOT(SendRF_RESET()));
-    connect(ConnectHandler,      SIGNAL(isRF_RESET()),                         si4432_settings_form, SLOT(isRF_Reset()));
+    connect(si4432_settings_form, SIGNAL(Cancel(QRect)),                        this,                 SLOT(Define_Pre_Form(QRect)));
+    connect(si4432_settings_form, SIGNAL(Next(QRect)),                          this,                 SLOT(Define_Next_Form(QRect)));
+    connect(si4432_settings_form, SIGNAL(Settings(QWidget*)),                   this,                 SLOT(Create_And_Show_Settings_Form(QWidget*)));
+    connect(si4432_settings_form, SIGNAL(Get_Console(QPlainTextEdit*)),         this,                 SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(si4432_settings_form, SIGNAL(Stop_Send_Data()),                     DataLogic,            SLOT(STOP_SEND_DATA()));
+    connect(DataLogic,            SIGNAL(STOPPED()),                            si4432_settings_form, SLOT(isSTOPPED()));
+    connect(si4432_settings_form, SIGNAL(Send_RF_Reset()),                      ConnectHandler,       SLOT(SendRF_RESET()));
+    connect(ConnectHandler,       SIGNAL(isRF_RESET()),                         si4432_settings_form, SLOT(isRF_Reset()));
 
-    connect(ConnectHandler,      SIGNAL(Progress(uint)),                       si4432_settings_form,  SLOT(SetProgress(uint)));
+    connect(ConnectHandler,       SIGNAL(Progress(uint)),                       si4432_settings_form, SLOT(SetProgress(uint)));
 
-    connect(si4432_settings_form,SIGNAL(isCreated()),                          SI4432Config,         SLOT(getOut_SI4432_RF_Config()));
-    connect(si4432_settings_form,SIGNAL(isCreated()),                          SI4432Config,         SLOT(getIn_SI4432_RF_Config()));
+    connect(si4432_settings_form, SIGNAL(isCreated()),                          SI4432Config,         SLOT(getOut_SI4432_RF_Config()));
+    connect(si4432_settings_form, SIGNAL(isCreated()),                          SI4432Config,         SLOT(getIn_SI4432_RF_Config()));
 
     connect(SI4432Config,SIGNAL(sIn_SI4432_Parameters(SI4432ConfigurationClass*)),      si4432_settings_form, SLOT(setIn_SI4432_Parameters(SI4432ConfigurationClass*)));
     connect(SI4432Config,SIGNAL(sOut_SI4432_Parameters(SI4432ConfigurationClass*)),     si4432_settings_form, SLOT(setOut_SI4432_Parameters(SI4432ConfigurationClass*)));
 
-    connect(si4432_settings_form,SIGNAL(Write_SI4432_Parameters()),            ConnectHandler,       SLOT(WriteRFSI4432_PARAMS()));
-    connect(ConnectHandler,      SIGNAL(isRFSI4432_PARAMS()),                  si4432_settings_form, SLOT(isSI4432_Parameters()));
+    connect(si4432_settings_form, SIGNAL(Write_SI4432_Parameters()),            ConnectHandler,       SLOT(WriteRFSI4432_PARAMS()));
+    connect(ConnectHandler,       SIGNAL(isRFSI4432_PARAMS()),                  si4432_settings_form, SLOT(isSI4432_Parameters()));
 
     this->hide();
     si4432_settings_form->setGeometry(current_geometry);
@@ -543,24 +563,24 @@ void Connections_Form::Create_And_Show_SI4463_Settings_Form(QRect current_geomet
 {
     si4463_settings_form = new SI4463_Settings_Form;
 
-    connect(si4463_settings_form,SIGNAL(Cancel(QRect)),                    this,                  SLOT(Define_Pre_Form(QRect)));
-    connect(si4463_settings_form,SIGNAL(Next(QRect)),                      this,                  SLOT(Define_Next_Form(QRect)));
-    connect(si4463_settings_form,SIGNAL(Settings(QWidget*)),               this,                  SLOT(Create_And_Show_Settings_Form(QWidget*)));
-    connect(si4463_settings_form,SIGNAL(Get_Console(QPlainTextEdit*)),     this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
-    connect(si4463_settings_form,SIGNAL(Stop_Send_Data()),                 DataLogic,             SLOT(STOP_SEND_DATA()));
-    connect(DataLogic,           SIGNAL(STOPPED()),                        si4463_settings_form,  SLOT(isSTOPPED()));
-    connect(si4463_settings_form,SIGNAL(Send_RF_Reset()),                  ConnectHandler,        SLOT(SendRF_RESET()));
-    connect(ConnectHandler,      SIGNAL(isRF_RESET()),                     si4463_settings_form,  SLOT(isRF_Reset()));
-    connect(si4463_settings_form,SIGNAL(Write_SI4463_Parameters()),        ConnectHandler,        SLOT(WriteRF_PARAMS()));
-    connect(ConnectHandler,      SIGNAL(isRF_PARAMS()),                    si4463_settings_form,  SLOT(isSI4463_Parameters()));
+    connect(si4463_settings_form, SIGNAL(Cancel(QRect)),                    this,                  SLOT(Define_Pre_Form(QRect)));
+    connect(si4463_settings_form, SIGNAL(Next(QRect)),                      this,                  SLOT(Define_Next_Form(QRect)));
+    connect(si4463_settings_form, SIGNAL(Settings(QWidget*)),               this,                  SLOT(Create_And_Show_Settings_Form(QWidget*)));
+    connect(si4463_settings_form, SIGNAL(Get_Console(QPlainTextEdit*)),     this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(si4463_settings_form, SIGNAL(Stop_Send_Data()),                 DataLogic,             SLOT(STOP_SEND_DATA()));
+    connect(DataLogic,            SIGNAL(STOPPED()),                        si4463_settings_form,  SLOT(isSTOPPED()));
+    connect(si4463_settings_form, SIGNAL(Send_RF_Reset()),                  ConnectHandler,        SLOT(SendRF_RESET()));
+    connect(ConnectHandler,       SIGNAL(isRF_RESET()),                     si4463_settings_form,  SLOT(isRF_Reset()));
+    connect(si4463_settings_form, SIGNAL(Write_SI4463_Parameters()),        ConnectHandler,        SLOT(WriteRF_PARAMS()));
+    connect(ConnectHandler,       SIGNAL(isRF_PARAMS()),                    si4463_settings_form,  SLOT(isSI4463_Parameters()));
 
-    connect(ConnectHandler,      SIGNAL(Progress(uint)),                   si4463_settings_form,  SLOT(SetProgress(uint)));
+    connect(ConnectHandler,       SIGNAL(Progress(uint)),                   si4463_settings_form,  SLOT(SetProgress(uint)));
 
-    connect(si4463_settings_form,SIGNAL(isCreated()),                      SI4463Config,          SLOT(request_Model_handling()));
-    connect(SI4463Config,        SIGNAL(get_Model(QStandardItemModel*)),   si4463_settings_form,  SLOT(Set_Model(QStandardItemModel*)));
-    connect(SI4463Config,        SIGNAL(get_Prameters(QList<Params>*)),    si4463_settings_form,  SLOT(Set_Prameters(QList<Params>*)));
+    connect(si4463_settings_form, SIGNAL(isCreated()),                      SI4463Config,          SLOT(request_Model_handling()));
+    connect(SI4463Config,         SIGNAL(get_Model(QStandardItemModel*)),   si4463_settings_form,  SLOT(Set_Model(QStandardItemModel*)));
+    connect(SI4463Config,         SIGNAL(get_Prameters(QList<Params>*)),    si4463_settings_form,  SLOT(Set_Prameters(QList<Params>*)));
 
-    connect(si4463_settings_form,SIGNAL(Start_Parcer(QString)),            this,                  SLOT(Start_Parcer(QString)));
+    connect(si4463_settings_form, SIGNAL(Start_Parcer(QString)),            this,                  SLOT(Start_Parcer(QString)));
 
     this->hide();
     si4463_settings_form->setGeometry(current_geometry);

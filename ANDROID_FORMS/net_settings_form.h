@@ -7,6 +7,7 @@
 #include <OTHER_FUNCTIONS/mess_enum.h>
 #include "CRC/crc16_class.h"
 #include "MODEM/modemclass.h"
+#include "RESIZE_CALCULATING/resizecalculating.h"
 
 namespace Ui {
 class Net_Settings_Form;
@@ -40,7 +41,9 @@ private slots:
     void on_Next_clicked();
 
 private:
-    Ui::Net_Settings_Form *ui;
+    Ui::Net_Settings_Form     *ui;
+
+    ResizeCalculating          resize_calculating;
 };
 
 #endif // NET_SETTINGS_FORM_H
