@@ -51,6 +51,7 @@ class RetranslatorPropertiesClass
 public:
     RetranslatorPropertiesClass();
 
+    void            Clear_Data();
 
     uchar           getRetranslator_Mode();
     void            setRetranslator_Mode(uchar);

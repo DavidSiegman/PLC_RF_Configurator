@@ -588,8 +588,6 @@ void DataLogic_Class::ParceData(uint n)
     QByteArray In_Data;
     uchar NumbOfBytes, Comande, ComandState;
 
-    FirmwareInformationClass      *In_Firmware_Information = MODEM->getIn_Firmware_Information();
-
     if (n == IN_INTERFACE_USO)
     {
         if (ParceDataBuffer.length() >= 7)
@@ -700,6 +698,8 @@ void DataLogic_Class::ParceData(uint n)
 
             if (In_Data.length() >= 19)
             {
+                FirmwareInformationClass      *In_Firmware_Information = MODEM->getIn_Firmware_Information();
+
                 In_Firmware_Information->setCurrent_Firmware_Version(ComandState);
                 In_Firmware_Information->setString_Bootloader_Version(QString::fromUtf8(In_Data.data(),4));
 
@@ -748,6 +748,8 @@ void DataLogic_Class::ParceData(uint n)
                     FW_CRC32.append(In_Data.at(20));
 
                     In_Firmware_Information->setUpgradable_CRC32(FW_CRC32);
+
+                    In_Firmware_Information = MODEM->getIn_Firmware_Information();
                 }
 
                 Repeat_Counter = Repeat_Number;
@@ -771,7 +773,7 @@ void DataLogic_Class::ParceData(uint n)
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
                     emit SendLog(QString::fromUtf8(">> ======= Ожидание перехода в BOOT:"),NONE);
-                    if (In_Firmware_Information->getCurrent_Firmware_Version() == 0)
+                    if (MODEM->getIn_Firmware_Information()->getCurrent_Firmware_Version() == 0)
                     {
                         BOOT_WAIT_COUNTER = 1;
                     }
@@ -820,7 +822,7 @@ void DataLogic_Class::ParceData(uint n)
                         if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                         {
                             emit SendLog(QString::fromUtf8(">> ======= Ожидание перехода на обнавлённую прошивку:"),NONE);
-                            if (In_Firmware_Information->getBootloader_Version() == 0)
+                            if (MODEM->getIn_Firmware_Information()->getBootloader_Version() == 0)
                             {
                                 BOOT_WAIT_COUNTER = 5;
                             }
@@ -898,6 +900,7 @@ void DataLogic_Class::ParceData(uint n)
         }
         case 0xF0: // Запрос режима ретрансляции
         {
+            MODEM->getIn_Retranslator_Properties()->setRetranslator_Mode(ComandState);
             MODEM->getIn_Retranslator_Properties()->setRetranslator_Mode(ComandState);
 
             Repeat_Counter = Repeat_Number;
@@ -1195,6 +1198,8 @@ void DataLogic_Class::ParceData(uint n)
                 SWITCH_TIMEOUT    |= *((uint*)(In_Data.data()));
 
                 MODEM->getIn_Retranslator_Properties()->setRetranslator_Timeout(SWITCH_TIMEOUT);
+                MODEM->getIn_Retranslator_Properties()->setRetranslator_Timeout(SWITCH_TIMEOUT);
+
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
@@ -1226,6 +1231,7 @@ void DataLogic_Class::ParceData(uint n)
                 RX_TIMEOUT           |= *((uint*)(In_Data.data()));
 
                 MODEM->getIn_Modem_Properties()->setRX_Timeout(RX_TIMEOUT);
+                MODEM->getIn_Modem_Properties()->setRX_Timeout(RX_TIMEOUT);
 
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
@@ -1255,6 +1261,7 @@ void DataLogic_Class::ParceData(uint n)
                 TX_TIMEOUT           |= *((uint*)(In_Data.data()));
 
                 MODEM->getIn_Modem_Properties()->setTX_Timeout(TX_TIMEOUT);
+                MODEM->getIn_Modem_Properties()->setTX_Timeout(TX_TIMEOUT);
 
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
@@ -1280,6 +1287,7 @@ void DataLogic_Class::ParceData(uint n)
         {
             if ((NumbOfBytes == 6)&(In_Data.length() >= 4))
             {
+                MODEM->getIn_Retranslator_Properties()->setRetranslator_Level(*((uint*)(In_Data.data())));
                 MODEM->getIn_Retranslator_Properties()->setRetranslator_Level(*((uint*)(In_Data.data())));
 
                 Repeat_Counter = Repeat_Number;

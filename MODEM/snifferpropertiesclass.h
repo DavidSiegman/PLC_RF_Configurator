@@ -21,6 +21,8 @@ class SnifferPropertiesClass
 public:
     SnifferPropertiesClass();
 
+    void            Clear_Data();
+
     uchar           getSniffer_Mode();
     void            setSniffer_Mode(uchar);
 

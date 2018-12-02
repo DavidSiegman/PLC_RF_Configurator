@@ -42,6 +42,7 @@ signals:
     void Get_Geometry(QRect);
     void Get_Console(QPlainTextEdit* console);
     void SendSerialNumber(QString, bool);
+    void ClearAllData(void);
     void AOPEN(void);
     void SEND_RF_RESET(void);
 

@@ -2,6 +2,11 @@
 
 SnifferPropertiesClass::SnifferPropertiesClass()
 {
+    Clear_Data();
+}
+
+void SnifferPropertiesClass::Clear_Data()
+{
     this->Sniffer_Properties_Data.Sniffer_Mode                                  = 0;
     this->Sniffer_Properties_Data.UpLink_Value                                  = 0;
     this->Sniffer_Properties_Data.CRC_Check_Disable                             = 0;
@@ -10,7 +15,6 @@ SnifferPropertiesClass::SnifferPropertiesClass()
     *((unsigned int*)&(this->Sniffer_Properties_Data.Sniffer_Mask_Destination)) = this->Sniffer_Properties_Data.Sniffer_Level_Destination;
     this->Sniffer_Properties_Data.Direct_Transfer                               = 0;
 }
-
 
 uchar      SnifferPropertiesClass::getSniffer_Mode()
 {

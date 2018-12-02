@@ -2,12 +2,16 @@
 
 ModemPropertiesClass::ModemPropertiesClass()
 {
+    Clear_Data();
+}
+
+void ModemPropertiesClass::Clear_Data()
+{
     this->Modem_Properties_Data.RX_Timeout                                = 0;
     this->Modem_Properties_Data.TX_Timeout                                = 0;
     this->Modem_Properties_Data.LED_Logic                                 = 0;
     this->Modem_Properties_Data.Reset_Device_Timeout                      = 0;
 }
-
 
 uint       ModemPropertiesClass::getRX_Timeout()
 {

@@ -443,7 +443,17 @@
         </size>
        </property>
        <property name="text">
-        <string>&lt;&lt;&lt;</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../RESOURCES/images.qrc">
+         <normaloff>:/images/icons/images/BACK.png</normaloff>:/images/icons/images/BACK.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
        </property>
       </widget>
      </item>
@@ -475,7 +485,7 @@
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/Settings.png</normaloff>:/new/icons/images/Settings.png</iconset>
+         <normaloff>:/images/icons/images/Settings_2.png</normaloff>:/images/icons/images/Settings_2.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -500,7 +510,17 @@
         </size>
        </property>
        <property name="text">
-        <string>&gt;&gt;&gt;</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../RESOURCES/images.qrc">
+         <normaloff>:/images/icons/images/NEXT.png</normaloff>:/images/icons/images/NEXT.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
        </property>
       </widget>
      </item>

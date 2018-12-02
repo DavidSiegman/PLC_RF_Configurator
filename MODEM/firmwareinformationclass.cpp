@@ -2,8 +2,13 @@
 
 FirmwareInformationClass::FirmwareInformationClass()
 {
+    Clear_Data();
+}
+
+void FirmwareInformationClass::Clear_Data()
+{
     this->Firmware_Information_Data.Device_Name                           = "";
-    this->Firmware_Information_Data.Current_Firmware_Version              = 0;
+    this->Firmware_Information_Data.Current_Firmware_Version              = 3;
     this->Firmware_Information_Data.String_Bootloader_Version             = "";
     this->Firmware_Information_Data.String_Upgradable_Version             = "";
     this->Firmware_Information_Data.Bootloader_Version                    = 0;
@@ -17,6 +22,7 @@ FirmwareInformationClass::FirmwareInformationClass()
     this->Firmware_Information_Data.Bootloader_CRC32.clear();
     this->Firmware_Information_Data.Upgradable_CRC32.clear();
 }
+
 void FirmwareInformationClass::Define_Device_Name()
 {
     setDevice_Name("");

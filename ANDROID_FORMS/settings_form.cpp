@@ -28,6 +28,7 @@ Settings_Form::Settings_Form(QWidget *parent) :
     ui->btnCOMSettings->setStyleSheet(Basic_Buttons_Style);
 
     ui->Back->setStyleSheet(Buttons_Style);
+    ui->None->setStyleSheet(Buttons_Style);
     ui->Apply->setStyleSheet(Buttons_Style);
 
     ui->Repeat->setStyleSheet(Background_White+Basic_Text_Style);

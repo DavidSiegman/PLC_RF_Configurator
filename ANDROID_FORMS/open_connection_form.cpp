@@ -136,6 +136,7 @@ void Open_Connection_Form::Set_In_Firmware_Information(FirmwareInformationClass 
 
 void Open_Connection_Form::on_Back_clicked()
 {
+    emit Get_Console(NULL);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
@@ -147,6 +148,7 @@ void Open_Connection_Form::on_Back_clicked()
 
 void Open_Connection_Form::on_Next_clicked()
 {
+    emit Get_Console(NULL);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
@@ -375,6 +377,8 @@ void Open_Connection_Form::on_Interface_currentIndexChanged(int index)
 
 void Open_Connection_Form::Clear_Form(void)
 {
+    emit ClearAllData();
+
     ui->Next->setEnabled(false);
     ui->Reset->setEnabled(false);
     SetProgress(0);

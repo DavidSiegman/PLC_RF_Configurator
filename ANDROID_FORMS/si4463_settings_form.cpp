@@ -23,11 +23,13 @@ void SI4463_Settings_Form::resizeEvent(QResizeEvent *event)
 
 void SI4463_Settings_Form::on_Back_clicked()
 {
+    emit Get_Console(NULL);
     emit Cancel(this->geometry());
 }
 
 void SI4463_Settings_Form::on_Next_clicked()
 {
+    emit Get_Console(NULL);
     emit Next(this->geometry());
 }
 

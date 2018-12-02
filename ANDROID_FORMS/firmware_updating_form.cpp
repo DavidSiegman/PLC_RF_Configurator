@@ -130,6 +130,7 @@ void Firmware_Updating_Form::Set_In_Firmware_Information(FirmwareInformationClas
 
 void Firmware_Updating_Form::on_Back_clicked()
 {
+    emit Get_Console(NULL);
     emit Get_Geometry(this->geometry());
     emit Cancel();
     this->deleteLater();

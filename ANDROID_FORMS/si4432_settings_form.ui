@@ -57,7 +57,7 @@
         </font>
        </property>
        <property name="text">
-        <string>РАДИО НАСТРОЙКИ</string>
+        <string>РАДИО-НАСТРОЙКИ</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -80,7 +80,7 @@
         <x>0</x>
         <y>0</y>
         <width>311</width>
-        <height>613</height>
+        <height>635</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -2822,7 +2822,7 @@ background-color: rgb(225, 225, 225);</string>
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/BACK_2.png</normaloff>:/new/icons/images/BACK_2.png</iconset>
+         <normaloff>:/images/icons/images/BACK.png</normaloff>:/images/icons/images/BACK.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -2860,7 +2860,7 @@ background-color: rgb(225, 225, 225);</string>
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/Settings.png</normaloff>:/new/icons/images/Settings.png</iconset>
+         <normaloff>:/images/icons/images/Settings_2.png</normaloff>:/images/icons/images/Settings_2.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -2895,7 +2895,7 @@ background-color: rgb(225, 225, 225);</string>
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/NEXT_2.png</normaloff>:/new/icons/images/NEXT_2.png</iconset>
+         <normaloff>:/images/icons/images/NEXT.png</normaloff>:/images/icons/images/NEXT.png</iconset>
        </property>
        <property name="iconSize">
         <size>

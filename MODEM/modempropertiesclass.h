@@ -18,6 +18,8 @@ class ModemPropertiesClass
 public:
     ModemPropertiesClass();
 
+    void            Clear_Data();
+
     uint            getRX_Timeout();
     void            setRX_Timeout(uint);
 

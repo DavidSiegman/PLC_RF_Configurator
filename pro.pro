@@ -56,7 +56,8 @@ HEADERS += \
     SI4432/si4432configurationclass.h \
     ANDROID_FORMS/si4463_settings_form.h \
     RESIZE_CALCULATING/resizecalculating.h \
-    ANDROID_FORMS/firmware_updating_form.h
+    ANDROID_FORMS/firmware_updating_form.h \
+    ANDROID_FORMS/retranslation_table_form.h
 
 SOURCES += \
     COM/port.cpp \
@@ -97,7 +98,8 @@ SOURCES += \
     SI4432/si4432configurationclass.cpp \
     ANDROID_FORMS/si4463_settings_form.cpp \
     RESIZE_CALCULATING/resizecalculating.cpp \
-    ANDROID_FORMS/firmware_updating_form.cpp
+    ANDROID_FORMS/firmware_updating_form.cpp \
+    ANDROID_FORMS/retranslation_table_form.cpp
 
 FORMS += \
     WINDOWS_FORMS/mainwindow.ui \
@@ -110,7 +112,8 @@ FORMS += \
     ANDROID_FORMS/si4432_settings_form.ui \
     ANDROID_FORMS/sniffer_settings_form.ui \
     ANDROID_FORMS/si4463_settings_form.ui \
-    ANDROID_FORMS/firmware_updating_form.ui
+    ANDROID_FORMS/firmware_updating_form.ui \
+    ANDROID_FORMS/retranslation_table_form.ui
 
 RESOURCES += \
     RESOURCES/images.qrc

@@ -914,7 +914,7 @@
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/BACK_2.png</normaloff>:/new/icons/images/BACK_2.png</iconset>
+         <normaloff>:/images/icons/images/BACK.png</normaloff>:/images/icons/images/BACK.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -952,7 +952,7 @@
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/Settings.png</normaloff>:/new/icons/images/Settings.png</iconset>
+         <normaloff>:/images/icons/images/Settings_2.png</normaloff>:/images/icons/images/Settings_2.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -984,7 +984,7 @@
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/NEXT_2.png</normaloff>:/new/icons/images/NEXT_2.png</iconset>
+         <normaloff>:/images/icons/images/NEXT.png</normaloff>:/images/icons/images/NEXT.png</iconset>
        </property>
        <property name="iconSize">
         <size>

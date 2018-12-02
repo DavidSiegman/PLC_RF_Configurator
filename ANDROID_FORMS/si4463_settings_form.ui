@@ -57,7 +57,7 @@
         </font>
        </property>
        <property name="text">
-        <string>SI4463 НАСТРОЙКИ</string>
+        <string>РАДИО-НАСТРОЙКИ</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -1340,7 +1340,7 @@
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/BACK_2.png</normaloff>:/new/icons/images/BACK_2.png</iconset>
+         <normaloff>:/images/icons/images/BACK.png</normaloff>:/images/icons/images/BACK.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -1360,13 +1360,13 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>40</width>
-         <height>40</height>
+         <width>0</width>
+         <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>80</width>
+         <width>16777215</width>
          <height>16777215</height>
         </size>
        </property>
@@ -1378,7 +1378,7 @@
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/Settings.png</normaloff>:/new/icons/images/Settings.png</iconset>
+         <normaloff>:/images/icons/images/Settings_2.png</normaloff>:/images/icons/images/Settings_2.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -1407,7 +1407,7 @@
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/NEXT_2.png</normaloff>:/new/icons/images/NEXT_2.png</iconset>
+         <normaloff>:/images/icons/images/NEXT.png</normaloff>:/images/icons/images/NEXT.png</iconset>
        </property>
        <property name="iconSize">
         <size>

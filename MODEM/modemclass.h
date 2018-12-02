@@ -56,6 +56,8 @@ public slots:
 
     ModemPropertiesClass*         getOut_Modem_Properties(void);
 
+    void                          ClearAllData(void);
+
 private slots:
 
 };

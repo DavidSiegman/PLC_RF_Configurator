@@ -1,8 +1,10 @@
 <RCC>
-    <qresource prefix="/new/icons">
-        <file>images/NEXT_2.png</file>
-        <file>images/Settings.png</file>
-        <file>images/BACK_2.png</file>
+    <qresource prefix="/images/icons">
+        <file>images/BACK.png</file>
         <file>images/ManualMode.png</file>
+        <file>images/NEXT.png</file>
+        <file>images/OK.png</file>
+        <file>images/Settings.png</file>
+        <file>images/Settings_2.png</file>
     </qresource>
 </RCC>

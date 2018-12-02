@@ -29,6 +29,7 @@ public:
 signals:
     void Cancel();
     void Next();
+    void Settings(QWidget*);
     void Get_Geometry(QRect);
     void Send_Data(QByteArray data, uint n);
     void Get_Console(QPlainTextEdit* console);
@@ -42,6 +43,10 @@ private slots:
     void on_cBtnSend_clicked();
 
     void on_SN_ENABLE_stateChanged(int arg1);
+
+    void on_btnSettings_clicked();
+
+    void on_Next_clicked();
 
 private:
     Ui::Hands_Enter_Form *ui;

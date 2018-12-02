@@ -109,6 +109,15 @@ void Hands_Enter_Form::Set_Geometry(QRect new_value)
 
 void Hands_Enter_Form::on_Back_clicked()
 {
+    emit Get_Console(NULL);
+    emit Get_Geometry(this->geometry());
+    emit Cancel();
+    this->deleteLater();
+}
+
+void Hands_Enter_Form::on_Next_clicked()
+{
+    emit Get_Console(NULL);
     emit Get_Geometry(this->geometry());
     emit Cancel();
     this->deleteLater();
@@ -194,4 +203,9 @@ void Hands_Enter_Form::on_SN_ENABLE_stateChanged(int arg1)
     {
         ui->SN_TEXT->setEnabled(false);
     }
+}
+
+void Hands_Enter_Form::on_btnSettings_clicked()
+{
+    emit Settings(this);
 }

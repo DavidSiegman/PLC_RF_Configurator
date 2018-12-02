@@ -22,11 +22,13 @@ void PLC_Settings_Form::resizeEvent(QResizeEvent *event)
 
 void PLC_Settings_Form::on_Back_clicked()
 {
+    emit Get_Console(NULL);
     emit Cancel();
 }
 
 void PLC_Settings_Form::on_Next_clicked()
 {
+    emit Get_Console(NULL);
     emit Next();
 }
 

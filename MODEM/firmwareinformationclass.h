@@ -37,6 +37,8 @@ class FirmwareInformationClass
 public:
     FirmwareInformationClass();
 
+    void            Clear_Data();
+
     QString         getDevice_Name();
 
 

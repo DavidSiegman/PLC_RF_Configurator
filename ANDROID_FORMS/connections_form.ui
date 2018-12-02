@@ -588,7 +588,7 @@ color: rgb(150, 80, 0);</string>
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/ManualMode.png</normaloff>:/new/icons/images/ManualMode.png</iconset>
+         <normaloff>:/images/icons/images/ManualMode.png</normaloff>:/images/icons/images/ManualMode.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -626,7 +626,7 @@ color: rgb(150, 80, 0);</string>
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/Settings.png</normaloff>:/new/icons/images/Settings.png</iconset>
+         <normaloff>:/images/icons/images/Settings_2.png</normaloff>:/images/icons/images/Settings_2.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -664,7 +664,7 @@ color: rgb(150, 80, 0);</string>
        </property>
        <property name="icon">
         <iconset resource="../RESOURCES/images.qrc">
-         <normaloff>:/new/icons/images/NEXT_2.png</normaloff>:/new/icons/images/NEXT_2.png</iconset>
+         <normaloff>:/images/icons/images/NEXT.png</normaloff>:/images/icons/images/NEXT.png</iconset>
        </property>
        <property name="iconSize">
         <size>

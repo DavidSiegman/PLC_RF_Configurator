@@ -123,11 +123,13 @@ void Sniffer_Settings_Form::resizeEvent(QResizeEvent *event)
 
 void Sniffer_Settings_Form::on_Back_clicked()
 {
+    emit Get_Console(NULL);
     emit Cancel(this->geometry());
 }
 
 void Sniffer_Settings_Form::on_Next_clicked()
 {
+    emit Get_Console(NULL);
     emit Next(this->geometry());
 }
 
@@ -219,7 +221,7 @@ void Sniffer_Settings_Form::on_Sniffer_Mode_currentIndexChanged(int index)
     if ((index >= 0)&&(index < 3)&&(this->resizing_going == 0))
     {
         emit Get_Console(ui->console);
-        emit Set_SnifferMode((uchar)(index));
+        Set_SnifferMode((uchar)(index));
 
         ui->Stop->setEnabled(true);
         ui->SettingsWidget->setEnabled(false);

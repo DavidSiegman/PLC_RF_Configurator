@@ -34,6 +34,8 @@ signals:
     void isAOPEN();
     void isSWITCH_MODE();
     void isSWITCH_PROP();
+    void isSWITCH_LEVEL();
+    void isSWITCH_TIMEOUT();
     void isCURRENT_RSSI();
     void isLRSSI_AFC();
     void isRF_PARAMS();
@@ -54,6 +56,9 @@ public slots:
     void aOPEN();
     void SetSWITCH_MODE();
     void SetSWITCH_PROP();
+    void SetSWITCH_MASK();
+    void SetSWITCH_LEVEL();
+    void SetSWITCH_TIMEOUT();
     void StartMonitor();
     void StopMonitor();
     void ReadCURRENT_RSSI();

@@ -31,6 +31,21 @@ void ConnectHandlerClass::SetSWITCH_MODE()
     ReadDataProgress = 0;
     ConnectHandling(SEND_WRITE_NODE_TYPE,1);
 }
+void ConnectHandlerClass::SetSWITCH_MASK()
+{
+    ReadDataProgress = 0;
+    ConnectHandling(SEND_WRITE_SWITCH_LEVEL,1);
+}
+void ConnectHandlerClass::SetSWITCH_LEVEL()
+{
+    ReadDataProgress = 0;
+    ConnectHandling(SEND_WRITE_SWITCH_LEVEL,1);
+}
+void ConnectHandlerClass::SetSWITCH_TIMEOUT()
+{
+    ReadDataProgress = 0;
+    ConnectHandling(SEND_WRITE_SWITCH_TIMEOUT,1);
+}
 
 void ConnectHandlerClass::SetSWITCH_PROP()
 {
@@ -826,20 +841,10 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         {
             if (state != 0)
             {
-                if ((In_Firmware_Information->getBootloader_Version() >= 4)||(In_Firmware_Information->getBootloader_Version() == 0))
-                {
-                    emit Progress(0);
-                    emit SendLog(QString::fromUtf8("\r>> ======= Запись уровня/маски ретранслятора\r"),NONE);
-                    emit SendComand(SEND_WRITE_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
-                    ReadDataProgress = 1;
-                }
-                else
-                {
-                    emit Progress(60);
-                    emit SendLog(QString::fromUtf8("\r>> ======= Запись задержки ретранслятора\r"),NONE);
-                    emit SendComand(SEND_WRITE_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
-                    ReadDataProgress = 3;
-                }
+                emit Progress(0);
+                emit SendLog(QString::fromUtf8("\r>> ======= Запись уровня/маски ретранслятора\r"),NONE);
+                emit SendComand(SEND_WRITE_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 1;
             }
             break;
         }
@@ -847,17 +852,10 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         {
             if (state != 0)
             {
-                emit Progress(30);
+                emit Progress(50);
                 emit SendLog(QString::fromUtf8("\r>> ======= Чтение уровня/маски ретранслятора\r"),NONE);
                 emit SendComand(SEND_READ_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
-                if (In_Firmware_Information->getBootloader_Version() == 0)
-                {
-                    ReadDataProgress = 4;
-                }
-                else
-                {
-                    ReadDataProgress = 2;
-                }
+                ReadDataProgress = 2;
             }
             break;
         }
@@ -865,31 +863,48 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state)
         {
             if (state != 0)
             {
-                emit Progress(60);
-                emit SendLog(QString::fromUtf8("\r>> ======= Запись задержки ретранслятора\r"),NONE);
-                emit SendComand(SEND_WRITE_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
-                ReadDataProgress = 3;
+                emit Progress(100);
+                emit SendLog(QString::fromUtf8(">> ======= Установка уровня/маски прошла успешно\r"),NONE);
+                emit isSWITCH_LEVEL();
+                ReadDataProgress = 0;
             }
             break;
         }
-        case 3:
+        }
+    }
+    else if (n == SEND_WRITE_SWITCH_TIMEOUT)
+    {
+        switch (ReadDataProgress)
+        {
+        case 0:
         {
             if (state != 0)
             {
-                emit Progress(90);
-                emit SendLog(QString::fromUtf8("\r>> ======= Чтение задержки ретранслятора\r"),NONE);
-                emit SendComand(SEND_READ_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
-                ReadDataProgress = 4;
+                emit Progress(0);
+                emit SendLog(QString::fromUtf8("\r>> ======= Запись таймаута ретранслятора\r"),NONE);
+                emit SendComand(SEND_WRITE_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 1;
             }
             break;
         }
-        case 4:
+        case 1:
+        {
+            if (state != 0)
+            {
+                emit Progress(50);
+                emit SendLog(QString::fromUtf8("\r>> ======= Чтение таймаута ретранслятора\r"),NONE);
+                emit SendComand(SEND_READ_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
+                ReadDataProgress = 2;
+            }
+            break;
+        }
+        case 2:
         {
             if (state != 0)
             {
                 emit Progress(100);
-                emit SendLog(QString::fromUtf8(">> ======= Установка параметров прошла успешно\r"),NONE);
-                emit isSWITCH_PROP();
+                emit SendLog(QString::fromUtf8(">> ======= Установка таймаута прошла успешно\r"),NONE);
+                emit isSWITCH_TIMEOUT();
                 ReadDataProgress = 0;
             }
             break;

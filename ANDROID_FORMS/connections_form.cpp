@@ -102,7 +102,7 @@ Connections_Form::Connections_Form(QWidget *parent) :
     DataLogic->setRepeatNumber(settings.value(CONNECTION_SETTINGS_REPEATE).toInt());
     DataLogic->setRepeatTimeout(settings.value(CONNECTION_SETTINGS_PERIODE).toInt());
 
-    ui->PortNameBox           ->installEventFilter(this);
+    ui->PortNameBox->installEventFilter(this);
 
     newPort->start();
     newTCP ->start();
@@ -434,6 +434,7 @@ void Connections_Form::Create_And_Show_Hands_Enter_Form(QWidget *parent)
     connect(hands_enter_form,SIGNAL(Get_Geometry(QRect)),                    parent,                SLOT(Set_Geometry(QRect)));
     connect(hands_enter_form,SIGNAL(Send_Data(QByteArray,uint)),             DataLogic,             SLOT(SEND_DATA(QByteArray,uint)));
     connect(hands_enter_form,SIGNAL(Get_Console(QPlainTextEdit*)),           this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(hands_enter_form,SIGNAL(Settings(QWidget*)),                     this,                  SLOT(Create_And_Show_Settings_Form(QWidget*)));
 
     parent->hide();
     hands_enter_form->setGeometry(parent->geometry());
@@ -454,6 +455,7 @@ void Connections_Form::Create_And_Show_Open_Connection_Form(void)
     connect(open_connection_form,SIGNAL(STOP_SEND_DATA()),                   DataLogic,             SLOT(STOP_SEND_DATA()));
     connect(open_connection_form,SIGNAL(SEND_RF_RESET()),                    ConnectHandler,        SLOT(SendRF_RESET()));
     connect(open_connection_form,SIGNAL(AOPEN()),                            ConnectHandler,        SLOT(aOPEN()));
+    connect(open_connection_form,SIGNAL(ClearAllData()),                     MODEM,                 SLOT(ClearAllData()));
     connect(ConnectHandler,      SIGNAL(isAOPEN()),                          open_connection_form,  SLOT(isOPEND()));
     connect(ConnectHandler,      SIGNAL(isRF_RESET()),                       open_connection_form,  SLOT(isRESET()));
     connect(ConnectHandler,      SIGNAL(Progress(uint)),                     open_connection_form,  SLOT(SetProgress(uint)));
@@ -471,14 +473,28 @@ void Connections_Form::Create_And_Show_Net_Settings_Form(QRect current_geometry)
 
     connect(net_settings_form,SIGNAL(Cancel(QRect)),                        this,                  SLOT(Define_Pre_Form(QRect)));
     connect(net_settings_form,SIGNAL(Next(QRect)),                          this,                  SLOT(Define_Next_Form(QRect)));
+    connect(net_settings_form,SIGNAL(Settings(QWidget*)),                   this,                  SLOT(Create_And_Show_Settings_Form(QWidget*)));
+    connect(net_settings_form,SIGNAL(Retranslation_Table(QWidget*)),        this,                  SLOT(Create_And_Show_Retranslation_Table_Form(QWidget*)));
     connect(net_settings_form,SIGNAL(Get_Console(QPlainTextEdit*)),         this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
-    connect(net_settings_form,SIGNAL(Send_Data(QByteArray,uint)),           DataLogic,             SLOT(SEND_DATA(QByteArray,uint)));
-    connect(net_settings_form,SIGNAL(isCreated()),                          MODEM,                 SLOT(getSWITCH_MODE()));
-    connect(net_settings_form,SIGNAL(isCreated()),                          MODEM,                 SLOT(getSWITCH_LEVEL()));
-    connect(net_settings_form,SIGNAL(isCreated()),                          MODEM,                 SLOT(getSWITCH_TIMEOUT()));
-    connect(MODEM,            SIGNAL(SWITCH_MODE(uchar)),                   net_settings_form,     SLOT(SetSwitchModeToUI(uchar)));
-    connect(MODEM,            SIGNAL(SWITCH_LEVEL(uint)),                   net_settings_form,     SLOT(SetSwitchLevelToUI(uint)));
-    connect(MODEM,            SIGNAL(SWITCH_TIMEOUT(uint)),                 net_settings_form,     SLOT(SetSwitchTimeoutToUI(uint)));
+    connect(net_settings_form,SIGNAL(Stop_Send_Data()),                     DataLogic,             SLOT(STOP_SEND_DATA()));
+    connect(DataLogic,        SIGNAL(STOPPED()),                            net_settings_form,     SLOT(isStopped()));
+
+    connect(ConnectHandler,       SIGNAL(Progress(uint)),                   net_settings_form,     SLOT(SetProgress(uint)));
+
+    connect(net_settings_form,SIGNAL(isCreated()),                          MODEM,                 SLOT(getOut_Retranslator_Properties()));
+    connect(net_settings_form,SIGNAL(isCreated()),                          MODEM,                 SLOT(getIn_Retranslator_Properties()));
+
+    connect(MODEM, SIGNAL(sIn_Retranslator_Properties(RetranslatorPropertiesClass*)), net_settings_form, SLOT(Set_In_Retranslator_Properties(RetranslatorPropertiesClass*)));
+    connect(MODEM, SIGNAL(sOut_Retranslator_Properties(RetranslatorPropertiesClass*)), net_settings_form, SLOT(Set_Out_Retranslator_Properties(RetranslatorPropertiesClass*)));
+
+    connect(net_settings_form,SIGNAL(Send_Switch_Mode()),                   ConnectHandler,        SLOT(SetSWITCH_MODE()));
+    connect(ConnectHandler,   SIGNAL(isSWITCH_MODE()),                      net_settings_form,     SLOT(isSwitchMode()));
+    connect(net_settings_form,SIGNAL(Send_Switch_Level()),                  ConnectHandler,        SLOT(SetSWITCH_LEVEL()));
+    connect(ConnectHandler,   SIGNAL(isSWITCH_LEVEL()),                     net_settings_form,     SLOT(isSwitchLevel()));
+    connect(net_settings_form,SIGNAL(Send_Switch_Timeout()),                ConnectHandler,        SLOT(SetSWITCH_TIMEOUT()));
+    connect(ConnectHandler,   SIGNAL(isSWITCH_TIMEOUT()),                   net_settings_form,     SLOT(isSwitchTimeout()));
+    connect(net_settings_form,SIGNAL(Send_RF_Reset()),                      ConnectHandler,        SLOT(SendRF_RESET()));
+    connect(ConnectHandler,   SIGNAL(isRF_RESET()),                         net_settings_form,     SLOT(isRF_Reset()));
 
     this->hide();
     net_settings_form->setGeometry(current_geometry);
@@ -594,6 +610,7 @@ void Connections_Form::Create_And_Show_Firmware_Updating_Form(QWidget *parent)
     connect(firmware_updating_form,SIGNAL(Cancel()),                         parent,                SLOT(show()));
     connect(firmware_updating_form,SIGNAL(Get_Geometry(QRect)),              parent,                SLOT(Set_Geometry(QRect)));
     connect(firmware_updating_form,SIGNAL(Get_Console(QPlainTextEdit*)),     this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(firmware_updating_form, SIGNAL(Settings(QWidget*)),              this,                  SLOT(Create_And_Show_Settings_Form(QWidget*)));
     connect(firmware_updating_form,SIGNAL(Stop_Send_Data()),                 DataLogic,             SLOT(STOP_SEND_DATA()));
     connect(DataLogic,             SIGNAL(STOPPED()),                        firmware_updating_form,SLOT(isStopped()));
     connect(firmware_updating_form,SIGNAL(Start_Update()),                   ConnectHandler,        SLOT(StartUPDATE()));
@@ -614,6 +631,29 @@ void Connections_Form::Create_And_Show_Firmware_Updating_Form(QWidget *parent)
     firmware_updating_form->show();
 }
 
+void Connections_Form::Create_And_Show_Retranslation_Table_Form(QWidget *parent)
+{
+    retranslation_table_form = new Retranslation_Table_Form;
+    connect(retranslation_table_form,SIGNAL(Cancel()),                         parent,                  SLOT(show()));
+    connect(retranslation_table_form,SIGNAL(Get_Geometry(QRect)),              parent,                  SLOT(Set_Geometry(QRect)));
+    connect(retranslation_table_form,SIGNAL(Get_Console(QPlainTextEdit*)),     this,                    SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(retranslation_table_form,SIGNAL(Settings(QWidget*)),               this,                    SLOT(Create_And_Show_Settings_Form(QWidget*)));
+    connect(retranslation_table_form,SIGNAL(Stop_Send_Data()),                 DataLogic,               SLOT(STOP_SEND_DATA()));
+    connect(DataLogic,               SIGNAL(STOPPED()),                        retranslation_table_form,SLOT(isStopped()));
+    connect(ConnectHandler,          SIGNAL(Progress(uint)),                   retranslation_table_form,SLOT(SetProgress(uint)));
+    connect(DataLogic,               SIGNAL(outPROGRESS(uint)),                retranslation_table_form,SLOT(SetProgress(uint)));
+
+    connect(retranslation_table_form,SIGNAL(isCreated()),                      MODEM,                 SLOT(getIn_Retranslator_Properties()));
+    connect(retranslation_table_form,SIGNAL(isCreated()),                      MODEM,                 SLOT(getOut_Retranslator_Properties()));
+
+    connect(MODEM,                   SIGNAL(sIn_Retranslator_Properties(RetranslatorPropertiesClass*)), retranslation_table_form,  SLOT(Set_In_Retranslator_Properties(RetranslatorPropertiesClass *)));
+    connect(MODEM,                   SIGNAL(sOut_Retranslator_Properties(RetranslatorPropertiesClass*)),retranslation_table_form,  SLOT(Set_Out_Retranslator_Properties(RetranslatorPropertiesClass *)));
+
+    parent->hide();
+    retranslation_table_form->setGeometry(parent->geometry());
+    retranslation_table_form->show();
+}
+
 //+++++++++++++[Процедура вывода данных в консоль]++++++++++++++++++++++++++++++++++++++++
 void Connections_Form::Print(QByteArray data, uint n)
 {
@@ -622,6 +662,11 @@ void Connections_Form::Print(QByteArray data, uint n)
 
     QByteArray d;
     d.append(data);
+
+    if (ActiveConsole == NULL)
+    {
+        ActiveConsole = ui->console;
+    }
 
     switch (n)
     {

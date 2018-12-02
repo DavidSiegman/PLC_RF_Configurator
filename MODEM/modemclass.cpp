@@ -61,4 +61,19 @@ ModemPropertiesClass*         MODEMClass::getOut_Modem_Properties(void)
     return this->Out_Modem_Properties;
 }
 
+void                          MODEMClass::ClearAllData()
+{
+
+    In_Firmware_Information->Clear_Data();
+
+    In_Retranslator_Properties->Clear_Data();
+    Out_Retranslator_Properties->Clear_Data();
+
+    In_Sniffer_Properties->Clear_Data();
+    Out_Sniffer_Properties->Clear_Data();
+
+    In_Modem_Properties->Clear_Data();
+    Out_Modem_Properties->Clear_Data();
+}
+
 

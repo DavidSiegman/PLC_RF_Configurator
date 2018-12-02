@@ -42,6 +42,7 @@
 #include "si4432_settings_form.h"
 #include "si4463_settings_form.h"
 #include "firmware_updating_form.h"
+#include "retranslation_table_form.h"
 
 /* Defining */
 #define ORGANIZATION_NAME "MILANDR"
@@ -110,6 +111,8 @@ private slots:
 
     void Create_And_Show_Firmware_Updating_Form(QWidget*);
 
+    void Create_And_Show_Retranslation_Table_Form(QWidget*);
+
     void on_TCPConnect_clicked();
 
     void on_PortNameBox_currentIndexChanged(const QString &arg1);
@@ -121,23 +124,24 @@ private slots:
     void on_btnHandsEnter_clicked();
 
 private:
-    Ui::Connections_Form *ui;
+    Ui::Connections_Form     *ui;
 
-    QPlainTextEdit         *ActiveConsole;
+    QPlainTextEdit           *ActiveConsole;
 
-    Settings_Form          *settings_form;
-    Hands_Enter_Form       *hands_enter_form;
-    Open_Connection_Form   *open_connection_form;
-    Net_Settings_Form      *net_settings_form;
-    Sniffer_Settings_Form  *sniffer_settings_form;
-    SI4432_Settings_Form   *si4432_settings_form;
-    SI4463_Settings_Form   *si4463_settings_form;
-    Firmware_Updating_Form *firmware_updating_form;
+    Settings_Form            *settings_form;
+    Hands_Enter_Form         *hands_enter_form;
+    Open_Connection_Form     *open_connection_form;
+    Net_Settings_Form        *net_settings_form;
+    Sniffer_Settings_Form    *sniffer_settings_form;
+    SI4432_Settings_Form     *si4432_settings_form;
+    SI4463_Settings_Form     *si4463_settings_form;
+    Firmware_Updating_Form   *firmware_updating_form;
+    Retranslation_Table_Form *retranslation_table_form;
 
-    QSysInfo               *SysInfo;
-    QRegExp                 RegSystemName;
+    QSysInfo                 *SysInfo;
+    QRegExp                   RegSystemName;
 
-    ResizeCalculating       resize_calculating;
+    ResizeCalculating         resize_calculating;
 
 };
 

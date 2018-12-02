@@ -2,6 +2,11 @@
 
 RetranslatorPropertiesClass::RetranslatorPropertiesClass()
 {
+    Clear_Data();
+}
+
+void RetranslatorPropertiesClass::Clear_Data()
+{
     this->Retranslator_Properties_Data.Retranslator_Mode                  = 0;
     this->Retranslator_Properties_Data.Retranslator_Level                 = 0;
     *((unsigned int*)&(this->Retranslator_Properties_Data.Retranslator_Mask)) = this->Retranslator_Properties_Data.Retranslator_Level;
