@@ -57,7 +57,7 @@ HEADERS += \
     ANDROID_FORMS/si4463_settings_form.h \
     RESIZE_CALCULATING/resizecalculating.h \
     ANDROID_FORMS/firmware_updating_form.h \
-    ANDROID_FORMS/retranslation_table_form.h
+    ANDROID_FORMS/retranslation_table_form.h \
 
 SOURCES += \
     COM/port.cpp \

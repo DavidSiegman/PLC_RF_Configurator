@@ -178,7 +178,7 @@ void Sniffer_Settings_Form::Set_In_Retranslator_Properties (RetranslatorProperti
     Out_Retranslator_Properties->setRetranslator_Level(In_Retranslator_Properties->getRetranslator_Level());
     Out_Retranslator_Properties->setRetranslator_Mode(In_Retranslator_Properties->getRetranslator_Mode());
     Out_Retranslator_Properties->setRetranslator_Table(In_Retranslator_Properties->getRetranslator_Table());
-    Out_Retranslator_Properties->setRetranslator_Table_Current_Index(In_Retranslator_Properties->getRetranslator_Table_Current_Index());
+    Out_Retranslator_Properties->setRetranslator_Table_Current_Index(0);
     Out_Retranslator_Properties->setRetranslator_Timeout(In_Retranslator_Properties->getRetranslator_Timeout());
 
     if (Out_Retranslator_Properties->getRetranslator_Table().length() > 0)

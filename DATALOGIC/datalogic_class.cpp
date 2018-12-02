@@ -993,7 +993,7 @@ void DataLogic_Class::ParceData(uint n)
         {
             if (ComandState == 1)
             {
-                if(MODEM->getIn_Retranslator_Properties()->getRetranslator_Table_Current_Index() < MODEM->getIn_Retranslator_Properties()->getRetranslator_Table().length()-1)
+                if(MODEM->getOut_Retranslator_Properties()->getRetranslator_Table_Current_Index() < MODEM->getOut_Retranslator_Properties()->getRetranslator_Table().length()-1)
                 {
                     //if (this->stop)
                     //{
@@ -1007,15 +1007,15 @@ void DataLogic_Class::ParceData(uint n)
                     //else
                     //{
                         Repeat_Counter = Repeat_Number;
-                        uchar temp = MODEM->getIn_Retranslator_Properties()->getRetranslator_Table_Current_Index();
+                        uchar temp = MODEM->getOut_Retranslator_Properties()->getRetranslator_Table_Current_Index();
                         temp += 1;
-                        MODEM->getIn_Retranslator_Properties()->setRetranslator_Table_Current_Index(temp);
+                        MODEM->getOut_Retranslator_Properties()->setRetranslator_Table_Current_Index(temp);
                         ComandHandling(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                     //}
                 }
                 else
                 {
-                    MODEM->getIn_Retranslator_Properties()->clearRetranslation_Table();
+                    MODEM->getOut_Retranslator_Properties()->clearRetranslation_Table();
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
 

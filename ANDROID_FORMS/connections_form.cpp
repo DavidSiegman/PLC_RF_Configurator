@@ -643,11 +643,18 @@ void Connections_Form::Create_And_Show_Retranslation_Table_Form(QWidget *parent)
     connect(ConnectHandler,          SIGNAL(Progress(uint)),                   retranslation_table_form,SLOT(SetProgress(uint)));
     connect(DataLogic,               SIGNAL(outPROGRESS(uint)),                retranslation_table_form,SLOT(SetProgress(uint)));
 
-    connect(retranslation_table_form,SIGNAL(isCreated()),                      MODEM,                 SLOT(getIn_Retranslator_Properties()));
-    connect(retranslation_table_form,SIGNAL(isCreated()),                      MODEM,                 SLOT(getOut_Retranslator_Properties()));
+    connect(retranslation_table_form,SIGNAL(isCreated()),                      MODEM,                   SLOT(getOut_Retranslator_Properties()));
+    connect(retranslation_table_form,SIGNAL(isCreated()),                      MODEM,                   SLOT(getIn_Retranslator_Properties()));
 
     connect(MODEM,                   SIGNAL(sIn_Retranslator_Properties(RetranslatorPropertiesClass*)), retranslation_table_form,  SLOT(Set_In_Retranslator_Properties(RetranslatorPropertiesClass *)));
     connect(MODEM,                   SIGNAL(sOut_Retranslator_Properties(RetranslatorPropertiesClass*)),retranslation_table_form,  SLOT(Set_Out_Retranslator_Properties(RetranslatorPropertiesClass *)));
+
+    connect(retranslation_table_form,SIGNAL(Send_Read_Switch_Table()),         ConnectHandler,          SLOT(ReadSWITCH_TABLE()));
+    connect(ConnectHandler,          SIGNAL(isSWITCH_TABLE()),                 retranslation_table_form,SLOT(isSwitch_Table()));
+    connect(retranslation_table_form,SIGNAL(Send_Write_Switch_Table()),        ConnectHandler,          SLOT(WriteSWITCH_TABLE()));
+    connect(ConnectHandler,          SIGNAL(isSWITCH_TABLE()),                 retranslation_table_form,SLOT(isSwitch_Table()));
+    connect(retranslation_table_form,SIGNAL(Send_Clear_Switch_Table()),        ConnectHandler,          SLOT(SendSWITCH_TABLE_DELETE()));
+    connect(ConnectHandler,          SIGNAL(isSWITCH_TABLE_DELETE()),          retranslation_table_form,SLOT(isSwitch_Table_Delete()));
 
     parent->hide();
     retranslation_table_form->setGeometry(parent->geometry());
