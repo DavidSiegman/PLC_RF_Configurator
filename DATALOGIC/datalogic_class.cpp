@@ -973,6 +973,7 @@ void DataLogic_Class::ParceData(uint n)
                         Repeat_Counter = Repeat_Number;
 
                         MODEM->getIn_Retranslator_Properties()->addNewItemToRetranslation_Table(QString::number(SWT_Element));
+                        MODEM->getIn_Retranslator_Properties();
                         ComandHandling(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                     //}
                 }
@@ -1007,6 +1008,7 @@ void DataLogic_Class::ParceData(uint n)
                     //else
                     //{
                         Repeat_Counter = Repeat_Number;
+
                         uchar temp = MODEM->getOut_Retranslator_Properties()->getRetranslator_Table_Current_Index();
                         temp += 1;
                         MODEM->getOut_Retranslator_Properties()->setRetranslator_Table_Current_Index(temp);

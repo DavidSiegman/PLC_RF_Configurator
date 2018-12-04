@@ -168,11 +168,13 @@ void Retranslation_Table_Form::on_Del_NetItem_clicked()
 {
     if (this->model->rowCount() > 0)
     {
+        uint count = this->model->rowCount()-1;
+        Out_Retranslator_Properties->setRetranslator_Table_Current_Index(count);
         Out_Retranslator_Properties->delCurrentItemFromRetranslation_Table();
 
-        this->model->removeRow(this->model->rowCount());
+        this->model->removeRow(count);
 
-        if (this->model->rowCount() == 0)
+        if (count == 0)
         {
             this->model->removeColumn(0);
         }

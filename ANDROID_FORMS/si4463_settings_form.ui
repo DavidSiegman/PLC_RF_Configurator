@@ -68,6 +68,12 @@
    </item>
    <item>
     <widget class="QScrollArea" name="scrollArea">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
      </property>
@@ -80,24 +86,36 @@
         <x>0</x>
         <y>0</y>
         <width>311</width>
-        <height>732</height>
+        <height>494</height>
        </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <property name="spacing">
         <number>0</number>
        </property>
        <property name="leftMargin">
-        <number>2</number>
+        <number>0</number>
        </property>
        <property name="topMargin">
-        <number>2</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
-        <number>2</number>
+        <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>2</number>
+        <number>0</number>
        </property>
        <item>
         <widget class="QWidget" name="SettingsWidget" native="true">
@@ -110,7 +128,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>500</height>
+           <height>0</height>
           </size>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0,0,0,0,0">
@@ -170,7 +188,7 @@
             <item>
              <widget class="QLabel" name="FileName">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Ignored" vsizetype="Minimum">
+               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -185,12 +203,12 @@
                <font>
                 <family>Microsoft YaHei UI</family>
                 <pointsize>8</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
+                <weight>50</weight>
+                <bold>false</bold>
                </font>
               </property>
               <property name="styleSheet">
-               <string notr="true"/>
+               <string notr="true">color: rgb(0, 115, 10);</string>
               </property>
               <property name="text">
                <string/>
@@ -1092,6 +1110,13 @@
            </layout>
           </item>
           <item>
+           <widget class="QPushButton" name="Registers">
+            <property name="text">
+             <string>Регистры SI4463</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QProgressBar" name="progress">
             <property name="minimumSize">
              <size>
@@ -1201,67 +1226,6 @@
             </item>
            </layout>
           </item>
-          <item>
-           <layout class="QVBoxLayout" name="verticalLayout_14">
-            <property name="spacing">
-             <number>0</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="label_25">
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>25</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <pointsize>10</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>Значения регистров SI4436</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QTableView" name="SI4436_PROPSView">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Minimum" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>230</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-                <pointsize>7</pointsize>
-               </font>
-              </property>
-              <property name="verticalScrollBarPolicy">
-               <enum>Qt::ScrollBarAsNeeded</enum>
-              </property>
-              <property name="horizontalScrollBarPolicy">
-               <enum>Qt::ScrollBarAsNeeded</enum>
-              </property>
-              <property name="sizeAdjustPolicy">
-               <enum>QAbstractScrollArea::AdjustIgnored</enum>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
          </layout>
         </widget>
        </item>
@@ -1293,7 +1257,7 @@
        <item>
         <widget class="QPlainTextEdit" name="console">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -1301,7 +1265,7 @@
          <property name="minimumSize">
           <size>
            <width>0</width>
-           <height>200</height>
+           <height>0</height>
           </size>
          </property>
          <property name="font">
@@ -1309,6 +1273,9 @@
            <family>Microsoft YaHei UI</family>
            <pointsize>7</pointsize>
           </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border: none;</string>
          </property>
         </widget>
        </item>

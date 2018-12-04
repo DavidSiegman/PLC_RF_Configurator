@@ -50,9 +50,9 @@ void SI4463_Settings_Form::Set_Geometry(QRect new_value)
 
 void SI4463_Settings_Form::Set_Model(QStandardItemModel *model)
 {
-    ui->SI4436_PROPSView      ->setModel(model);
-    ui->SI4436_PROPSView      ->resizeRowsToContents();
-    ui->SI4436_PROPSView      ->resizeColumnsToContents();
+    //ui->SI4436_PROPSView      ->setModel(model);
+    //ui->SI4436_PROPSView      ->resizeRowsToContents();
+    //ui->SI4436_PROPSView      ->resizeColumnsToContents();
 }
 
 void SI4463_Settings_Form::Set_Prameters(QList<Params> *params)

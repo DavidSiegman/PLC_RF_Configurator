@@ -26,11 +26,16 @@ HEADERS += \
     OTHER_FUNCTIONS/mess_enum.h \
     BUTTONS_HANDLERS/connecthandlerclass.h \
     MODEM/modemclass.h \
+    MODEM/firmwareinformationclass.h \
+    MODEM/retranslatorpropertiesclass.h \
+    MODEM/snifferpropertiesclass.h \
+    MODEM/modempropertiesclass.h \
     GRAPH/mygraphgrid.h \
     GRAPH/mygraphlegend.h \
     GRAPH/mygraphscene.h \
     GRAPH/mypoligon.h \
     MONITOR/monitorclass.h \
+    SI4432/si4432configurationclass.h \
     SI4463/si4463_propertys_tablemodel.h \
     TCP/tcp.h \
     FILE/parceclass.h \
@@ -49,30 +54,31 @@ HEADERS += \
     ANDROID_FORMS/plc_settings_form.h \
     ANDROID_FORMS/si4432_settings_form.h \
     ANDROID_FORMS/sniffer_settings_form.h \
-    MODEM/firmwareinformationclass.h \
-    MODEM/retranslatorpropertiesclass.h \
-    MODEM/snifferpropertiesclass.h \
-    MODEM/modempropertiesclass.h \
-    SI4432/si4432configurationclass.h \
     ANDROID_FORMS/si4463_settings_form.h \
-    RESIZE_CALCULATING/resizecalculating.h \
     ANDROID_FORMS/firmware_updating_form.h \
     ANDROID_FORMS/retranslation_table_form.h \
+    ANDROID_FORMS/si4463_registers_form.h
+    RESIZE_CALCULATING/resizecalculating.h \
 
 SOURCES += \
     COM/port.cpp \
     CRC/crc16_class.cpp \
     DATALOGIC/datalogic_class.cpp \
-    SI4463/si4463class.cpp \
     MAIN/main.cpp \
     WINDOWS_FORMS/mainwindow.cpp \
     BUTTONS_HANDLERS/connecthandlerclass.cpp \
     MODEM/modemclass.cpp \
+    MODEM/firmwareinformationclass.cpp \
+    MODEM/retranslatorpropertiesclass.cpp \
+    MODEM/snifferpropertiesclass.cpp \
+    MODEM/modempropertiesclass.cpp \
     GRAPH/mygraphgrid.cpp \
     GRAPH/mygraphlegend.cpp \
     GRAPH/mygraphscene.cpp \
     GRAPH/mypoligon.cpp \
     MONITOR/monitorclass.cpp \
+    SI4432/si4432configurationclass.cpp \
+    SI4463/si4463class.cpp \
     SI4463/si4463_propertys_tablemodel.cpp \
     TCP/tcp.cpp \
     FILE/parceclass.cpp \
@@ -91,15 +97,11 @@ SOURCES += \
     ANDROID_FORMS/plc_settings_form.cpp \
     ANDROID_FORMS/si4432_settings_form.cpp \
     ANDROID_FORMS/sniffer_settings_form.cpp \
-    MODEM/firmwareinformationclass.cpp \
-    MODEM/retranslatorpropertiesclass.cpp \
-    MODEM/snifferpropertiesclass.cpp \
-    MODEM/modempropertiesclass.cpp \
-    SI4432/si4432configurationclass.cpp \
     ANDROID_FORMS/si4463_settings_form.cpp \
-    RESIZE_CALCULATING/resizecalculating.cpp \
     ANDROID_FORMS/firmware_updating_form.cpp \
-    ANDROID_FORMS/retranslation_table_form.cpp
+    ANDROID_FORMS/retranslation_table_form.cpp \
+    ANDROID_FORMS/si4463_registers_form.cpp
+    RESIZE_CALCULATING/resizecalculating.cpp \
 
 FORMS += \
     WINDOWS_FORMS/mainwindow.ui \
@@ -113,7 +115,8 @@ FORMS += \
     ANDROID_FORMS/sniffer_settings_form.ui \
     ANDROID_FORMS/si4463_settings_form.ui \
     ANDROID_FORMS/firmware_updating_form.ui \
-    ANDROID_FORMS/retranslation_table_form.ui
+    ANDROID_FORMS/retranslation_table_form.ui \
+    ANDROID_FORMS/si4463_registers_form.ui
 
 RESOURCES += \
     RESOURCES/images.qrc
