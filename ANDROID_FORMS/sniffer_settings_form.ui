@@ -430,7 +430,7 @@
                  <set>Qt::AlignCenter</set>
                 </property>
                 <property name="maximum">
-                 <number>3</number>
+                 <number>7</number>
                 </property>
                </widget>
               </item>
@@ -520,7 +520,7 @@
                  <set>Qt::AlignCenter</set>
                 </property>
                 <property name="maximum">
-                 <number>7</number>
+                 <number>3</number>
                 </property>
                </widget>
               </item>

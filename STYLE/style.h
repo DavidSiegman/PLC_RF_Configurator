@@ -72,6 +72,11 @@ const QString Text_Green                          (
 const QString ScrollBar_Style                     (
                                                    "QScrollBar:vertical {"
                                                     "width: 10px;"
+                                                    "height: 10px;"
+                                                   "}"
+                                                   "QScrollBar:horizontal {"
+                                                    "width: 10px;"
+                                                    "height: 10px;"
                                                    "}"
                                                   );
 const QString Basic_Buttons_Style                 (

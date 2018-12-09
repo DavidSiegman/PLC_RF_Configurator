@@ -57,7 +57,8 @@ HEADERS += \
     ANDROID_FORMS/si4463_settings_form.h \
     ANDROID_FORMS/firmware_updating_form.h \
     ANDROID_FORMS/retranslation_table_form.h \
-    ANDROID_FORMS/si4463_registers_form.h
+    ANDROID_FORMS/si4463_registers_form.h \
+    RESIZE_CALCULATING/resizecalculating.h
     RESIZE_CALCULATING/resizecalculating.h \
 
 SOURCES += \
@@ -100,7 +101,8 @@ SOURCES += \
     ANDROID_FORMS/si4463_settings_form.cpp \
     ANDROID_FORMS/firmware_updating_form.cpp \
     ANDROID_FORMS/retranslation_table_form.cpp \
-    ANDROID_FORMS/si4463_registers_form.cpp
+    ANDROID_FORMS/si4463_registers_form.cpp \
+    RESIZE_CALCULATING/resizecalculating.cpp
     RESIZE_CALCULATING/resizecalculating.cpp \
 
 FORMS += \

@@ -1,11 +1,30 @@
 #include "si4463_settings_form.h"
+#include "connections_form.h"
 #include "ui_si4463_settings_form.h"
+
+#include "STYLE/style.h"
 
 SI4463_Settings_Form::SI4463_Settings_Form(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SI4463_Settings_Form)
 {
     ui->setupUi(this);
+    this->setWindowTitle(APPLICATION_NAME);
+
+    this->setStyleSheet(Main_Widget_Style);
+    ui->label_1->setStyleSheet(Titel_Widget_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+
+    ui->FileOpen->setStyleSheet(Basic_Buttons_Style);
+    ui->Write->setStyleSheet(Basic_Buttons_Style);
+    ui->Stop->setStyleSheet(Basic_Buttons_Style);
+    ui->Reset->setStyleSheet(Basic_Buttons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->Registers->setStyleSheet(Basic_Buttons_Style);
+
+    ui->Back->setStyleSheet(Buttons_Style);
+    ui->btnSettings->setStyleSheet(Buttons_Style);
+    ui->Next->setStyleSheet(Buttons_Style);
 
     connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 
@@ -19,6 +38,53 @@ SI4463_Settings_Form::~SI4463_Settings_Form()
 void SI4463_Settings_Form::resizeEvent(QResizeEvent *event)
 {
     emit isCreated();
+
+    resize_calculating.set_form_geometry(this->geometry());
+
+    int text_size_1 = resize_calculating.get_text_size_1();
+    int text_size_2 = resize_calculating.get_text_size_2();
+    int text_size_3 = resize_calculating.get_text_size_3();
+    int text_size_4 = resize_calculating.get_text_size_4();
+    int text_size_5 = resize_calculating.get_text_size_5();
+
+    QSize icons_size;
+    icons_size.setWidth(resize_calculating.get_icons_size());
+    icons_size.setHeight(resize_calculating.get_icons_size());
+
+    QFont font_1 = ui->label_1->font();     font_1.setPixelSize(text_size_1);
+    QFont font_2 = ui->label_2->font();     font_2.setPixelSize(text_size_2);
+    QFont font_3 = ui->Write->font();       font_3.setPixelSize(text_size_3);
+    QFont font_4 = ui->label_3->font();     font_4.setPixelSize(text_size_4);
+    QFont font_5 = ui->console->font();     font_5.setPixelSize(text_size_5);
+
+    ui->label_1->setFont(font_1);  ui->label_11->setFont(font_4);  ui->Freq->setFont(font_4);
+    ui->label_2->setFont(font_2);  ui->label_12->setFont(font_4);  ui->RXBW->setFont(font_4);
+    ui->label_3->setFont(font_4);  ui->label_13->setFont(font_4);  ui->WB_BW->setFont(font_4);
+    ui->label_4->setFont(font_4);  ui->label_14->setFont(font_4);  ui->NB_BW->setFont(font_4);
+    ui->label_5->setFont(font_4);  ui->DataRate->setFont(font_4);  ui->ANT_DIV->setFont(font_4);
+    ui->label_6->setFont(font_4);  ui->Fdev->setFont(font_4);      ui->MOD_INDEX->setFont(font_4);
+    ui->label_7->setFont(font_4);  ui->WB_Filter->setFont(font_4);
+    ui->label_8->setFont(font_4);  ui->NB_Filter->setFont(font_4);
+    ui->label_9->setFont(font_4);  ui->AFC_State->setFont(font_4);
+    ui->label_10->setFont(font_4); ui->MODULATION->setFont(font_4);
+
+    ui->FileOpen->setFont(font_3);
+    ui->Write->setFont(font_3);
+    ui->Stop->setFont(font_3);
+    ui->Reset->setFont(font_3);
+    ui->ClearConsole->setFont(font_3);
+    ui->Registers->setFont(font_3);
+
+    ui->console->setFont(font_5);
+
+    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
+
+    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
+
+    ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
 }
 
 void SI4463_Settings_Form::on_Back_clicked()
@@ -30,7 +96,8 @@ void SI4463_Settings_Form::on_Back_clicked()
 void SI4463_Settings_Form::on_Next_clicked()
 {
     emit Get_Console(NULL);
-    emit Next(this->geometry());
+    emit Cancel(this->geometry());
+    //emit Next(this->geometry());
 }
 
 void SI4463_Settings_Form::on_btnSettings_clicked()
@@ -202,4 +269,9 @@ void SI4463_Settings_Form::on_Write_clicked()
     ui->btnSettings->setEnabled(false);
     ui->Next->setEnabled(false);
     emit Write_SI4463_Parameters();
+}
+
+void SI4463_Settings_Form::on_Registers_clicked()
+{
+    emit Open_RegistersWindow(this);
 }

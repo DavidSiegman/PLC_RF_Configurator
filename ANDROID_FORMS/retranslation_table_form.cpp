@@ -31,6 +31,8 @@ Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
     model = new QStandardItemModel;
 
     ui->NetTable->setModel(model);
+
+    connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
 
 Retranslation_Table_Form::~Retranslation_Table_Form()
@@ -259,6 +261,19 @@ void Retranslation_Table_Form::isSwitch_Table_Delete(void)
     this->model->clear();
 }
 
+void Retranslation_Table_Form::on_Reset_clicked()
+{
+    emit Get_Console(ui->console);
+
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
+
+    emit Send_RF_Reset();
+}
 void Retranslation_Table_Form::isRF_Reset(void)
 {
     ui->Stop->setEnabled(false);
@@ -268,3 +283,4 @@ void Retranslation_Table_Form::isRF_Reset(void)
     ui->btnSettings->setEnabled(true);
     ui->Next->setEnabled(true);
 }
+

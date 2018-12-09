@@ -5,7 +5,7 @@
 #include <QFileDialog>
 #include <QPlainTextEdit>
 #include <QStandardItemModel>
-
+#include "RESIZE_CALCULATING/resizecalculating.h"
 #include "SI4463/si4463class.h"
 
 namespace Ui {
@@ -31,6 +31,7 @@ signals:
     void Start_Parcer(QString);
     void Send_RF_Reset(void);
     void Write_SI4463_Parameters(void);
+    void Open_RegistersWindow(QWidget*);
 
 public slots:
     void SetProgress(uint progress);
@@ -57,8 +58,12 @@ private slots:
 
     void on_Write_clicked();
 
+    void on_Registers_clicked();
+
 private:
     Ui::SI4463_Settings_Form *ui;
+
+    ResizeCalculating          resize_calculating;
 };
 
 #endif // SI4463_SETTINGS_FORM_H

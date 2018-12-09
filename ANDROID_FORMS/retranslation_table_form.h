@@ -65,6 +65,8 @@ private slots:
 
     void on_Del_NetTable_clicked();
 
+    void on_Reset_clicked();
+
 private:
     Ui::Retranslation_Table_Form *ui;
 

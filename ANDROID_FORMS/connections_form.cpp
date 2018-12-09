@@ -582,6 +582,7 @@ void Connections_Form::Create_And_Show_SI4463_Settings_Form(QRect current_geomet
     connect(si4463_settings_form, SIGNAL(Cancel(QRect)),                    this,                  SLOT(Define_Pre_Form(QRect)));
     connect(si4463_settings_form, SIGNAL(Next(QRect)),                      this,                  SLOT(Define_Next_Form(QRect)));
     connect(si4463_settings_form, SIGNAL(Settings(QWidget*)),               this,                  SLOT(Create_And_Show_Settings_Form(QWidget*)));
+    connect(si4463_settings_form, SIGNAL(Open_RegistersWindow(QWidget*)),   this,                  SLOT(Create_And_Show_SI4463_Registers_Form(QWidget*)));
     connect(si4463_settings_form, SIGNAL(Get_Console(QPlainTextEdit*)),     this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
     connect(si4463_settings_form, SIGNAL(Stop_Send_Data()),                 DataLogic,             SLOT(STOP_SEND_DATA()));
     connect(DataLogic,            SIGNAL(STOPPED()),                        si4463_settings_form,  SLOT(isSTOPPED()));
@@ -659,6 +660,23 @@ void Connections_Form::Create_And_Show_Retranslation_Table_Form(QWidget *parent)
     parent->hide();
     retranslation_table_form->setGeometry(parent->geometry());
     retranslation_table_form->show();
+}
+
+
+void Connections_Form::Create_And_Show_SI4463_Registers_Form(QWidget *parent)
+{
+    si4463_registers_form = new SI4463_Registers_Form;
+    connect(si4463_registers_form,SIGNAL(Cancel()),                         parent,                  SLOT(show()));
+    connect(si4463_registers_form,SIGNAL(Get_Geometry(QRect)),              parent,                  SLOT(Set_Geometry(QRect)));
+    connect(si4463_registers_form,SIGNAL(Get_Console(QPlainTextEdit*)),     this,                    SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(si4463_registers_form,SIGNAL(Settings(QWidget*)),               this,                    SLOT(Create_And_Show_Settings_Form(QWidget*)));
+
+    connect(si4463_registers_form,SIGNAL(isCreated()),                      SI4463Config,            SLOT(request_Model_handling()));
+    connect(SI4463Config,         SIGNAL(get_Model(QStandardItemModel*)),   si4463_registers_form,   SLOT(Set_Model(QStandardItemModel*)));
+
+    parent->hide();
+    si4463_registers_form->setGeometry(parent->geometry());
+    si4463_registers_form->show();
 }
 
 //+++++++++++++[Процедура вывода данных в консоль]++++++++++++++++++++++++++++++++++++++++
