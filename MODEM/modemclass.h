@@ -43,18 +43,20 @@ signals:
 public slots:
 
     FirmwareInformationClass*     getIn_Firmware_Information(void);
-
+    void                          ChangedIn_Firmware_Information(void);
     RetranslatorPropertiesClass*  getIn_Retranslator_Properties(void);
-
+    void                          ChangedIn_Retranslator_Properties(void);
     RetranslatorPropertiesClass*  getOut_Retranslator_Properties(void);
-
+    void                          ChangedOut_Retranslator_Properties(void);
     SnifferPropertiesClass*       getIn_Sniffer_Properties(void);
-
+    void                          ChangedIn_Sniffer_Properties(void);
     SnifferPropertiesClass*       getOut_Sniffer_Properties(void);
-
+    void                          ChangedOut_Sniffer_Properties(void);
     ModemPropertiesClass*         getIn_Modem_Properties(void);
-
+    void                          ChangedIn_Modem_Properties(void);
     ModemPropertiesClass*         getOut_Modem_Properties(void);
+
+    void                          ChangedOut_Modem_Properties(void);
 
     void                          ClearAllData(void);
 

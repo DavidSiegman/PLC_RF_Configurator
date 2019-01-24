@@ -80,7 +80,7 @@
         <x>0</x>
         <y>0</y>
         <width>328</width>
-        <height>475</height>
+        <height>476</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -581,7 +581,7 @@
                </size>
               </property>
               <property name="text">
-               <string>Уровень сети - Записать</string>
+               <string/>
               </property>
              </widget>
             </item>
@@ -612,6 +612,9 @@
                <font>
                 <family>Microsoft YaHei UI</family>
                </font>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">border: none;</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>

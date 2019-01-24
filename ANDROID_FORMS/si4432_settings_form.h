@@ -5,14 +5,16 @@
 #include <QPlainTextEdit>
 
 #include "SI4432/si4432class.h"
+#include "myformabstractclass.h"
+#include "ui_si4432_settings_form.h"
 #include "OTHER_FUNCTIONS/barr_to_string.h"
 #include "RESIZE_CALCULATING/resizecalculating.h"
 
-namespace Ui {
-class SI4432_Settings_Form;
-}
+//namespace Ui {
+//class SI4432_Settings_Form;
+//}
 
-class SI4432_Settings_Form : public QWidget
+class SI4432_Settings_Form : public myFormAbstractClass
 {
     Q_OBJECT
 
@@ -22,23 +24,15 @@ public:
 
     void resizeEvent(QResizeEvent *event);
 signals:
-    void Cancel(QRect);
-    void Next(QRect);
-    void Settings(QWidget*);
-    void isCreated(void);
-    void Stop_Send_Data(void);
-    void Get_Console(QPlainTextEdit* console);
-    void Send_RF_Reset(void);
-
     void Out_SI4432_Parameters_Changed(SI4432ConfigurationClass*);
     void Write_SI4432_Parameters(void);
 
 public slots:
     void SetProgress(uint progress);
-    void Set_Geometry(QRect);
-
+    void ForceClose(void);
     void isStopped(void);
     void isRF_Reset(void);
+
     void isSI4432_Parameters(void);
 
     void setIn_SI4432_Parameters(SI4432ConfigurationClass*);
@@ -46,38 +40,31 @@ public slots:
 
 private slots:
     void on_Back_clicked();
-
     void on_Next_clicked();
-
     void CalculateDR_BPS(void);
-
     void CalculateFNOM(unsigned char);
-
     void CalculateFo(void);
-
     void CalculateFd(void);
-
     void on_MT_currentIndexChanged(int index);
-
     void on_PA_currentIndexChanged(int index);
-
     void on_DIV_DR_stateChanged(int arg1);
-
     void on_DR_valueChanged(int arg1);
-
     void on_FX2_stateChanged(int arg1);
-
     void on_FCAR_currentIndexChanged(int index);
-
     void on_FNOM_valueChanged(double arg1);
-
     void on_FOFF_valueChanged(int arg1);
-
     void on_DV_valueChanged(int arg1);
-
     void on_BW_currentIndexChanged(int index);
-
     void on_CLOAD_textEdited(const QString &arg1);
+    void on_SNW_N_currentIndexChanged(int index);
+    void on_HEAD_N_currentIndexChanged(int index);
+    void on_SNW_textEdited(const QString &arg1);
+    void on_HEAD_TX_textEdited(const QString &arg1);
+    void on_HEAD_RX_textEdited(const QString &arg1);
+    void on_Write_clicked();
+    void on_Stop_clicked();
+    void on_Reset_clicked();
+    void on_btnSettings_clicked();
 
     void setMTToUI(unsigned char);
     void setPAToUI(unsigned char);
@@ -94,7 +81,6 @@ private slots:
     void setSNWToUI(unsigned int);
     void setHEAD_TXToUI(unsigned int);
     void setHEAD_RXToUI(unsigned int);
-
     void setCLOADToUI(unsigned char);
     void setCLOAD_PFToUI(unsigned int);
     void setRXOSRToUI(unsigned int);
@@ -104,24 +90,6 @@ private slots:
     void setDwn3ToUI(unsigned char);
     void setFilsetToUI(unsigned char);
 
-    void on_SNW_N_currentIndexChanged(int index);
-
-    void on_HEAD_N_currentIndexChanged(int index);
-
-    void on_SNW_textEdited(const QString &arg1);
-
-    void on_HEAD_TX_textEdited(const QString &arg1);
-
-    void on_HEAD_RX_textEdited(const QString &arg1);
-
-    void on_Write_clicked();
-
-    void on_Stop_clicked();
-
-    void on_Reset_clicked();
-
-    void on_btnSettings_clicked();
-
 private:
     Ui::SI4432_Settings_Form *ui;
 
@@ -129,7 +97,6 @@ private:
     SI4432ConfigurationClass  *Out_SI4432_Parameters;
 
     ResizeCalculating          resize_calculating;
-    uchar                      resizing_going;
 };
 
 #endif // SI4432_SETTINGS_FORM_H

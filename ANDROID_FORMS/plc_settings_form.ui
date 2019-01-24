@@ -52,7 +52,7 @@
       </font>
      </property>
      <property name="text">
-      <string>НАСТРОЙКИ PLC</string>
+      <string>PLC-НАСТРОЙКИ</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

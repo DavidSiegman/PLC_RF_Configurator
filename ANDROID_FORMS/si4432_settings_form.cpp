@@ -1,13 +1,12 @@
 #include "si4432_settings_form.h"
 #include "connections_form.h"
-#include "ui_si4432_settings_form.h"
 
 #include "STYLE/style.h"
 
 SI4432_Settings_Form::SI4432_Settings_Form(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::SI4432_Settings_Form)
+    myFormAbstractClass(parent)
 {
+    ui = new (Ui::SI4432_Settings_Form);
     ui->setupUi(this);
     this->setWindowTitle(APPLICATION_NAME);
 
@@ -36,15 +35,60 @@ SI4432_Settings_Form::SI4432_Settings_Form(QWidget *parent) :
     connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
 
-SI4432_Settings_Form::~SI4432_Settings_Form()
-{
+SI4432_Settings_Form::~SI4432_Settings_Form(){
     delete ui;
 }
+void SI4432_Settings_Form::on_Back_clicked(){
+    this->Back_ClickHandler();
+}
+void SI4432_Settings_Form::on_Next_clicked(){
+    this->Next_ClickHandler();
+}
+void SI4432_Settings_Form::ForceClose(void){
+    this->ForceCloseHandler();
+}
+void SI4432_Settings_Form::on_btnSettings_clicked(){
+    emit Settings(this);
+}
+void SI4432_Settings_Form::SetProgress(uint progress){
+    ui->progress->setValue(progress);
+}
+void SI4432_Settings_Form::on_Stop_clicked(){
+    this->Stop_ClickHandler();
+}
+void SI4432_Settings_Form::on_Reset_clicked(){
+    emit Get_Console(ui->console);
 
-void SI4432_Settings_Form::resizeEvent(QResizeEvent *event)
-{
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
+
+    this->Reset_ClickHandler();
+}
+void SI4432_Settings_Form::isStopped(void){
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
+void SI4432_Settings_Form::isRF_Reset(){
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+
+    this->Back_ClickHandler();
+}
+void SI4432_Settings_Form::resizeEvent(QResizeEvent *event){
     emit isCreated();
-    this->resizing_going = 1;
+    this->Set_resizing_going(1);
     resize_calculating.set_form_geometry(this->geometry());
 
     int text_size_1 = resize_calculating.get_text_size_1();
@@ -211,44 +255,12 @@ void SI4432_Settings_Form::resizeEvent(QResizeEvent *event)
         this->ui->FCAR->addItem("470-479,99");
     }
     ui->FCAR->setCurrentIndex(current_index);
-    this->resizing_going = 0;
+    this->Set_resizing_going(0);
 }
-
-void SI4432_Settings_Form::on_Back_clicked()
-{
-    emit Get_Console(NULL);
-    emit Cancel(this->geometry());
-}
-
-void SI4432_Settings_Form::on_Next_clicked()
-{
-    emit Get_Console(NULL);
-    emit Cancel(this->geometry());
-    //emit Next(this->geometry());
-}
-
-void SI4432_Settings_Form::on_btnSettings_clicked()
-{
-    emit Settings(this);
-}
-
-void SI4432_Settings_Form::SetProgress(uint progress)
-{
-    ui->progress->setValue(progress);
-}
-
-void SI4432_Settings_Form::Set_Geometry(QRect new_value)
-{
-    this->setGeometry(new_value);
-}
-
-void SI4432_Settings_Form::setOut_SI4432_Parameters(SI4432ConfigurationClass* new_value)
-{
+void SI4432_Settings_Form::setOut_SI4432_Parameters(SI4432ConfigurationClass* new_value){
     Out_SI4432_Parameters = new_value;
 }
-
-void SI4432_Settings_Form::setIn_SI4432_Parameters(SI4432ConfigurationClass* new_value)
-{
+void SI4432_Settings_Form::setIn_SI4432_Parameters(SI4432ConfigurationClass* new_value){
     In_SI4432_Parameters = new_value;
 
     In_SI4432_Parameters->calcSI4432_CLOAD();
@@ -290,7 +302,7 @@ void SI4432_Settings_Form::setIn_SI4432_Parameters(SI4432ConfigurationClass* new
 
 void SI4432_Settings_Form::on_MT_currentIndexChanged(int index)
 {
-    if ((index >= 0)&&(index < 2)&&(this->resizing_going == 0))
+    if ((index >= 0)&&(index < 2)&&(this->Get_resizing_going() == 0))
     {
         Out_SI4432_Parameters->setSI4432_MT(index);
 
@@ -304,7 +316,7 @@ void SI4432_Settings_Form::setMTToUI(unsigned char new_value)
 
 void SI4432_Settings_Form::on_PA_currentIndexChanged(int index)
 {
-    if ((index >= 0)&&(index < 8)&&(this->resizing_going == 0))
+    if ((index >= 0)&&(index < 8)&&(this->Get_resizing_going() == 0))
     {
         Out_SI4432_Parameters->setSI4432_PA(index);
         //emit PA_CHANGED((unsigned char)(index),setSI4432_Property_From_Form);
@@ -410,7 +422,7 @@ void SI4432_Settings_Form::setHBToUI(unsigned char new_value)
 
 void SI4432_Settings_Form::on_FCAR_currentIndexChanged(int index)
 {
-    if ((index >= 0)&&(index < 24)&&(this->resizing_going == 0))
+    if ((index >= 0)&&(index < 24)&&(this->Get_resizing_going() == 0))
     {
         CalculateFNOM(0);
         Out_SI4432_Parameters->setSI4432_FC((unsigned char)(index));
@@ -598,7 +610,7 @@ void SI4432_Settings_Form::CalculateFd(void)
 
 void SI4432_Settings_Form::on_BW_currentIndexChanged(int index)
 {
-    if ((index >= 0)&&(index < 57)&&(this->resizing_going == 0))
+    if ((index >= 0)&&(index < 57)&&(this->Get_resizing_going() == 0))
     {
         Out_SI4432_Parameters->setSI4432_IFBW((unsigned char)(index));
 
@@ -631,7 +643,7 @@ void SI4432_Settings_Form::setSNW_NToUI(unsigned char new_value)
 
 void SI4432_Settings_Form::on_SNW_N_currentIndexChanged(int index)
 {
-    if ((index >= 0)&&(index < 4)&&(this->resizing_going == 0))
+    if ((index >= 0)&&(index < 4)&&(this->Get_resizing_going() == 0))
     {
         Out_SI4432_Parameters->setSI4432_SWC((unsigned char)(index));
 
@@ -646,7 +658,7 @@ void SI4432_Settings_Form::setHEAD_NToUI(unsigned char new_value)
 
 void SI4432_Settings_Form::on_HEAD_N_currentIndexChanged(int index)
 {
-    if ((index >= 0)&&(index < 5)&&(this->resizing_going == 0))
+    if ((index >= 0)&&(index < 5)&&(this->Get_resizing_going() == 0))
     {
         Out_SI4432_Parameters->setSI4432_HC((unsigned char)(index));
 
@@ -1018,46 +1030,5 @@ void SI4432_Settings_Form::isSI4432_Parameters(void)
 
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
-}
-
-
-void SI4432_Settings_Form::on_Stop_clicked()
-{
-    emit Stop_Send_Data();
-}
-
-
-void SI4432_Settings_Form::isStopped(void)
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
-}
-
-void SI4432_Settings_Form::on_Reset_clicked()
-{
-    emit Get_Console(ui->console);
-
-    ui->Stop->setEnabled(true);
-    ui->SettingsWidget->setEnabled(false);
-    ui->Reset->setEnabled(false);
-    ui->Back->setEnabled(false);
-    ui->btnSettings->setEnabled(false);
-    ui->Next->setEnabled(false);
-
-    emit Send_RF_Reset();
-}
-
-void SI4432_Settings_Form::isRF_Reset()
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
 }
 

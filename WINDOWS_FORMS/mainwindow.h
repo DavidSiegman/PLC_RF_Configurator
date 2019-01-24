@@ -14,7 +14,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QGraphicsLinearLayout>
 
-#include "BUTTONS_HANDLERS/connecthandlerclass.h"
+#include "CONNECT_HANDLER/connecthandlerclass.h"
 #include "SI4463/si4463_propertys_tablemodel.h"
 #include "SI4432/si4432class.h"
 #include "FILE/parceclass.h"

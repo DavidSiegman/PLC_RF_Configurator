@@ -18,7 +18,7 @@
 #include <QtSerialPort/QSerialPortInfo>
 #include <QGraphicsLinearLayout>
 
-#include "BUTTONS_HANDLERS/connecthandlerclass.h"
+#include "CONNECT_HANDLER/connecthandlerclass.h"
 #include "SI4463/si4463_propertys_tablemodel.h"
 #include "SI4432/si4432class.h"
 #include "FILE/parceclass.h"
@@ -85,47 +85,34 @@ private slots:
     void Print    (QByteArray data, uint n);
     void Print_Log(QString    data, uint n);
     void start_COM_Init();
-    void TCP_Is_Connected(void);
-    void COM_Is_Opend(void);
+    void TCP_IsConnected(void);
+    void COM_IsOpend(void);
+    void TCP_IsDisconnected(void);
+    void COM_IsClosed(void);
+    void COM_Error(void);
+    void TCP_Error(void);
     void Set_Geometry(QRect);
-    void Start_Parcer(QString);
-
-    void Define_Next_Form(QRect);
-
-    void Define_Pre_Form(QRect);
-
     void Set_ActiveConsole(QPlainTextEdit*);
+    void Start_Parcer(QString);
+    void Define_Next_Form(QRect);
+    void Define_Pre_Form(QRect);
+    void RF_Reset_Handler(void);
 
     void Create_And_Show_Settings_Form(QWidget*);
-
     void Create_And_Show_Hands_Enter_Form(QWidget*);
-
     void Create_And_Show_Open_Connection_Form(void);
-
     void Create_And_Show_Net_Settings_Form(QRect);
-
     void Create_And_Show_Sniffer_Settings_Form(QRect);
-
     void Create_And_Show_SI4432_Settings_Form(QRect);
-
     void Create_And_Show_SI4463_Settings_Form(QRect);
-
     void Create_And_Show_Firmware_Updating_Form(QWidget*);
-
     void Create_And_Show_Retranslation_Table_Form(QWidget*);
-
     void Create_And_Show_SI4463_Registers_Form(QWidget*);
-
     void on_TCPConnect_clicked();
-
     void on_PortNameBox_currentIndexChanged(const QString &arg1);
-
     void on_COMConnect_clicked();
-
     void on_btnSettings_clicked();
-
     void on_btnHandsEnter_clicked();
-
 private:
     Ui::Connections_Form     *ui;
 
@@ -146,7 +133,6 @@ private:
     QRegExp                   RegSystemName;
 
     ResizeCalculating         resize_calculating;
-
 };
 
 #endif // CONNECTIONS_FORM_H

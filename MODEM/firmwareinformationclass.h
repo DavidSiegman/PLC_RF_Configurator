@@ -12,6 +12,7 @@
 #define RF_PLC_MODEM      "Mилур PLC/RF (ST750/SI4463)"
 #define RF_PLC_SNIFFER    "Милур IC U/Z/P (SI4463)"
 #define TERMINAL          "Mилур Terminal (SI4432)"
+#define GSM_MODEM         "Mилур DIN-GSM"
 
 typedef struct Firmware_Information_Type
 {
@@ -25,6 +26,8 @@ typedef struct Firmware_Information_Type
     double                Upgradable_Version_Sniffer;
     double                Bootloader_Version_Terminal;
     double                Upgradable_Version_Terminal;
+    double                Bootloader_Version_GSM;
+    double                Upgradable_Version_GSM;
     uint                  Bootloader_Size;
     uint                  Upgradable_Size;
     QByteArray            Bootloader_CRC32;
@@ -68,6 +71,12 @@ public:
 
     double          getUpgradable_Version_Terminal();
     void            setUpgradable_Version_Terminal(double);
+
+    double          getBootloader_Version_GSM();
+    void            setBootloader_Version_GSM(double);
+
+    double          getUpgradable_Version_GSM();
+    void            setUpgradable_Version_GSM(double);
 
     uint            getBootloader_Size();
     void            setBootloader_Size(uint);

@@ -57,7 +57,7 @@
         </font>
        </property>
        <property name="text">
-        <string>РАДИО-НАСТРОЙКИ</string>
+        <string>RF-НАСТРОЙКИ</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
@@ -80,7 +80,7 @@
         <x>0</x>
         <y>0</y>
         <width>311</width>
-        <height>635</height>
+        <height>613</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">

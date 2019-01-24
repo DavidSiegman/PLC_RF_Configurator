@@ -47,6 +47,11 @@ void FirmwareInformationClass::Define_Device_Name()
             {
                 setDevice_Name(TERMINAL);
             }
+            // если версия бутлоадера соответствует терминалу
+            else if (getBootloader_Version_GSM() > 0)
+            {
+                setDevice_Name(GSM_MODEM);
+            }
         }
         // если версия бутлоадера соответствует PLC модему
         else if ((getBootloader_Version() > 0) && (getBootloader_Version() < 3))
@@ -83,6 +88,11 @@ void FirmwareInformationClass::Define_Device_Name()
             else if (getUpgradable_Version_Terminal() > 0)
             {
                 setDevice_Name(TERMINAL);
+            }
+            // если версия обновляемой прошивки соответствует GSM модему
+            else if (getUpgradable_Version_GSM() > 0)
+            {
+                setDevice_Name(GSM_MODEM);
             }
         }
         // если версия обновляемой прошивки соответствует PLC модему
@@ -134,6 +144,7 @@ void       FirmwareInformationClass::setString_Bootloader_Version(QString new_va
 
     setBootloader_Version_Sniffer(0);
     setBootloader_Version_Terminal(0);
+    setBootloader_Version_GSM(0);
 
     QString s;
     s.append(Firmware_Information_Data.String_Bootloader_Version.at(2));
@@ -146,6 +157,10 @@ void       FirmwareInformationClass::setString_Bootloader_Version(QString new_va
     else if((Firmware_Information_Data.String_Bootloader_Version.at(0) == 'T'))
     {
         setBootloader_Version_Terminal(s.toDouble());
+    }
+    else if((Firmware_Information_Data.String_Bootloader_Version.at(0) == 'G'))
+    {
+        setBootloader_Version_GSM(s.toDouble());
     }
 }
 
@@ -161,6 +176,7 @@ void       FirmwareInformationClass::setString_Upgradable_Version(QString new_va
 
     setUpgradable_Version_Sniffer(0);
     setUpgradable_Version_Terminal(0);
+    setUpgradable_Version_GSM(0);
 
     QString s;
     s.append(Firmware_Information_Data.String_Upgradable_Version.at(2));
@@ -174,6 +190,11 @@ void       FirmwareInformationClass::setString_Upgradable_Version(QString new_va
     {
         setUpgradable_Version_Terminal(s.toDouble());
     }
+    else if((Firmware_Information_Data.String_Upgradable_Version.at(0) == 'G'))
+    {
+        setUpgradable_Version_GSM(s.toDouble());
+    }
+
 }
 
 double     FirmwareInformationClass::getBootloader_Version()
@@ -228,6 +249,24 @@ double     FirmwareInformationClass::getUpgradable_Version_Terminal()
 void       FirmwareInformationClass::setUpgradable_Version_Terminal(double new_value)
 {
     Firmware_Information_Data.Upgradable_Version_Terminal = new_value;
+}
+
+double     FirmwareInformationClass::getBootloader_Version_GSM()
+{
+    return Firmware_Information_Data.Bootloader_Version_GSM;
+}
+void       FirmwareInformationClass::setBootloader_Version_GSM(double new_value)
+{
+    Firmware_Information_Data.Bootloader_Version_GSM = new_value;
+}
+
+double     FirmwareInformationClass::getUpgradable_Version_GSM()
+{
+    return Firmware_Information_Data.Upgradable_Version_GSM;
+}
+void       FirmwareInformationClass::setUpgradable_Version_GSM(double new_value)
+{
+    Firmware_Information_Data.Upgradable_Version_GSM = new_value;
 }
 
 uint       FirmwareInformationClass::getBootloader_Size()

@@ -5,7 +5,6 @@
 
 typedef struct Sniffer_Properties_Type
 {
-
     uchar                 Sniffer_Mode;
     uchar                 UpLink_Value;
     uchar                 CRC_Check_Disable;

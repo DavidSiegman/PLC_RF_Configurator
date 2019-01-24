@@ -14,8 +14,10 @@ Port :: ~Port()
 
 void Port :: run(){
     qDebug("Hello World in COM Thread!");
-    connect(this->thisPort, SIGNAL(error(QSerialPort::SerialPortError)), this, SLOT(COM_ErrorHandler(QSerialPort::SerialPortError)));
-    connect(this->thisPort, SIGNAL(readyRead()),this,SLOT(COM_ReadDATA()));
+
+    connect(this->thisPort, SIGNAL(error(QSerialPort::SerialPortError)),         this, SLOT(COM_ErrorHandler(QSerialPort::SerialPortError)));
+    connect(this->thisPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(COM_ErrorHandler(QSerialPort::SerialPortError)));
+    connect(this->thisPort, SIGNAL(readyRead()),                                 this, SLOT(COM_ReadDATA()));
     emit COM_Started();
 }
 
@@ -61,65 +63,138 @@ void Port :: COM_SetFlowControl(int FlowControl)
     qDebug() << s;
 }
 
-void Port :: COM_Connect(void)
-{
+void Port :: COM_Open(void){
     this->thisPort->setPortName(this->SettingsPort.name);
     QString s = "Connect Port: "; s += this->SettingsPort.name;
     qDebug() << s;
-    if (this->thisPort->open(QIODevice::ReadWrite))
-    {
+    if (this->thisPort->open(QIODevice::ReadWrite)){
         if (this->thisPort->setBaudRate(this->SettingsPort.baudRate)
          && this->thisPort->setDataBits(this->SettingsPort.dataBits)//DataBits
          && this->thisPort->setParity(this->SettingsPort.parity)
          && this->thisPort->setStopBits(this->SettingsPort.stopBits)
-         && this->thisPort->setFlowControl(this->SettingsPort.flowControl))
-        {
+         && this->thisPort->setFlowControl(this->SettingsPort.flowControl)){
             if (this->thisPort->isOpen())
             {
                 emit COM_Log(">> ======= Порт " + this->SettingsPort.name.toLocal8Bit() + " Открыт!\r",COM_OPEN);
                 emit COM_Opend();
             }
         }
-        else
-        {
+        else{
             this->thisPort->close();
             emit COM_Log(this->thisPort->errorString().toLocal8Bit() + "\r",NONE);
         }
     }
-    else
-    {
+    else{
         this->thisPort->close();
         emit COM_Log(this->thisPort->errorString().toLocal8Bit() + "\r",NONE);
     }
 }
 
-void Port::COM_ErrorHandler(QSerialPort::SerialPortError error)//
-{
-    if ( (this->thisPort->isOpen()) && (error == QSerialPort::ResourceError)) {
-        emit COM_Log(this->thisPort->errorString().toLocal8Bit() + "\r",NONE);
-        COM_Disconnect();
-    }
+void Port::COM_ErrorHandler(QSerialPort::SerialPortError error){ //
+
     QString s = "Error: "; s += error;
+
+    switch (error){
+        // ошибка при попытке открыть несуществующее устройство.
+    case QSerialPort::DeviceNotFoundError:{
+        s += " - DeviceNotFoundError";
+        emit COM_Error();
+        emit COM_Log("QSerialPort::DeviceNotFoundError\r",NONE);
+        emit COM_Close();
+        break;
+    }
+        // ошибка при попытке открыть уже открытое устройство другим процессом
+    case QSerialPort::PermissionError:{
+        s += " - PermissionError";
+        emit COM_Error();
+        emit COM_Log("QSerialPort::PermissionError\r",NONE);
+        emit COM_Close();
+        break;
+    }
+        // ошибка при попытке открыть уже открытое устройство в этом объекте
+    case QSerialPort::OpenError:{
+        s += " - OpenError";
+        emit COM_Error();
+        emit COM_Log("QSerialPort::OpenError\r",NONE);
+        emit COM_Close();
+        break;
+    }
+        // ошибка выполнения операции, которая может быть успешно выполнена только при открытом устройстве
+    case QSerialPort::NotOpenError:{
+        s += " - NotOpenError";
+        emit COM_Error();
+        emit COM_Log("QSerialPort::NotOpenError\r",NONE);
+        emit COM_Close();
+        break;
+    }
+        // ошибка записи данных
+    case QSerialPort::WriteError:{
+        s += " - WriteError";
+        emit COM_Error();
+        emit COM_Log("QSerialPort::WriteError\r",NONE);
+        emit COM_Close();
+        break;
+    }
+        // ошибка чтения данных
+    case QSerialPort::ReadError:{
+        s += " - ReadError";
+        emit COM_Error();
+        emit COM_Log("QSerialPort::ReadError\r",NONE);
+        emit COM_Close();
+        break;
+    }
+        // ошибка ресурс стал недоступен
+    case QSerialPort::ResourceError:{
+        s += " - ResourceError";
+        emit COM_Error();
+        emit COM_Log("QSerialPort::ResourceError\r",NONE);
+        emit COM_Close();
+        break;
+    }
+        // операция устройства не поддерживается или запрещена
+    case QSerialPort::UnsupportedOperationError:{
+        s += " - UnsupportedOperationError";
+        emit COM_Error();
+        emit COM_Log("QSerialPort::UnsupportedOperationError\r",NONE);
+        emit COM_Close();
+        break;
+    }
+        // ошибка тайм-аута
+    case QSerialPort::TimeoutError:{
+        s += " - TimeoutError";
+        emit COM_Error();
+        emit COM_Log("QSerialPort::TimeoutError\r",NONE);
+        emit COM_Close();
+        break;
+    }
+        // неопознанная ошибка
+    case QSerialPort::UnknownError:{
+        s += " - UnknownError";
+        emit COM_Error();
+        emit COM_Log("QSerialPort::UnknownError\r",NONE);
+        emit COM_Close();
+        break;
+    }
+    }
     qDebug() << s;
 }//
 
-void  Port::COM_Disconnect(){
+void  Port::COM_Close(){
     if(this->thisPort->isOpen()){
         this->thisPort->close();
         emit COM_Log(">> ======= Порт " + this->SettingsPort.name.toLocal8Bit() + " Закрыт!\r",COM_CLOSE);
+        emit COM_Closed();
     }
 }
 
-void Port :: COM_WriteDATA(QByteArray data)
-{
+void Port :: COM_WriteDATA(QByteArray data){
     if(this->thisPort->isOpen())
     {
         this->thisPort->write(data);
     }
 }
 
-void Port :: COM_ReadDATA()
-{
+void Port :: COM_ReadDATA(){
     QByteArray  in_data;
     in_data.append(this->thisPort->readAll());
     emit COM_OutDATA(in_data);

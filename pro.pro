@@ -24,7 +24,7 @@ HEADERS += \
     SI4463/si4463class.h \
     WINDOWS_FORMS/mainwindow.h \
     OTHER_FUNCTIONS/mess_enum.h \
-    BUTTONS_HANDLERS/connecthandlerclass.h \
+    CONNECT_HANDLER/connecthandlerclass.h \
     MODEM/modemclass.h \
     MODEM/firmwareinformationclass.h \
     MODEM/retranslatorpropertiesclass.h \
@@ -58,7 +58,8 @@ HEADERS += \
     ANDROID_FORMS/firmware_updating_form.h \
     ANDROID_FORMS/retranslation_table_form.h \
     ANDROID_FORMS/si4463_registers_form.h \
-    RESIZE_CALCULATING/resizecalculating.h
+    RESIZE_CALCULATING/resizecalculating.h \
+    ANDROID_FORMS/myformabstractclass.h
     RESIZE_CALCULATING/resizecalculating.h \
 
 SOURCES += \
@@ -67,7 +68,7 @@ SOURCES += \
     DATALOGIC/datalogic_class.cpp \
     MAIN/main.cpp \
     WINDOWS_FORMS/mainwindow.cpp \
-    BUTTONS_HANDLERS/connecthandlerclass.cpp \
+    CONNECT_HANDLER/connecthandlerclass.cpp \
     MODEM/modemclass.cpp \
     MODEM/firmwareinformationclass.cpp \
     MODEM/retranslatorpropertiesclass.cpp \
@@ -102,7 +103,8 @@ SOURCES += \
     ANDROID_FORMS/firmware_updating_form.cpp \
     ANDROID_FORMS/retranslation_table_form.cpp \
     ANDROID_FORMS/si4463_registers_form.cpp \
-    RESIZE_CALCULATING/resizecalculating.cpp
+    RESIZE_CALCULATING/resizecalculating.cpp \
+    ANDROID_FORMS/myformabstractclass.cpp
     RESIZE_CALCULATING/resizecalculating.cpp \
 
 FORMS += \

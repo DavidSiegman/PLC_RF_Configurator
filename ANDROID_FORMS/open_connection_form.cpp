@@ -1,12 +1,11 @@
 #include "open_connection_form.h"
 #include "connections_form.h"
-#include "ui_open_connection_form.h"
 #include "OTHER_FUNCTIONS/barr_to_string.h"
 
 Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Open_Connection_Form)
+    myFormAbstractClass(parent)
 {
+    ui = new (Ui::Open_Connection_Form);
     ui->setupUi(this);
     this->setWindowTitle(APPLICATION_NAME);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
@@ -50,8 +49,103 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     connect(ui->ClearConsole, SIGNAL(clicked(bool)), ui->console, SLOT(clear()));
 }
 
+Open_Connection_Form::~Open_Connection_Form(){
+    delete ui;
+}
+
+void Open_Connection_Form::on_Back_clicked(){
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.sync();
+    this->Back_ClickHandler();
+}
+void Open_Connection_Form::on_Next_clicked(){
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.sync();
+    this->Next_ClickHandler();
+}
+void Open_Connection_Form::ForceClose(void){
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.sync();
+    this->ForceCloseHandler();
+}
+void Open_Connection_Form::on_btnSettings_clicked(){
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.sync();
+    emit Settings(this);
+}
+void Open_Connection_Form::SetProgress(uint progress){
+    ui->progress->setValue(progress);
+}
+
+void Open_Connection_Form::on_Stop_clicked(){
+    this->Stop_ClickHandler();
+}
+void Open_Connection_Form::on_Reset_clicked(){
+    emit Get_Console(ui->console);
+
+    ui->Stop->setEnabled(true);
+    ui->Connect->setEnabled(false);
+    ui->Update->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Next->setEnabled(false);
+    ui->InterfaceWidget->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+
+    this->Reset_ClickHandler();
+}
+void Open_Connection_Form::isStopped(void){
+    SetProgress(0);
+    ui->Stop->setEnabled(false);
+    ui->Connect->setEnabled(true);
+    if (this->ui->DeviceType->text() != ""){
+       ui->Reset->setEnabled(true);
+       ui->Update->setEnabled(true);
+    }
+    else{
+       ui->Reset->setEnabled(false);
+       ui->Update->setEnabled(false);
+    }
+    ui->InterfaceWidget->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->Next->setEnabled(false);
+    ui->btnSettings->setEnabled(true);
+}
+void Open_Connection_Form::isRF_Reset(){
+    ui->Stop->setEnabled(false);
+    ui->Connect->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Update->setEnabled(false);
+    ui->InterfaceWidget->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->Next->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+
+    ui->Next->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    SetProgress(0);
+
+    SetCurrentFitmwareToUI(2);
+    SetBootloaderVersionToUI("");
+    SetBootloaderSizeToUI(0);
+    SetBootloaderCRCToUI(0);
+    SetUpgradableVersionToUI("");
+    SetUpgradableSizeToUI(0);
+    SetUpgradableCRCToUI(0);
+    SetDeviceNameToUI("");
+}
+
 void Open_Connection_Form::resizeEvent(QResizeEvent *event)
 {
+    this->Set_resizing_going(1);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     resize_calculating.set_form_geometry(this->geometry());
@@ -112,11 +206,17 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
+    this->Set_resizing_going(0);
 }
 
-Open_Connection_Form::~Open_Connection_Form()
+void Open_Connection_Form::on_Update_clicked()
 {
-    delete ui;
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.sync();
+    emit Updating(this);
 }
 
 void Open_Connection_Form::Set_In_Firmware_Information(FirmwareInformationClass *FirmwareInformation)
@@ -134,30 +234,7 @@ void Open_Connection_Form::Set_In_Firmware_Information(FirmwareInformationClass 
 
 }
 
-void Open_Connection_Form::on_Back_clicked()
-{
-    emit Get_Console(NULL);
-    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
-    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
-    settings.sync();
-    emit Get_Geometry(this->geometry());
-    emit Cancel();
-    this->deleteLater();
-}
-
-void Open_Connection_Form::on_Next_clicked()
-{
-    emit Get_Console(NULL);
-    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
-    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
-    settings.sync();
-    emit Next(this->geometry());
-}
-
-void Open_Connection_Form::on_Connect_clicked()
-{
+void Open_Connection_Form::on_Connect_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
@@ -175,50 +252,17 @@ void Open_Connection_Form::on_Connect_clicked()
     ui->Next->setEnabled(false);
     ui->btnSettings->setEnabled(false);
 
-    if (ui->Interface->currentIndex() == 0)
-    {
+    if (ui->Interface->currentIndex() == 0){
         emit SendSerialNumber(ui->SN->text(), false);
     }
-    else if (ui->Interface->currentIndex() == 1)
-    {
+    else if (ui->Interface->currentIndex() == 1){
         emit SendSerialNumber(ui->SN->text(), true);
     }
 
     emit AOPEN();
-    emit STOP_MONITOR();
 }
 
-void Open_Connection_Form::on_btnSettings_clicked()
-{
-    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
-    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
-    settings.sync();
-    emit Settings(this);
-}
-
-void Open_Connection_Form::on_Update_clicked()
-{
-    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
-    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
-    settings.sync();
-    emit Updating(this);
-}
-
-void Open_Connection_Form::on_Stop_clicked()
-{
-    emit STOP_MONITOR();
-    emit STOP_SEND_DATA();
-}
-
-void Open_Connection_Form::SetProgress(uint progress)
-{
-    ui->progress->setValue(progress);
-}
-
-void Open_Connection_Form::isOPEND()
-{
+void Open_Connection_Form::isOPEND(){
     ui->Stop->setEnabled(false);
     ui->Connect->setEnabled(true);
     ui->Reset->setEnabled(true);
@@ -228,37 +272,6 @@ void Open_Connection_Form::isOPEND()
     ui->Next->setEnabled(true);
     ui->btnSettings->setEnabled(true);
 }
-
-void Open_Connection_Form::isRESET()
-{
-    ui->Stop->setEnabled(false);
-    ui->Connect->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Update->setEnabled(true);
-    ui->InterfaceWidget->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->Next->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-}
-
-void Open_Connection_Form::isSTOPPED(void)
-{
-    SetProgress(0);
-    ui->Stop->setEnabled(false);
-    ui->Connect->setEnabled(true);
-    ui->Reset->setEnabled(false);
-    ui->Update->setEnabled(false);
-    ui->InterfaceWidget->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->Next->setEnabled(false);
-    ui->btnSettings->setEnabled(true);
-}
-
-void Open_Connection_Form::Set_Geometry(QRect new_value)
-{
-    this->setGeometry(new_value);
-}
-
 void Open_Connection_Form::SetCurrentFitmwareToUI(uchar new_value)
 {
     // Бутлоадер
@@ -280,69 +293,52 @@ void Open_Connection_Form::SetCurrentFitmwareToUI(uchar new_value)
     }
 
 }
-void Open_Connection_Form::SetBootloaderVersionToUI(QString new_value)
-{
+void Open_Connection_Form::SetBootloaderVersionToUI(QString new_value){
     this->ui->boot_v->setText("NAN");
-    if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0))
-    {
+    if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0)){
         this->ui->boot_v->setText(new_value);
     }
 }
-void Open_Connection_Form::SetBootloaderSizeToUI(uint new_value)
-{
+void Open_Connection_Form::SetBootloaderSizeToUI(uint new_value){
     this->ui->boot_Size->setText("NAN");
-    if (new_value > 0)
-    {
+    if (new_value > 0){
         this->ui->boot_Size->setText(QString::number(new_value));
     }
 }
-void Open_Connection_Form::SetBootloaderCRCToUI(QByteArray new_value)
-{
+void Open_Connection_Form::SetBootloaderCRCToUI(QByteArray new_value){
     this->ui->boot_CRC->setText("NAN");
-    if (new_value.length() == 4)
-    {
+    if (new_value.length() == 4){
         if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
-            (new_value.at(2) == 0) && (new_value.at(3) == 0))
-        {
+            (new_value.at(2) == 0) && (new_value.at(3) == 0)){
             this->ui->boot_CRC->setText("NAN");
         }
-        else
-        {
+        else{
             this->ui->boot_CRC->setText(QByteAray_To_QString(new_value).toUpper());
         }
     }
 }
-void Open_Connection_Form::SetUpgradableVersionToUI(QString new_value)
-{
+void Open_Connection_Form::SetUpgradableVersionToUI(QString new_value){
     this->ui->fw_v->setText("NAN");
-    if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0))
-    {
+    if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0)){
         this->ui->fw_v->setText(new_value);
     }
 }
-void Open_Connection_Form::SetUpgradableSizeToUI(uint new_value)
-{
+void Open_Connection_Form::SetUpgradableSizeToUI(uint new_value){
     this->ui->fw_Size->setText("NAN");
-    if (new_value > 0)
-    {
+    if (new_value > 0){
         this->ui->fw_Size->setText(QString::number(new_value));
     }
 }
-void Open_Connection_Form::SetUpgradableCRCToUI(QByteArray new_value)
-{
+void Open_Connection_Form::SetUpgradableCRCToUI(QByteArray new_value){
     this->ui->fw_CRC->setText("NAN");
-    if (new_value.length() == 4)
-    {
+    if (new_value.length() == 4){
         if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
-            (new_value.at(2) == 0) && (new_value.at(3) == 0))
-        {
+            (new_value.at(2) == 0) && (new_value.at(3) == 0)){
             this->ui->fw_CRC->setText("NAN");
         }
-        else
-        {
+        else{
             this->ui->fw_CRC->setText(QByteAray_To_QString(new_value).toUpper());
         }
-
     }
 }
 
@@ -351,32 +347,26 @@ void Open_Connection_Form::SetDeviceNameToUI(QString new_value)
    this->ui->DeviceType->setText(new_value);
 }
 
-void Open_Connection_Form::on_Interface_currentIndexChanged(int index)
-{
-    Clear_Form();
-
-    switch (index)
-    {
-        case 0:
-        {
-            ui->SN->setEnabled(false);
-            emit SendSerialNumber(ui->SN->text(), false);
-            break;
-        }
-        case 1:
-        {
-            ui->SN->setEnabled(true);
-            emit SendSerialNumber(ui->SN->text(), true);
-            break;
-
+void Open_Connection_Form::on_Interface_currentIndexChanged(int index){
+    if (this->Get_resizing_going() == 0){
+        switch (index){
+            case 0:{
+                    Clear_Form();
+                    ui->SN->setEnabled(false);
+                    emit SendSerialNumber(ui->SN->text(), false);
+                break;
+            }
+            case 1:{
+                    Clear_Form();
+                    ui->SN->setEnabled(true);
+                    emit SendSerialNumber(ui->SN->text(), true);
+                break;
+            }
         }
     }
-
-
 }
 
-void Open_Connection_Form::Clear_Form(void)
-{
+void Open_Connection_Form::Clear_Form(void){
     emit ClearAllData();
 
     ui->Next->setEnabled(false);
@@ -391,21 +381,4 @@ void Open_Connection_Form::Clear_Form(void)
     SetUpgradableSizeToUI(0);
     SetUpgradableCRCToUI(0);
     SetDeviceNameToUI("");
-}
-
-
-void Open_Connection_Form::on_Reset_clicked()
-{
-    emit Get_Console(ui->console);
-
-    ui->Stop->setEnabled(true);
-    ui->Connect->setEnabled(false);
-    ui->Update->setEnabled(false);
-    ui->Reset->setEnabled(false);
-    ui->Next->setEnabled(false);
-    ui->InterfaceWidget->setEnabled(false);
-    ui->Back->setEnabled(false);
-    ui->btnSettings->setEnabled(false);
-
-    emit SEND_RF_RESET();
 }

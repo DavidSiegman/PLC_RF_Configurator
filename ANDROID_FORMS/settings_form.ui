@@ -73,7 +73,7 @@
         <x>0</x>
         <y>0</y>
         <width>328</width>
-        <height>466</height>
+        <height>467</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -240,7 +240,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Настройки COM Порта</string>
+          <string/>
          </property>
         </widget>
        </item>

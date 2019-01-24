@@ -37,10 +37,12 @@ signals:
     void COM_OutDATA(QByteArray data);
     void COM_Started();
     void COM_Opend();
+    void COM_Error();
+    void COM_Closed();
 
 public slots:
-    void COM_Disconnect();
-    void COM_Connect();
+    void COM_Close();
+    void COM_Open();
     void COM_SetPortName(QString Name);
     void COM_SetBaudRate(int baudrate);
     void COM_SetDataBits(int DataBits);
@@ -56,3 +58,4 @@ private slots:
 };
 
 #endif // PORT_H
+
