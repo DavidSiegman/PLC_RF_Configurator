@@ -149,10 +149,9 @@ void Retranslation_Table_Form::Set_Out_Retranslator_Properties (RetranslatorProp
 void Retranslation_Table_Form::on_Add_NetItem_clicked()
 {
 
-    if (Out_Retranslator_Properties->getRetranslator_Table().length() < 100)
-    {
+    if (Out_Retranslator_Properties->getRetranslator_Table().length() < 100) {
         bool ok;
-        int i = QInputDialog::getInt(this, QString::fromUtf8("Введите серийный номер"), QString::fromUtf8(""), 1, 1, 2147483647, 1, &ok);
+        int i = QInputDialog::getInt(ui->scrollAreaWidgetContents, QString::fromUtf8("Введите адресс устройства"), QString::fromUtf8(""), 1, 1, 2147483647, 1, &ok);
         if (ok){
             //emit ADD_NET_TABLE_ITEM(QString::number(i));
 
@@ -171,9 +170,8 @@ void Retranslation_Table_Form::on_Del_NetItem_clicked()
     if (this->model->rowCount() > 0)
     {
         uint count = this->model->rowCount()-1;
-        Out_Retranslator_Properties->setRetranslator_Table_Current_Index(count);
         Out_Retranslator_Properties->delCurrentItemFromRetranslation_Table();
-
+        //Out_Retranslator_Properties->setRetranslator_Table_Current_Index(count);
         this->model->removeRow(count);
 
         if (count == 0)
@@ -257,7 +255,7 @@ void Retranslation_Table_Form::isSwitch_Table_Delete(void)
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
     ui->Next->setEnabled(true);
-
+    Out_Retranslator_Properties->clearRetranslation_Table();
     this->model->clear();
 }
 

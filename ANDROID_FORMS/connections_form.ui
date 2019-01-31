@@ -21,10 +21,7 @@
   <property name="styleSheet">
    <string notr="true">background-color: qlineargradient(spread:reflect, x1:1, y1:0.1, x2:1, y2:0.9,stop:0.223242 rgba(220, 119, 64, 255), stop:0.902141 rgba(255, 255, 255, 255));</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="spacing">
-    <number>0</number>
-   </property>
+  <layout class="QGridLayout" name="gridLayout_3">
    <property name="leftMargin">
     <number>5</number>
    </property>
@@ -37,7 +34,10 @@
    <property name="bottomMargin">
     <number>5</number>
    </property>
-   <item>
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <property name="spacing">
       <number>0</number>
@@ -78,7 +78,7 @@ color: rgb(255, 255, 255);</string>
      </item>
     </layout>
    </item>
-   <item>
+   <item row="1" column="0">
     <widget class="QScrollArea" name="scrollArea">
      <property name="horizontalScrollBarPolicy">
       <enum>Qt::ScrollBarAlwaysOff</enum>
@@ -95,7 +95,7 @@ color: rgb(255, 255, 255);</string>
         <x>0</x>
         <y>0</y>
         <width>328</width>
-        <height>475</height>
+        <height>476</height>
        </rect>
       </property>
       <property name="styleSheet">
@@ -123,6 +123,49 @@ color: rgb(150, 80, 0);</string>
          <property name="spacing">
           <number>2</number>
          </property>
+         <item row="8" column="0">
+          <widget class="QPushButton" name="RSSIMonitor">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Microsoft YaHei UI</family>
+            </font>
+           </property>
+           <property name="text">
+            <string>RSSI Монитор</string>
+           </property>
+           <property name="tabletTracking" stdset="0">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="0">
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </widget>
+         </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label_2">
            <property name="sizePolicy">
@@ -184,14 +227,14 @@ color: rgb(150, 80, 0);</string>
              <family>Microsoft YaHei UI</family>
             </font>
            </property>
-           <property name="tabletTracking">
-            <bool>true</bool>
-           </property>
            <property name="styleSheet">
             <string notr="true"/>
            </property>
            <property name="text">
             <string>Открыть</string>
+           </property>
+           <property name="tabletTracking" stdset="0">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -250,7 +293,7 @@ color: rgb(150, 80, 0);</string>
            </item>
           </layout>
          </item>
-         <item row="8" column="0">
+         <item row="10" column="0">
           <widget class="QPushButton" name="ClearConsole">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
@@ -264,11 +307,11 @@ color: rgb(150, 80, 0);</string>
              <height>0</height>
             </size>
            </property>
-           <property name="tabletTracking">
-            <bool>true</bool>
-           </property>
            <property name="text">
             <string>Очистить Лог</string>
+           </property>
+           <property name="tabletTracking" stdset="0">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -340,11 +383,11 @@ color: rgb(150, 80, 0);</string>
              <family>Microsoft YaHei UI</family>
             </font>
            </property>
-           <property name="tabletTracking">
-            <bool>true</bool>
-           </property>
            <property name="text">
             <string>Подключить</string>
+           </property>
+           <property name="tabletTracking" stdset="0">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -445,9 +488,6 @@ color: rgb(150, 80, 0);</string>
                <family>Microsoft YaHei UI</family>
               </font>
              </property>
-             <property name="tabletTracking">
-              <bool>true</bool>
-             </property>
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
              </property>
@@ -459,6 +499,9 @@ color: rgb(150, 80, 0);</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
+             </property>
+             <property name="tabletTracking" stdset="0">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -487,9 +530,6 @@ color: rgb(150, 80, 0);</string>
                <family>Microsoft YaHei UI</family>
               </font>
              </property>
-             <property name="tabletTracking">
-              <bool>true</bool>
-             </property>
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
              </property>
@@ -502,11 +542,14 @@ color: rgb(150, 80, 0);</string>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
              </property>
+             <property name="tabletTracking" stdset="0">
+              <bool>true</bool>
+             </property>
             </widget>
            </item>
           </layout>
          </item>
-         <item row="9" column="0">
+         <item row="11" column="0">
           <widget class="QPlainTextEdit" name="console">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -534,8 +577,8 @@ color: rgb(150, 80, 0);</string>
            </property>
           </widget>
          </item>
-         <item row="7" column="0">
-          <widget class="Line" name="line">
+         <item row="9" column="0">
+          <widget class="Line" name="line_3">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
@@ -547,7 +590,7 @@ color: rgb(150, 80, 0);</string>
      </widget>
     </widget>
    </item>
-   <item>
+   <item row="2" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="spacing">
       <number>0</number>

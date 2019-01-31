@@ -4,15 +4,15 @@
 #include <QByteArray>
 #include <QString>
 
-#define PLC_MODEM         "Mилур PLC (ST750)"
-#define RF_MODEM_SI4432   "Mилур RF (SI4432)"
-#define RF_MODEM_SI4463   "Mилур RF (SI4463)"
+#define PLC_MODEM         "Интерфейсный модуль PLC (ST750)"
+#define RF_MODEM_SI4432   "Интерфейсный модуль RF (SI4432)"
+#define RF_MODEM_SI4463   "Интерфейсный модуль RF (SI4463)"
 #define RF_SNIFFER_SI4432 "Милур IC U/Z (SI4432)"
 #define RF_SNIFFER_SI4463 "Милур IC U/Z (SI4463)"
-#define RF_PLC_MODEM      "Mилур PLC/RF (ST750/SI4463)"
+#define RF_PLC_MODEM      "Интерфейсный модуль PLC/RF (ST750/SI4463)"
 #define RF_PLC_SNIFFER    "Милур IC U/Z/P (SI4463)"
-#define TERMINAL          "Mилур Terminal (SI4432)"
-#define GSM_MODEM         "Mилур DIN-GSM"
+#define TERMINAL          "Mилур T (SI4432)"
+#define GSM_MODEM         "Интерфейсный модуль GSM"
 
 typedef struct Firmware_Information_Type
 {

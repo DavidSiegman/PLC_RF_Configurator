@@ -35,6 +35,7 @@ Connections_Form::Connections_Form(QWidget *parent) :
     ui->COMConnect->setStyleSheet(Basic_Buttons_Style);
     ui->TCPConnect->setStyleSheet(Basic_Buttons_Style);
     ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->RSSIMonitor->setStyleSheet(Basic_Buttons_Style);
 
     ui->btnHandsEnter->setStyleSheet(Buttons_Style);
     ui->btnSettings->setStyleSheet(Buttons_Style);
@@ -69,7 +70,7 @@ Connections_Form::Connections_Form(QWidget *parent) :
     newParcer                 = new ParceClass();
     SI4463Config              = new SI4463Class();
     SI4432Config              = new SI4432Class();
-    //PLCConfig                 = new PLCClass(ui);
+    PLCConfig                 = new PLCClass();
     newUPDATE                 = new UPDATE();
 
     DataLogic                 = new DataLogic_Class(oCRC16,timer_COMBufferClear,SI4463Config,SI4432Config,
@@ -155,6 +156,7 @@ void Connections_Form::resizeEvent(QResizeEvent *event)
     ui->PORTInput->setFont(font_3);
     ui->TCPConnect->setFont(font_3);
     ui->ClearConsole->setFont(font_3);
+    ui->RSSIMonitor->setFont(font_3);
 
     ui->console->setFont(font_5);
 
@@ -501,7 +503,9 @@ void Connections_Form::Create_And_Show_Open_Connection_Form(void)
     connect(open_connection_form,SIGNAL(Updating(QWidget*)),                 this,                  SLOT(Create_And_Show_Firmware_Updating_Form(QWidget*)));
     connect(open_connection_form,SIGNAL(SendSerialNumber(QString,bool)),     DataLogic,             SLOT(setSerialNumberMode(QString,bool)));
     connect(open_connection_form,SIGNAL(Send_RF_Reset()),                    ConnectHandler,        SLOT(SendRF_RESET()));
-    connect(ConnectHandler,   SIGNAL(isRF_RESET()),                          open_connection_form,  SLOT(isRF_Reset()));
+    connect(open_connection_form,SIGNAL(SendModuleType(uchar)),              ConnectHandler,        SLOT(SetModuleType(uchar)));
+    connect(open_connection_form,SIGNAL(SendInterface(uchar)),               ConnectHandler,        SLOT(SetInterface(uchar)));
+    connect(ConnectHandler,      SIGNAL(isRF_RESET()),                       open_connection_form,  SLOT(isRF_Reset()));
     connect(open_connection_form,SIGNAL(AOPEN()),                            ConnectHandler,        SLOT(aOPEN()));
     connect(open_connection_form,SIGNAL(ClearAllData()),                     MODEM,                 SLOT(ClearAllData()));
     connect(open_connection_form,SIGNAL(Stop_Send_Data()),                   DataLogic,             SLOT(STOP_SEND_DATA()));
@@ -768,20 +772,22 @@ void Connections_Form::Print(QByteArray data, uint n)
     if (ActiveConsole == NULL){
         ActiveConsole = ui->console;
     }
-
-    switch (n){
-        case COM_TX:{
-            ActiveConsole->textCursor().insertText("TX >> " + QByteAray_To_QString(d).toUpper()); // Вывод текста в консоль
-            break;
+    if (ActiveConsole != NULL)
+    {
+        switch (n){
+            case COM_TX:{
+                ActiveConsole->textCursor().insertText("TX >> " + QByteAray_To_QString(d).toUpper()); // Вывод текста в консоль
+                break;
+            }
+            case COM_RX:{
+                ActiveConsole->textCursor().insertText("RX << " + QByteAray_To_QString(d).toUpper()); // Вывод текста в консоль
+                break;
+            }
         }
-        case COM_RX:{
-            ActiveConsole->textCursor().insertText("RX << " + QByteAray_To_QString(d).toUpper()); // Вывод текста в консоль
-            break;
-        }
+        QString str;str += '\r';
+        ActiveConsole->textCursor().insertText(str); // Вывод текста в консоль
+        ActiveConsole->moveCursor(QTextCursor::End); // Scroll
     }
-    QString str;str += '\r';
-    ActiveConsole->textCursor().insertText(str); // Вывод текста в консоль
-    ActiveConsole->moveCursor(QTextCursor::End); //Scroll
 }
 
 //+++++++++++++[Процедура вывода данных в консоль]++++++++++++++++++++++++++++++++++++++++
@@ -790,9 +796,11 @@ void Connections_Form::Print_Log(QString data, uint n)
     if (ActiveConsole == NULL){
         ActiveConsole = ui->console;
     }
-
-    ActiveConsole->textCursor().insertText(data); // Вывод текста в консоль
-    ActiveConsole->moveCursor(QTextCursor::End);  //Scroll
+    if (ActiveConsole != NULL)
+    {
+        ActiveConsole->textCursor().insertText(data); // Вывод текста в консоль
+        ActiveConsole->moveCursor(QTextCursor::End);  // Scroll
+    }
 }
 
 void Connections_Form::Set_ActiveConsole(QPlainTextEdit * new_active_console)

@@ -32,45 +32,36 @@ DataLogic_Class::DataLogic_Class(CRC16_Class *oCRC16,QTimer *t,SI4463Class *SI44
 
 }
 
-void DataLogic_Class::setSerialNumberMode(QString S, bool Enable)
-{
+void DataLogic_Class::setSerialNumberMode(QString S, bool Enable){
     this->SerialNumber    = S;
     this->addSerialNumber = Enable;
 }
 
-void DataLogic_Class::setRepeatNumber(uint new_value)
-{
+void DataLogic_Class::setRepeatNumber(uint new_value){
     this->Repeat_Number  = new_value;
     this->Repeat_Counter = new_value;
 }
 
-void DataLogic_Class::setRepeatTimeout(uint new_value)
-{
+void DataLogic_Class::setRepeatTimeout(uint new_value){
     this->Delay_Time     = new_value;
 }
 
-void DataLogic_Class::setCurrentSI4463_PROPERTYS_structur(uint select)
-{
-    if (select == 0)
-    {
+void DataLogic_Class::setCurrentSI4463_PROPERTYS_structur(uint select){
+    if (select == 0){
         this->CurrentSI4463_PROPERTYS_structur = SI4463Conf->aSI4463_PROPERTYS();
     }
-    else if (select == 1)
-    {
+    else if (select == 1){
         this->CurrentSI4463_PROPERTYS_structur = SI4463Conf->aSI4463_PROPERTYS_CALIB();
     }
-    else if (select == 2)
-    {
+    else if (select == 2){
         this->CurrentSI4463_PROPERTYS_structur = SI4463Conf->aSI4463_PROPERTYS_FROM_FILE();
     }
-    else if (select == 3)
-    {
+    else if (select == 3){
         this->CurrentSI4463_PROPERTYS_structur = SI4463Conf->aSI4463_PROPERTYS_CALIB_FROM_FILE();
     }
 }
 
-void DataLogic_Class::ClearIn_DataBuffer(void)
-{
+void DataLogic_Class::ClearIn_DataBuffer(void){
     InDataBuffer.clear();
     this->timer->stop();
                                                         // ====================================
@@ -551,6 +542,16 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
+    case SEND_CHOICE_ADDITIONAL_MODULE:{
+        int u[9] = {0xF1,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_CHOICE_MAIN_MODULE:{
+        int u[9] = {0xB1,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
     }
     this->Stop_Parceing = false;
     if (data.length() > 0){
@@ -740,7 +741,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,1);
+                    emit outConnect(DataLogicMode,1,0);
                 }
             }
 
@@ -793,7 +794,8 @@ void DataLogic_Class::ParceData(uint n)
                             uint progr = 90*nUPDATE->getWrited_BYTES()/nUPDATE->getSIZE();
                             emit outPROGRESS(progr);
                             nUPDATE->incCurrent_SECTOR();
-                            ComandHandling(SEND_WRITE_SECTOR,CONFIG_SEND_CONTROL);
+                            emit outConnect(DataLogicMode,1,0);
+                            //ComandHandling(SEND_WRITE_SECTOR,CONFIG_SEND_CONTROL);
                         //}
 
                     }
@@ -805,12 +807,10 @@ void DataLogic_Class::ParceData(uint n)
                         if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                         {
                             emit SendLog(QString::fromUtf8(">> ======= Ожидание перехода на обнавлённую прошивку:"),NONE);
-                            if (MODEM->getIn_Firmware_Information()->getBootloader_Version() == 0)
-                            {
+                            if (MODEM->getIn_Firmware_Information()->getBootloader_Version() == 0) {
                                 BOOT_WAIT_COUNTER = 5;
                             }
-                            else
-                            {
+                            else {
                                 BOOT_WAIT_COUNTER = 15;
                             }
                             emit SendLog(QString::fromUtf8(" > ") + QString::number(BOOT_WAIT_COUNTER),NONE);
@@ -822,7 +822,7 @@ void DataLogic_Class::ParceData(uint n)
                 else if ((ComandState == nUPDATE->getCurrent_BLOCK())&&(In_Data.at(0) == nUPDATE->getCurrent_SECTOR())&&(In_Data.at(1) != 1))
                 {
                     // тогда возвращаемся в самое начало обновления
-                    emit outConnect(DataLogicMode,0);
+                    emit outConnect(DataLogicMode,0,0);
                 }
             }
             break;
@@ -836,7 +836,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -850,7 +850,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -876,9 +876,20 @@ void DataLogic_Class::ParceData(uint n)
 
             if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
             {
-                emit outConnect(DataLogicMode,1);
+                emit outConnect(DataLogicMode,1,0);
             }
 
+            break;
+        }
+        case 0xF1: // Выбор основного интерфейсного модуля
+        {
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+            {
+                emit outConnect(DataLogicMode,1,0);
+            }
             break;
         }
         case 0xF0: // Запрос режима ретрансляции
@@ -893,7 +904,7 @@ void DataLogic_Class::ParceData(uint n)
 
             if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
             {
-                emit outConnect(DataLogicMode,1);
+                emit outConnect(DataLogicMode,1,0);
             }
             break;
         }
@@ -906,7 +917,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -917,13 +928,13 @@ void DataLogic_Class::ParceData(uint n)
             if (In_Data.length() >= 5)
             {
                 temp = ((In_Data.at(4) & 0xFF) << 16)|((In_Data.at(3) & 0xFF) << 8)|((In_Data.at(2) & 0xFF) << 0);
-                this->PLCConf->PLC_SET_LOWF(temp);
+                //this->PLCConf->PLC_SET_LOWF(temp);
                 temp = ((In_Data.at(1) & 0xFF) << 16)|((In_Data.at(0) & 0xFF) << 8)|((Comande & 0xFF) << 0);
-                this->PLCConf->PLC_SET_HIGHF(temp);
+                //this->PLCConf->PLC_SET_HIGHF(temp);
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -959,7 +970,8 @@ void DataLogic_Class::ParceData(uint n)
 
                         MODEM->getIn_Retranslator_Properties()->addNewItemToRetranslation_Table(QString::number(SWT_Element));
                         MODEM->ChangedIn_Retranslator_Properties();
-                        ComandHandling(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
+                        emit outConnect(DataLogicMode,1,0);
+                        //ComandHandling(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                     //}
                 }
                 else
@@ -969,7 +981,7 @@ void DataLogic_Class::ParceData(uint n)
 
                     if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                     {
-                        emit outConnect(DataLogicMode,1);
+                        emit outConnect(DataLogicMode,2,0);
                     }
                 }
             }
@@ -997,7 +1009,8 @@ void DataLogic_Class::ParceData(uint n)
                         uchar temp = MODEM->getOut_Retranslator_Properties()->getRetranslator_Table_Current_Index();
                         temp += 1;
                         MODEM->getOut_Retranslator_Properties()->setRetranslator_Table_Current_Index(temp);
-                        ComandHandling(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
+                        emit outConnect(DataLogicMode,ComandState,0);
+                        //ComandHandling(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                     //}
                 }
                 else
@@ -1008,7 +1021,7 @@ void DataLogic_Class::ParceData(uint n)
 
                     if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                     {
-                        emit outConnect(DataLogicMode,ComandState);
+                        emit outConnect(DataLogicMode,2,0);
                     }
                 }
             }
@@ -1023,7 +1036,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -1037,7 +1050,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -1051,7 +1064,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
            break;
@@ -1078,7 +1091,7 @@ void DataLogic_Class::ParceData(uint n)
 
                     if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                     {
-                        emit outConnect(DataLogicMode,ComandState);
+                        emit outConnect(DataLogicMode,ComandState,0);
                     }
                 }
             }
@@ -1172,7 +1185,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -1194,7 +1207,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             else if (NumbOfBytes == 2)
@@ -1206,7 +1219,7 @@ void DataLogic_Class::ParceData(uint n)
 
                     if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                     {
-                        emit outConnect(DataLogicMode,ComandState);
+                        emit outConnect(DataLogicMode,ComandState,0);
                     }
                 }
             }
@@ -1227,7 +1240,7 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                emit outConnect(DataLogicMode,ComandState,0);
             }
             else if (NumbOfBytes == 2)
             {
@@ -1238,7 +1251,7 @@ void DataLogic_Class::ParceData(uint n)
 
                     if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                     {
-                        emit outConnect(DataLogicMode,ComandState);
+                        emit outConnect(DataLogicMode,ComandState,0);
                     }
                 }
             }
@@ -1257,7 +1270,7 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
-                emit outConnect(DataLogicMode,ComandState);
+                emit outConnect(DataLogicMode,ComandState,0);
             }
             else if (NumbOfBytes == 2){
                 if (ComandState == 1){
@@ -1265,7 +1278,7 @@ void DataLogic_Class::ParceData(uint n)
                     timerRepeat->stop();
 
                     if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
-                        emit outConnect(DataLogicMode,ComandState);
+                        emit outConnect(DataLogicMode,ComandState,0);
                     }
                 }
             }
@@ -1282,7 +1295,7 @@ void DataLogic_Class::ParceData(uint n)
                 timerRepeat->stop();
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             else if (NumbOfBytes == 2){
@@ -1291,7 +1304,7 @@ void DataLogic_Class::ParceData(uint n)
                     timerRepeat->stop();
 
                     if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
-                        emit outConnect(DataLogicMode,ComandState);
+                        emit outConnect(DataLogicMode,ComandState,0);
                     }
                 }
             }
@@ -1309,7 +1322,7 @@ void DataLogic_Class::ParceData(uint n)
                 timerRepeat->stop();
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -1327,7 +1340,7 @@ void DataLogic_Class::ParceData(uint n)
                 timerRepeat->stop();
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -1344,7 +1357,7 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -1363,7 +1376,7 @@ void DataLogic_Class::ParceData(uint n)
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -1394,7 +1407,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,1);
+                    emit outConnect(DataLogicMode,1,0);
                 }
             }
             else
@@ -1406,7 +1419,7 @@ void DataLogic_Class::ParceData(uint n)
 
                     if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                     {
-                        emit outConnect(DataLogicMode,ComandState);
+                        emit outConnect(DataLogicMode,ComandState,0);
                     }
                 }
             }
@@ -1421,7 +1434,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -1440,7 +1453,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -1460,7 +1473,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState);
+                    emit outConnect(DataLogicMode,ComandState,0);
                 }
             }
             break;
@@ -1482,7 +1495,7 @@ void DataLogic_Class::ParceData(uint n)
                   timerRepeat->stop();
                   if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                   {
-                      emit outConnect(DataLogicMode,ComandState);
+                      emit outConnect(DataLogicMode,ComandState,0);
                   }
               }
           }
@@ -1507,7 +1520,7 @@ void DataLogic_Class::ParceData(uint n)
                   }
                   if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                   {
-                      emit outConnect(DataLogicMode,ComandState);
+                      emit outConnect(DataLogicMode,ComandState,0);
                   }
               }
           }
@@ -1527,6 +1540,17 @@ void DataLogic_Class::ParceData(uint n)
           }
           break;
         }
+        case 0xB1: // Выбор дополнительного интерфейсного модуля
+        {
+            Repeat_Counter = Repeat_Number;
+            timerRepeat->stop();
+
+            if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
+            {
+                emit outConnect(DataLogicMode,1,0);
+            }
+            break;
+        }
         }
     //}
     ParceDataBuffer.clear();
@@ -1540,7 +1564,7 @@ void DataLogic_Class::BOOT_WAITED()
     {
         BOOT_WAIT->stop();
         emit SendLog(QString::fromUtf8("\r"),NONE);
-        emit outConnect(DataLogicMode,1);
+        emit outConnect(DataLogicMode,2,0);
     }
     else
     {
@@ -1550,30 +1574,38 @@ void DataLogic_Class::BOOT_WAITED()
 
 void DataLogic_Class::REPEAT_SEND()
 {
-    SEND_DATA(OutDataBuffer, CONFIG_SEND_CONTROL);
+    //SEND_DATA(OutDataBuffer, CONFIG_SEND_CONTROL);
+    if (Repeat_Counter > 0) {
+        emit outConnect(DataLogicMode,1,1);
+        timerRepeat->start(Delay_Time);
+        Repeat_Counter--;
+    }
+    else {
+        Repeat_Counter = Repeat_Number;
+        timerRepeat->stop();
+        emit noANSWER();
+    }
 }
-void DataLogic_Class::MANUAL_REPEAT_SEND()
-{
+void DataLogic_Class::MANUAL_REPEAT_SEND(){
     SEND_DATA(OutDataBuffer, MANUAL_CYCLIC_SEND_CONTROL);
 }
-void DataLogic_Class::STOP_SEND_DATA()
-{
+void DataLogic_Class::STOP_SEND_DATA(){
     Repeat_Counter = Repeat_Number;
     timerRepeat->stop();
+    BOOT_WAIT->stop();
     this->Stop_Parceing = true;
     emit STOPPED();
 }
 //+++++++++++++[Процедура ОТПРАВКИ СООБЩЕНИЙ]++++++++++++++++++++++++++++++++++++++++
 
-void DataLogic_Class::SEND_DATA(QByteArray data, uint n)
-{
+void DataLogic_Class::SEND_DATA(QByteArray data, uint n){
     SEND_MODE = n;
     switch (n)
     {
     case CONFIG_SEND_CONTROL:
     {
-        if (Repeat_Counter > 0)
-        {
+        //if (Repeat_Counter > 0)
+        //{
             QByteArray data_to_write; // Текстовая переменная
             ClearOut_DataBuffer();
             OutDataBuffer = data;
@@ -1599,13 +1631,13 @@ void DataLogic_Class::SEND_DATA(QByteArray data, uint n)
 
             timerRepeat->start(Delay_Time);
             Repeat_Counter--;
-        }
-        else
-        {
-            Repeat_Counter = Repeat_Number;
-            timerRepeat->stop();
-            emit noANSWER();
-        }
+        //}
+        //else
+        //{
+        //    Repeat_Counter = Repeat_Number;
+        //    timerRepeat->stop();
+        //    emit noANSWER();
+        //}
         SEND_MODE = n;
         break;
     }

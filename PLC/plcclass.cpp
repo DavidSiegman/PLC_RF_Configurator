@@ -1,33 +1,25 @@
 #include "plcclass.h"
 
-PLCClass::PLCClass(Ui::MainWindow *ui,QObject *parent) : QObject(parent)
-{
-    this->ui = ui;
-
-    PLC_Parameters = new PLC_Config_struct;
+PLCClass::PLCClass(Ui::MainWindow *ui,QObject *parent) : QObject(parent){
+    //this->ui = ui;
+    //PLC_Parameters = new PLC_Config_struct;
 }
 
-PLC_Config_struct*        PLCClass::aSI4432_PLC_Config_struct(void)
+PLCClass::PLCClass(QObject *parent) : QObject(parent)
 {
-    return PLC_Parameters;
+    In_ST750_Parameters  = new ST750ConfigurationClass();
+    Out_ST750_Parameters = new ST750ConfigurationClass();
 }
 
-void           PLCClass::PLC_SET_LOWF  (unsigned int LOWF)
+ST750ConfigurationClass*  PLCClass::getIn_ST750_RF_Config(void)
 {
-    this->PLC_Parameters->LOWF = LOWF;
-    this->ui->PLC_LowF->setValue(LOWF);
+    emit   sIn_ST750_Parameters (In_ST750_Parameters);
+    return In_ST750_Parameters;
 }
-unsigned int   PLCClass::PLC_GET_LOWF  (void)
+
+ST750ConfigurationClass*  PLCClass::getOut_ST750_RF_Config(void)
 {
-    return this->PLC_Parameters->LOWF;
-}
-void           PLCClass::PLC_SET_HIGHF (unsigned int HIGHF)
-{
-    this->PLC_Parameters->HIGHF = HIGHF;
-    this->ui->PLC_HighF->setValue(HIGHF);
-}
-unsigned int   PLCClass::PLC_SET_HIGHF (void)
-{
-    return this->PLC_Parameters->HIGHF;
+    emit   sOut_ST750_Parameters (Out_ST750_Parameters);
+    return Out_ST750_Parameters;
 }
 

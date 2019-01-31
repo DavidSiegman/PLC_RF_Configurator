@@ -31,6 +31,14 @@ private slots:
 
     void on_Apply_clicked();
 
+    void on_RepeatSlider_valueChanged(int value);
+
+    void on_PeriodeSlider_valueChanged(int value);
+
+    void on_Repeat_valueChanged(int arg1);
+
+    void on_Periode_valueChanged(int arg1);
+
 private:
     Ui::Settings_Form *ui;
 

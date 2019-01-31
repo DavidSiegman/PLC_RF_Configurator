@@ -1,5 +1,15 @@
 #ifndef MESS_ENUM
 #define MESS_ENUM
+enum
+{
+    COM_USO_INTERFACE = 0,
+    PLC_RF_INTERFACE
+};
+enum
+{
+    ADDITIONAL_MODULE_TYPE = 0,
+    MAIN_MODULE_TYPE
+};
 // ==================================================
 // Все возможные сообщения передаваемые между слотами
 // ==================================================
@@ -81,8 +91,11 @@ enum
     SEND_FIRMWARE_DATA,
     SEND_READ_WRITED_PAGES,
     SEND_WRITE_SECTOR,
-    SEND_DELETE_FIRMWARE
+    SEND_DELETE_FIRMWARE,
+    SEND_CHOICE_ADDITIONAL_MODULE,
+    SEND_CHOICE_MAIN_MODULE
 };
 
 #endif // MESS_ENUM
+
 

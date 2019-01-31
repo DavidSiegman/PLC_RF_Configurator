@@ -14,6 +14,7 @@
 
 #define CONNECTION_SETTINGS_INTERFACE   "Connection_Settings/INTERFACE"
 #define CONNECTION_SETTINGS_SN          "Connection_Settings/SN"
+#define CONNECTION_SETTINGS_MODULE_TYPE "Connection_Settings/MODULE_TYPE"
 
 //namespace Ui {
 //class Open_Connection_Form;
@@ -31,6 +32,8 @@ public:
 signals:
     void Updating(QWidget*);
     void SendSerialNumber(QString, bool);
+    void SendModuleType(uchar);
+    void SendInterface(uchar);
     void ClearAllData(void);
     void AOPEN(void);
 
@@ -63,6 +66,8 @@ private slots:
     void SetDeviceNameToUI(QString);
 
     void Clear_Form(void);
+
+    void on_ModuleType_currentIndexChanged(int index);
 
 private:
     Ui::Open_Connection_Form *ui;

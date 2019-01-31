@@ -59,7 +59,9 @@ HEADERS += \
     ANDROID_FORMS/retranslation_table_form.h \
     ANDROID_FORMS/si4463_registers_form.h \
     RESIZE_CALCULATING/resizecalculating.h \
-    ANDROID_FORMS/myformabstractclass.h
+    ANDROID_FORMS/myformabstractclass.h \
+    PLC/st750configurationclass.h \
+    ANDROID_FORMS/rssimonitor_form.h
     RESIZE_CALCULATING/resizecalculating.h \
 
 SOURCES += \
@@ -104,7 +106,9 @@ SOURCES += \
     ANDROID_FORMS/retranslation_table_form.cpp \
     ANDROID_FORMS/si4463_registers_form.cpp \
     RESIZE_CALCULATING/resizecalculating.cpp \
-    ANDROID_FORMS/myformabstractclass.cpp
+    ANDROID_FORMS/myformabstractclass.cpp \
+    PLC/st750configurationclass.cpp \
+    ANDROID_FORMS/rssimonitor_form.cpp
     RESIZE_CALCULATING/resizecalculating.cpp \
 
 FORMS += \
@@ -120,7 +124,8 @@ FORMS += \
     ANDROID_FORMS/si4463_settings_form.ui \
     ANDROID_FORMS/firmware_updating_form.ui \
     ANDROID_FORMS/retranslation_table_form.ui \
-    ANDROID_FORMS/si4463_registers_form.ui
+    ANDROID_FORMS/si4463_registers_form.ui \
+    ANDROID_FORMS/rssimonitor_form.ui
 
 RESOURCES += \
     RESOURCES/images.qrc

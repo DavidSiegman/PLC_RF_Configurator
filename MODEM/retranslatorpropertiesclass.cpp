@@ -64,15 +64,19 @@ void       RetranslatorPropertiesClass::addNewItemToRetranslation_Table(QString 
 }
 void       RetranslatorPropertiesClass::delCurrentItemFromRetranslation_Table()
 {
-    if (Retranslator_Properties_Data.Retranslation_Table_Current_Index <= 100)
-    {
-        Retranslator_Properties_Data.Retranslation_Table_Current_Index -= 1;
+    Retranslator_Properties_Data.Retranslation_Table_Current_Index = Retranslator_Properties_Data.Retranslation_Table.length();
+    if (Retranslator_Properties_Data.Retranslation_Table_Current_Index <= 100){
+        if (Retranslator_Properties_Data.Retranslation_Table_Current_Index > 0){
+            Retranslator_Properties_Data.Retranslation_Table_Current_Index -= 1;
+        }
+        if (Retranslator_Properties_Data.Retranslation_Table.length() > 0){
+            Retranslator_Properties_Data.Retranslation_Table.removeAt(Retranslator_Properties_Data.Retranslation_Table_Current_Index);
+        }
     }
     else
     {
         Retranslator_Properties_Data.Retranslation_Table_Current_Index = 0;
     }
-    Retranslator_Properties_Data.Retranslation_Table.removeAt(Retranslator_Properties_Data.Retranslation_Table_Current_Index);
     //this->model->removeRow(this->current_index);
     //if ((this->current_index == 0)&&(this->model->rowCount() == 0))
     //{

@@ -78,6 +78,7 @@ void UPDATE::getCurrent_SECTOR_DATA(QByteArray* DATA)
     DATA->append((uchar)(length + 2));
     DATA->append(this->Current_BLOCK);
     DATA->append(this->Current_SECTOR);
+    this->Writed_BYTES = start_index;
     for(uint i = 0; i < length; i++)
     {
         DATA->append(this->DATA.at(start_index + i));

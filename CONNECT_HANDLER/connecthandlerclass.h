@@ -21,7 +21,15 @@ private:
     MonitorClass    *Monitor;
     UPDATE          *nUPDATE;
 
-    uint ReadDataProgress;
+    uint             preReadDataProgress;
+    uint             ReadDataProgress;
+    uint             SetModuleTypeStatus;
+
+    uchar            ModuleType;
+    uchar            Interface;
+
+    void SetReadDataProgress(uint new_value);
+    uint GetPreeReadDataProgress(void);
 
 signals:
     void SendComand(uint n, uint m);
@@ -80,8 +88,10 @@ public slots:
     void WriteMASK_DESTINATION();
     void StartUPDATE();
     void StartDELETE();
+    void SetModuleType(uchar);
+    void SetInterface(uchar);
 
-    void ConnectHandling(uint n, uint state);
+    void ConnectHandling(uint n, uint state, uint repeate);
     void MonitorComandCounter(uint n, uint state);
 };
 

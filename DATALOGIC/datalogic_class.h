@@ -134,7 +134,7 @@ signals:
     void DataForPrint(QByteArray data,uint n);
     void LogForPrint(QString data,uint n);
     void SendLog(QString data, uint n);
-    void outConnect(uint n, uint state);
+    void outConnect(uint n, uint state, uint repeate);
     void outCurrentRSSI(signed short RSSI);
     void outLRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,signed short ANT2_RSSI,double AFC);
     void noANSWER();

@@ -12,6 +12,10 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
 
     ui->SN->setText(settings.value(CONNECTION_SETTINGS_SN).toString());
 
+    ui->ModuleType->setCurrentIndex(settings.value(CONNECTION_SETTINGS_MODULE_TYPE).toInt());
+
+    ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
+
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
@@ -27,6 +31,7 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     ui->Next->setStyleSheet(Buttons_Style);
 
     ui->Interface->setStyleSheet(Background_White);
+    ui->ModuleType->setStyleSheet(Background_White);
     ui->SN->setStyleSheet(Background_White);
 
     ui->DeviceType->setStyleSheet(Work_Area_Style + Text_Green);
@@ -57,6 +62,7 @@ void Open_Connection_Form::on_Back_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
     this->Back_ClickHandler();
 }
@@ -64,6 +70,7 @@ void Open_Connection_Form::on_Next_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
     this->Next_ClickHandler();
 }
@@ -71,6 +78,7 @@ void Open_Connection_Form::ForceClose(void){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
     this->ForceCloseHandler();
 }
@@ -78,6 +86,7 @@ void Open_Connection_Form::on_btnSettings_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
     emit Settings(this);
 }
@@ -175,12 +184,19 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->label_5->setFont(font_4_1);
     ui->label_6->setFont(font_4_2);
     ui->label_7->setFont(font_4_2);
+    ui->label_8->setFont(font_4_1);
 
     ui->Interface->setFont(font_4_2);
     ui->Interface->clear();
     ui->Interface->addItem("COM/УСО (Оптопорт)");
     ui->Interface->addItem("PLC/RF");
     ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
+
+    ui->ModuleType->setFont(font_4_2);
+    ui->ModuleType->clear();
+    ui->ModuleType->addItem("Дополнительный");
+    ui->ModuleType->addItem("Основной");
+    ui->ModuleType->setCurrentIndex(settings.value(CONNECTION_SETTINGS_MODULE_TYPE).toInt());
 
     ui->SN->setFont(font_4_2);
     ui->DeviceType->setFont(font_2_1);
@@ -215,6 +231,7 @@ void Open_Connection_Form::on_Update_clicked()
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
     emit Updating(this);
 }
@@ -238,6 +255,7 @@ void Open_Connection_Form::on_Connect_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ui->ModuleType->currentIndex());
     settings.sync();
 
     Clear_Form();
@@ -252,13 +270,14 @@ void Open_Connection_Form::on_Connect_clicked(){
     ui->Next->setEnabled(false);
     ui->btnSettings->setEnabled(false);
 
-    if (ui->Interface->currentIndex() == 0){
+    if (ui->Interface->currentIndex() == COM_USO_INTERFACE){
         emit SendSerialNumber(ui->SN->text(), false);
     }
-    else if (ui->Interface->currentIndex() == 1){
+    else if (ui->Interface->currentIndex() == PLC_RF_INTERFACE){
         emit SendSerialNumber(ui->SN->text(), true);
     }
-
+    emit SendModuleType(ui->ModuleType->currentIndex());
+    emit SendInterface(ui->Interface->currentIndex());
     emit AOPEN();
 }
 
@@ -348,18 +367,50 @@ void Open_Connection_Form::SetDeviceNameToUI(QString new_value)
 }
 
 void Open_Connection_Form::on_Interface_currentIndexChanged(int index){
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     if (this->Get_resizing_going() == 0){
         switch (index){
-            case 0:{
+            case COM_USO_INTERFACE:{
                     Clear_Form();
                     ui->SN->setEnabled(false);
+                    ui->ModuleType->setEnabled(true);
+                    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+                    settings.sync();
+                    emit SendInterface((uchar)(index));
                     emit SendSerialNumber(ui->SN->text(), false);
                 break;
             }
-            case 1:{
+            case PLC_RF_INTERFACE:{
                     Clear_Form();
                     ui->SN->setEnabled(true);
+                    ui->ModuleType->setEnabled(false);
+                    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+                    settings.sync();
+                    emit SendInterface((uchar)(index));
                     emit SendSerialNumber(ui->SN->text(), true);
+                break;
+            }
+        }
+    }
+}
+
+void Open_Connection_Form::on_ModuleType_currentIndexChanged(int index)
+{
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    if (this->Get_resizing_going() == 0){
+        switch (index){
+            case ADDITIONAL_MODULE_TYPE:{
+                    Clear_Form();
+                    settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ui->ModuleType->currentIndex());
+                    settings.sync();
+                    emit SendModuleType((uchar)(index));
+                break;
+            }
+            case MAIN_MODULE_TYPE:{
+                    Clear_Form();
+                    settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ui->ModuleType->currentIndex());
+                    settings.sync();
+                    emit SendModuleType((uchar)(index));
                 break;
             }
         }
@@ -382,3 +433,4 @@ void Open_Connection_Form::Clear_Form(void){
     SetUpgradableCRCToUI(0);
     SetDeviceNameToUI("");
 }
+
