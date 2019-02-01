@@ -126,7 +126,7 @@ color: rgb(150, 80, 0);</string>
          <item row="8" column="0">
           <widget class="QPushButton" name="RSSIMonitor">
            <property name="enabled">
-            <bool>true</bool>
+            <bool>false</bool>
            </property>
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Minimum">

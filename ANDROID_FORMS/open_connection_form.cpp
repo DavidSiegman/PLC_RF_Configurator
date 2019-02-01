@@ -105,7 +105,7 @@ void Open_Connection_Form::on_Reset_clicked(){
     ui->Update->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Next->setEnabled(false);
-    ui->InterfaceWidget->setEnabled(false);
+    //ui->InterfaceWidget->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
 
@@ -123,7 +123,7 @@ void Open_Connection_Form::isStopped(void){
        ui->Reset->setEnabled(false);
        ui->Update->setEnabled(false);
     }
-    ui->InterfaceWidget->setEnabled(true);
+    //ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(false);
     ui->btnSettings->setEnabled(true);
@@ -133,7 +133,7 @@ void Open_Connection_Form::isRF_Reset(){
     ui->Connect->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Update->setEnabled(false);
-    ui->InterfaceWidget->setEnabled(true);
+    //ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -151,7 +151,6 @@ void Open_Connection_Form::isRF_Reset(){
     SetUpgradableCRCToUI(0);
     SetDeviceNameToUI("");
 }
-
 void Open_Connection_Form::resizeEvent(QResizeEvent *event)
 {
     this->Set_resizing_going(1);
@@ -265,7 +264,7 @@ void Open_Connection_Form::on_Connect_clicked(){
     ui->Update->setEnabled(false);
     ui->Connect->setEnabled(false);
     ui->Reset->setEnabled(false);
-    ui->InterfaceWidget->setEnabled(false);
+    //ui->InterfaceWidget->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->Next->setEnabled(false);
     ui->btnSettings->setEnabled(false);
@@ -286,7 +285,7 @@ void Open_Connection_Form::isOPEND(){
     ui->Connect->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Update->setEnabled(true);
-    ui->InterfaceWidget->setEnabled(true);
+    //ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(true);
     ui->btnSettings->setEnabled(true);

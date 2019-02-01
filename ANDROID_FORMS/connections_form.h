@@ -44,6 +44,7 @@
 #include "firmware_updating_form.h"
 #include "retranslation_table_form.h"
 #include "si4463_registers_form.h"
+#include "rssimonitor_form.h"
 
 /* Defining */
 #define ORGANIZATION_NAME "MILANDR"
@@ -108,11 +109,15 @@ private slots:
     void Create_And_Show_Firmware_Updating_Form(QWidget*);
     void Create_And_Show_Retranslation_Table_Form(QWidget*);
     void Create_And_Show_SI4463_Registers_Form(QWidget*);
+    void Create_And_Show_RSSIMonitor_Form(QWidget*);
+
     void on_TCPConnect_clicked();
     void on_PortNameBox_currentIndexChanged(const QString &arg1);
     void on_COMConnect_clicked();
     void on_btnSettings_clicked();
     void on_btnHandsEnter_clicked();
+    void on_RSSIMonitor_clicked();
+
 private:
     Ui::Connections_Form     *ui;
 
@@ -128,6 +133,7 @@ private:
     SI4463_Registers_Form    *si4463_registers_form;
     Firmware_Updating_Form   *firmware_updating_form;
     Retranslation_Table_Form *retranslation_table_form;
+    RSSIMonitor_Form         *rssimonitor_form;
 
     QSysInfo                 *SysInfo;
     QRegExp                   RegSystemName;

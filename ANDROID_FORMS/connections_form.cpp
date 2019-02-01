@@ -87,6 +87,7 @@ Connections_Form::Connections_Form(QWidget *parent) :
     si4463_registers_form     = NULL;
     firmware_updating_form    = NULL;
     retranslation_table_form  = NULL;
+    rssimonitor_form          = NULL;
 
     connect(newPort,           SIGNAL(COM_Started()),                  this, SLOT(start_COM_Init()));          //Установка свойств порта при открытии
     connect(newPort,           SIGNAL(COM_Log(QString,uint)),          this, SLOT(Print_Log(QString,uint)));   //Лог ошибок
@@ -205,7 +206,7 @@ void Connections_Form::on_TCPConnect_clicked()
         newTCP->TCP_SetIP(ui->IPInput->text());
         newTCP->TCP_SetPORT(ui->PORTInput->text().toInt());
         newTCP->TCP_Connect();
-
+        ui->btnNext->setEnabled(true);
         ui->TCPConnect->setText("Отключить");
     }
     else
@@ -215,6 +216,7 @@ void Connections_Form::on_TCPConnect_clicked()
         ui->TCPConnect->setText("Подключить");
         ui->btnHandsEnter->setEnabled(false);
         ui->btnNext->setEnabled(false);
+        ui->RSSIMonitor->setEnabled(false);
         ui->COMConnect->setEnabled(true);
         ui->PortNameBox->setEnabled(true);
         ui->IPInput->setEnabled(true);
@@ -263,6 +265,7 @@ void Connections_Form::TCP_IsConnected(void)
 
     ui->btnHandsEnter->setEnabled(true);
     ui->btnNext->setEnabled(true);
+    ui->RSSIMonitor->setEnabled(true);
     ui->COMConnect->setEnabled(false);
     ui->PortNameBox->setEnabled(false);
     ui->IPInput->setEnabled(false);
@@ -284,6 +287,7 @@ void Connections_Form::COM_IsOpend(void)
     ui->COMConnect->setText("Закрыть");
     ui->btnHandsEnter->setEnabled(true);
     ui->btnNext->setEnabled(true);
+    ui->RSSIMonitor->setEnabled(true);
     ui->TCPConnect->setEnabled(false);
     ui->PortNameBox->setEnabled(false);
     ui->IPInput->setEnabled(false);
@@ -300,6 +304,7 @@ void Connections_Form::COM_IsClosed(void)
     ui->COMConnect->setText("Открыть");
     ui->btnHandsEnter->setEnabled(false);
     ui->btnNext->setEnabled(false);
+    ui->RSSIMonitor->setEnabled(false);
     ui->TCPConnect->setEnabled(true);
     ui->PortNameBox->setEnabled(true);
     ui->IPInput->setEnabled(true);
@@ -320,26 +325,33 @@ void Connections_Form::Define_Next_Form(QRect curren_geometry)
 {
     FirmwareInformationClass *In_Firmware_Information = MODEM->getIn_Firmware_Information();
 
+    if((rssimonitor_form != NULL)&&(rssimonitor_form->isHidden() == false)){
+        rssimonitor_form->deleteLater();
+        rssimonitor_form = NULL;
+        this->setGeometry(curren_geometry);
+        this->show();
+    }
+
     if (In_Firmware_Information->getDevice_Name().compare(PLC_MODEM) == 0)
     {
 
     }
     else if (In_Firmware_Information->getDevice_Name().compare(RF_MODEM_SI4432) == 0){
-        if(open_connection_form->isHidden() == false){
+        if((open_connection_form != NULL)&&(open_connection_form->isHidden() == false)){
             open_connection_form->hide();
             Create_And_Show_Net_Settings_Form(curren_geometry);
         }
-        else if(net_settings_form->isHidden() == false){
+        else if((net_settings_form != NULL)&&(net_settings_form->isHidden() == false)){
             net_settings_form->hide();
             Create_And_Show_SI4432_Settings_Form(curren_geometry);
         }
     }
     else if (In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4432) == 0){
-        if(open_connection_form->isHidden() == false){
+        if((open_connection_form != NULL)&&(open_connection_form->isHidden() == false)){
             open_connection_form->hide();
             Create_And_Show_Sniffer_Settings_Form(curren_geometry);
         }
-        else if(sniffer_settings_form->isHidden() == false){
+        else if((sniffer_settings_form != NULL)&&(sniffer_settings_form->isHidden() == false)){
             sniffer_settings_form->hide();
             Create_And_Show_SI4432_Settings_Form(curren_geometry);
         }
@@ -348,11 +360,11 @@ void Connections_Form::Define_Next_Form(QRect curren_geometry)
 
     }
     else if (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0){
-        if(open_connection_form->isHidden() == false){
+        if((open_connection_form != NULL)&&(open_connection_form->isHidden() == false)){
             open_connection_form->hide();
             Create_And_Show_Sniffer_Settings_Form(curren_geometry);
         }
-        else if(sniffer_settings_form->isHidden() == false){
+        else if((sniffer_settings_form != NULL)&&(sniffer_settings_form->isHidden() == false)){
             sniffer_settings_form->hide();
             Create_And_Show_SI4463_Settings_Form(curren_geometry);
         }
@@ -364,9 +376,15 @@ void Connections_Form::Define_Next_Form(QRect curren_geometry)
 void Connections_Form::Define_Pre_Form(QRect curren_geometry)
 {
     FirmwareInformationClass *In_Firmware_Information = MODEM->getIn_Firmware_Information();
-
-    if(open_connection_form->isHidden() == false){
+    if((open_connection_form != NULL)&&(open_connection_form->isHidden() == false)){
         open_connection_form->deleteLater();
+        open_connection_form = NULL;
+        this->setGeometry(curren_geometry);
+        this->show();
+    }
+    else if((rssimonitor_form != NULL)&&(rssimonitor_form->isHidden() == false)){
+        rssimonitor_form->deleteLater();
+        rssimonitor_form = NULL;
         this->setGeometry(curren_geometry);
         this->show();
     }
@@ -374,38 +392,38 @@ void Connections_Form::Define_Pre_Form(QRect curren_geometry)
         if (In_Firmware_Information->getDevice_Name().compare(PLC_MODEM) == 0){
 
         }
-        else if (In_Firmware_Information->getDevice_Name().compare(RF_MODEM_SI4432) == 0){
-            if(net_settings_form->isHidden() == false){
+        else if(In_Firmware_Information->getDevice_Name().compare(RF_MODEM_SI4432) == 0){
+            if((net_settings_form != NULL)&&(net_settings_form->isHidden() == false)){
                 net_settings_form->deleteLater();
                 net_settings_form = NULL;
                 open_connection_form->setGeometry(curren_geometry);
                 open_connection_form->show();
             }
-            else if(si4432_settings_form->isHidden() == false){
+            else if((si4432_settings_form != NULL)&&(si4432_settings_form->isHidden() == false)){
                 si4432_settings_form->deleteLater();
                 si4432_settings_form = NULL;
                 net_settings_form->setGeometry(curren_geometry);
                 net_settings_form->show();
             }
-            else if (settings_form->isHidden() == false){
+            else if((settings_form != NULL)&&(settings_form->isHidden() == false)){
                 settings_form->deleteLater();
                 settings_form = NULL;
             }
         }
         else if (In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4432) == 0){
-            if(sniffer_settings_form->isHidden() == false){
+            if((sniffer_settings_form != NULL)&&(sniffer_settings_form->isHidden() == false)){
                 sniffer_settings_form->deleteLater();
                 sniffer_settings_form = NULL;
                 open_connection_form->setGeometry(curren_geometry);
                 open_connection_form->show();
             }
-            else if(si4432_settings_form->isHidden() == false){
+            else if((si4432_settings_form != NULL)&&(si4432_settings_form->isHidden() == false)){
                 si4432_settings_form->deleteLater();
                 si4432_settings_form = NULL;
                 sniffer_settings_form->setGeometry(curren_geometry);
                 sniffer_settings_form->show();
             }
-            else if (settings_form->isHidden() == false){
+            else if((settings_form != NULL)&&(settings_form->isHidden() == false)){
                 settings_form->deleteLater();
                 settings_form = NULL;
             }
@@ -414,19 +432,19 @@ void Connections_Form::Define_Pre_Form(QRect curren_geometry)
 
         }
         else if (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0){
-            if(sniffer_settings_form->isHidden() == false){
+            if((sniffer_settings_form != NULL)&&(sniffer_settings_form->isHidden() == false)){
                 sniffer_settings_form->deleteLater();
                 sniffer_settings_form = NULL;
                 open_connection_form->setGeometry(curren_geometry);
                 open_connection_form->show();
             }
-            else if(si4463_settings_form->isHidden() == false){
+            else if((si4463_settings_form != NULL)&&(si4463_settings_form->isHidden() == false)){
                 si4463_settings_form->deleteLater();
                 si4463_settings_form = NULL;
                 sniffer_settings_form->setGeometry(curren_geometry);
                 sniffer_settings_form->show();
             }
-            else if (settings_form->isHidden() == false){
+            else if ((settings_form != NULL)&&(settings_form->isHidden() == false)){
                 settings_form->deleteLater();
                 settings_form = NULL;
             }
@@ -438,27 +456,34 @@ void Connections_Form::Define_Pre_Form(QRect curren_geometry)
 }
 void Connections_Form::RF_Reset_Handler(void)
 {
-    QRect Geometry = open_connection_form->geometry();
-
+    QRect Geometry;
+    if (open_connection_form != NULL){
+        Geometry = open_connection_form->geometry();
+    }
     if (sniffer_settings_form != NULL){
         Geometry = sniffer_settings_form->geometry();
         sniffer_settings_form->deleteLater();
         sniffer_settings_form = NULL;
     }
     if (net_settings_form != NULL){
+        Geometry = net_settings_form->geometry();
         net_settings_form->deleteLater();
         net_settings_form = NULL;
     }
     if (si4432_settings_form != NULL){
+        Geometry = si4432_settings_form->geometry();
         si4432_settings_form->deleteLater();
         si4432_settings_form = NULL;
     }
     if (si4463_settings_form != NULL){
+        Geometry = si4463_settings_form->geometry();
         si4463_settings_form->deleteLater();
         si4463_settings_form = NULL;
     }
-    open_connection_form->setGeometry(Geometry);
-    open_connection_form->show();
+    if ((rssimonitor_form == NULL)&&(open_connection_form != NULL)){
+        open_connection_form->setGeometry(Geometry);
+        open_connection_form->show();
+    }
 }
 void Connections_Form::Create_And_Show_Settings_Form(QWidget *parent)
 {
@@ -760,6 +785,39 @@ void Connections_Form::Create_And_Show_SI4463_Registers_Form(QWidget *parent)
     si4463_registers_form->show();
 }
 
+void Connections_Form::Create_And_Show_RSSIMonitor_Form(QWidget *parent)
+{
+    rssimonitor_form = new RSSIMonitor_Form;
+    connect(this->newPort,   SIGNAL(COM_Error()),                           rssimonitor_form,      SLOT(ForceClose()));
+    connect(rssimonitor_form,SIGNAL(ForcedClosed()),                        this,                  SLOT(show()));
+    connect(rssimonitor_form,SIGNAL(Get_Geometry(QRect)),                   this,                  SLOT(Set_Geometry(QRect)));
+
+    connect(rssimonitor_form,SIGNAL(Cancel(QRect)),                         this,                  SLOT(Define_Pre_Form(QRect)));
+    connect(rssimonitor_form,SIGNAL(Next(QRect)),                           this,                  SLOT(Define_Next_Form(QRect)));
+    connect(rssimonitor_form,SIGNAL(Settings(QWidget*)),                    this,                  SLOT(Create_And_Show_Settings_Form(QWidget*)));
+    connect(rssimonitor_form,SIGNAL(Get_Console(QPlainTextEdit*)),          this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(rssimonitor_form,SIGNAL(Stop_Send_Data()),                      DataLogic,             SLOT(STOP_SEND_DATA()));
+    connect(DataLogic,       SIGNAL(STOPPED()),                             rssimonitor_form,      SLOT(isSTOPPED()));
+    connect(DataLogic,       SIGNAL(noANSWER()),                            rssimonitor_form,      SLOT(isSTOPPED()));
+
+    connect(rssimonitor_form,SIGNAL(SendSerialNumber(QString,bool)),        DataLogic,             SLOT(setSerialNumberMode(QString,bool)));
+    connect(rssimonitor_form,SIGNAL(SendModuleType(uchar)),                 ConnectHandler,        SLOT(SetModuleType(uchar)));
+    connect(rssimonitor_form,SIGNAL(SendInterface(uchar)),                  ConnectHandler,        SLOT(SetInterface(uchar)));
+
+    connect(rssimonitor_form,SIGNAL(Send_RF_Reset()),                       ConnectHandler,        SLOT(SendRF_RESET()));
+    connect(ConnectHandler,  SIGNAL(isRF_RESET()),                          rssimonitor_form,      SLOT(isRF_Reset()));
+
+    connect(rssimonitor_form,SIGNAL(SendReadLatchRSSI_AFC()),               ConnectHandler,        SLOT(ReadLRSSI_AFC()));
+    connect(DataLogic,       SIGNAL(outLRSSI_AFC(signed short,signed short,signed short,double)),  rssimonitor_form,      SLOT(isLatchRSSI_AFC(signed short,signed short,signed short,double)));
+
+    connect(rssimonitor_form,SIGNAL(StartRSSIMonitor()),                    ConnectHandler,        SLOT(StartMonitor()));
+    connect(rssimonitor_form,SIGNAL(StopRSSIMonitor()),                     ConnectHandler,        SLOT(StopMonitor()));
+
+    parent->hide();
+    rssimonitor_form->setGeometry(parent->geometry());
+    rssimonitor_form->show();
+}
+
 //+++++++++++++[Процедура вывода данных в консоль]++++++++++++++++++++++++++++++++++++++++
 void Connections_Form::Print(QByteArray data, uint n)
 {
@@ -821,4 +879,9 @@ void Connections_Form::on_btnSettings_clicked()
 void Connections_Form::on_btnHandsEnter_clicked()
 {
     Create_And_Show_Hands_Enter_Form(this);
+}
+
+void Connections_Form::on_RSSIMonitor_clicked()
+{
+    Create_And_Show_RSSIMonitor_Form(this);
 }

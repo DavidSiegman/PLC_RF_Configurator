@@ -74,6 +74,9 @@ void ConnectHandlerClass::ReadLRSSI_AFC(){
 
     }
     */
+    DataLogic->DataLogicMode = SEND_READ_RSSI;
+    emit SendLog(QString::fromUtf8("\r>> ======= Запрос Latch RSSI\r"),NONE);
+    emit SendComand(SEND_READ_RSSI,CONFIG_SEND_CONTROL);
 }
 
 void ConnectHandlerClass::WriteRF_PARAMS(){
@@ -161,11 +164,11 @@ void ConnectHandlerClass::WriteMASK_DESTINATION(){
 
 void ConnectHandlerClass::StartMonitor(){
    emit SendLog(QString::fromUtf8("\r>> ======= Старт RSSI Монитор\r"),NONE);
-   //Monitor = new MonitorClass(timeout,parameter);
-   //connect(Monitor,SIGNAL(SendComand(uint,uint)),this->DataLogic,SLOT(ComandHandling(uint,uint)));
-   //connect(Monitor,SIGNAL(SendComand(uint,uint)),this,SLOT(MonitorComandCounter(uint,uint)));
-   //connect(this,SIGNAL(MonitorStart()),Monitor,SLOT(startMonitor()));
-   //connect(this,SIGNAL(MonitorStop()),Monitor,SLOT(stopMonitor()));
+   Monitor = new MonitorClass(DataLogic->Delay_Time,1);
+   connect(Monitor,SIGNAL(SendComand(uint,uint)),this->DataLogic,SLOT(ComandHandling(uint,uint)));
+   connect(Monitor,SIGNAL(SendComand(uint,uint)),this,SLOT(MonitorComandCounter(uint,uint)));
+   connect(this,SIGNAL(MonitorStart()),          Monitor,SLOT(startMonitor()));
+   connect(this,SIGNAL(MonitorStop()),           Monitor,SLOT(stopMonitor()));
    emit MonitorStart();
 }
 
@@ -222,7 +225,9 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state, uint repeate){
     }
     if ((In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4432) == 0) ||
         (In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4463) == 0) ||
-        (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0)){
+        (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0)    ||
+        (In_Firmware_Information->getDevice_Name().compare(GSM_MODEM) == 0)         ||
+        (In_Firmware_Information->getDevice_Name().compare(TERMINAL) == 0)){
         SetModuleTypeStatus = 2;
     }
     if (SetModuleTypeStatus == 1){
@@ -1405,22 +1410,29 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state, uint repeate){
             }
             case 6:{
                 if (state == 1){
-                    /*
-                    if (state != 0){
-                        emit SendComand(SEND_WRITE_SECTOR,CONFIG_SEND_CONTROL);
-                        SetReadDataProgress(4);
+                    if ((In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4432) == 0) ||
+                        (In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4463) == 0) ||
+                        (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0)    ||
+                        (In_Firmware_Information->getDevice_Name().compare(GSM_MODEM) == 0)         ||
+                        (In_Firmware_Information->getDevice_Name().compare(TERMINAL) == 0)){
+                        emit SendLog(QString::fromUtf8("\r>> ======= Выбор модуля\r"),NONE);
+                        if (this->ModuleType == ADDITIONAL_MODULE_TYPE){
+                            emit SendComand(SEND_CHOICE_ADDITIONAL_MODULE,CONFIG_SEND_CONTROL);
+                        }
+                        else if (this->ModuleType == MAIN_MODULE_TYPE){
+                            emit SendComand(SEND_CHOICE_MAIN_MODULE,CONFIG_SEND_CONTROL);
+                        }
+                        SetReadDataProgress(7);
                         SetModuleTypeStatus = 2;
                     }
-                    */
-                    emit SendLog(QString::fromUtf8("\r>> ======= Выбор модуля\r"),NONE);
-                    if (this->ModuleType == ADDITIONAL_MODULE_TYPE){
-                        emit SendComand(SEND_CHOICE_ADDITIONAL_MODULE,CONFIG_SEND_CONTROL);
+                    else{
+                        if (state != 0){
+                            emit SendLog(QString::fromUtf8("\r>> ======= Чтение ячейки\r"),NONE);
+                            emit SendComand(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
+                            SetReadDataProgress(6);
+                            SetModuleTypeStatus = 2;
+                        }
                     }
-                    else if (this->ModuleType == MAIN_MODULE_TYPE){
-                        emit SendComand(SEND_CHOICE_MAIN_MODULE,CONFIG_SEND_CONTROL);
-                    }
-                    SetReadDataProgress(7);
-                    SetModuleTypeStatus = 2;
                 }
                 else if (state == 2)
                 {
@@ -1548,35 +1560,64 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state, uint repeate){
             }
             case 4:{
                 if (state == 1){
-                    /*
-                    if (state != 0){
-                        emit SendComand(SEND_WRITE_SECTOR,CONFIG_SEND_CONTROL);
-                        SetReadDataProgress(4);
+                    if ((In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4432) == 0) ||
+                        (In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4463) == 0) ||
+                        (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0)    ||
+                        (In_Firmware_Information->getDevice_Name().compare(GSM_MODEM) == 0)         ||
+                        (In_Firmware_Information->getDevice_Name().compare(TERMINAL) == 0)){
+
+                         emit SendComand(SEND_WRITE_SECTOR,CONFIG_SEND_CONTROL);
+                         SetReadDataProgress(4);
+                         SetModuleTypeStatus = 2;
+                    }
+                    else {
+                        emit SendLog(QString::fromUtf8("\r>> ======= Выбор модуля\r"),NONE);
+                        if (this->ModuleType == ADDITIONAL_MODULE_TYPE){
+                            emit SendComand(SEND_CHOICE_ADDITIONAL_MODULE,CONFIG_SEND_CONTROL);
+                        }
+                        else if (this->ModuleType == MAIN_MODULE_TYPE){
+                            emit SendComand(SEND_CHOICE_MAIN_MODULE,CONFIG_SEND_CONTROL);
+                        }
+                        SetReadDataProgress(5);
                         SetModuleTypeStatus = 2;
                     }
-                    */
-                    emit SendLog(QString::fromUtf8("\r>> ======= Выбор модуля\r"),NONE);
-                    if (this->ModuleType == ADDITIONAL_MODULE_TYPE){
-                        emit SendComand(SEND_CHOICE_ADDITIONAL_MODULE,CONFIG_SEND_CONTROL);
-                    }
-                    else if (this->ModuleType == MAIN_MODULE_TYPE){
-                        emit SendComand(SEND_CHOICE_MAIN_MODULE,CONFIG_SEND_CONTROL);
-                    }
-                    SetReadDataProgress(5);
-                    SetModuleTypeStatus = 2;
                 }
                 else if (state == 2)
                 {
-                    emit SendLog(QString::fromUtf8("\r>> ======= Выбор модуля\r"),NONE);
-                    if (this->ModuleType == ADDITIONAL_MODULE_TYPE){
-                        emit SendComand(SEND_CHOICE_ADDITIONAL_MODULE,CONFIG_SEND_CONTROL);
-                    }
-                    else if (this->ModuleType == MAIN_MODULE_TYPE){
-                        emit SendComand(SEND_CHOICE_MAIN_MODULE,CONFIG_SEND_CONTROL);
-                    }
-                    SetReadDataProgress(6);
-                    SetModuleTypeStatus = 2;
+                    if ((In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4432) == 0) ||
+                        (In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4463) == 0) ||
+                        (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0)    ||
+                        (In_Firmware_Information->getDevice_Name().compare(GSM_MODEM) == 0)         ||
+                        (In_Firmware_Information->getDevice_Name().compare(TERMINAL) == 0)){
 
+                        emit SendLog(QString::fromUtf8("\r>> ======= Выбор модуля\r"),NONE);
+                        if (this->ModuleType == ADDITIONAL_MODULE_TYPE){
+                            emit SendComand(SEND_CHOICE_ADDITIONAL_MODULE,CONFIG_SEND_CONTROL);
+                        }
+                        else if (this->ModuleType == MAIN_MODULE_TYPE){
+                            emit SendComand(SEND_CHOICE_MAIN_MODULE,CONFIG_SEND_CONTROL);
+                        }
+                        SetReadDataProgress(6);
+                        SetModuleTypeStatus = 2;
+                    }
+                    else
+                    {
+                        if (state != 0){
+                            emit Progress(95);
+                            emit SendLog(QString::fromUtf8("\r>> ======= Запрос версии ПО\r"),NONE);
+                            emit SendComand(SEND_AOPEN,CONFIG_SEND_CONTROL);
+                            SetReadDataProgress(7);
+                            SetModuleTypeStatus = 2;
+                        }
+                        else{
+                            emit SendLog(QString::fromUtf8(">> =======  Блок не записан, повтор\r"),NONE);
+                            emit Progress(0);
+                            emit SendLog(QString::fromUtf8("\r>> ======= Переключение в BOOT\r"),NONE);
+                            emit SendComand(SEND_ENABLE_BOOT,CONFIG_SEND_CONTROL);
+                            SetReadDataProgress(1);
+                            SetModuleTypeStatus = 2;
+                        }
+                    }
                 }
                 else{
                     emit SendLog(QString::fromUtf8(">> =======  Блок не записан, повтор\r"),NONE);

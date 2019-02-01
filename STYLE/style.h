@@ -69,6 +69,17 @@ const QString Text_Green                          (
                                                     "color: rgb(0, 115, 10);"
                                                    "}"
                                                   );
+const QString Text_Green_Disabled                          (
+                                                   "QWidget{"
+                                                   "color: rgb(0, 115, 10);"
+                                                   "}"
+                                                   "QWidget:disabled{"
+                                                    "color: rgb(0, 115, 10);"
+                                                   "}"
+                                                   "QWidget:enabled{"
+                                                    "color: rgb(0, 115, 10);"
+                                                   "}"
+                                                  );
 const QString ScrollBar_Style                     (
                                                    "QScrollBar:vertical {"
                                                     "width: 10px;"

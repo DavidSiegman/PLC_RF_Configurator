@@ -79,7 +79,7 @@
         <x>0</x>
         <y>0</y>
         <width>311</width>
-        <height>561</height>
+        <height>559</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -98,27 +98,6 @@
        <property name="bottomMargin">
         <number>2</number>
        </property>
-       <item>
-        <widget class="QWidget" name="InterfaceWidget" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-         </layout>
-        </widget>
-       </item>
        <item>
         <layout class="QGridLayout" name="gridLayout_2">
          <property name="horizontalSpacing">

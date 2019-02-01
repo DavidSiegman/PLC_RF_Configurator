@@ -1145,6 +1145,8 @@ void DataLogic_Class::ParceData(uint n)
 
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
+                ANT1_RSSI = RSSI;
+                ANT2_RSSI = 100;
                 emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
             }
             if ((NumbOfBytes == 10)&&(In_Data.length() >= 8))

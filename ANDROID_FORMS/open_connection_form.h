@@ -73,9 +73,9 @@ private:
     Ui::Open_Connection_Form *ui;
     QSysInfo                 *SysInfo;
     QRegExp                   RegSystemName;
+    ResizeCalculating         resize_calculating;
 
     FirmwareInformationClass *In_Firmware_Information;
-    ResizeCalculating         resize_calculating;
 };
 
 #endif // OPEN_CONNECTION_FORM_H

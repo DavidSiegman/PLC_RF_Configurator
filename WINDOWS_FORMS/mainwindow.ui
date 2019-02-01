@@ -29,14 +29,14 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <property name="tabletTracking">
-    <bool>false</bool>
-   </property>
    <property name="autoFillBackground">
     <bool>false</bool>
    </property>
    <property name="styleSheet">
     <string notr="true"/>
+   </property>
+   <property name="tabletTracking" stdset="0">
+    <bool>false</bool>
    </property>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
@@ -585,7 +585,7 @@
           <string notr="true">background-color: rgb(255, 255, 255);</string>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>6</number>
          </property>
          <widget class="QWidget" name="tab">
           <property name="styleSheet">
