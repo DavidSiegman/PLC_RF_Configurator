@@ -10,6 +10,9 @@
 #include "myformabstractclass.h"
 #include "MODEM/firmwareinformationclass.h"
 #include "RESIZE_CALCULATING/resizecalculating.h"
+#include "GRAPH/mygraphscene.h"
+#include "GRAPH/mypoligon.h"
+#include "FILTER/filter.h"
 #include "STYLE/style.h"
 
 #define CONNECTION_SETTINGS_INTERFACE   "Connection_Settings/INTERFACE"
@@ -40,7 +43,6 @@ signals:
     void StopRSSIMonitor();
 
 public slots:
-    void isOPEND(void);
     void ForceClose(void);
     void isStopped(void);
     void isRF_Reset(void);
@@ -74,6 +76,15 @@ private:
     QSysInfo                 *SysInfo;
     QRegExp                   RegSystemName;
     ResizeCalculating         resize_calculating;
+    uchar                     Monitor_running;
+
+    myGraphScene             *scene;
+    Filter                   *newFilter;
+
+    myPoligon *pRSSICurrent, *pAFC ,*pRSSI;
+    QPolygonF pfRSSICurrent, pfAFC, pfRSSI;
+
+    double x_coord;
 };
 
 #endif // RSSIMONITOR_FORM_H

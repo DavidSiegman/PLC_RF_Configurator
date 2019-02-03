@@ -43,13 +43,13 @@ myGraphScene::myGraphScene(QObject *parent) : QGraphicsScene(parent)
     this->y_devision->setText(QString::number(y_div));
     this->grpixstep->setText(QString::number(GridPixStep));
 
-    this->addWidget(this->x_devision_label);
-    this->addWidget(this->y_devision_label);
-    this->addWidget(this->grpixstep_label);
+    //this->addWidget(this->x_devision_label);
+    //this->addWidget(this->y_devision_label);
+    //this->addWidget(this->grpixstep_label);
 
-    this->addWidget(this->x_devision);
-    this->addWidget(this->y_devision);
-    this->addWidget(this->grpixstep);
+    //this->addWidget(this->x_devision);
+    //this->addWidget(this->y_devision);
+    //this->addWidget(this->grpixstep);
 }
 
 double myGraphScene::my_rand(int accuracy)
