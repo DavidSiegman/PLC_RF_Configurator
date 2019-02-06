@@ -3,14 +3,21 @@
 myGraphScene::myGraphScene(QObject *parent) : QGraphicsScene(parent)
 {
     this->setFocus();
-    this->GridPixStep = 10;
+    this->Y_GridPixStep = 10;
+    this->X_GridPixStep = 10;
 
     this->setGrid();
 
-    this->x_div = 0.2;
-    this->y_div = 12;
+    this->x_div = 1;
+    this->y_div = 13;
 
     x_mult = 0.01, y_mult = 0.01, g_mult = 1;
+
+    y_AxesOffset = 0; //-this->height()/2;
+    x_AxesOffset = 0; //this->width()/2;
+
+    OXY_Point.setX(x_AxesOffset);
+    OXY_Point.setY(y_AxesOffset);
 
     QString String (   "{"
                         "background: rgba(255,255,255,60);"
@@ -41,7 +48,7 @@ myGraphScene::myGraphScene(QObject *parent) : QGraphicsScene(parent)
     QObject::connect(this->grpixstep, SIGNAL(textChanged(QString)),this,SLOT(grpixstep_editingFinished(QString)));
     this->x_devision->setText(QString::number(x_div));
     this->y_devision->setText(QString::number(y_div));
-    this->grpixstep->setText(QString::number(GridPixStep));
+    this->grpixstep->setText(QString::number(X_GridPixStep));
 
     //this->addWidget(this->x_devision_label);
     //this->addWidget(this->y_devision_label);
@@ -50,6 +57,7 @@ myGraphScene::myGraphScene(QObject *parent) : QGraphicsScene(parent)
     //this->addWidget(this->x_devision);
     //this->addWidget(this->y_devision);
     //this->addWidget(this->grpixstep);
+
 }
 
 double myGraphScene::my_rand(int accuracy)
@@ -62,6 +70,16 @@ double myGraphScene::my_rand(int accuracy)
 void myGraphScene::setGeometry(qreal w, qreal h)
 {
     this->setSceneRect(-w/2,-h/2,w-5,h-5);
+
+    if (y_AxesOffset < -this->height()/2){y_AxesOffset = -this->height()/2;}
+    if (y_AxesOffset > this->height()/2){y_AxesOffset = this->height()/2;}
+
+    if (x_AxesOffset < -this->width()/2){x_AxesOffset = -this->width()/2;}
+    if (x_AxesOffset > this->width()/2){x_AxesOffset = this->width()/2;}
+
+    OXY_Point.setX(x_AxesOffset);
+    OXY_Point.setY(y_AxesOffset);
+
     this->x_devision_label->setGeometry(this->sceneRect().x()+5,this->sceneRect().y()-17+this->sceneRect().height(),145,17);
     this->x_devision->setGeometry(this->x_devision_label->geometry().x()+97,this->x_devision_label->geometry().y(),50,17);
 
@@ -70,6 +88,19 @@ void myGraphScene::setGeometry(qreal w, qreal h)
 
     this->grpixstep_label->setGeometry(this->y_devision->geometry().x()+60,this->x_devision_label->geometry().y(),145,17);
     this->grpixstep->setGeometry(this->grpixstep_label->geometry().x()+97,this->grpixstep_label->geometry().y(),50,17);
+
+    //this->y_div = (double)(this->height())/(double)GridPixStep;
+    //this->y_devision->setText(QString::number(y_div));
+
+    this->Y_GridPixStep = (double)(this->height())/10;
+    //this->X_GridPixStep = (double)(this->width())/30;
+    this->mygrid->setXGridPixStep(this->X_GridPixStep);
+    this->mygrid->setYGridPixStep(this->Y_GridPixStep);
+
+    mygrid->setHeight(this->height());
+    mygrid->setWidth(this->width());
+    mygrid->setOXYPoint(this->OXY_Point);
+
 }
 
 qreal myGraphScene::getXDevision(void)
@@ -84,13 +115,18 @@ qreal myGraphScene::getYDevision(void)
     result = this->y_div;
     return result;
 }
-qreal myGraphScene::getGridPixStep(void)
+qreal myGraphScene::getXGridPixStep(void)
 {
     qreal result = 0;
-    result = this->GridPixStep;
+    result = this->X_GridPixStep;
     return result;
 }
-
+qreal myGraphScene::getYGridPixStep(void)
+{
+    qreal result = 0;
+    result = this->Y_GridPixStep;
+    return result;
+}
 void myGraphScene::x_devision_editingFinished(QString s)
 {
     this->x_div = s.toDouble();;
@@ -111,14 +147,37 @@ void myGraphScene::y_devision_editingFinished(QString s)
     }
 }
 
+void myGraphScene::setX_AxesOffset(int offset)
+{
+    this->x_AxesOffset = offset;
+    OXY_Point.setX(this->x_AxesOffset);
+}
+void myGraphScene::setY_AxesOffset(int offset)
+{
+    this->y_AxesOffset = offset;
+    OXY_Point.setY(this->y_AxesOffset);
+}
+void myGraphScene::setOXYPoint(QPoint OXY_Point)
+{
+    this->OXY_Point = OXY_Point;
+    this->x_AxesOffset = OXY_Point.x();
+    this->y_AxesOffset = OXY_Point.y();
+}
+QPoint myGraphScene::getOXYPoint(void)
+{
+    return this->OXY_Point;
+}
+
 void myGraphScene::grpixstep_editingFinished(QString s)
 {
-    this->GridPixStep = s.toDouble();
+    this->X_GridPixStep = s.toDouble();
+    this->Y_GridPixStep = s.toDouble();
 
-    if (this->GridPixStep != 0)
+    if (this->X_GridPixStep != 0)
     {
         this->removeItem(mygrid);
-        this->mygrid->setGridPixStep(this->GridPixStep);
+        this->mygrid->setXGridPixStep(this->X_GridPixStep);
+        this->mygrid->setYGridPixStep(this->Y_GridPixStep);
         this->addItem(mygrid);
         this->mygrid->setZValue(-100);
         emit this->update_polygon(this);
@@ -129,7 +188,8 @@ void myGraphScene::setGrid(void)
 {
     // сетка
     mygrid = new myGraphGrid();
-    mygrid->setGridPixStep(GridPixStep);
+    mygrid->setXGridPixStep(X_GridPixStep);
+    mygrid->setYGridPixStep(Y_GridPixStep);
     this->addItem(mygrid);
 }
 
@@ -156,15 +216,19 @@ void myGraphScene::wheelEvent(QGraphicsSceneWheelEvent *wheelEvent)
     }
     if (grpixstep->underMouse() == true)
     {
-        this->GridPixStep += delta*g_mult;
-        if (this->GridPixStep < 1)
+        this->X_GridPixStep += delta*g_mult;
+        this->Y_GridPixStep += delta*g_mult;
+        if (this->X_GridPixStep < 1)
         {
-            this->GridPixStep = 1;
+            this->X_GridPixStep = 1;
+            this->Y_GridPixStep = 1;
         }
-        this->grpixstep->setText(QString::number(GridPixStep));
+        this->grpixstep->setText(QString::number(X_GridPixStep));
     }
 
 }
+
+
 /*
 void myGraphScene::mousePressEvent(QGraphicsSceneMouseEvent *mouseEvent)
 {

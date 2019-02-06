@@ -75,8 +75,11 @@ void ConnectHandlerClass::ReadLRSSI_AFC(){
     }
     */
     DataLogic->DataLogicMode = SEND_READ_RSSI;
-    emit SendLog(QString::fromUtf8("\r>> ======= Запрос Latch RSSI\r"),NONE);
-    emit SendComand(SEND_READ_RSSI,CONFIG_SEND_CONTROL);
+    SetModuleTypeStatus = 0;
+    SetReadDataProgress(0);
+    ConnectHandling(SEND_READ_RSSI,1,0);
+    //emit SendLog(QString::fromUtf8("\r>> ======= Запрос Latch RSSI\r"),NONE);
+    //emit SendComand(SEND_READ_RSSI,CONFIG_SEND_CONTROL);
 }
 
 void ConnectHandlerClass::WriteRF_PARAMS(){
@@ -1714,6 +1717,34 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state, uint repeate){
                     SetReadDataProgress(0);
                     SetModuleTypeStatus = 2;
                 }
+                break;
+            }
+            }
+        }
+        else if (n == SEND_READ_RSSI)
+        {
+            switch (ReadDataProgress){
+            case 0:{
+                if (state != 0){
+                    emit Progress(0);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Чтение Latch RSSI\r"),NONE);
+                    emit SendComand(SEND_READ_RSSI,CONFIG_SEND_CONTROL);
+                    SetReadDataProgress(1);
+                    SetModuleTypeStatus = 2;
+                }
+                break;
+            }
+            case 1:{
+                if (state != 0){
+                    emit Progress(100);
+                    emit SendLog(QString::fromUtf8("\r>> ======= Чтение прошло успешно\r"),NONE);
+                    SetReadDataProgress(0);
+                    SetModuleTypeStatus = 2;
+                }
+                //else
+                //{
+
+                //}
                 break;
             }
             }

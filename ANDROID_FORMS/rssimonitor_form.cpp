@@ -57,7 +57,6 @@ RSSIMonitor_Form::RSSIMonitor_Form(QWidget *parent) :
     scene                     = new myGraphScene(this);
     newFilter                 = new Filter(10);
 
-    x_coord                   = -6;
     pRSSICurrent              = new myPoligon(QString::fromUtf8("RSSI Current"),0,scene);
     pRSSICurrent->BrushColor  = QColor::fromRgbF(0.9,0.9,0.3,1);
     pRSSICurrent->CurveColor  = QColor::fromRgbF(0.5,0.0,0.3,1);
@@ -215,6 +214,9 @@ void RSSIMonitor_Form::resizeEvent(QResizeEvent *event)
     ui->Interface->addItem("COM/УСО (Оптопорт)");
     ui->Interface->addItem("PLC/RF");
     ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
+    if (ui->Interface->currentIndex() == 1){
+        ui->SN->setEnabled(true);
+    }
 
     ui->ModuleType->setFont(font_4_2);
     ui->ModuleType->clear();
@@ -248,12 +250,25 @@ void RSSIMonitor_Form::resizeEvent(QResizeEvent *event)
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
-    scene->setGeometry(ui->graphicsView->geometry().width(),ui->graphicsView->geometry().height());
+    int w = ui->graphicsView->geometry().width();
+    int h = ui->graphicsView->geometry().height();
+    scene->setX_AxesOffset(w/2);
+    scene->setY_AxesOffset(-h/2);
+    scene->setGeometry(w,h);
+    pRSSI->removePolygon(scene);
+    pRSSI->drawPolygon(&pfRSSI, scene);
 
     this->Set_resizing_going(0);
 }
 
 void RSSIMonitor_Form::on_MonitorStart_clicked(){
+
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ui->ModuleType->currentIndex());
+    settings.sync();
+
     emit Get_Console(ui->console);
 
     ui->InterfaceWidget->setEnabled(false);
@@ -265,33 +280,54 @@ void RSSIMonitor_Form::on_MonitorStart_clicked(){
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
 
+    SetRSSILvlToUI(-1300);
+    ui->RSSI_ANT1->setText("NAN");
+    ui->RSSI_ANT2->setText("NAN");
+    ui->AFC->setText("NAN");
+    SetMsgCounterToUI(0);
+    SetYesAnswerToUI(0);
+    SetNoAnswerToUI(0);
+    SetAValueUI(0);
+
+    if (ui->Interface->currentIndex() == COM_USO_INTERFACE){
+        emit SendSerialNumber(ui->SN->text(), false);
+    }
+    else if (ui->Interface->currentIndex() == PLC_RF_INTERFACE){
+        emit SendSerialNumber(ui->SN->text(), true);
+    }
+    emit SendModuleType(ui->ModuleType->currentIndex());
+    emit SendInterface(ui->Interface->currentIndex());
+
     Monitor_running = 1;
-    /*
+
     pRSSICurrent->removePolygon(scene);
     pAFC->removePolygon(scene);
     pRSSI->removePolygon(scene);
     pfRSSICurrent.clear();pfAFC.clear();pfRSSI.clear();
-    scene->setGeometry(ui->graphicsView->geometry().width(),ui->graphicsView->geometry().height());
+    int w = ui->graphicsView->geometry().width();
+    int h = ui->graphicsView->geometry().height();
+    scene->setX_AxesOffset(w/2);
+    scene->setY_AxesOffset(-h/2);
+    scene->setGeometry(w,h);
     ui->graphicsView->setScene(scene);
     ui->graphicsView->show();
-    */
+
     emit StartRSSIMonitor();
 }
 
 void RSSIMonitor_Form::SetRSSILvlToUI(int new_value){
     if (new_value < -1300){new_value = -1300;}
-    if (new_value > 0){new_value = 0;}
-    if ((new_value > -1300)&&(new_value <= 0)){
+    if (new_value >= 0){new_value = -1300;}
+    if ((new_value >= -1300)&&(new_value < 0)){
         int r = new_value;
         r/=10;
-        ui->RSSI_Lvl_1->setValue(r);
-        ui->RSSI_Lvl_2->setValue(r);
+        ui->RSSI_Lvl->setValue(r);
     }
 }
 void RSSIMonitor_Form::SetRSSIANT1ToUI(int new_value){
     if (new_value < -1300){new_value = -1300;}
-    if (new_value > 0){ui->RSSI_ANT1->setText("NAN");}
-    if ((new_value > -1300)&&(new_value <= 0)){
+    if (new_value >= 0){ui->RSSI_ANT1->setText("NAN");}
+    if ((new_value >= -1300)&&(new_value < 0)){
         double r = (double)(new_value);
         r/=10;
         ui->RSSI_ANT1->setText(QString("%1").arg(r));
@@ -300,8 +336,8 @@ void RSSIMonitor_Form::SetRSSIANT1ToUI(int new_value){
 }
 void RSSIMonitor_Form::SetRSSIANT2ToUI(int new_value){
     if (new_value < -1300){new_value = -1300;}
-    if (new_value > 0){ui->RSSI_ANT2->setText("NAN");}
-    if ((new_value > -1300)&&(new_value <= 0)){
+    if (new_value >= 0){ui->RSSI_ANT2->setText("NAN");}
+    if ((new_value >= -1300)&&(new_value < 0)){
         double r = (double)(new_value);
         r/=10;
         ui->RSSI_ANT2->setText(QString("%1").arg(r));
@@ -324,7 +360,15 @@ void RSSIMonitor_Form::SetAValueUI(int new_value){
     ui->AValue->setText(QString::number(new_value));
 }
 void RSSIMonitor_Form::on_readLatchRSSI_clicked(){
+
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->text());
+    settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
+    settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ui->ModuleType->currentIndex());
+    settings.sync();
+
     emit Get_Console(ui->console);
+
     ui->InterfaceWidget->setEnabled(false);
     ui->LatchRSSIWidget->setEnabled(false);
     ui->MonitorStart->setEnabled(false);
@@ -333,6 +377,14 @@ void RSSIMonitor_Form::on_readLatchRSSI_clicked(){
     ui->Next->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
+
+    int w = ui->graphicsView->geometry().width();
+    int h = ui->graphicsView->geometry().height();
+    scene->setX_AxesOffset(w/2);
+    scene->setY_AxesOffset(-h/2);
+    scene->setGeometry(w,h);
+    ui->graphicsView->setScene(scene);
+    ui->graphicsView->show();
 
     if (ui->Interface->currentIndex() == COM_USO_INTERFACE){
         emit SendSerialNumber(ui->SN->text(), false);
@@ -344,8 +396,24 @@ void RSSIMonitor_Form::on_readLatchRSSI_clicked(){
     emit SendInterface(ui->Interface->currentIndex());
     emit SendReadLatchRSSI_AFC();
 }
+void RSSIMonitor_Form::RSSI_RequestSended(void)
+{
+    unsigned int counter;
+    if (RSSI_RequestAnswerDetector == 0){
+        RSSI_RequestAnswerDetector = 1;
+    }
+    else if (RSSI_RequestAnswerDetector == 1){
+        counter = ui->NoAnswer->text().toInt();
+        counter++;
+        ui->NoAnswer->setText(QString::number(counter));
+    }
+    counter = ui->MsgCounter->text().toInt();
+    counter++;
+    ui->MsgCounter->setText(QString::number(counter));
+}
 void RSSIMonitor_Form::isLatchRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,signed short ANT2_RSSI,double AFC)
 {
+    RSSI_RequestAnswerDetector = 0;
     if (Monitor_running == 0)
     {
         ui->InterfaceWidget->setEnabled(true);
@@ -357,36 +425,28 @@ void RSSIMonitor_Form::isLatchRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,
         ui->Next->setEnabled(true);
         ui->btnSettings->setEnabled(true);
     }
-    /*
+
     double r = (double)(RSSI);
     r/=10;
     double r1 = (double)(ANT1_RSSI);
     r1/=10;
     double r2 = (double)(ANT2_RSSI);
     r2/=10;
-    if (ui->MonitorStart->isEnabled() == false)
-    {
-        unsigned int counter = ui->YesAnswer->text().toInt();
-        counter++;
-        newFilter->add_value(r);
-        double average = newFilter->get_result();
-        ui->AValue->setText(QString::number(average));
-        ui->YesAnswer->setText(QString::number(counter));
+    //if (ui->MonitorStart->isEnabled() == false)
+    //{
+    unsigned int counter = ui->YesAnswer->text().toInt();
+    counter++;
+    newFilter->add_value(r);
+    double average = newFilter->get_result();
+    ui->AValue->setText(QString::number(average));
+    ui->YesAnswer->setText(QString::number(counter));
 
-        if (x_coord >= 6)
-        {
-            pRSSICurrent->removePolygon(scene);
-            pAFC->removePolygon(scene);
-            pRSSI->removePolygon(scene);
-            pfRSSICurrent.clear();pfAFC.clear();pfRSSI.clear();
-            x_coord = -6;
-        }
-        pfRSSI <<  QPointF(x_coord, r);
+    QPoint p; p.setX(0); p.setY(r);
+    pRSSI->addPointWithXOffset(&pfRSSI, p, -1, -ui->graphicsView->geometry().width()/scene->getXGridPixStep());
 
-        x_coord += 0.1;//ui->MonitorTimeout->text().toDouble()/10000;
-        pRSSI->drawPolygon(&pfRSSI, scene);
-    }
-    */
+    pRSSI->drawPolygon(&pfRSSI, scene);
+    //}
+
     SetRSSILvlToUI(RSSI);
     SetRSSIANT1ToUI(ANT1_RSSI);
     SetRSSIANT2ToUI(ANT2_RSSI);
@@ -446,7 +506,7 @@ void RSSIMonitor_Form::on_ModuleType_currentIndexChanged(int index)
 
 void RSSIMonitor_Form::Clear_Form(void){
     emit ClearAllData();
-    SetRSSILvlToUI(0);
+    SetRSSILvlToUI(-1300);
     ui->RSSI_ANT1->setText("NAN");
     ui->RSSI_ANT2->setText("NAN");
     ui->AFC->setText("NAN");

@@ -26,11 +26,10 @@ public:
     int PolygonId;
     myGraphLegend *legend;
 
-
-
 public slots:
     void drawPolygon(QPolygonF *newPolygon, myGraphScene *scene);
     void removePolygon(myGraphScene *scene);
+    void addPointWithXOffset(QPolygonF *newPolygon, QPoint point, qreal x_offset, qreal x_endpoint);
 
 private:
     qreal my_rand(int accuracy);

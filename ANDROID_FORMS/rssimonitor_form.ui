@@ -78,7 +78,7 @@
           <x>0</x>
           <y>0</y>
           <width>309</width>
-          <height>465</height>
+          <height>466</height>
          </rect>
         </property>
         <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -304,7 +304,7 @@
                </font>
               </property>
               <property name="text">
-               <string>Адресс устройства</string>
+               <string>Адрес устройства</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -661,50 +661,25 @@
                <number>0</number>
               </property>
               <item>
-               <widget class="QProgressBar" name="RSSI_Lvl_1">
+               <widget class="QGraphicsView" name="graphicsView">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
-                  <width>9</width>
-                  <height>0</height>
+                  <width>0</width>
+                  <height>132</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
-                  <width>9</width>
-                  <height>16777215</height>
+                  <width>16777215</width>
+                  <height>132</height>
                  </size>
                 </property>
-                <property name="layoutDirection">
-                 <enum>Qt::LeftToRight</enum>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">border: none;</string>
-                </property>
-                <property name="minimum">
-                 <number>-130</number>
-                </property>
-                <property name="maximum">
-                 <number>5</number>
-                </property>
-                <property name="value">
-                 <number>-60</number>
-                </property>
-                <property name="textVisible">
-                 <bool>false</bool>
-                </property>
-                <property name="orientation">
-                 <enum>Qt::Vertical</enum>
-                </property>
-                <property name="invertedAppearance">
-                 <bool>false</bool>
-                </property>
-                <property name="textDirection">
-                 <enum>QProgressBar::BottomToTop</enum>
-                </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QGraphicsView" name="graphicsView">
                 <property name="font">
                  <font>
                   <family>Microsoft YaHei UI</family>
@@ -713,20 +688,32 @@
                 <property name="styleSheet">
                  <string notr="true">border: none;</string>
                 </property>
+                <property name="verticalScrollBarPolicy">
+                 <enum>Qt::ScrollBarAlwaysOff</enum>
+                </property>
+                <property name="horizontalScrollBarPolicy">
+                 <enum>Qt::ScrollBarAlwaysOff</enum>
+                </property>
                </widget>
               </item>
               <item>
-               <widget class="QProgressBar" name="RSSI_Lvl_2">
+               <widget class="QProgressBar" name="RSSI_Lvl">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
                 <property name="minimumSize">
                  <size>
                   <width>9</width>
-                  <height>0</height>
+                  <height>132</height>
                  </size>
                 </property>
                 <property name="maximumSize">
                  <size>
                   <width>9</width>
-                  <height>16777215</height>
+                  <height>132</height>
                  </size>
                 </property>
                 <property name="layoutDirection">
@@ -739,7 +726,7 @@
                  <number>-130</number>
                 </property>
                 <property name="maximum">
-                 <number>5</number>
+                 <number>0</number>
                 </property>
                 <property name="value">
                  <number>-60</number>

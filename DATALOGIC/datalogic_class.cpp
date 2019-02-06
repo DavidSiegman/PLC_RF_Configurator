@@ -209,6 +209,7 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
     case SEND_READ_RSSI:{
         int u[2] = {0xE5,0x00}; length = 2;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        emit RSSI_RequestSended();
         break;
     }
     case SEND_READ_SWITCH_TIMEOUT:{
@@ -806,7 +807,7 @@ void DataLogic_Class::ParceData(uint n)
 
                         if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                         {
-                            emit SendLog(QString::fromUtf8(">> ======= Ожидание перехода на обнавлённую прошивку:"),NONE);
+                            emit SendLog(QString::fromUtf8(">> ======= Ожидание перехода на обновлённую прошивку:"),NONE);
                             if (MODEM->getIn_Firmware_Information()->getBootloader_Version() == 0) {
                                 BOOT_WAIT_COUNTER = 5;
                             }
@@ -1149,7 +1150,7 @@ void DataLogic_Class::ParceData(uint n)
                 ANT2_RSSI = 100;
                 emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
             }
-            if ((NumbOfBytes == 10)&&(In_Data.length() >= 8))
+            else if ((NumbOfBytes == 10)&&(In_Data.length() >= 8))
             {
                 SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_0 = In_Data.at(2);
                 SI4463Conf->aSI4463_INTERUPTS()->Field.ANT1_RSSI.Field.ANT1_RSSI_1 = In_Data.at(3);
@@ -1174,6 +1175,11 @@ void DataLogic_Class::ParceData(uint n)
                 }
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
+                emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
+            }
+            else{
+                ANT1_RSSI = RSSI;
+                ANT2_RSSI = 100;
                 emit outLRSSI_AFC(RSSI,ANT1_RSSI,ANT2_RSSI,(double)(AFC));
             }
             break;

@@ -15,6 +15,7 @@ myPoligon::myPoligon(QString name, int Id, QObject *parent) : QObject(parent)
 
     QObject::connect(parent, SIGNAL(update_polygon(myGraphScene*)),this,SLOT(drawPolygon(myGraphScene*)));
 
+    LegendEnable = false;
     legend = new myGraphLegend(this);
     legend->setZValue(1000);
     legend->setTexte(name);
@@ -34,7 +35,7 @@ void myPoligon::drawPolygon(QPolygonF *newPolygon, myGraphScene *scene)
                     );
 
     PointNumb = newPolygon->size();
-    PointRadius = scene->GridPixStep/3;
+    PointRadius = scene->Y_GridPixStep/3;
 
     removePolygon(scene);
     //points.reserve(PointNumb);
@@ -53,13 +54,38 @@ void myPoligon::drawPolygon(QPolygonF *newPolygon, myGraphScene *scene)
 
     for(int j = 0; j < this->PointNumb; j++)
     {
-        int x_coordinate = newPolygon->at(j).x()/scene->x_div*scene->GridPixStep;
-        int y_coordinate = newPolygon->at(j).y()/scene->y_div*scene->GridPixStep;
+        int x_coordinate = newPolygon->at(j).x()/scene->x_div*scene->X_GridPixStep + scene->getOXYPoint().x();
+        int y_coordinate = newPolygon->at(j).y()/scene->y_div*scene->Y_GridPixStep - scene->getOXYPoint().y();
+
+        if ((newPolygon->at(j).y()) <= 0 && (newPolygon->at(j).y() > -1*26)){
+            b_point.setColor(QColor::fromRgb(60,180,5,255));
+            p_curve.setColor(QColor::fromRgb(60,180,5,255));
+        }
+        else if ((newPolygon->at(j).y()) <= -1*26 && (newPolygon->at(j).y() > -2*26)){
+            b_point.setColor(QColor::fromRgb(120,180,5,255));
+            p_curve.setColor(QColor::fromRgb(120,180,5,255));
+        }
+        else if ((newPolygon->at(j).y()) <= -2*26 && (newPolygon->at(j).y() > -3*26)){
+            b_point.setColor(QColor::fromRgb(180,180,5,255));
+            p_curve.setColor(QColor::fromRgb(180,180,5,255));
+        }
+        else if ((newPolygon->at(j).y()) <= -3*26 && (newPolygon->at(j).y() > -4*26)){
+            b_point.setColor(QColor::fromRgb(180,120,5,255));
+            p_curve.setColor(QColor::fromRgb(180,120,5,255));
+        }
+        else if ((newPolygon->at(j).y()) <= -4*26 && (newPolygon->at(j).y() > -5*26)){
+            b_point.setColor(QColor::fromRgb(180,60,5,255));
+            p_curve.setColor(QColor::fromRgb(180,60,5,255));
+        }
+        else{
+            b_point.setColor(QColor::fromRgb(180,0,0,255));
+            p_curve.setColor(QColor::fromRgb(180,0,0,255));
+        }
 
         if (j >= 1)
         {
-            int x0_coordinate = newPolygon->at(j-1).x()/scene->x_div*scene->GridPixStep;
-            int y0_coordinate = newPolygon->at(j-1).y()/scene->y_div*scene->GridPixStep;
+            int x0_coordinate = newPolygon->at(j-1).x()/scene->x_div*scene->X_GridPixStep + scene->getOXYPoint().x();
+            int y0_coordinate = newPolygon->at(j-1).y()/scene->y_div*scene->Y_GridPixStep - scene->getOXYPoint().y();
 
             QGraphicsLineItem *line = scene->addLine(x0_coordinate,-y0_coordinate,x_coordinate,-y_coordinate,p_curve);
             line->setZValue(-2);
@@ -68,7 +94,8 @@ void myPoligon::drawPolygon(QPolygonF *newPolygon, myGraphScene *scene)
             if (this->PointsVisible == true)
             {
                 QGraphicsEllipseItem *elipse = scene->addEllipse(x0_coordinate-PointRadius/2,-y0_coordinate-PointRadius/2,PointRadius,PointRadius,p_point,b_point);
-                elipse->setToolTip("x: " + QString::number(newPolygon->at(j-1).x()) + " y: " + QString::number(newPolygon->at(j-1).y()));
+                elipse->setToolTip("x: " + QString::number(newPolygon->at(j-1).x()) +
+                                  " y: " + QString::number(newPolygon->at(j-1).y()));
                 this->points.append(elipse);
             }
         }
@@ -78,11 +105,38 @@ void myPoligon::drawPolygon(QPolygonF *newPolygon, myGraphScene *scene)
     {
         if (this->PointsVisible == true)
         {
-            int x_c = newPolygon->at(PointNumb-1).x()/scene->x_div*scene->GridPixStep;
-            int y_c = newPolygon->at(PointNumb-1).y()/scene->y_div*scene->GridPixStep;
+            int x_c = newPolygon->at(PointNumb-1).x()/scene->x_div*scene->X_GridPixStep + scene->getOXYPoint().x();
+            int y_c = newPolygon->at(PointNumb-1).y()/scene->y_div*scene->Y_GridPixStep - scene->getOXYPoint().y();
+
+            if ((newPolygon->at(PointNumb-1).y()) <= 0 && (newPolygon->at(PointNumb-1).y() > -1*26)){
+                b_point.setColor(QColor::fromRgb(60,180,5,255));
+                p_curve.setColor(QColor::fromRgb(60,180,5,255));
+            }
+            else if ((newPolygon->at(PointNumb-1).y()) <= -1*26 && (newPolygon->at(PointNumb-1).y() > -2*26)){
+                b_point.setColor(QColor::fromRgb(120,180,5,255));
+                p_curve.setColor(QColor::fromRgb(120,180,5,255));
+            }
+            else if ((newPolygon->at(PointNumb-1).y()) <= -2*26 && (newPolygon->at(PointNumb-1).y() > -3*26)){
+                b_point.setColor(QColor::fromRgb(180,180,5,255));
+                p_curve.setColor(QColor::fromRgb(180,180,5,255));
+            }
+            else if ((newPolygon->at(PointNumb-1).y()) <= -3*26 && (newPolygon->at(PointNumb-1).y() > -4*26)){
+                b_point.setColor(QColor::fromRgb(180,120,5,255));
+                p_curve.setColor(QColor::fromRgb(180,120,5,255));
+            }
+            else if ((newPolygon->at(PointNumb-1).y()) <= -4*26 && (newPolygon->at(PointNumb-1).y() > -5*26)){
+                b_point.setColor(QColor::fromRgb(180,60,5,255));
+                p_curve.setColor(QColor::fromRgb(180,60,5,255));
+            }
+            else{
+                b_point.setColor(QColor::fromRgb(180,0,0,255));
+                p_curve.setColor(QColor::fromRgb(180,0,0,255));
+            }
+
             QGraphicsEllipseItem *elipse = scene->addEllipse(x_c-PointRadius/2,-y_c-PointRadius/2,PointRadius,PointRadius,p_point,b_point);
             elipse->setZValue(-1);
-            elipse->setToolTip("x: " + QString::number(newPolygon->at(PointNumb-1).x()) + " y: " + QString::number(newPolygon->at(PointNumb-1).y()));
+            elipse->setToolTip("x: " + QString::number(newPolygon->at(PointNumb-1).x()) +
+                              " y: " + QString::number(newPolygon->at(PointNumb-1).y()));
             this->points.append(elipse);
         }
     }
@@ -125,6 +179,30 @@ double myPoligon::my_rand(int accuracy)
 void myPoligon::setPointsVisible(bool Visible)
 {
     this->PointsVisible = Visible;
+}
+
+void myPoligon::addPointWithXOffset(QPolygonF *newPolygon, QPoint point, qreal x_offset, qreal x_endpoint)
+{
+    int    PointsNumber = newPolygon->size();
+    qreal current_x;
+    QPoint p;
+    if (PointsNumber > 0){
+        for(int i = 0; i < PointsNumber; i++){
+            current_x = newPolygon->at(i).x() + x_offset;
+
+            if (((x_endpoint < 0)&&(current_x < x_endpoint)) ||
+                ((x_endpoint >= 0)&&(current_x > x_endpoint))){
+                newPolygon->removeAt(i);
+                PointsNumber--;
+            }
+            else {
+                p.setX(current_x);
+                p.setY(newPolygon->at(i).y());
+                newPolygon->replace(i,p);
+            }
+        }
+    }
+    newPolygon->append(point);
 }
 
 

@@ -190,6 +190,9 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->Interface->addItem("COM/УСО (Оптопорт)");
     ui->Interface->addItem("PLC/RF");
     ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
+    if (ui->Interface->currentIndex() == 1){
+        ui->SN->setEnabled(true);
+    }
 
     ui->ModuleType->setFont(font_4_2);
     ui->ModuleType->clear();

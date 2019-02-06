@@ -140,6 +140,7 @@ signals:
     void noANSWER();
     void outPROGRESS(uint value);
     void STOPPED();
+    void RSSI_RequestSended(void);
 
 public slots:
     void setSerialNumberMode(QString S, bool Enable);

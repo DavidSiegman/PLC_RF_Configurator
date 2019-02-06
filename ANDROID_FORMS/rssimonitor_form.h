@@ -46,7 +46,7 @@ public slots:
     void ForceClose(void);
     void isStopped(void);
     void isRF_Reset(void);
-
+    void RSSI_RequestSended(void);
     void isLatchRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,signed short ANT2_RSSI,double AFC);
 
 private slots:
@@ -84,7 +84,7 @@ private:
     myPoligon *pRSSICurrent, *pAFC ,*pRSSI;
     QPolygonF pfRSSICurrent, pfAFC, pfRSSI;
 
-    double x_coord;
+    uchar                     RSSI_RequestAnswerDetector;
 };
 
 #endif // RSSIMONITOR_FORM_H

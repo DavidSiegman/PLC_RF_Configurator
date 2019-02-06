@@ -799,6 +799,8 @@ void Connections_Form::Create_And_Show_RSSIMonitor_Form(QWidget *parent)
     connect(rssimonitor_form,SIGNAL(Stop_Send_Data()),                      DataLogic,             SLOT(STOP_SEND_DATA()));
     connect(DataLogic,       SIGNAL(STOPPED()),                             rssimonitor_form,      SLOT(isStopped()));
     connect(DataLogic,       SIGNAL(noANSWER()),                            rssimonitor_form,      SLOT(isStopped()));
+    connect(DataLogic,       SIGNAL(RSSI_RequestSended()),                  rssimonitor_form,      SLOT(RSSI_RequestSended()));
+    connect(DataLogic,       SIGNAL(noANSWER()),                            rssimonitor_form,      SLOT(RSSI_RequestSended()));
 
     connect(rssimonitor_form,SIGNAL(SendSerialNumber(QString,bool)),        DataLogic,             SLOT(setSerialNumberMode(QString,bool)));
     connect(rssimonitor_form,SIGNAL(SendModuleType(uchar)),                 ConnectHandler,        SLOT(SetModuleType(uchar)));
