@@ -1,6 +1,6 @@
 #include "sniffer_settings_form.h"
 #include "connections_form.h"
-#include "STYLE/style.h"
+
 
 Sniffer_Settings_Form::Sniffer_Settings_Form(QWidget *parent) :
     myFormAbstractClass(parent)
@@ -40,6 +40,7 @@ Sniffer_Settings_Form::Sniffer_Settings_Form(QWidget *parent) :
     //ui->NetLevel->setStyleSheet(Background_White+Basic_Text_Style);
     ui->DeviceMonitorSN->setStyleSheet(Background_White+Basic_Text_Style);
 
+    ui->NetLevel->setVisible(false);
 
     connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
@@ -245,7 +246,7 @@ void Sniffer_Settings_Form::on_Sniffer_Mode_currentIndexChanged(int index){
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
 
-        emit Send_Sniffer_Mode();
+        emit StartSendingProcess(SEND_WRITE_SNIFER_MODE);
     }
 }
 void Sniffer_Settings_Form::on_Up_Link_stateChanged(int arg1){
@@ -264,7 +265,7 @@ void Sniffer_Settings_Form::on_Up_Link_stateChanged(int arg1){
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
 
-        emit Send_UpLink_Mode();
+        emit StartSendingProcess(SEND_WRITE_UPLINK_MODE);
     }
 }
 
@@ -286,7 +287,7 @@ void Sniffer_Settings_Form::on_Disable_CRC_stateChanged(int arg1)
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
 
-        emit Send_CRC_Disable_Mode();
+        emit StartSendingProcess(SEND_WRITE_CRC_CHECK_MODE);
     }
 }
 
@@ -308,7 +309,7 @@ void Sniffer_Settings_Form::on_Broadcasting_stateChanged(int arg1)
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
 
-        emit Send_Broadcasting_Mode();
+        emit StartSendingProcess(SEND_WRITE_BROADCASTING_MODE);
     }
 }
 
@@ -324,12 +325,13 @@ void Sniffer_Settings_Form::on_SetDestinationMASK_clicked()
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
 
-        emit Send_Mask_Destination();
+        emit StartSendingProcess(SEND_WRITE_MASK_DESTINATION);
     }
 }
 
 void Sniffer_Settings_Form::on_SetNetLevel_clicked()
 {
+    /*
     if (this->Get_resizing_going() == 0){
         emit Get_Console(ui->console);
 
@@ -342,6 +344,7 @@ void Sniffer_Settings_Form::on_SetNetLevel_clicked()
 
         emit Set_Switch_Prop();
     }
+    */
 }
 
 void Sniffer_Settings_Form::on_SetDeviceMonitorSN_clicked()
@@ -351,10 +354,10 @@ void Sniffer_Settings_Form::on_SetDeviceMonitorSN_clicked()
 
         Out_Retranslator_Properties->clearRetranslation_Table();
 
-        int numb = ui->DeviceMonitorSN->text().toInt();
+        int numb = ui->DeviceMonitorSN->value();
         if (numb > 0)
         {
-            Out_Retranslator_Properties->addNewItemToRetranslation_Table(ui->DeviceMonitorSN->text());
+            Out_Retranslator_Properties->addNewItemToRetranslation_Table(QString::number(ui->DeviceMonitorSN->value()));
 
             ui->Stop->setEnabled(true);
             ui->SettingsWidget->setEnabled(false);
@@ -363,7 +366,7 @@ void Sniffer_Settings_Form::on_SetDeviceMonitorSN_clicked()
             ui->btnSettings->setEnabled(false);
             ui->Next->setEnabled(false);
 
-            emit Send_Write_Switch_Table();
+            emit StartSendingProcess(SEND_WRITE_SWITCH_TABLE_ELEMENT);
         }
         else
         {
@@ -374,7 +377,7 @@ void Sniffer_Settings_Form::on_SetDeviceMonitorSN_clicked()
             ui->btnSettings->setEnabled(false);
             ui->Next->setEnabled(false);
 
-            emit Send_Clear_Switch_Table();
+            emit StartSendingProcess(SEND_DELET_SWITCH_TABLE);
         }
     }
 }
@@ -424,7 +427,7 @@ void Sniffer_Settings_Form::SetMaskDestinationToUI(uint mask){
     ui->LVL9->setValue(new_mask.Field.Retranslation_MASK_1.Field.LVL9);
 }
 void Sniffer_Settings_Form::SetTableItemToUI(QString item){
-    ui->DeviceMonitorSN->setText(item);
+    ui->DeviceMonitorSN->setValue(item.toInt());
 }
 
 void Sniffer_Settings_Form::isSnifferMode(void)
@@ -501,7 +504,7 @@ void Sniffer_Settings_Form::isSwitch_Table(void)
     ui->btnSettings->setEnabled(true);
     ui->Next->setEnabled(true);
 }
-void Sniffer_Settings_Form::isSwitch_Table_Delete(void)
+void Sniffer_Settings_Form::isDelet_Switch_Table(void)
 {
     ui->Stop->setEnabled(false);
     ui->SettingsWidget->setEnabled(true);

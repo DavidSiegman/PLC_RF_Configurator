@@ -1,12 +1,12 @@
 #include "retranslation_table_form.h"
 #include "connections_form.h"
-#include "ui_retranslation_table_form.h"
+
 #include "STYLE/style.h"
 
 Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Retranslation_Table_Form)
+    myFormAbstractClass(parent)
 {
+    ui = new Ui::Retranslation_Table_Form;
     ui->setupUi(this);
     this->setWindowTitle(APPLICATION_NAME);
 
@@ -32,14 +32,71 @@ Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
 
     ui->NetTable->setModel(model);
 
-    connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
+    //emit dataChanged(index, index, QVector<int>() << role);
+    connect(ui->ClearConsole,  SIGNAL(clicked(bool)),                   ui->console,    SLOT(clear()));
+    connect(model,             SIGNAL(itemChanged(QStandardItem*)), this,           SLOT(ModelItemChanged(QStandardItem*)));
 }
-
-Retranslation_Table_Form::~Retranslation_Table_Form()
-{
+Retranslation_Table_Form::~Retranslation_Table_Form(){
     delete ui;
 }
 
+void Retranslation_Table_Form::on_Back_clicked(){
+    this->Back_ClickHandler();
+}
+void Retranslation_Table_Form::on_Next_clicked(){
+    this->Next_ClickHandler();
+}
+void Retranslation_Table_Form::ForceClose(void){
+    this->ForceCloseHandler();
+}
+void Retranslation_Table_Form::on_btnSettings_clicked(){
+    emit Settings(this);
+}
+void Retranslation_Table_Form::SetProgress(uint progress){
+    ui->progress->setValue(progress);
+}
+void Retranslation_Table_Form::on_Stop_clicked(){
+    emit Stop_Send_Data();
+}
+void Retranslation_Table_Form::on_Reset_clicked()
+{
+    emit Get_Console(ui->console);
+
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->Read_NetTable->setEnabled(false);
+    ui->Write->setEnabled(false);
+    ui->Del_NetTable->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
+
+    this->Reset_ClickHandler();
+}
+void Retranslation_Table_Form::isStopped(void){
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Read_NetTable->setEnabled(true);
+    ui->Write->setEnabled(true);
+    ui->Del_NetTable->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
+void Retranslation_Table_Form::isRF_Reset(void)
+{
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Read_NetTable->setEnabled(true);
+    ui->Write->setEnabled(true);
+    ui->Del_NetTable->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
 void Retranslation_Table_Form::resizeEvent(QResizeEvent *event)
 {
     emit isCreated();
@@ -87,53 +144,6 @@ void Retranslation_Table_Form::resizeEvent(QResizeEvent *event)
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 }
 
-void Retranslation_Table_Form::on_Back_clicked()
-{
-    emit Get_Console(NULL);
-    emit Get_Geometry(this->geometry());
-    emit Cancel();
-    this->deleteLater();
-}
-
-void Retranslation_Table_Form::on_Next_clicked()
-{
-    emit Get_Console(NULL);
-    emit Get_Geometry(this->geometry());
-    emit Cancel();
-    this->deleteLater();
-}
-
-void Retranslation_Table_Form::on_btnSettings_clicked()
-{
-    emit Settings(this);
-}
-
-void Retranslation_Table_Form::on_Stop_clicked()
-{
-    emit Stop_Send_Data();
-}
-
-
-void Retranslation_Table_Form::isStopped(void)
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
-}
-
-void Retranslation_Table_Form::SetProgress(uint progress)
-{
-    ui->progress->setValue(progress);
-}
-
-void Retranslation_Table_Form::Set_Geometry(QRect new_value)
-{
-    this->setGeometry(new_value);
-}
-
 void Retranslation_Table_Form::Set_In_Retranslator_Properties (RetranslatorPropertiesClass* new_data)
 {
     In_Retranslator_Properties = new_data;
@@ -145,10 +155,7 @@ void Retranslation_Table_Form::Set_Out_Retranslator_Properties (RetranslatorProp
 {
     Out_Retranslator_Properties = new_data;
 }
-
-void Retranslation_Table_Form::on_Add_NetItem_clicked()
-{
-
+void Retranslation_Table_Form::on_Add_NetItem_clicked(){
     if (Out_Retranslator_Properties->getRetranslator_Table().length() < 100) {
         bool ok;
         int i = QInputDialog::getInt(ui->scrollAreaWidgetContents, QString::fromUtf8("Введите адресс устройства"), QString::fromUtf8(""), 1, 1, 2147483647, 1, &ok);
@@ -156,129 +163,117 @@ void Retranslation_Table_Form::on_Add_NetItem_clicked()
             //emit ADD_NET_TABLE_ITEM(QString::number(i));
 
             QString SN = QString::number(i);
-
+            modelChanging = 1;
             QStandardItem *item = new QStandardItem(SN);
             int model_index = Out_Retranslator_Properties->getRetranslator_Table().length();
             this->model->setItem(model_index, 0, item);
+            modelChanging = 0;
             Out_Retranslator_Properties->addNewItemToRetranslation_Table(SN);
         }
     }
 }
-
-void Retranslation_Table_Form::on_Del_NetItem_clicked()
-{
-    if (this->model->rowCount() > 0)
-    {
+void Retranslation_Table_Form::on_Del_NetItem_clicked(){
+    modelChanging = 1;
+    if (this->model->rowCount() > 0){
         uint count = this->model->rowCount()-1;
         Out_Retranslator_Properties->delCurrentItemFromRetranslation_Table();
         //Out_Retranslator_Properties->setRetranslator_Table_Current_Index(count);
         this->model->removeRow(count);
-
-        if (count == 0)
-        {
+        if (count == 0){
             this->model->removeColumn(0);
         }
     }
+    modelChanging = 0;
 }
 
-void Retranslation_Table_Form::on_Read_NetTable_clicked()
-{
+void Retranslation_Table_Form::on_Read_NetTable_clicked(){
     emit Get_Console(ui->console);
-
     ui->Stop->setEnabled(true);
     ui->SettingsWidget->setEnabled(false);
+    ui->Read_NetTable->setEnabled(false);
+    ui->Write->setEnabled(false);
+    ui->Del_NetTable->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
     ui->Next->setEnabled(false);
-
-    emit Send_Read_Switch_Table();
-}
-
-void Retranslation_Table_Form::on_Write_clicked()
-{
-    emit Get_Console(ui->console);
-
-    ui->Stop->setEnabled(true);
-    ui->SettingsWidget->setEnabled(false);
-    ui->Reset->setEnabled(false);
-    ui->Back->setEnabled(false);
-    ui->btnSettings->setEnabled(false);
-    ui->Next->setEnabled(false);
-
-    emit Send_Write_Switch_Table();
-}
-
-void Retranslation_Table_Form::isSwitch_Table(void)
-{
-    emit isCreated();
-
-    Out_Retranslator_Properties->setRetranslator_Table(In_Retranslator_Properties->getRetranslator_Table());
-
+    modelChanging = 1;
     this->model->clear();
+    modelChanging = 0;
+    emit StartSendingProcess(SEND_READ_SWITCH_TABLE_ELEMENT);
+}
+void Retranslation_Table_Form::on_Write_clicked(){
+    emit Get_Console(ui->console);
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->Read_NetTable->setEnabled(false);
+    ui->Write->setEnabled(false);
+    ui->Del_NetTable->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
+    emit StartSendingProcess(SEND_WRITE_SWITCH_TABLE_ELEMENT);
+}
 
+void Retranslation_Table_Form::isSwitch_Table(void){
+    emit isCreated();
+    Out_Retranslator_Properties->setRetranslator_Table(In_Retranslator_Properties->getRetranslator_Table());
+    this->model->clear();
     QList<QString> table = Out_Retranslator_Properties->getRetranslator_Table();
-
-    for(unsigned int i = 0; i < table.length(); i++)
-    {
+    modelChanging = 1;
+    for(unsigned int i = 0; i < table.length(); i++){
         QStandardItem *item = new QStandardItem(table.at(i));
         this->model->setItem(i, 0, item);
     }
-
+    modelChanging = 0;
     ui->Stop->setEnabled(false);
     ui->SettingsWidget->setEnabled(true);
+    ui->Read_NetTable->setEnabled(true);
+    ui->Write->setEnabled(true);
+    ui->Del_NetTable->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
     ui->Next->setEnabled(true);
 }
-
-void Retranslation_Table_Form::on_Del_NetTable_clicked()
-{
+void Retranslation_Table_Form::on_Del_NetTable_clicked(){
     emit Get_Console(ui->console);
 
     ui->Stop->setEnabled(true);
     ui->SettingsWidget->setEnabled(false);
+    ui->Read_NetTable->setEnabled(false);
+    ui->Write->setEnabled(false);
+    ui->Del_NetTable->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
     ui->Next->setEnabled(false);
 
-    emit Send_Clear_Switch_Table();
+    emit StartSendingProcess(SEND_DELET_SWITCH_TABLE);
 }
-
-void Retranslation_Table_Form::isSwitch_Table_Delete(void)
-{
+void Retranslation_Table_Form::isDelet_Switch_Table(void){
     ui->Stop->setEnabled(false);
     ui->SettingsWidget->setEnabled(true);
+    ui->Read_NetTable->setEnabled(true);
+    ui->Write->setEnabled(true);
+    ui->Del_NetTable->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
     ui->Next->setEnabled(true);
     Out_Retranslator_Properties->clearRetranslation_Table();
+    modelChanging = 1;
     this->model->clear();
+    modelChanging = 0;
 }
 
-void Retranslation_Table_Form::on_Reset_clicked()
-{
-    emit Get_Console(ui->console);
-
-    ui->Stop->setEnabled(true);
-    ui->SettingsWidget->setEnabled(false);
-    ui->Reset->setEnabled(false);
-    ui->Back->setEnabled(false);
-    ui->btnSettings->setEnabled(false);
-    ui->Next->setEnabled(false);
-
-    emit Send_RF_Reset();
+void Retranslation_Table_Form::ModelItemChanged(QStandardItem* item){
+    if (modelChanging == 0){
+    // перезагружаем модель в Out_Retranslator_Properties
+        Out_Retranslator_Properties->clearRetranslation_Table();
+        for(int i = 0; i < this->model->rowCount(); i++){
+            Out_Retranslator_Properties->addNewItemToRetranslation_Table(model->item(i,0)->text());
+        }
+    }
 }
-void Retranslation_Table_Form::isRF_Reset(void)
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
-}
-

@@ -586,38 +586,20 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="NetLevel">
+             <widget class="QSpinBox" name="NetLevel">
               <property name="enabled">
                <bool>false</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>16777215</height>
-               </size>
               </property>
               <property name="font">
                <font>
                 <family>Microsoft YaHei UI</family>
                </font>
               </property>
-              <property name="styleSheet">
-               <string notr="true">border: none;</string>
-              </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
+              </property>
+              <property name="maximum">
+               <number>10</number>
               </property>
              </widget>
             </item>
@@ -648,28 +630,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="DeviceMonitorSN">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>16777215</height>
-               </size>
-              </property>
+             <widget class="QSpinBox" name="DeviceMonitorSN">
               <property name="font">
                <font>
                 <family>Microsoft YaHei UI</family>
@@ -677,6 +638,9 @@
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
+              </property>
+              <property name="maximum">
+               <number>429496729</number>
               </property>
              </widget>
             </item>

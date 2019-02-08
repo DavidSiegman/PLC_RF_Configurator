@@ -43,10 +43,12 @@ HEADERS += \
     SI4432/si4432class.h \
     FILTER/filter.h \
     PLC/plcclass.h \
+    PLC/st750configurationclass.h \
     UPDATE/update.h \
     CRC/crc32_class.h \
     OTHER_FUNCTIONS/barr_to_string.h \
     ANDROID_FORMS/connections_form.h \
+    ANDROID_FORMS/myformabstractclass.h \
     ANDROID_FORMS/settings_form.h \
     ANDROID_FORMS/open_connection_form.h \
     ANDROID_FORMS/hands_enter_form.h \
@@ -58,11 +60,8 @@ HEADERS += \
     ANDROID_FORMS/firmware_updating_form.h \
     ANDROID_FORMS/retranslation_table_form.h \
     ANDROID_FORMS/si4463_registers_form.h \
-    RESIZE_CALCULATING/resizecalculating.h \
-    ANDROID_FORMS/myformabstractclass.h \
-    PLC/st750configurationclass.h \
-    ANDROID_FORMS/rssimonitor_form.h
-    RESIZE_CALCULATING/resizecalculating.h \
+    ANDROID_FORMS/rssimonitor_form.h \
+    RESIZE_CALCULATING/resizecalculating.h
 
 SOURCES += \
     COM/port.cpp \
@@ -90,13 +89,15 @@ SOURCES += \
     SI4432/si4432class.cpp \
     FILTER/filter.cpp \
     PLC/plcclass.cpp \
+    PLC/st750configurationclass.cpp \
     UPDATE/update.cpp \
     CRC/crc32_class.cpp \
+    OTHER_FUNCTIONS/barr_to_string.cpp \
     ANDROID_FORMS/connections_form.cpp \
+    ANDROID_FORMS/myformabstractclass.cpp \
     ANDROID_FORMS/settings_form.cpp \
     ANDROID_FORMS/open_connection_form.cpp \
     ANDROID_FORMS/hands_enter_form.cpp \
-    OTHER_FUNCTIONS/barr_to_string.cpp \
     ANDROID_FORMS/net_settings_form.cpp \
     ANDROID_FORMS/plc_settings_form.cpp \
     ANDROID_FORMS/si4432_settings_form.cpp \
@@ -105,11 +106,8 @@ SOURCES += \
     ANDROID_FORMS/firmware_updating_form.cpp \
     ANDROID_FORMS/retranslation_table_form.cpp \
     ANDROID_FORMS/si4463_registers_form.cpp \
-    RESIZE_CALCULATING/resizecalculating.cpp \
-    ANDROID_FORMS/myformabstractclass.cpp \
-    PLC/st750configurationclass.cpp \
-    ANDROID_FORMS/rssimonitor_form.cpp
-    RESIZE_CALCULATING/resizecalculating.cpp \
+    ANDROID_FORMS/rssimonitor_form.cpp \
+    RESIZE_CALCULATING/resizecalculating.cpp
 
 FORMS += \
     WINDOWS_FORMS/mainwindow.ui \

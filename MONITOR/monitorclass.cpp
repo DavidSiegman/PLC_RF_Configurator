@@ -21,11 +21,11 @@ void MonitorClass::handlingMonitor()
 {
     if (Parameter == 0)
     {
-        emit SendComand(SEND_READ_RSSI_CURRENT,CONFIG_SEND_WHITOUT_REPEAT);
+        emit SendComand(SEND_READ_LRSSI_AFC_CURRENT,CONFIG_SEND_WHITOUT_REPEAT);
     }
     else if (Parameter == 1)
     {
-        emit SendComand(SEND_READ_RSSI,CONFIG_SEND_WHITOUT_REPEAT);
+        emit SendComand(SEND_READ_LRSSI_AFC,CONFIG_SEND_WHITOUT_REPEAT);
     }
     else
     {

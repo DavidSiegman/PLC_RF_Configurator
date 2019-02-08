@@ -25,7 +25,6 @@ public:
     void resizeEvent(QResizeEvent *event);
 signals:
     void Out_SI4432_Parameters_Changed(SI4432ConfigurationClass*);
-    void Write_SI4432_Parameters(void);
 
 public slots:
     void SetProgress(uint progress);

@@ -195,18 +195,18 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
-    case SEND_READ_NODE_TYPE:{
+    case SEND_READ_SWITCH_MODE:{
         int u[2] = {0xF0,0x00};length = 2;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
-    case SEND_WRITE_NODE_TYPE:{
+    case SEND_WRITE_SWITCH_MODE:{
         uchar Retranslator_Mode = Out_Retranslator_Properties->getRetranslator_Mode();
         int u[10] = {0xEF,0x07,Retranslator_Mode,0xE0,0x96,0xF8,0xA5,0xC9,0xDC,0x0C}; length = 10;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
-    case SEND_READ_RSSI:{
+    case SEND_READ_LRSSI_AFC:{
         int u[2] = {0xE5,0x00}; length = 2;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         emit RSSI_RequestSended();
@@ -291,7 +291,7 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         }
         break;
     }
-    case SEND_READ_RSSI_CURRENT:{
+    case SEND_READ_LRSSI_AFC_CURRENT:{
         int u[2] = {0xBB,0x00}; length = 2;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
@@ -327,12 +327,12 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
-    case SEND_READ_UPLINC_MODE:{
+    case SEND_READ_UPLINK_MODE:{
         int u[2] = {0xDA,0x00}; length = 2;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
-    case SEND_WRITE_UPLINC_MODE:{
+    case SEND_WRITE_UPLINK_MODE:{
         uchar UpLink_Value = Out_Sniffer_Properties->getUpLink_Value();
         int u[3] = {0xDA,0x01,(int)(UpLink_Value)}; length = 3;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
@@ -366,7 +366,7 @@ void DataLogic_Class::ComandHandling(uint n, uint m)
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
-    case SEND_DELET_SWITCH_TABLE_FROM_FLASH:{
+    case SEND_DELET_SWITCH_TABLE:{
         int u[9] = {0xE9,0x07,0x5A,0xCD,0x8F,0x9C,0xC0,0x0E,0x69}; length = 9;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
@@ -795,7 +795,7 @@ void DataLogic_Class::ParceData(uint n)
                             uint progr = 90*nUPDATE->getWrited_BYTES()/nUPDATE->getSIZE();
                             emit outPROGRESS(progr);
                             nUPDATE->incCurrent_SECTOR();
-                            emit outConnect(DataLogicMode,1,0);
+                            emit outConnect(DataLogicMode,0,0);
                             //ComandHandling(SEND_WRITE_SECTOR,CONFIG_SEND_CONTROL);
                         //}
 
@@ -935,7 +935,7 @@ void DataLogic_Class::ParceData(uint n)
 
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
-                    emit outConnect(DataLogicMode,ComandState,0);
+                    emit outConnect(DataLogicMode,1,0);
                 }
             }
             break;
@@ -971,7 +971,7 @@ void DataLogic_Class::ParceData(uint n)
 
                         MODEM->getIn_Retranslator_Properties()->addNewItemToRetranslation_Table(QString::number(SWT_Element));
                         MODEM->ChangedIn_Retranslator_Properties();
-                        emit outConnect(DataLogicMode,1,0);
+                        emit outConnect(DataLogicMode,0,0);
                         //ComandHandling(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                     //}
                 }
@@ -982,7 +982,7 @@ void DataLogic_Class::ParceData(uint n)
 
                     if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                     {
-                        emit outConnect(DataLogicMode,2,0);
+                        emit outConnect(DataLogicMode,1,0);
                     }
                 }
             }
@@ -1010,7 +1010,7 @@ void DataLogic_Class::ParceData(uint n)
                         uchar temp = MODEM->getOut_Retranslator_Properties()->getRetranslator_Table_Current_Index();
                         temp += 1;
                         MODEM->getOut_Retranslator_Properties()->setRetranslator_Table_Current_Index(temp);
-                        emit outConnect(DataLogicMode,ComandState,0);
+                        emit outConnect(DataLogicMode,0,0);
                         //ComandHandling(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                     //}
                 }
@@ -1022,7 +1022,7 @@ void DataLogic_Class::ParceData(uint n)
 
                     if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                     {
-                        emit outConnect(DataLogicMode,2,0);
+                        emit outConnect(DataLogicMode,1,0);
                     }
                 }
             }
@@ -1032,6 +1032,7 @@ void DataLogic_Class::ParceData(uint n)
         {
             if (ComandState == 1)
             {
+                MODEM->getIn_Retranslator_Properties()->clearRetranslation_Table();
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
 
@@ -1100,9 +1101,9 @@ void DataLogic_Class::ParceData(uint n)
         }
         case 0xE5: // Latch RSSI
         {
-            signed short RSSI = 0;
-            signed short ANT1_RSSI = 0;
-            signed short ANT2_RSSI = 0;
+            signed short RSSI = 100;
+            signed short ANT1_RSSI = 100;
+            signed short ANT2_RSSI = 100;
 
             if (In_Data.length() >= 2)
             {
@@ -1572,7 +1573,7 @@ void DataLogic_Class::BOOT_WAITED()
     {
         BOOT_WAIT->stop();
         emit SendLog(QString::fromUtf8("\r"),NONE);
-        emit outConnect(DataLogicMode,2,0);
+        emit outConnect(DataLogicMode,1,0);
     }
     else
     {
@@ -1584,7 +1585,7 @@ void DataLogic_Class::REPEAT_SEND()
 {
     //SEND_DATA(OutDataBuffer, CONFIG_SEND_CONTROL);
     if (Repeat_Counter > 0) {
-        emit outConnect(DataLogicMode,1,1);
+        emit outConnect(DataLogicMode,0,1);
         timerRepeat->start(Delay_Time);
         Repeat_Counter--;
     }

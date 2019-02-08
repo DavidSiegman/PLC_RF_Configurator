@@ -1,12 +1,12 @@
 #include "net_settings_form.h"
 #include "connections_form.h"
-#include "ui_net_settings_form.h"
 #include "STYLE/style.h"
 
 Net_Settings_Form::Net_Settings_Form(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Net_Settings_Form)
+    myFormAbstractClass(parent)
+
 {
+    ui = new Ui::Net_Settings_Form;
     ui->setupUi(this);
     this->setWindowTitle(APPLICATION_NAME);
 
@@ -42,6 +42,8 @@ Net_Settings_Form::Net_Settings_Form(QWidget *parent) :
     ui->SwitchLVL->setStyleSheet(Background_White);
     ui->SwitchTM->setStyleSheet(Background_White);
 
+    ui->SwitchLVL->setVisible(false);
+
     connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
 
@@ -50,6 +52,44 @@ Net_Settings_Form::~Net_Settings_Form()
     delete ui;
 }
 
+void Net_Settings_Form::on_Back_clicked(){
+    this->Back_ClickHandler();
+}
+void Net_Settings_Form::on_Next_clicked(){
+    this->Next_ClickHandler();
+}
+void Net_Settings_Form::ForceClose(void){
+    this->ForceCloseHandler();
+}
+void Net_Settings_Form::on_btnSettings_clicked(){
+    emit Settings(this);
+}
+void Net_Settings_Form::SetProgress(uint progress){
+    ui->progress->setValue(progress);
+}
+void Net_Settings_Form::on_Stop_clicked(){
+    emit Stop_Send_Data();
+}
+void Net_Settings_Form::on_Reset_clicked(){
+    emit Get_Console(ui->console);
+    this->Reset_ClickHandler();
+}
+void Net_Settings_Form::isStopped(void){
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
+void Net_Settings_Form::isRF_Reset(void){
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
 void Net_Settings_Form::resizeEvent(QResizeEvent *event)
 {
     emit isCreated();
@@ -108,30 +148,97 @@ void Net_Settings_Form::resizeEvent(QResizeEvent *event)
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 }
-
-void Net_Settings_Form::on_Back_clicked()
-{
-    emit Get_Console(NULL);
-    emit Cancel(this->geometry());
+void Net_Settings_Form::on_Switch_stateChanged(int arg1){
+    if ((arg1 == 0)&&(Get_SwitchMode() != 0)){
+        emit Get_Console(ui->console);
+        Set_SwitchMode(0);
+        ui->Stop->setEnabled(true);
+        ui->SettingsWidget->setEnabled(false);
+        ui->NetTable->setEnabled(false);
+        ui->Reset->setEnabled(false);
+        ui->Back->setEnabled(false);
+        ui->btnSettings->setEnabled(false);
+        ui->Next->setEnabled(false);
+        emit StartSendingProcess(SEND_WRITE_SWITCH_MODE);
+    }
+    else if ((arg1 == 2)&&(Get_SwitchMode() != 1)){
+        emit Get_Console(ui->console);
+        Set_SwitchMode(1);
+        ui->Stop->setEnabled(true);
+        ui->SettingsWidget->setEnabled(false);
+        ui->NetTable->setEnabled(false);
+        ui->Reset->setEnabled(false);
+        ui->Back->setEnabled(false);
+        ui->btnSettings->setEnabled(false);
+        ui->Next->setEnabled(false);
+        emit StartSendingProcess(SEND_WRITE_SWITCH_MODE);
+    }
 }
-
-void Net_Settings_Form::on_Next_clicked()
-{
-    emit Get_Console(NULL);
-    emit Next(this->geometry());
+void Net_Settings_Form::isSwitchMode(){
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->NetTable->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
 }
-
-
-void Net_Settings_Form::on_btnSettings_clicked()
-{
-    emit Settings(this);
+void Net_Settings_Form::on_SetMask_clicked(){
+    emit Get_Console(ui->console);
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->NetTable->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
+    emit StartSendingProcess(SEND_WRITE_SWITCH_LEVEL);
 }
-
-void Net_Settings_Form::SetProgress(uint progress)
-{
-    ui->progress->setValue(progress);
+void Net_Settings_Form::on_SetLevel_clicked(){
+    emit Get_Console(ui->console);
+    Set_SwitchLevel(ui->SwitchLVL->text().toInt());
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->NetTable->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
+    emit StartSendingProcess(SEND_WRITE_SWITCH_LEVEL);
 }
-
+void Net_Settings_Form::isSwitchLevel(){
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->NetTable->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
+void Net_Settings_Form::on_SetTimeout_clicked(){
+    emit Get_Console(ui->console);
+    Set_SwitchTimeout(ui->SwitchTM->text().toInt());
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->NetTable->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
+    emit StartSendingProcess(SEND_WRITE_SWITCH_TIMEOUT);
+}
+void Net_Settings_Form::isSwitchTimeout(){
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->NetTable->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
+void Net_Settings_Form::on_NetTable_clicked(){
+    emit Retranslation_Table(this);
+}
 void Net_Settings_Form::Set_Out_Retranslator_Properties (RetranslatorPropertiesClass* new_data)
 {
     Out_Retranslator_Properties = new_data;
@@ -145,7 +252,7 @@ void Net_Settings_Form::Set_In_Retranslator_Properties (RetranslatorPropertiesCl
     Out_Retranslator_Properties->setRetranslator_Timeout(In_Retranslator_Properties->getRetranslator_Timeout());
 
     SetSwitchModeToUI(Out_Retranslator_Properties->getRetranslator_Mode());
-    SetSwitchLevelToUI(Out_Retranslator_Properties->getRetranslator_Level());
+    //SetSwitchLevelToUI(Out_Retranslator_Properties->getRetranslator_Level());
     SetSwitchTimeoutToUI(Out_Retranslator_Properties->getRetranslator_Timeout());
     SetSwitchMaskToUI(Out_Retranslator_Properties->getRetranslator_Level());
 }
@@ -163,11 +270,11 @@ void Net_Settings_Form::SetSwitchModeToUI(uchar new_value)
 }
 void Net_Settings_Form::SetSwitchLevelToUI(uint new_value)
 {
-    ui->SwitchLVL->setText(QString::number(new_value));
+    ui->SwitchLVL->setValue(new_value);
 }
 void Net_Settings_Form::SetSwitchTimeoutToUI(uint new_value)
 {
-    ui->SwitchTM->setText(QString::number(new_value));
+    ui->SwitchTM->setValue(new_value);
 }
 void Net_Settings_Form::SetSwitchMaskToUI(uint new_value)
 {
@@ -246,7 +353,7 @@ void Net_Settings_Form::on_LVL0_valueChanged(int arg1)
     }
     Set_SwitchMask(*(uint*)&(new_mask));
 
-    ui->SwitchLVL->setText(QString::number(*(uint*)&(new_mask)));
+    ui->SwitchLVL->setValue(*(uint*)&(new_mask));
 }
 
 void Net_Settings_Form::on_LVL1_valueChanged(int arg1)
@@ -283,7 +390,7 @@ void Net_Settings_Form::on_LVL1_valueChanged(int arg1)
     }
     Set_SwitchMask(*(uint*)&(new_mask));
 
-    ui->SwitchLVL->setText(QString::number(*(uint*)&(new_mask)));
+    ui->SwitchLVL->setValue(*(uint*)&(new_mask));
 }
 
 void Net_Settings_Form::on_LVL2_valueChanged(int arg1)
@@ -318,7 +425,7 @@ void Net_Settings_Form::on_LVL2_valueChanged(int arg1)
     }
     Set_SwitchMask(*(uint*)&(new_mask));
 
-    ui->SwitchLVL->setText(QString::number(*(uint*)&(new_mask)));
+    ui->SwitchLVL->setValue(*(uint*)&(new_mask));
 }
 
 void Net_Settings_Form::on_LVL3_valueChanged(int arg1)
@@ -351,7 +458,7 @@ void Net_Settings_Form::on_LVL3_valueChanged(int arg1)
     }
     Set_SwitchMask(*(uint*)&(new_mask));
 
-    ui->SwitchLVL->setText(QString::number(*(uint*)&(new_mask)));
+    ui->SwitchLVL->setValue(*(uint*)&(new_mask));
 }
 
 void Net_Settings_Form::on_LVL4_valueChanged(int arg1)
@@ -382,7 +489,7 @@ void Net_Settings_Form::on_LVL4_valueChanged(int arg1)
     }
     Set_SwitchMask(*(uint*)&(new_mask));
 
-    ui->SwitchLVL->setText(QString::number(*(uint*)&(new_mask)));
+    ui->SwitchLVL->setValue(*(uint*)&(new_mask));
 }
 
 void Net_Settings_Form::on_LVL5_valueChanged(int arg1)
@@ -411,7 +518,7 @@ void Net_Settings_Form::on_LVL5_valueChanged(int arg1)
     }
     Set_SwitchMask(*(uint*)&(new_mask));
 
-    ui->SwitchLVL->setText(QString::number(*(uint*)&(new_mask)));
+    ui->SwitchLVL->setValue(*(uint*)&(new_mask));
 }
 
 void Net_Settings_Form::on_LVL6_valueChanged(int arg1)
@@ -438,7 +545,7 @@ void Net_Settings_Form::on_LVL6_valueChanged(int arg1)
     }
     Set_SwitchMask(*(uint*)&(new_mask));
 
-    ui->SwitchLVL->setText(QString::number(*(uint*)&(new_mask)));
+    ui->SwitchLVL->setValue(*(uint*)&(new_mask));
 }
 
 void Net_Settings_Form::on_LVL7_valueChanged(int arg1)
@@ -463,7 +570,7 @@ void Net_Settings_Form::on_LVL7_valueChanged(int arg1)
     }
     Set_SwitchMask(*(uint*)&(new_mask));
 
-    ui->SwitchLVL->setText(QString::number(*(uint*)&(new_mask)));
+    ui->SwitchLVL->setValue(*(uint*)&(new_mask));
 }
 
 void Net_Settings_Form::on_LVL8_valueChanged(int arg1)
@@ -485,7 +592,7 @@ void Net_Settings_Form::on_LVL8_valueChanged(int arg1)
     }
     Set_SwitchMask(*(uint*)&(new_mask));
 
-    ui->SwitchLVL->setText(QString::number(*(uint*)&(new_mask)));
+    ui->SwitchLVL->setValue(*(uint*)&(new_mask));
 }
 
 void Net_Settings_Form::on_LVL9_valueChanged(int arg1)
@@ -497,135 +604,5 @@ void Net_Settings_Form::on_LVL9_valueChanged(int arg1)
 
     Set_SwitchMask(*(uint*)&(new_mask));
 
-    ui->SwitchLVL->setText(QString::number(*(uint*)&(new_mask)));
-}
-
-void Net_Settings_Form::on_Reset_clicked()
-{
-    emit Get_Console(ui->console);
-    emit Send_RF_Reset();
-}
-
-void Net_Settings_Form::isRF_Reset(void)
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
-}
-
-void Net_Settings_Form::on_Stop_clicked()
-{
-    emit Stop_Send_Data();
-}
-void Net_Settings_Form::isStopped(void)
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
-}
-void Net_Settings_Form::on_Switch_stateChanged(int arg1)
-{
-    if ((arg1 == 0)&&(Get_SwitchMode() != 0))
-    {
-        emit Get_Console(ui->console);
-        Set_SwitchMode(0);
-        ui->Stop->setEnabled(true);
-        ui->SettingsWidget->setEnabled(false);
-        ui->Reset->setEnabled(false);
-        ui->Back->setEnabled(false);
-        ui->btnSettings->setEnabled(false);
-        ui->Next->setEnabled(false);
-        emit Send_Switch_Mode();
-    }
-    else if ((arg1 == 2)&&(Get_SwitchMode() != 1))
-    {
-        emit Get_Console(ui->console);
-        Set_SwitchMode(1);
-        ui->Stop->setEnabled(true);
-        ui->SettingsWidget->setEnabled(false);
-        ui->Reset->setEnabled(false);
-        ui->Back->setEnabled(false);
-        ui->btnSettings->setEnabled(false);
-        ui->Next->setEnabled(false);
-        emit Send_Switch_Mode();
-    }
-}
-void Net_Settings_Form::isSwitchMode()
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
-}
-void Net_Settings_Form::on_SetMask_clicked()
-{
-    emit Get_Console(ui->console);
-    ui->Stop->setEnabled(true);
-    ui->SettingsWidget->setEnabled(false);
-    ui->Reset->setEnabled(false);
-    ui->Back->setEnabled(false);
-    ui->btnSettings->setEnabled(false);
-    ui->Next->setEnabled(false);
-    emit Send_Switch_Level();
-}
-void Net_Settings_Form::on_SetLevel_clicked()
-{
-    emit Get_Console(ui->console);
-
-    Set_SwitchLevel(ui->SwitchLVL->text().toInt());
-
-    ui->Stop->setEnabled(true);
-    ui->SettingsWidget->setEnabled(false);
-    ui->Reset->setEnabled(false);
-    ui->Back->setEnabled(false);
-    ui->btnSettings->setEnabled(false);
-    ui->Next->setEnabled(false);
-    emit Send_Switch_Level();
-}
-void Net_Settings_Form::isSwitchLevel()
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
-}
-
-void Net_Settings_Form::on_SetTimeout_clicked()
-{
-    emit Get_Console(ui->console);
-
-    Set_SwitchTimeout(ui->SwitchTM->text().toInt());
-
-    ui->Stop->setEnabled(true);
-    ui->SettingsWidget->setEnabled(false);
-    ui->Reset->setEnabled(false);
-    ui->Back->setEnabled(false);
-    ui->btnSettings->setEnabled(false);
-    ui->Next->setEnabled(false);
-    emit Send_Switch_Timeout();
-}
-
-void Net_Settings_Form::isSwitchTimeout()
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
-}
-
-void Net_Settings_Form::on_NetTable_clicked()
-{
-    emit Retranslation_Table(this);
+    ui->SwitchLVL->setValue(*(uint*)&(new_mask));
 }

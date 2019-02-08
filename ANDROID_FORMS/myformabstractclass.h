@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QWidget>
 #include <QPlainTextEdit>
+#include <OTHER_FUNCTIONS/mess_enum.h>
 
 class myFormAbstractClass : public QWidget
 {
@@ -22,7 +23,7 @@ signals:
     void Get_Geometry(QRect);
     void Stop_Send_Data(void);
     void Get_Console(QPlainTextEdit* console);
-    void Send_RF_Reset(void);
+    void StartSendingProcess(uint SelectComandQueue);
 
 public slots:
     void SetProgress(uint progress);

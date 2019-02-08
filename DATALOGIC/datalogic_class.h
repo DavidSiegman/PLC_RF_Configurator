@@ -99,8 +99,8 @@ public:
                              PLCClass *PLCConf,MODEMClass *MODEM,Port *nPort,TCP *nTCP, UPDATE *nUPDATE, QObject *parent = 0);
 
     uint         DataLogicMode;
-    uint         Repeat_Number;
-    uint         Repeat_Counter;
+    int         Repeat_Number;
+    int         Repeat_Counter;
     uint         Delay_Time;
 
     void setCurrentSI4463_PROPERTYS_structur(uint select);

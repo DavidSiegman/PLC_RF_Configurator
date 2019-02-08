@@ -39,6 +39,7 @@
 #include "open_connection_form.h"
 #include "net_settings_form.h"
 #include "sniffer_settings_form.h"
+#include "plc_settings_form.h"
 #include "si4432_settings_form.h"
 #include "si4463_settings_form.h"
 #include "firmware_updating_form.h"
@@ -99,13 +100,16 @@ private slots:
     void Define_Pre_Form(QRect);
     void RF_Reset_Handler(void);
 
-    void Create_And_Show_Settings_Form(QWidget*);
-    void Create_And_Show_Hands_Enter_Form(QWidget*);
     void Create_And_Show_Open_Connection_Form(void);
+
     void Create_And_Show_Net_Settings_Form(QRect);
     void Create_And_Show_Sniffer_Settings_Form(QRect);
     void Create_And_Show_SI4432_Settings_Form(QRect);
     void Create_And_Show_SI4463_Settings_Form(QRect);
+    void Create_And_Show_PLC_Settings_Form(QRect);
+
+    void Create_And_Show_Hands_Enter_Form(QWidget*);
+    void Create_And_Show_Settings_Form(QWidget*);
     void Create_And_Show_Firmware_Updating_Form(QWidget*);
     void Create_And_Show_Retranslation_Table_Form(QWidget*);
     void Create_And_Show_SI4463_Registers_Form(QWidget*);
@@ -134,6 +138,7 @@ private:
     Firmware_Updating_Form   *firmware_updating_form;
     Retranslation_Table_Form *retranslation_table_form;
     RSSIMonitor_Form         *rssimonitor_form;
+    PLC_Settings_Form        *plc_settings_form;
 
     QSysInfo                 *SysInfo;
     QRegExp                   RegSystemName;

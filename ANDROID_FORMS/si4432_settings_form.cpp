@@ -984,7 +984,7 @@ void SI4432_Settings_Form::on_Write_clicked()
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
 
-    emit Write_SI4432_Parameters();
+    emit StartSendingProcess(SEND_WRITE_SI4432_PARAMETERS);
 }
 
 void SI4432_Settings_Form::isSI4432_Parameters(void)

@@ -7,6 +7,7 @@
 #include "myformabstractclass.h"
 #include "ui_sniffer_settings_form.h"
 #include "RESIZE_CALCULATING/resizecalculating.h"
+#include "STYLE/style.h"
 
 //namespace Ui {
 //class Sniffer_Settings_Form;
@@ -19,20 +20,9 @@ class Sniffer_Settings_Form : public myFormAbstractClass
 public:
     explicit Sniffer_Settings_Form(QWidget *parent = 0);
     ~Sniffer_Settings_Form();
-
     void resizeEvent(QResizeEvent *event);
 
 signals:
-    void Send_Sniffer_Mode(void);
-    void Send_UpLink_Mode(void);
-    void Send_CRC_Disable_Mode(void);
-    void Send_Broadcasting_Mode(void);
-    void Send_Mask_Destination(void);
-    void Set_Switch_Prop(void);
-    void Send_Switch_Prop(void);
-    void Clear_Switch_Table(void);
-    void Send_Clear_Switch_Table(void);
-    void Send_Write_Switch_Table(void);
 
 public slots:
     void SetProgress(uint progress);
@@ -52,7 +42,7 @@ public slots:
     void isMask_Destination(void);
     void isSwitch_Prop(void);
     void isSwitch_Table(void);
-    void isSwitch_Table_Delete(void);
+    void isDelet_Switch_Table(void);
 
 private slots:
     void on_Back_clicked();

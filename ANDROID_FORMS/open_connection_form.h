@@ -35,16 +35,16 @@ signals:
     void SendModuleType(uchar);
     void SendInterface(uchar);
     void ClearAllData(void);
-    void AOPEN(void);
 
 public slots:
     void SetProgress(uint progress);
-    void isOPEND(void);
-    void Set_In_Firmware_Information(FirmwareInformationClass*);
     void ForceClose(void);
 
+    void isOPEND(void);
     void isStopped(void);
     void isRF_Reset(void);
+
+    void Set_In_Firmware_Information(FirmwareInformationClass*);
 
 private slots:
     void on_Back_clicked();

@@ -1,10 +1,10 @@
 #include "settings_form.h"
 #include "connections_form.h"
-#include "ui_settings_form.h"
+
 
 Settings_Form::Settings_Form(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Settings_Form){
+    myFormAbstractClass(parent){
+    ui = new Ui::Settings_Form;
     ui->setupUi(this);
     this->setWindowTitle(APPLICATION_NAME);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
@@ -48,6 +48,12 @@ Settings_Form::Settings_Form(QWidget *parent) :
         //this->setFixedSize (340,560);
     }
 }
+Settings_Form::~Settings_Form(){
+    delete ui;
+}
+void Settings_Form::on_Back_clicked(){
+    this->Back_ClickHandler();
+}
 void Settings_Form::resizeEvent(QResizeEvent *event){
     resize_calculating.set_form_geometry(this->geometry());
 
@@ -84,14 +90,7 @@ void Settings_Form::resizeEvent(QResizeEvent *event){
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Apply->setIconSize(icons_size); ui->Apply->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 }
-Settings_Form::~Settings_Form(){
-    delete ui;
-}
-void Settings_Form::on_Back_clicked(){
-    emit Get_Geometry(this->geometry());
-    emit Cancel();
-    this->deleteLater();
-}
+
 void Settings_Form::on_Apply_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_REPEATE, ui->Repeat->value());
@@ -100,8 +99,7 @@ void Settings_Form::on_Apply_clicked(){
 
     emit GetRepeatNumber(ui->Repeat->value());
     emit GetRepeatTimeout(ui->Periode->value());
-    emit Cancel();
-    this->deleteLater();
+    this->Back_ClickHandler();
 }
 void Settings_Form::on_RepeatSlider_valueChanged(int value){
     ui->Repeat->setValue(value);

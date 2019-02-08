@@ -10,26 +10,35 @@
 #include <OTHER_FUNCTIONS/mess_enum.h>
 #include "UPDATE/update.h"
 
+#define CommandsQueueLength 20
+
+typedef struct ConnectHandler_Type {
+    uint  CommandsQueue[CommandsQueueLength];
+    uchar CommandsNumber;
+    uchar ModuleChoiceEnable;
+    uchar ModuleTypeIndex;
+    uint  CommandsQueuePreIndex;
+    uint  CommandsQueueCurrentIndex;
+}ConnectHandlerStruct;
+
 class ConnectHandlerClass : public QObject
 {
     Q_OBJECT
 public:
     explicit ConnectHandlerClass(DataLogic_Class *DataLogic,MODEMClass *MODEM,UPDATE *nUPDATE,QObject *parent = 0);
 private:
-    DataLogic_Class *DataLogic;
-    MODEMClass      *MODEM;
-    MonitorClass    *Monitor;
-    UPDATE          *nUPDATE;
+    DataLogic_Class     *DataLogic;
+    MODEMClass          *MODEM;
+    MonitorClass        *Monitor;
+    UPDATE              *nUPDATE;
 
-    uint             preReadDataProgress;
-    uint             ReadDataProgress;
-    uint             SetModuleTypeStatus;
+    uchar                ModuleType;
+    uchar                Interface;
 
-    uchar            ModuleType;
-    uchar            Interface;
+    ConnectHandlerStruct ConnectHandler;
 
-    void SetReadDataProgress(uint new_value);
-    uint GetPreeReadDataProgress(void);
+    uint EnableModuleChoiceMode(FirmwareInformationClass* device);
+    void EmitCurrentSignal(uint SelectComandQueue);
 
 signals:
     void SendComand(uint n, uint m);
@@ -46,53 +55,30 @@ signals:
     void isSWITCH_TIMEOUT();
     void isCURRENT_RSSI();
     void isLRSSI_AFC();
-    void isRF_PARAMS();
+    void isRFSI4463_PARAMETERS();
     void isRF_RESET();
-    void isRFSI4432_PARAMS();
+    void isRFSI4432_PARAMETERS();
     void isSNIFER_MODE();
-    void isUPLINC_MODE();
-    void isCRC_DISABLE_MODE();
-    void isBROADCAST_MODE();
+    void isUPLINK_MODE();
+    void isCRC_CHECK_MODE();
+    void isBROADCASTING_MODE();
     void isSWITCH_TABLE();
-    void isSWITCH_TABLE_DELETE();
+    void isDELET_SWITCH_TABLE();
     void isMASK_DESTINATION();
     void isUPDATED();
     void isDELETED();
 
 public slots:
     void STOP();
-    void aOPEN();
-    void SetSWITCH_MODE();
-    void SetSWITCH_PROP();
-    void SetSWITCH_MASK();
-    void SetSWITCH_LEVEL();
-    void SetSWITCH_TIMEOUT();
+    void StartSendingProcess(uint SelectComandQueue);
+
     void StartMonitor();
     void StopMonitor();
-    void ReadCURRENT_RSSI();
-    void ReadLRSSI_AFC();
-    void WriteRF_PARAMS();
-    void WriteRFSI4432_PARAMS();
-    void SendRF_RESET();
-    void SendReadSNIFER_MODE();
-    void SendWriteSNIFER_MODE();
-    void SendReadUPLINC_MODE();
-    void SendWriteUPLINC_MODE();
-    void SendReadCRC_DISABLE_MODE();
-    void SendWriteCRC_DISABLE_MODE();
-    void SendReadBROADCAST_MODE();
-    void SendWriteBROADCAST_MODE();
-    void WriteSWITCH_TABLE();
-    void ReadSWITCH_TABLE();
-    void SendSWITCH_TABLE_DELETE();
-    void WriteMASK_DESTINATION();
-    void StartUPDATE();
-    void StartDELETE();
+
     void SetModuleType(uchar);
     void SetInterface(uchar);
 
     void ConnectHandling(uint n, uint state, uint repeate);
-    void MonitorComandCounter(uint n, uint state);
 };
 
 #endif // CONNECTHANDLERCLASS_H

@@ -22,7 +22,7 @@ void myFormAbstractClass::isRF_Reset(void){
 
 }
 void myFormAbstractClass::Reset_ClickHandler(void){
-    emit Send_RF_Reset();
+    emit StartSendingProcess(SEND_RF_RESET);
 }
 void myFormAbstractClass::Back_ClickHandler(void){
     emit Get_Console(NULL);

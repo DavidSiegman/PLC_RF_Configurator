@@ -438,7 +438,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="SwitchLVL">
+             <widget class="QSpinBox" name="SwitchLVL">
               <property name="enabled">
                <bool>false</bool>
               </property>
@@ -448,31 +448,16 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>16777215</height>
-               </size>
-              </property>
               <property name="font">
                <font>
                 <family>Microsoft YaHei UI</family>
                </font>
               </property>
-              <property name="toolTipDuration">
-               <number>-1</number>
-              </property>
-              <property name="layoutDirection">
-               <enum>Qt::LeftToRight</enum>
-              </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
+              </property>
+              <property name="maximum">
+               <number>10</number>
               </property>
              </widget>
             </item>
@@ -503,27 +488,12 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="SwitchTM">
-              <property name="enabled">
-               <bool>true</bool>
-              </property>
+             <widget class="QSpinBox" name="SwitchTM">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>16777215</height>
-               </size>
               </property>
               <property name="font">
                <font>
@@ -532,6 +502,12 @@
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
+              </property>
+              <property name="maximum">
+               <number>30000</number>
+              </property>
+              <property name="value">
+               <number>0</number>
               </property>
              </widget>
             </item>

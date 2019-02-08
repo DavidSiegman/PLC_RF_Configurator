@@ -6,15 +6,17 @@
 #include <QScrollBar>
 #include <QSettings>
 #include <QPlainTextEdit>
+#include "myformabstractclass.h"
+#include "ui_firmware_updating_form.h"
 #include "MODEM/firmwareinformationclass.h"
 #include "RESIZE_CALCULATING/resizecalculating.h"
 #include "STYLE/style.h"
 
-namespace Ui {
-class Firmware_Updating_Form;
-}
+//namespace Ui {
+//class Firmware_Updating_Form;
+//}
 
-class Firmware_Updating_Form : public QWidget
+class Firmware_Updating_Form : public myFormAbstractClass
 {
     Q_OBJECT
 
@@ -23,43 +25,30 @@ public:
     void resizeEvent(QResizeEvent *event);
     ~Firmware_Updating_Form();
 
+signals:
+    void Get_FirmwareData(QString,QByteArray);
+
 public slots:
+    void SetProgress(uint progress);
+    void ForceClose(void);
+
     void isStopped(void);
     void isDeleted(void);
     void isUpdated(void);
-    void SetProgress(uint progress);
-    void Set_Geometry(QRect);
 
     void Set_In_Firmware_Information(FirmwareInformationClass *FirmwareInformation);
-signals:
-    void Cancel(void);
-    void isCreated(void);
-    void Next(QRect);
-    void Settings(QWidget*);
-    void Get_Geometry(QRect);
-    void Get_Console(QPlainTextEdit* console);
-    void Get_FirmwareData(QString,QByteArray);
-
-    void Stop_Send_Data(void);
-    void Start_Delete(void);
-    void Start_Update(void);
 
 private slots:
+    void on_Back_clicked();
+    void on_btnSettings_clicked();
+    void on_Stop_clicked();
+    void on_OpenBin_clicked();
+    void on_Clear_clicked();
+    void on_UpdateStart_clicked();
+
     void SetUpgradableVersionToUI(QString);
     void SetUpgradableSizeToUI(uint);
     void SetUpgradableCRCToUI(QByteArray);
-
-    void on_Back_clicked();
-
-    void on_btnSettings_clicked();
-
-    void on_Stop_clicked();
-
-    void on_OpenBin_clicked();
-
-    void on_Clear_clicked();
-
-    void on_UpdateStart_clicked();
 
 private:
     Ui::Firmware_Updating_Form *ui;
