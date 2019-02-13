@@ -1,5 +1,10 @@
 #ifndef MESS_ENUM
 #define MESS_ENUM
+
+// ================================================================
+// Все возможные сообщения передаваемые между слотами и энумераторы
+// ================================================================
+
 enum
 {
     COM_USO_INTERFACE = 0,
@@ -10,34 +15,35 @@ enum
     ADDITIONAL_MODULE_TYPE = 0,
     MAIN_MODULE_TYPE
 };
-// ==================================================
-// Все возможные сообщения передаваемые между слотами
-// ==================================================
 enum
 {
-    NONE = 0,
-    CONFIG_SEND_CONTROL,
+    CONFIG_SEND_CONTROL = 1,
     CONFIG_SEND_WHITOUT_REPEAT,
     MANUAL_SEND_CONTROL,
     MANUAL_CYCLIC_SEND_CONTROL,
-    COM_OPEN,
+    MONITOR_SEND_CONTROL
+};
+enum
+{
+    IN_INTERFACE_USO = 1,
+    IN_INTERFACE_RF_PLC,
+    IN_SNIFER_PLUS_PREAMBLE
+};
+enum
+{
+    COM_OPEN = 1,
     COM_CLOSE,
     COM_TX,
     COM_RX,
     TCP_OPEN,
     TCP_CLOSE,
     TCP_TX,
-    TCP_RX,
-    PLC_READ_DATA,
-    RF_MODEM_SI4463_READ_DATA,
-    RF_MODEM_SI4432_READ_DATA,
-    RF_PLC_MODEM_READ_DATA,
-    RF_SNIFFER_SI4463_READ_DATA,
-    RF_SNIFFER_SI4432_READ_DATA,
-    RF_PLC_SNIFFER_READ_DATA,
-    IN_INTERFACE_USO,
-    IN_INTERFACE_RF_PLC,
-    IN_SNIFER_PLUS_PREAMBLE,
+    TCP_RX
+};
+
+enum
+{
+    NONE = 0,
     CONNECT_HANDLING,
     UPDATE_HANDLING,
     DELETE_HANDLING,
@@ -84,8 +90,8 @@ enum
     SEND_WRITE_SI4432_REGISTER,
     SEND_READ_SI4432_09_REGISTER,
     SEND_WRITE_SI4432_09_REGISTER,
-    SEND_READ_PLC_FREQ_PARAMS,
-    SEND_WRITE_PLC_FREQ_PARAMS,
+    SEND_READ_ST750_PARAMETERS,
+    SEND_WRITE_ST750_PARAMETERS,
     SEND_READ_MASK_DESTINATION,
     SEND_WRITE_MASK_DESTINATION,
     SEND_ENABLE_BOOT,
@@ -94,7 +100,7 @@ enum
     SEND_WRITE_SECTOR,
     SEND_DELETE_FIRMWARE,
     SEND_CHOICE_ADDITIONAL_MODULE,
-    SEND_CHOICE_MAIN_MODULE,
+    SEND_CHOICE_MAIN_MODULE
 };
 
 #endif // MESS_ENUM

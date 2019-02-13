@@ -8,7 +8,7 @@ SI4432_Settings_Form::SI4432_Settings_Form(QWidget *parent) :
 {
     ui = new (Ui::SI4432_Settings_Form);
     ui->setupUi(this);
-    this->setWindowTitle(APPLICATION_NAME);
+    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
@@ -22,6 +22,7 @@ SI4432_Settings_Form::SI4432_Settings_Form(QWidget *parent) :
     ui->Back->setStyleSheet(Buttons_Style);
     ui->btnSettings->setStyleSheet(Buttons_Style);
     ui->Next->setStyleSheet(Buttons_Style);
+    ui->Next->setEnabled(false);
 
     ui->MT->setStyleSheet(Background_White);       ui->PA->setStyleSheet(Background_White);       ui->DR->setStyleSheet(Background_White);
     ui->DR_BPS->setStyleSheet(Background_White);   ui->FCAR->setStyleSheet(Background_White);     ui->FNOM->setStyleSheet(Background_White);
@@ -40,6 +41,7 @@ SI4432_Settings_Form::~SI4432_Settings_Form(){
 }
 void SI4432_Settings_Form::on_Back_clicked(){
     this->Back_ClickHandler();
+    emit Cancel(this->geometry());
 }
 void SI4432_Settings_Form::on_Next_clicked(){
     this->Next_ClickHandler();
@@ -255,7 +257,25 @@ void SI4432_Settings_Form::resizeEvent(QResizeEvent *event){
         this->ui->FCAR->addItem("470-479,99");
     }
     ui->FCAR->setCurrentIndex(current_index);
+    DeviceVersionHandling();
     this->Set_resizing_going(0);
+}
+void SI4432_Settings_Form::DeviceVersionHandling(void){
+    FirmwareInformationClass* In_Firmware_Information = myFormAbstractClass::Get_In_Firmware_Information();
+
+    if (In_Firmware_Information->getDevice_Name() == RF_MODEM_SI4432){
+        if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version() >= 3)       &&
+             (In_Firmware_Information->getBootloader_Version() < 4)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version() >= 3)       &&
+             (In_Firmware_Information->getUpgradable_Version() < 4))){
+            ui->label_15->setEnabled(false);
+            ui->CLOAD->setEnabled(false);
+            ui->CLOAD_PF->setEnabled(false);
+            ui->label_23->setEnabled(false);
+        }
+    }
 }
 void SI4432_Settings_Form::setOut_SI4432_Parameters(SI4432ConfigurationClass* new_value){
     Out_SI4432_Parameters = new_value;
@@ -920,7 +940,7 @@ void SI4432_Settings_Form::on_CLOAD_textEdited(const QString &arg1)
 
         Out_SI4432_Parameters->setSI4432_CLOAD(cload_barr.at(0));
 
-        Out_SI4432_Parameters->calcSI4432_CLOAD();
+        //Out_SI4432_Parameters->calcSI4432_CLOAD();
 
         setCLOAD_PFToUI(Out_SI4432_Parameters->getCOscill_CLoad());
 
@@ -984,7 +1004,7 @@ void SI4432_Settings_Form::on_Write_clicked()
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
 
-    emit StartSendingProcess(SEND_WRITE_SI4432_PARAMETERS);
+    emit StartSendingProcess(SEND_WRITE_SI4432_PARAMETERS,CONFIG_SEND_CONTROL);
 }
 
 void SI4432_Settings_Form::isSI4432_Parameters(void)

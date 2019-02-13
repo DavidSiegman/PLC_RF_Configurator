@@ -1,0 +1,5 @@
+<RCC>
+    <qresource lang="RUS" prefix="/StringFileInfo/Info">
+        <file>texts/appinfo.txt</file>
+    </qresource>
+</RCC>

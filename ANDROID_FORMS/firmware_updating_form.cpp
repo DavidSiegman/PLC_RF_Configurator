@@ -6,9 +6,9 @@
 Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
     myFormAbstractClass(parent)
 {
-    ui = new (Ui::Firmware_Updating_Form);
+    ui = new Ui::Firmware_Updating_Form;
     ui->setupUi(this);
-    this->setWindowTitle(APPLICATION_NAME);
+    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
@@ -53,6 +53,7 @@ Firmware_Updating_Form::~Firmware_Updating_Form(){
 }
 void Firmware_Updating_Form::on_Back_clicked(){
     this->Back_ClickHandler();
+    emit Cancel(this->geometry());
 }
 void Firmware_Updating_Form::ForceClose(void){
     this->ForceCloseHandler();
@@ -239,7 +240,7 @@ void Firmware_Updating_Form::on_Clear_clicked(){
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
 
-    emit StartSendingProcess(DELETE_HANDLING);
+    emit StartSendingProcess(DELETE_HANDLING,CONFIG_SEND_CONTROL);
 }
 void Firmware_Updating_Form::isDeleted(void){
     ui->Stop->setEnabled(false);
@@ -262,7 +263,7 @@ void Firmware_Updating_Form::on_UpdateStart_clicked(){
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
 
-    emit StartSendingProcess(UPDATE_HANDLING);
+    emit StartSendingProcess(UPDATE_HANDLING,CONFIG_SEND_CONTROL);
 }
 void Firmware_Updating_Form::isUpdated(void){
     ui->Stop->setEnabled(false);

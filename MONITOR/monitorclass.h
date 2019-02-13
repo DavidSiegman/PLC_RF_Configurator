@@ -20,7 +20,7 @@ private:
 
 
 signals:
-    void SendComand(uint n,uint m);
+    void SendComand(uint SelectComandQueue,uint SendMode);
 public slots:
     void handlingMonitor();
     void startMonitor();

@@ -3,16 +3,16 @@
 
 #include <QObject>
 #include <QWidget>
+#include <QIcon>
 #include <QPlainTextEdit>
 #include <OTHER_FUNCTIONS/mess_enum.h>
+#include "MODEM/firmwareinformationclass.h"
 
 class myFormAbstractClass : public QWidget
 {
     Q_OBJECT
 public:
     explicit myFormAbstractClass(QWidget *parent = 0);
-
-
 
 signals:
     void isCreated(void);
@@ -23,7 +23,7 @@ signals:
     void Get_Geometry(QRect);
     void Stop_Send_Data(void);
     void Get_Console(QPlainTextEdit* console);
-    void StartSendingProcess(uint SelectComandQueue);
+    void StartSendingProcess(uint SelectComandQueue, uint SendMode);
 
 public slots:
     void SetProgress(uint progress);
@@ -42,8 +42,15 @@ public slots:
     uchar Get_resizing_going(void);
     void  Set_resizing_going(uchar);
 
+    void Set_In_Firmware_Information(FirmwareInformationClass*);
+    FirmwareInformationClass* Get_In_Firmware_Information(void);
+    void Set_ConnectionType(uchar);
+    uchar Get_ConnectionType(void);
+
 private:
-    uchar resizing_going;
+    FirmwareInformationClass *In_Firmware_Information;
+    uchar                     ConnectionType;
+    uchar                     resizing_going;
 };
 
 #endif // MYFORMABSTRACTCLASS_H

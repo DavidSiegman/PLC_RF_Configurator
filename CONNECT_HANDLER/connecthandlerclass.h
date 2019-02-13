@@ -38,7 +38,7 @@ private:
     ConnectHandlerStruct ConnectHandler;
 
     uint EnableModuleChoiceMode(FirmwareInformationClass* device);
-    void EmitCurrentSignal(uint SelectComandQueue);
+    void EmitCurrentSignal(uint SelectComandQueue,uint SendMode);
 
 signals:
     void SendComand(uint n, uint m);
@@ -58,6 +58,7 @@ signals:
     void isRFSI4463_PARAMETERS();
     void isRF_RESET();
     void isRFSI4432_PARAMETERS();
+    void isPLCST750_PARAMETERS();
     void isSNIFER_MODE();
     void isUPLINK_MODE();
     void isCRC_CHECK_MODE();
@@ -70,7 +71,7 @@ signals:
 
 public slots:
     void STOP();
-    void StartSendingProcess(uint SelectComandQueue);
+    void StartSendingProcess(uint SelectComandQueue, uint SendMode);
 
     void StartMonitor();
     void StopMonitor();

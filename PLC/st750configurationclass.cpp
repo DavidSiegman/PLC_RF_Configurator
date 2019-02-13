@@ -19,9 +19,9 @@ unsigned int   ST750ConfigurationClass::getST750_LOWF  (){
     return ST750_Configuration_Data.LOWF;
 }
 void            ST750ConfigurationClass::setST750_HIGHF  (unsigned int HIGHF){
-    ST750_Configuration_Data.LOWF = HIGHF;
+    ST750_Configuration_Data.HIGHF = HIGHF;
 }
 unsigned int   ST750ConfigurationClass::getST750_HIGHF  (){
-    return ST750_Configuration_Data.LOWF;
+    return ST750_Configuration_Data.HIGHF;
 }
 

@@ -93,89 +93,70 @@ void Port :: COM_Open(void){
 void Port::COM_ErrorHandler(QSerialPort::SerialPortError error){ //
 
     QString s = "Error: "; s += error;
-
+    emit COM_Error();
     switch (error){
         // ошибка при попытке открыть несуществующее устройство.
     case QSerialPort::DeviceNotFoundError:{
         s += " - DeviceNotFoundError";
-        emit COM_Error();
         emit COM_Log("QSerialPort::DeviceNotFoundError\r",NONE);
-        emit COM_Close();
         break;
     }
         // ошибка при попытке открыть уже открытое устройство другим процессом
     case QSerialPort::PermissionError:{
         s += " - PermissionError";
-        emit COM_Error();
         emit COM_Log("QSerialPort::PermissionError\r",NONE);
-        emit COM_Close();
         break;
     }
         // ошибка при попытке открыть уже открытое устройство в этом объекте
     case QSerialPort::OpenError:{
         s += " - OpenError";
-        emit COM_Error();
         emit COM_Log("QSerialPort::OpenError\r",NONE);
-        emit COM_Close();
         break;
     }
         // ошибка выполнения операции, которая может быть успешно выполнена только при открытом устройстве
     case QSerialPort::NotOpenError:{
         s += " - NotOpenError";
-        emit COM_Error();
         emit COM_Log("QSerialPort::NotOpenError\r",NONE);
-        emit COM_Close();
         break;
     }
         // ошибка записи данных
     case QSerialPort::WriteError:{
         s += " - WriteError";
-        emit COM_Error();
         emit COM_Log("QSerialPort::WriteError\r",NONE);
-        emit COM_Close();
         break;
     }
         // ошибка чтения данных
     case QSerialPort::ReadError:{
         s += " - ReadError";
-        emit COM_Error();
         emit COM_Log("QSerialPort::ReadError\r",NONE);
-        emit COM_Close();
         break;
     }
         // ошибка ресурс стал недоступен
     case QSerialPort::ResourceError:{
         s += " - ResourceError";
-        emit COM_Error();
         emit COM_Log("QSerialPort::ResourceError\r",NONE);
-        emit COM_Close();
         break;
     }
         // операция устройства не поддерживается или запрещена
     case QSerialPort::UnsupportedOperationError:{
         s += " - UnsupportedOperationError";
-        emit COM_Error();
         emit COM_Log("QSerialPort::UnsupportedOperationError\r",NONE);
-        emit COM_Close();
         break;
     }
         // ошибка тайм-аута
     case QSerialPort::TimeoutError:{
         s += " - TimeoutError";
-        emit COM_Error();
         emit COM_Log("QSerialPort::TimeoutError\r",NONE);
-        emit COM_Close();
         break;
     }
         // неопознанная ошибка
     case QSerialPort::UnknownError:{
         s += " - UnknownError";
-        emit COM_Error();
         emit COM_Log("QSerialPort::UnknownError\r",NONE);
-        emit COM_Close();
         break;
     }
     }
+    COM_Close();
     qDebug() << s;
 }//
 

@@ -13,6 +13,7 @@
 #include <QScrollBar>
 #include <QSettings>
 #include <QTimer>
+#include <QIcon>
 #include "TCP/tcp.h"
 #include <QtSerialPort/QSerialPort>
 #include <QtSerialPort/QSerialPortInfo>
@@ -46,15 +47,24 @@
 #include "retranslation_table_form.h"
 #include "si4463_registers_form.h"
 #include "rssimonitor_form.h"
+#include "about_form.h"
 
 /* Defining */
-#define ORGANIZATION_NAME "MILANDR"
+#define ORGANIZATION_NAME   "MILANDR"
 #define ORGANIZATION_DOMAIN "www.milandr.ru"
-#define APPLICATION_NAME "RF-PLC Configurator"
+#define APPLICATION_NAME    "Конфигуратор PLC/RF"
 
-#define TCP_SETTINGS_IP                 "TCP_Settings/IP"
-#define TCP_SETTINGS_PORT               "TCP_Settings/PORT"
+#define TCP_SETTINGS_IP     "TCP_Settings/IP"
+#define TCP_SETTINGS_PORT   "TCP_Settings/PORT"
 
+#define BUILDING_VERSION    "v3.02"
+#define BUILDING_CRC        "19.001"
+#define BUILDING_TIME       "Feb. 02 2019 в 13:00"
+
+enum{
+    COM_ConnectionType = 0,
+    TCP_ConnectionType
+};
 namespace Ui {
 class Connections_Form;
 }
@@ -69,19 +79,8 @@ public:
     void resizeEvent(QResizeEvent *event);
     bool eventFilter(QObject *target, QEvent *event);
 
-    SI4463Class         *SI4463Config;                                     //
-    SI4432Class         *SI4432Config;                                     //
-    PLCClass            *PLCConfig;                                        //
-    QTimer              *timer_COMBufferClear, *timer_ConnectionsPanel;    //
-    Port                *newPort;                                          //
-    DataLogic_Class     *DataLogic;                                        //
-    CRC16_Class         *oCRC16;                                           //
-    ConnectHandlerClass *ConnectHandler;
-    MODEMClass          *MODEM;
-    TCP                 *newTCP;
-    ParceClass          *newParcer;
-    Filter              *newFilter;
-    UPDATE              *newUPDATE;
+public slots:
+    uchar Get_ConnectionType(void);
 
 private slots:
     void Print    (QByteArray data, uint n);
@@ -110,6 +109,7 @@ private slots:
 
     void Create_And_Show_Hands_Enter_Form(QWidget*);
     void Create_And_Show_Settings_Form(QWidget*);
+    void Create_And_Show_About_Form(QWidget*);
     void Create_And_Show_Firmware_Updating_Form(QWidget*);
     void Create_And_Show_Retranslation_Table_Form(QWidget*);
     void Create_And_Show_SI4463_Registers_Form(QWidget*);
@@ -121,9 +121,25 @@ private slots:
     void on_btnSettings_clicked();
     void on_btnHandsEnter_clicked();
     void on_RSSIMonitor_clicked();
+    void on_IPInput_textEdited(const QString &arg1);
+    void on_PORTInput_textChanged(const QString &arg1);
 
 private:
     Ui::Connections_Form     *ui;
+
+    SI4463Class              *SI4463Config;                                     //
+    SI4432Class              *SI4432Config;                                     //
+    PLCClass                 *PLCConfig;                                        //
+    QTimer                   *timer_COMBufferClear, *timer_ConnectionsPanel;    //
+    Port                     *newPort;                                          //
+    DataLogic_Class          *DataLogic;                                        //
+    CRC16_Class              *oCRC16;                                           //
+    ConnectHandlerClass      *ConnectHandler;
+    MODEMClass               *MODEM;
+    TCP                      *newTCP;
+    ParceClass               *newParcer;
+    Filter                   *newFilter;
+    UPDATE                   *newUPDATE;
 
     QPlainTextEdit           *ActiveConsole;
 
@@ -139,11 +155,20 @@ private:
     Retranslation_Table_Form *retranslation_table_form;
     RSSIMonitor_Form         *rssimonitor_form;
     PLC_Settings_Form        *plc_settings_form;
+    About_Form               *about_form;
 
     QSysInfo                 *SysInfo;
     QRegExp                   RegSystemName;
 
     ResizeCalculating         resize_calculating;
+
+    uchar                     ConnectionType;
+
 };
+
+//void TextInfoReading(void);
+//QString Get_BUILDING_VERSION(void);
+//QString Get_BUILDING_CRC(void);
+//QString Get_BUILDING_TIME(void);
 
 #endif // CONNECTIONS_FORM_H

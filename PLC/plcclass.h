@@ -13,16 +13,18 @@ public:
     explicit PLCClass(QObject *parent = 0);
 
 private:
-    ST750ConfigurationClass*  In_ST750_Parameters;
-    ST750ConfigurationClass*  Out_ST750_Parameters;
+    ST750ConfigurationClass*   In_ST750_Parameters;
+    ST750ConfigurationClass*   Out_ST750_Parameters;
 
 signals:
-    void                      sIn_ST750_Parameters  (ST750ConfigurationClass*);
-    void                      sOut_ST750_Parameters (ST750ConfigurationClass*);
+    void                       sIn_ST750_Parameters  (ST750ConfigurationClass*);
+    void                       sOut_ST750_Parameters (ST750ConfigurationClass*);
 
 public slots:
-    ST750ConfigurationClass*  getIn_ST750_RF_Config(void);
-    ST750ConfigurationClass*  getOut_ST750_RF_Config(void);
+    ST750ConfigurationClass*   getIn_ST750_PLC_Config(void);
+    void                       ChangedIn_ST750_PLC_Config(void);
+    ST750ConfigurationClass*   getOut_ST750_PLC_Config(void);
+    void                       ChangedOut_ST750_PLC_Config(void);
 
 };
 

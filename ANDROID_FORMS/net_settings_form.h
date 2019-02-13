@@ -74,6 +74,8 @@ private slots:
     void  Set_SwitchMask(uint);
     uint  Get_SwitchMask(void);
 
+    void DeviceVersionHandling(void);
+
 private:
     Ui::Net_Settings_Form        *ui;
 

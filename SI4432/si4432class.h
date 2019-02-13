@@ -36,8 +36,9 @@ public slots:
     void                       setSI4432_RF_RegRead(RF_RegRead_struct);
 
     SI4432ConfigurationClass*  getIn_SI4432_RF_Config(void);
-
+    void                       ChangedIn_SI4432_RF_Config(void);
     SI4432ConfigurationClass*  getOut_SI4432_RF_Config(void);
+    void                       ChangedOut_SI4432_RF_Config(void);
 
 private slots:
 

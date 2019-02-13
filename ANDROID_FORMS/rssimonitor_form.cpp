@@ -7,7 +7,7 @@ RSSIMonitor_Form::RSSIMonitor_Form(QWidget *parent) :
 {
     ui = new (Ui::RSSIMonitor_Form);
     ui->setupUi(this);
-    this->setWindowTitle(APPLICATION_NAME);
+    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     ui->SN->setValue(settings.value(CONNECTION_SETTINGS_SN).toInt());
     ui->ModuleType->setCurrentIndex(settings.value(CONNECTION_SETTINGS_MODULE_TYPE).toInt());
@@ -92,6 +92,7 @@ void RSSIMonitor_Form::on_Back_clicked(){
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
     this->Back_ClickHandler();
+    emit Cancel(this->geometry());
 }
 void RSSIMonitor_Form::on_Next_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
@@ -142,6 +143,11 @@ void RSSIMonitor_Form::on_Reset_clicked(){
 }
 void RSSIMonitor_Form::isStopped(void){
     SetProgress(0);
+    if (RSSI_RequestAnswerDetector == 1){
+       int counter = ui->NoAnswer->text().toInt();
+       counter++;
+       ui->NoAnswer->setText(QString::number(counter));
+    }
     ui->InterfaceWidget->setEnabled(true);
     ui->LatchRSSIWidget->setEnabled(true);
     ui->MonitorStart->setEnabled(true);
@@ -214,6 +220,13 @@ void RSSIMonitor_Form::resizeEvent(QResizeEvent *event)
     ui->Interface->addItem("COM/УСО (Оптопорт)");
     ui->Interface->addItem("PLC/RF");
     ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
+
+    if (this->ConnectionType == TCP_ConnectionType)
+    {
+        ui->Interface->setCurrentIndex(1);
+        ui->Interface->setEnabled(false);
+    }
+
     if (ui->Interface->currentIndex() == 0){
         ui->SN->setEnabled(false);
         ui->ModuleType->setEnabled(true);
@@ -267,6 +280,7 @@ void RSSIMonitor_Form::resizeEvent(QResizeEvent *event)
 }
 
 void RSSIMonitor_Form::on_MonitorStart_clicked(){
+    RSSI_RequestAnswerDetector = 0;
 
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
@@ -365,6 +379,7 @@ void RSSIMonitor_Form::SetAValueUI(int new_value){
     ui->AValue->setText(QString::number(new_value));
 }
 void RSSIMonitor_Form::on_readLatchRSSI_clicked(){
+    RSSI_RequestAnswerDetector = 0;
 
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
@@ -399,7 +414,7 @@ void RSSIMonitor_Form::on_readLatchRSSI_clicked(){
     }
     emit SendModuleType(ui->ModuleType->currentIndex());
     emit SendInterface(ui->Interface->currentIndex());
-    emit StartSendingProcess(SEND_READ_LRSSI_AFC);
+    emit StartSendingProcess(SEND_READ_LRSSI_AFC,CONFIG_SEND_WHITOUT_REPEAT);
 }
 void RSSIMonitor_Form::RSSI_RequestSended(void)
 {
@@ -519,5 +534,10 @@ void RSSIMonitor_Form::Clear_Form(void){
     SetYesAnswerToUI(0);
     SetNoAnswerToUI(0);
     SetAValueUI(0);
+}
+
+void RSSIMonitor_Form::Set_ConnectionType(uchar new_value)
+{
+    this->ConnectionType = new_value;
 }
 

@@ -5,19 +5,22 @@
 #include <QScreen>
 #include <QSettings>
 #include <QPlainTextEdit>
+#include "myformabstractclass.h"
+#include "ui_hands_enter_form.h"
 #include <OTHER_FUNCTIONS/mess_enum.h>
 #include "RESIZE_CALCULATING/resizecalculating.h"
+#include "STYLE/style.h"
 #include "CRC/crc16_class.h"
 
 #define  MANUAL_SETTINGS_SN_ENABLE          "Manual_Settings/SN_ENABLE"
 #define  MANUAL_SETTINGS_SN                 "Manual_Settings/SN"
 #define  MANUAL_SETTINGS_MESSAGE            "Manual_Settings/MESSAGE"
 
-namespace Ui {
-class Hands_Enter_Form;
-}
+//namespace Ui {
+//class Hands_Enter_Form;
+//}
 
-class Hands_Enter_Form : public QWidget
+class Hands_Enter_Form : public myFormAbstractClass
 {
     Q_OBJECT
 
@@ -27,26 +30,16 @@ public:
     void resizeEvent(QResizeEvent *event);
 
 signals:
-    void Cancel();
-    void Next();
-    void Settings(QWidget*);
-    void Get_Geometry(QRect);
-    void Send_Data(QByteArray data, uint n);
-    void Get_Console(QPlainTextEdit* console);
+    void Send_Data(QByteArray,uint);
 
 public slots:
-    void Set_Geometry(QRect);
+    void ForceClose(void);
 
 private slots:
     void on_Back_clicked();
-
     void on_cBtnSend_clicked();
-
     void on_SN_ENABLE_stateChanged(int arg1);
-
     void on_btnSettings_clicked();
-
-    void on_Next_clicked();
 
 private:
     Ui::Hands_Enter_Form *ui;

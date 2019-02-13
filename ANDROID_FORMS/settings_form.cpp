@@ -6,7 +6,7 @@ Settings_Form::Settings_Form(QWidget *parent) :
     myFormAbstractClass(parent){
     ui = new Ui::Settings_Form;
     ui->setupUi(this);
-    this->setWindowTitle(APPLICATION_NAME);
+    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     ui->Repeat->setValue(settings.value(CONNECTION_SETTINGS_REPEATE).toInt());
@@ -16,19 +16,17 @@ Settings_Form::Settings_Form(QWidget *parent) :
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style);
 
-
-    this->setStyleSheet(Main_Widget_Style);
-    ui->label_1->setStyleSheet(Titel_Widget_Style);
-    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style);
-
     ui->label_2->setStyleSheet(Basic_Text_Style);
     ui->label_3->setStyleSheet(Basic_Text_Style);
 
     ui->btnCOMSettings->setStyleSheet(Basic_Buttons_Style);
+    ui->btnAbout->setStyleSheet(Basic_Buttons_Style);
 
     ui->Back->setStyleSheet(Buttons_Style);
     ui->None->setStyleSheet(Buttons_Style);
     ui->Apply->setStyleSheet(Buttons_Style);
+
+    ui->None->setEnabled(false);
 
     ui->Repeat->setStyleSheet(Background_White+Basic_Text_Style);
     ui->Periode->setStyleSheet(Background_White+Basic_Text_Style);
@@ -53,6 +51,11 @@ Settings_Form::~Settings_Form(){
 }
 void Settings_Form::on_Back_clicked(){
     this->Back_ClickHandler();
+    emit Cancel(this->geometry());
+    this->deleteLater();
+}
+void Settings_Form::ForceClose(void){
+    this->ForceCloseHandler();
 }
 void Settings_Form::resizeEvent(QResizeEvent *event){
     resize_calculating.set_form_geometry(this->geometry());
@@ -82,6 +85,7 @@ void Settings_Form::resizeEvent(QResizeEvent *event){
     ui->PeriodeSlider->setMaximumHeight(text_size_3);
 
     ui->btnCOMSettings->setFont(font_3);
+    ui->btnAbout->setFont(font_3);
 
     QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
 
@@ -100,6 +104,8 @@ void Settings_Form::on_Apply_clicked(){
     emit GetRepeatNumber(ui->Repeat->value());
     emit GetRepeatTimeout(ui->Periode->value());
     this->Back_ClickHandler();
+    emit Cancel(this->geometry());
+    this->deleteLater();
 }
 void Settings_Form::on_RepeatSlider_valueChanged(int value){
     ui->Repeat->setValue(value);
@@ -115,4 +121,7 @@ void Settings_Form::on_Repeat_valueChanged(int arg1){
 void Settings_Form::on_Periode_valueChanged(int arg1){
     int SliderValue = arg1/100;
     ui->PeriodeSlider->setValue(SliderValue);
+}
+void Settings_Form::on_btnAbout_clicked(){
+    emit Open_AboutWindow(this);
 }

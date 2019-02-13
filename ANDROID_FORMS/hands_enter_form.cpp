@@ -1,14 +1,14 @@
 #include "hands_enter_form.h"
 #include "connections_form.h"
-#include "ui_hands_enter_form.h"
+
 #include "OTHER_FUNCTIONS/barr_to_string.h"
 
 Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::Hands_Enter_Form)
+    myFormAbstractClass(parent)
 {
+    ui = new Ui::Hands_Enter_Form;
     ui->setupUi(this);
-    this->setWindowTitle(APPLICATION_NAME);
+    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     ui->SN_ENABLE->setChecked(settings.value(MANUAL_SETTINGS_SN_ENABLE).toBool());
@@ -32,6 +32,7 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
     ui->Back->setStyleSheet(Buttons_Style);
     ui->btnSettings->setStyleSheet(Buttons_Style);
     ui->Next->setStyleSheet(Buttons_Style);
+    ui->Next->setEnabled(false);
 
     ui->SN_TEXT->setStyleSheet(Background_White+Basic_Text_Style);
     ui->cEnterText->setStyleSheet(Background_White+Basic_Text_Style);
@@ -61,6 +62,16 @@ Hands_Enter_Form::~Hands_Enter_Form()
     delete ui;
 }
 
+void Hands_Enter_Form::on_Back_clicked(){
+    this->Back_ClickHandler();
+    emit Cancel(this->geometry());
+}
+void Hands_Enter_Form::ForceClose(void){
+    this->ForceCloseHandler();
+}
+void Hands_Enter_Form::on_btnSettings_clicked(){
+    emit Settings(this);
+}
 void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
 {
     resize_calculating.set_form_geometry(this->geometry());
@@ -101,28 +112,6 @@ void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 }
-
-void Hands_Enter_Form::Set_Geometry(QRect new_value)
-{
-    this->setGeometry(new_value);
-}
-
-void Hands_Enter_Form::on_Back_clicked()
-{
-    emit Get_Console(NULL);
-    emit Get_Geometry(this->geometry());
-    emit Cancel();
-    this->deleteLater();
-}
-
-void Hands_Enter_Form::on_Next_clicked()
-{
-    emit Get_Console(NULL);
-    emit Get_Geometry(this->geometry());
-    emit Cancel();
-    this->deleteLater();
-}
-
 void Hands_Enter_Form::on_cBtnSend_clicked()
 {
     emit Get_Console(ui->console);
@@ -205,7 +194,3 @@ void Hands_Enter_Form::on_SN_ENABLE_stateChanged(int arg1)
     }
 }
 
-void Hands_Enter_Form::on_btnSettings_clicked()
-{
-    emit Settings(this);
-}

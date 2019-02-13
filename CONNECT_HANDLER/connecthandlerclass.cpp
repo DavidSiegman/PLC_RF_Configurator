@@ -18,7 +18,7 @@ void ConnectHandlerClass::STOP(){
 void ConnectHandlerClass::StartMonitor(){
    emit SendLog(QString::fromUtf8("\r>> ======= Старт RSSI Монитор\r"),NONE);
    Monitor = new MonitorClass(DataLogic->Delay_Time,1);
-   connect(Monitor,SIGNAL(SendComand(uint,uint)),this->DataLogic,SLOT(ComandHandling(uint,uint)));
+   connect(Monitor,SIGNAL(SendComand(uint,uint)),this   ,SLOT(StartSendingProcess(uint,uint)));
    connect(this,SIGNAL(MonitorStart()),          Monitor,SLOT(startMonitor()));
    connect(this,SIGNAL(MonitorStop()),           Monitor,SLOT(stopMonitor()));
    emit MonitorStart();
@@ -60,7 +60,7 @@ uint ConnectHandlerClass::EnableModuleChoiceMode(FirmwareInformationClass* devic
 }
 
 
-void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue){
+void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendMode){
     // Обнуляем индексы
     ConnectHandler.CommandsQueueCurrentIndex = 0;
     ConnectHandler.CommandsQueuePreIndex     = 0;
@@ -87,7 +87,7 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue){
         emit SendLog(QString::fromUtf8(">> ======= Считываем основные параметры\r"),NONE);
         // Вычитываем различные наборы параметров в зависимости от устройства
         if(In_Firmware_Information->getDevice_Name().compare(PLC_MODEM) == 0){
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_PLC_FREQ_PARAMS;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_ST750_PARAMETERS;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_MODE;
         }
         else if (In_Firmware_Information->getDevice_Name().compare(RF_MODEM_SI4432) == 0){
@@ -215,8 +215,6 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue){
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись радио-настроек\r"),NONE);
         // Формируем очередь команд
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_SI4432_PARAMETERS;
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SI4432_PARAMETERS;
         if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
              (In_Firmware_Information->getBootloader_Version() >= 4)) ||
             ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
@@ -228,6 +226,8 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue){
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_SI4432_09_REGISTER;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SI4432_09_REGISTER;
         }
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_SI4432_PARAMETERS;
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SI4432_PARAMETERS;
         break;
     }
     case SEND_WRITE_RFSI4463_PARAMETERS:{
@@ -246,6 +246,14 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue){
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_CALIBPROPS_FROM_FLASH;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
+        break;
+    }
+    case SEND_WRITE_ST750_PARAMETERS:{
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись радио-настроек\r"),NONE);
+        // Формируем очередь команд
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_ST750_PARAMETERS;
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_ST750_PARAMETERS;
         break;
     }
     case SEND_RF_RESET:{
@@ -371,10 +379,10 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue){
     }
     ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = NONE;
     emit Progress(0);
-    ConnectHandling(SelectComandQueue,0,0);
+    ConnectHandling(SelectComandQueue,0,SendMode);
 }
 
-void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue)
+void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode)
 {
     emit Progress(100);
     switch (SelectComandQueue)
@@ -382,7 +390,7 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue)
     case SEND_AOPEN:{
          // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Устройство определено\r"),NONE);
-        StartSendingProcess(SEND_READ_ALL_DATA);
+        StartSendingProcess(SEND_READ_ALL_DATA, SendMode);
         break;
     }
     case SEND_READ_ALL_DATA:{
@@ -417,14 +425,20 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue)
     }
     case SEND_WRITE_SI4432_PARAMETERS:{
         // Выводим сообщение в Лог
-        emit SendLog(QString::fromUtf8(">> ======= Запись радио-настроек прошла успешно\\r"),NONE);
+        emit SendLog(QString::fromUtf8(">> ======= Запись RF-настроек прошла успешно\\r"),NONE);
         emit isRFSI4432_PARAMETERS();
         break;
     }
     case SEND_WRITE_RFSI4463_PARAMETERS:{
         // Выводим сообщение в Лог
-        emit SendLog(QString::fromUtf8(">> ======= Запись радио-настроек прошла успешно\r"),NONE);
+        emit SendLog(QString::fromUtf8(">> ======= Запись RF-настроек прошла успешно\r"),NONE);
         emit isRFSI4463_PARAMETERS();
+        break;
+    }
+    case SEND_WRITE_ST750_PARAMETERS:{
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись PLC-настроек прошла успешно\r"),NONE);
+        emit isPLCST750_PARAMETERS();
         break;
     }
     case SEND_RF_RESET:{
@@ -496,7 +510,7 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue)
     }
 }
 
-void ConnectHandlerClass::ConnectHandling(uint n, uint state, uint repeate)
+void ConnectHandlerClass::ConnectHandling(uint n, uint state, uint SendMode)
 {
    // Информация об устройстве
    FirmwareInformationClass* In_Firmware_Information = MODEM->getIn_Firmware_Information();
@@ -514,7 +528,7 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state, uint repeate)
                ConnectHandler.CommandsQueueCurrentIndex = ConnectHandler.CommandsQueuePreIndex;
            }
        }
-       emit SendComand(ConnectHandler.CommandsQueue[ConnectHandler.CommandsQueueCurrentIndex],CONFIG_SEND_CONTROL);
+       emit SendComand(ConnectHandler.CommandsQueue[ConnectHandler.CommandsQueueCurrentIndex],SendMode);
     }
     else if (state == 1){
         // если нужно перед каждой командой выбирать модуль
@@ -540,11 +554,11 @@ void ConnectHandlerClass::ConnectHandling(uint n, uint state, uint repeate)
         }
 
         if (ConnectHandler.CommandsQueue[ConnectHandler.CommandsQueueCurrentIndex] != NONE){
-            emit SendComand(ConnectHandler.CommandsQueue[ConnectHandler.CommandsQueueCurrentIndex],CONFIG_SEND_CONTROL);
+            emit SendComand(ConnectHandler.CommandsQueue[ConnectHandler.CommandsQueueCurrentIndex],SendMode);
         }
         else
         {
-            EmitCurrentSignal(n);
+            EmitCurrentSignal(n, SendMode);
         }
     }
 }

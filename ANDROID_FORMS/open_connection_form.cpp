@@ -7,7 +7,7 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
 {
     ui = new (Ui::Open_Connection_Form);
     ui->setupUi(this);
-    this->setWindowTitle(APPLICATION_NAME);
+    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     ui->SN->setValue(settings.value(CONNECTION_SETTINGS_SN).toInt());
@@ -63,6 +63,7 @@ void Open_Connection_Form::on_Back_clicked(){
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
     this->Back_ClickHandler();
+    emit Cancel(this->geometry());
 }
 void Open_Connection_Form::on_Next_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
@@ -188,6 +189,13 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->Interface->addItem("COM/УСО (Оптопорт)");
     ui->Interface->addItem("PLC/RF");
     ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
+
+    if (Get_ConnectionType() == TCP_ConnectionType)
+    {
+        ui->Interface->setCurrentIndex(1);
+        ui->Interface->setEnabled(false);
+    }
+
     if (ui->Interface->currentIndex() == 0){
         ui->SN->setEnabled(false);
         ui->ModuleType->setEnabled(true);
@@ -243,16 +251,16 @@ void Open_Connection_Form::on_Update_clicked()
 
 void Open_Connection_Form::Set_In_Firmware_Information(FirmwareInformationClass *FirmwareInformation)
 {
-    In_Firmware_Information = FirmwareInformation;
+    myFormAbstractClass::Set_In_Firmware_Information(FirmwareInformation);
 
-    SetDeviceNameToUI(In_Firmware_Information->getDevice_Name());
-    SetCurrentFitmwareToUI(In_Firmware_Information->getCurrent_Firmware_Version());
-    SetBootloaderVersionToUI(In_Firmware_Information->getString_Bootloader_Version());
-    SetBootloaderSizeToUI(In_Firmware_Information->getBootloader_Size());
-    SetBootloaderCRCToUI(In_Firmware_Information->getBootloader_CRC32());
-    SetUpgradableVersionToUI(In_Firmware_Information->getString_Upgradable_Version());
-    SetUpgradableSizeToUI(In_Firmware_Information->getUpgradable_Size());
-    SetUpgradableCRCToUI(In_Firmware_Information->getUpgradable_CRC32());
+    SetDeviceNameToUI(myFormAbstractClass::Get_In_Firmware_Information()->getDevice_Name());
+    SetCurrentFitmwareToUI(myFormAbstractClass::Get_In_Firmware_Information()->getCurrent_Firmware_Version());
+    SetBootloaderVersionToUI(myFormAbstractClass::Get_In_Firmware_Information()->getString_Bootloader_Version());
+    SetBootloaderSizeToUI(myFormAbstractClass::Get_In_Firmware_Information()->getBootloader_Size());
+    SetBootloaderCRCToUI(myFormAbstractClass::Get_In_Firmware_Information()->getBootloader_CRC32());
+    SetUpgradableVersionToUI(myFormAbstractClass::Get_In_Firmware_Information()->getString_Upgradable_Version());
+    SetUpgradableSizeToUI(myFormAbstractClass::Get_In_Firmware_Information()->getUpgradable_Size());
+    SetUpgradableCRCToUI(myFormAbstractClass::Get_In_Firmware_Information()->getUpgradable_CRC32());
 
 }
 
@@ -283,7 +291,7 @@ void Open_Connection_Form::on_Connect_clicked(){
     }
     emit SendModuleType(ui->ModuleType->currentIndex());
     emit SendInterface(ui->Interface->currentIndex());
-    emit StartSendingProcess(SEND_AOPEN);
+    emit StartSendingProcess(SEND_AOPEN, CONFIG_SEND_CONTROL);
     //emit AOPEN();
 }
 

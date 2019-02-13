@@ -9,7 +9,7 @@ SI4463_Registers_Form::SI4463_Registers_Form(QWidget *parent) :
     ui(new Ui::SI4463_Registers_Form)
 {
     ui->setupUi(this);
-    this->setWindowTitle(APPLICATION_NAME);
+    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
 
     this->setStyleSheet(Main_Widget_Style);
 

@@ -31,6 +31,8 @@ signals:
     void TCP_OutDATA(QByteArray data);
     void TCP_Started();
     void TCP_Connected();
+    void TCP_Error();
+    void TCP_Disconnected();
 
 public slots:
     void TCP_Disconnect();

@@ -7,7 +7,7 @@ Sniffer_Settings_Form::Sniffer_Settings_Form(QWidget *parent) :
 {
     ui = new (Ui::Sniffer_Settings_Form);
     ui->setupUi(this);
-    this->setWindowTitle(APPLICATION_NAME);
+    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
@@ -49,6 +49,7 @@ Sniffer_Settings_Form::~Sniffer_Settings_Form(){
 }
 void Sniffer_Settings_Form::on_Back_clicked(){
     this->Back_ClickHandler();
+    emit Cancel(this->geometry());
 }
 void Sniffer_Settings_Form::on_Next_clicked(){
     this->Next_ClickHandler();
@@ -142,6 +143,8 @@ void Sniffer_Settings_Form::resizeEvent(QResizeEvent *event){
     ui->LVL7->setFont(font_4);
     ui->LVL8->setFont(font_4);
     ui->LVL9->setFont(font_4);
+    ui->NetLevel->setFont(font_4);
+    ui->DeviceMonitorSN->setFont(font_4);
 
     ui->SetDestinationMASK->setFont(font_3);
     ui->SetNetLevel->setFont(font_3);
@@ -246,7 +249,7 @@ void Sniffer_Settings_Form::on_Sniffer_Mode_currentIndexChanged(int index){
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
 
-        emit StartSendingProcess(SEND_WRITE_SNIFER_MODE);
+        emit StartSendingProcess(SEND_WRITE_SNIFER_MODE,CONFIG_SEND_CONTROL);
     }
 }
 void Sniffer_Settings_Form::on_Up_Link_stateChanged(int arg1){
@@ -265,7 +268,7 @@ void Sniffer_Settings_Form::on_Up_Link_stateChanged(int arg1){
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
 
-        emit StartSendingProcess(SEND_WRITE_UPLINK_MODE);
+        emit StartSendingProcess(SEND_WRITE_UPLINK_MODE,CONFIG_SEND_CONTROL);
     }
 }
 
@@ -287,7 +290,7 @@ void Sniffer_Settings_Form::on_Disable_CRC_stateChanged(int arg1)
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
 
-        emit StartSendingProcess(SEND_WRITE_CRC_CHECK_MODE);
+        emit StartSendingProcess(SEND_WRITE_CRC_CHECK_MODE,CONFIG_SEND_CONTROL);
     }
 }
 
@@ -309,7 +312,7 @@ void Sniffer_Settings_Form::on_Broadcasting_stateChanged(int arg1)
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
 
-        emit StartSendingProcess(SEND_WRITE_BROADCASTING_MODE);
+        emit StartSendingProcess(SEND_WRITE_BROADCASTING_MODE,CONFIG_SEND_CONTROL);
     }
 }
 
@@ -325,7 +328,7 @@ void Sniffer_Settings_Form::on_SetDestinationMASK_clicked()
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
 
-        emit StartSendingProcess(SEND_WRITE_MASK_DESTINATION);
+        emit StartSendingProcess(SEND_WRITE_MASK_DESTINATION,CONFIG_SEND_CONTROL);
     }
 }
 
@@ -366,7 +369,7 @@ void Sniffer_Settings_Form::on_SetDeviceMonitorSN_clicked()
             ui->btnSettings->setEnabled(false);
             ui->Next->setEnabled(false);
 
-            emit StartSendingProcess(SEND_WRITE_SWITCH_TABLE_ELEMENT);
+            emit StartSendingProcess(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
         }
         else
         {
@@ -377,7 +380,7 @@ void Sniffer_Settings_Form::on_SetDeviceMonitorSN_clicked()
             ui->btnSettings->setEnabled(false);
             ui->Next->setEnabled(false);
 
-            emit StartSendingProcess(SEND_DELET_SWITCH_TABLE);
+            emit StartSendingProcess(SEND_DELET_SWITCH_TABLE,CONFIG_SEND_CONTROL);
         }
     }
 }

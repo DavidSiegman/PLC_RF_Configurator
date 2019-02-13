@@ -8,7 +8,7 @@ Net_Settings_Form::Net_Settings_Form(QWidget *parent) :
 {
     ui = new Ui::Net_Settings_Form;
     ui->setupUi(this);
-    this->setWindowTitle(APPLICATION_NAME);
+    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
@@ -54,6 +54,7 @@ Net_Settings_Form::~Net_Settings_Form()
 
 void Net_Settings_Form::on_Back_clicked(){
     this->Back_ClickHandler();
+    emit Cancel(this->geometry());
 }
 void Net_Settings_Form::on_Next_clicked(){
     this->Next_ClickHandler();
@@ -72,11 +73,19 @@ void Net_Settings_Form::on_Stop_clicked(){
 }
 void Net_Settings_Form::on_Reset_clicked(){
     emit Get_Console(ui->console);
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->NetTable->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
     this->Reset_ClickHandler();
 }
 void Net_Settings_Form::isStopped(void){
     ui->Stop->setEnabled(false);
     ui->SettingsWidget->setEnabled(true);
+    ui->NetTable->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -85,6 +94,7 @@ void Net_Settings_Form::isStopped(void){
 void Net_Settings_Form::isRF_Reset(void){
     ui->Stop->setEnabled(false);
     ui->SettingsWidget->setEnabled(true);
+    ui->NetTable->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -147,7 +157,51 @@ void Net_Settings_Form::resizeEvent(QResizeEvent *event)
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
+    DeviceVersionHandling();
 }
+void Net_Settings_Form::DeviceVersionHandling(void)
+{
+    FirmwareInformationClass* In_Firmware_Information = myFormAbstractClass::Get_In_Firmware_Information();
+    if (In_Firmware_Information->getDevice_Name() == PLC_MODEM){
+        if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version() >= 2)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version() >= 2))){
+            ui->Mask_Widget->setEnabled(false);
+            ui->Timeout_Widget->setEnabled(false);
+            ui->Reset_Widget->setEnabled(false);
+        }
+    }
+    else if (In_Firmware_Information->getDevice_Name() == RF_MODEM_SI4432){
+        if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version() >= 3.00)       &&
+             (In_Firmware_Information->getBootloader_Version() < 3.05)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version() >= 3.00)       &&
+             (In_Firmware_Information->getUpgradable_Version() < 3.05))){
+            ui->Mask_Widget->setEnabled(false);
+            ui->Timeout_Widget->setEnabled(false);
+        }
+        if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version() >= 3.05)       &&
+             (In_Firmware_Information->getBootloader_Version() < 4)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version() >= 3.05)       &&
+             (In_Firmware_Information->getUpgradable_Version() < 4))){
+            ui->Mask_Widget->setEnabled(false);
+            ui->Timeout_Widget->setEnabled(true);
+        }
+    }
+    else if (In_Firmware_Information->getDevice_Name() == RF_MODEM_SI4463){
+
+    }
+    else{
+        ui->Mask_Widget->setEnabled(false);
+        ui->Timeout_Widget->setEnabled(false);
+    }
+}
+
 void Net_Settings_Form::on_Switch_stateChanged(int arg1){
     if ((arg1 == 0)&&(Get_SwitchMode() != 0)){
         emit Get_Console(ui->console);
@@ -159,7 +213,7 @@ void Net_Settings_Form::on_Switch_stateChanged(int arg1){
         ui->Back->setEnabled(false);
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
-        emit StartSendingProcess(SEND_WRITE_SWITCH_MODE);
+        emit StartSendingProcess(SEND_WRITE_SWITCH_MODE,CONFIG_SEND_CONTROL);
     }
     else if ((arg1 == 2)&&(Get_SwitchMode() != 1)){
         emit Get_Console(ui->console);
@@ -171,7 +225,7 @@ void Net_Settings_Form::on_Switch_stateChanged(int arg1){
         ui->Back->setEnabled(false);
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
-        emit StartSendingProcess(SEND_WRITE_SWITCH_MODE);
+        emit StartSendingProcess(SEND_WRITE_SWITCH_MODE,CONFIG_SEND_CONTROL);
     }
 }
 void Net_Settings_Form::isSwitchMode(){
@@ -192,7 +246,7 @@ void Net_Settings_Form::on_SetMask_clicked(){
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
     ui->Next->setEnabled(false);
-    emit StartSendingProcess(SEND_WRITE_SWITCH_LEVEL);
+    emit StartSendingProcess(SEND_WRITE_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
 }
 void Net_Settings_Form::on_SetLevel_clicked(){
     emit Get_Console(ui->console);
@@ -204,7 +258,7 @@ void Net_Settings_Form::on_SetLevel_clicked(){
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
     ui->Next->setEnabled(false);
-    emit StartSendingProcess(SEND_WRITE_SWITCH_LEVEL);
+    emit StartSendingProcess(SEND_WRITE_SWITCH_LEVEL,CONFIG_SEND_CONTROL);
 }
 void Net_Settings_Form::isSwitchLevel(){
     ui->Stop->setEnabled(false);
@@ -225,7 +279,7 @@ void Net_Settings_Form::on_SetTimeout_clicked(){
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
     ui->Next->setEnabled(false);
-    emit StartSendingProcess(SEND_WRITE_SWITCH_TIMEOUT);
+    emit StartSendingProcess(SEND_WRITE_SWITCH_TIMEOUT,CONFIG_SEND_CONTROL);
 }
 void Net_Settings_Form::isSwitchTimeout(){
     ui->Stop->setEnabled(false);

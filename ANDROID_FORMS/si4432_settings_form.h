@@ -24,7 +24,7 @@ public:
 
     void resizeEvent(QResizeEvent *event);
 signals:
-    void Out_SI4432_Parameters_Changed(SI4432ConfigurationClass*);
+    //void Out_SI4432_Parameters_Changed(SI4432ConfigurationClass*);
 
 public slots:
     void SetProgress(uint progress);
@@ -88,6 +88,8 @@ private slots:
     void setNdecToUI(unsigned char);
     void setDwn3ToUI(unsigned char);
     void setFilsetToUI(unsigned char);
+
+    void DeviceVersionHandling(void);
 
 private:
     Ui::SI4432_Settings_Form *ui;

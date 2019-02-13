@@ -49,6 +49,8 @@ public slots:
     void RSSI_RequestSended(void);
     void isLatchRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,signed short ANT2_RSSI,double AFC);
 
+    void Set_ConnectionType(uchar);
+
 private slots:
     void on_Back_clicked();
     void on_Next_clicked();
@@ -72,7 +74,7 @@ private slots:
 
 
 private:
-    Ui::RSSIMonitor_Form *ui;
+    Ui::RSSIMonitor_Form     *ui;
     QSysInfo                 *SysInfo;
     QRegExp                   RegSystemName;
     ResizeCalculating         resize_calculating;
@@ -85,6 +87,7 @@ private:
     QPolygonF pfRSSICurrent, pfAFC, pfRSSI;
 
     uchar                     RSSI_RequestAnswerDetector;
+    uchar                     ConnectionType;
 };
 
 #endif // RSSIMONITOR_FORM_H

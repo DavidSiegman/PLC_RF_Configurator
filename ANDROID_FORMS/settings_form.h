@@ -25,9 +25,10 @@ public:
 signals:
     void GetRepeatNumber(uint value);
     void GetRepeatTimeout(uint value);
+    void Open_AboutWindow(QWidget*);
 
 public slots:
-
+    void ForceClose(void);
 private slots:
     void on_Back_clicked();
     void on_Apply_clicked();
@@ -35,6 +36,8 @@ private slots:
     void on_PeriodeSlider_valueChanged(int value);
     void on_Repeat_valueChanged(int arg1);
     void on_Periode_valueChanged(int arg1);
+
+    void on_btnAbout_clicked();
 
 private:
     Ui::Settings_Form *ui;

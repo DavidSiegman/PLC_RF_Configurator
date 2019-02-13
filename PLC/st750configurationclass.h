@@ -17,7 +17,7 @@ public:
 
     void              setST750_LOWF  (unsigned int LOWF);
     unsigned int      getST750_LOWF  ();
-    void              setST750_HIGHF (unsigned int TXDR);
+    void              setST750_HIGHF (unsigned int HIGHF);
     unsigned int      getST750_HIGHF ();
 private:
     PLC_Config_struct  ST750_Configuration_Data;

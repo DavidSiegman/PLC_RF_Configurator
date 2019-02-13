@@ -10,9 +10,10 @@ QT      += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
-
 TARGET   = RF_PLC_Configurator
 TEMPLATE = app
+
+RC_ICONS = RESOURCES/images/AppIcon.ico
 
 FORMS
 
@@ -61,7 +62,9 @@ HEADERS += \
     ANDROID_FORMS/retranslation_table_form.h \
     ANDROID_FORMS/si4463_registers_form.h \
     ANDROID_FORMS/rssimonitor_form.h \
+    ANDROID_FORMS/about_form.h\
     RESIZE_CALCULATING/resizecalculating.h
+
 
 SOURCES += \
     COM/port.cpp \
@@ -107,7 +110,8 @@ SOURCES += \
     ANDROID_FORMS/retranslation_table_form.cpp \
     ANDROID_FORMS/si4463_registers_form.cpp \
     ANDROID_FORMS/rssimonitor_form.cpp \
-    RESIZE_CALCULATING/resizecalculating.cpp
+    ANDROID_FORMS/about_form.cpp \
+    RESIZE_CALCULATING/resizecalculating.cpp \
 
 FORMS += \
     WINDOWS_FORMS/mainwindow.ui \
@@ -123,7 +127,10 @@ FORMS += \
     ANDROID_FORMS/firmware_updating_form.ui \
     ANDROID_FORMS/retranslation_table_form.ui \
     ANDROID_FORMS/si4463_registers_form.ui \
-    ANDROID_FORMS/rssimonitor_form.ui
+    ANDROID_FORMS/rssimonitor_form.ui \
+    ANDROID_FORMS/about_form.ui
 
 RESOURCES += \
     RESOURCES/images.qrc
+
+

@@ -8,7 +8,7 @@ Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
 {
     ui = new Ui::Retranslation_Table_Form;
     ui->setupUi(this);
-    this->setWindowTitle(APPLICATION_NAME);
+    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
@@ -27,6 +27,7 @@ Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
     ui->Back->setStyleSheet(Buttons_Style);
     ui->btnSettings->setStyleSheet(Buttons_Style);
     ui->Next->setStyleSheet(Buttons_Style);
+    ui->Next->setEnabled(false);
 
     model = new QStandardItemModel;
 
@@ -42,6 +43,7 @@ Retranslation_Table_Form::~Retranslation_Table_Form(){
 
 void Retranslation_Table_Form::on_Back_clicked(){
     this->Back_ClickHandler();
+    emit Cancel(this->geometry());
 }
 void Retranslation_Table_Form::on_Next_clicked(){
     this->Next_ClickHandler();
@@ -200,7 +202,7 @@ void Retranslation_Table_Form::on_Read_NetTable_clicked(){
     modelChanging = 1;
     this->model->clear();
     modelChanging = 0;
-    emit StartSendingProcess(SEND_READ_SWITCH_TABLE_ELEMENT);
+    emit StartSendingProcess(SEND_READ_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
 }
 void Retranslation_Table_Form::on_Write_clicked(){
     emit Get_Console(ui->console);
@@ -213,7 +215,7 @@ void Retranslation_Table_Form::on_Write_clicked(){
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
     ui->Next->setEnabled(false);
-    emit StartSendingProcess(SEND_WRITE_SWITCH_TABLE_ELEMENT);
+    emit StartSendingProcess(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
 }
 
 void Retranslation_Table_Form::isSwitch_Table(void){
@@ -250,7 +252,7 @@ void Retranslation_Table_Form::on_Del_NetTable_clicked(){
     ui->btnSettings->setEnabled(false);
     ui->Next->setEnabled(false);
 
-    emit StartSendingProcess(SEND_DELET_SWITCH_TABLE);
+    emit StartSendingProcess(SEND_DELET_SWITCH_TABLE,CONFIG_SEND_CONTROL);
 }
 void Retranslation_Table_Form::isDelet_Switch_Table(void){
     ui->Stop->setEnabled(false);

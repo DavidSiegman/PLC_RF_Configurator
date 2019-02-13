@@ -8,7 +8,6 @@
 #include <QPlainTextEdit>
 #include "ui_open_connection_form.h"
 #include "myformabstractclass.h"
-#include "MODEM/firmwareinformationclass.h"
 #include "RESIZE_CALCULATING/resizecalculating.h"
 #include "STYLE/style.h"
 
@@ -44,7 +43,7 @@ public slots:
     void isStopped(void);
     void isRF_Reset(void);
 
-    void Set_In_Firmware_Information(FirmwareInformationClass*);
+    void Set_In_Firmware_Information(FirmwareInformationClass *FirmwareInformation);
 
 private slots:
     void on_Back_clicked();
@@ -75,7 +74,6 @@ private:
     QRegExp                   RegSystemName;
     ResizeCalculating         resize_calculating;
 
-    FirmwareInformationClass *In_Firmware_Information;
 };
 
 #endif // OPEN_CONNECTION_FORM_H

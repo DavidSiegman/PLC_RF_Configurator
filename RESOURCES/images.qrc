@@ -6,5 +6,6 @@
         <file>images/OK.png</file>
         <file>images/Settings.png</file>
         <file>images/Settings_2.png</file>
+        <file>images/AppIcon.ico</file>
     </qresource>
 </RCC>
