@@ -9,8 +9,8 @@
 #define RF_MODEM_SI4463   "Интерфейсный модуль RF (SI4463)"
 #define RF_SNIFFER_SI4432 "Милур IC U/Z (SI4432)"
 #define RF_SNIFFER_SI4463 "Милур IC U/Z (SI4463)"
-#define RF_PLC_MODEM      "Интерфейсный модуль PLC/RF (ST750/SI4463)"
-#define RF_PLC_SNIFFER    "Милур IC U/Z/P (SI4463)"
+#define RF_PLC_MODEM      "Интерфейсный модуль PLC/RF"
+#define RF_PLC_SNIFFER    "Милур IC U/Z/P (ST750/SI4463)"
 #define TERMINAL          "Mилур T (SI4432)"
 #define GSM_MODEM         "Интерфейсный модуль GSM"
 

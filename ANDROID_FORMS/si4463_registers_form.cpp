@@ -12,15 +12,16 @@ SI4463_Registers_Form::SI4463_Registers_Form(QWidget *parent) :
     this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
 
     this->setStyleSheet(Main_Widget_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
     ui->SI4436_PROPSView->setStyleSheet(Work_Area_Style + Basic_Text_Style);
     ui->label_2->setStyleSheet(Work_Area_Style + Basic_Text_Style);
 
     ui->label_1->setStyleSheet(Titel_Widget_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
 }
 
 SI4463_Registers_Form::~SI4463_Registers_Form()

@@ -35,15 +35,16 @@ Connections_Form::Connections_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->COMConnect->setStyleSheet(Basic_Buttons_Style);
-    ui->TCPConnect->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
-    ui->RSSIMonitor->setStyleSheet(Basic_Buttons_Style);
+    ui->COMConnect->setStyleSheet(Basic_PushButtons_Style);
+    ui->TCPConnect->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
+    ui->RSSIMonitor->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->btnHandsEnter->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->btnNext->setStyleSheet(Buttons_Style);
+    ui->btnHandsEnter->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->btnNext->setStyleSheet(PushButtons_Style);
 
     ui->PortNameBox->setStyleSheet(Background_White);
     ui->IPInput->setStyleSheet(Background_White);
@@ -93,6 +94,9 @@ Connections_Form::Connections_Form(QWidget *parent) :
     retranslation_table_form  = NULL;
     rssimonitor_form          = NULL;
     plc_settings_form         = NULL;
+    about_form                = NULL;
+    interfaces_control_form   = NULL;
+    plc_rf_netsettings_form   = NULL;
 
     connect(newPort,           SIGNAL(COM_Started()),                  this, SLOT(start_COM_Init()));          //Установка свойств порта при открытии
     connect(newPort,           SIGNAL(COM_Log(QString,uint)),          this, SLOT(Print_Log(QString,uint)));   //Лог ошибок
@@ -148,7 +152,7 @@ void Connections_Form::resizeEvent(QResizeEvent *event)
     icons_size.setHeight(resize_calculating.get_icons_size());
 
     QFont font_1 = ui->label_1->font();    font_1.setPixelSize(text_size_1);
-    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_2);
+    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_4);
     QFont font_3 = ui->COMConnect->font(); font_3.setPixelSize(text_size_3);
     QFont font_4 = ui->label_4->font();    font_4.setPixelSize(text_size_4);
     QFont font_5 = ui->console->font();    font_5.setPixelSize(text_size_5);
@@ -208,7 +212,6 @@ void Connections_Form::on_TCPConnect_clicked(){
         newTCP->TCP_SetIP(ui->IPInput->text());
         newTCP->TCP_SetPORT(ui->PORTInput->text().toInt());
         newTCP->TCP_Connect();
-
     }
     else{
         newTCP->TCP_Disconnect();
@@ -343,17 +346,30 @@ void Connections_Form::Define_Next_Form(QRect curren_geometry)
         }
     }
     else if (In_Firmware_Information->getDevice_Name().compare(RF_PLC_MODEM) == 0){
-
+        if((open_connection_form != NULL)&&(open_connection_form->isHidden() == false)){
+            open_connection_form->hide();
+            Create_And_Show_Interfaces_Control_Form(curren_geometry);
+        }
+        else if((interfaces_control_form != NULL)&&(interfaces_control_form->isHidden() == false)){
+            interfaces_control_form->hide();
+            Create_And_Show_PLC_RF_NetSettings_Form(curren_geometry);
+        }
     }
     else if (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0){
         if((open_connection_form != NULL)&&(open_connection_form->isHidden() == false)){
             open_connection_form->hide();
-            Create_And_Show_Sniffer_Settings_Form(curren_geometry);
+            Create_And_Show_Interfaces_Control_Form(curren_geometry);
         }
+        else if((interfaces_control_form != NULL)&&(interfaces_control_form->isHidden() == false)){
+            interfaces_control_form->hide();
+            Create_And_Show_PLC_RF_NetSettings_Form(curren_geometry);
+        }
+        /*
         else if((sniffer_settings_form != NULL)&&(sniffer_settings_form->isHidden() == false)){
             sniffer_settings_form->hide();
             Create_And_Show_SI4463_Settings_Form(curren_geometry);
         }
+        */
     }
     else if (In_Firmware_Information->getDevice_Name().compare(TERMINAL) == 0){
 
@@ -442,14 +458,35 @@ void Connections_Form::Define_Pre_Form(QRect curren_geometry)
             }
         }
         else if (In_Firmware_Information->getDevice_Name().compare(RF_PLC_MODEM) == 0){
-
-        }
-        else if (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0){
-            if((sniffer_settings_form != NULL)&&(sniffer_settings_form->isHidden() == false)){
-                sniffer_settings_form->deleteLater();
-                sniffer_settings_form = NULL;
+            if((interfaces_control_form != NULL)&&(interfaces_control_form->isHidden() == false)){
+                interfaces_control_form->deleteLater();
+                interfaces_control_form = NULL;
                 open_connection_form->setGeometry(curren_geometry);
                 open_connection_form->show();
+            }
+            else if((plc_rf_netsettings_form != NULL)&&(plc_rf_netsettings_form->isHidden() == false)){
+                plc_rf_netsettings_form->deleteLater();
+                plc_rf_netsettings_form = NULL;
+                interfaces_control_form->setGeometry(curren_geometry);
+                interfaces_control_form->show();
+            }
+            else if((settings_form != NULL)&&(settings_form->isHidden() == false)){
+                settings_form->deleteLater();
+                settings_form = NULL;
+            }
+        }
+        else if (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0){
+            if((interfaces_control_form != NULL)&&(interfaces_control_form->isHidden() == false)){
+                interfaces_control_form->deleteLater();
+                interfaces_control_form = NULL;
+                open_connection_form->setGeometry(curren_geometry);
+                open_connection_form->show();
+            }
+            else if((plc_rf_netsettings_form != NULL)&&(plc_rf_netsettings_form->isHidden() == false)){
+                plc_rf_netsettings_form->deleteLater();
+                plc_rf_netsettings_form = NULL;
+                interfaces_control_form->setGeometry(curren_geometry);
+                interfaces_control_form->show();
             }
             else if((si4463_settings_form != NULL)&&(si4463_settings_form->isHidden() == false)){
                 si4463_settings_form->deleteLater();
@@ -506,6 +543,16 @@ void Connections_Form::RF_Reset_Handler(void){
         Geometry = si4463_settings_form->geometry();
         si4463_settings_form->deleteLater();
         si4463_settings_form = NULL;
+    }
+    if (interfaces_control_form != NULL){
+        Geometry = interfaces_control_form->geometry();
+        interfaces_control_form->deleteLater();
+        interfaces_control_form = NULL;
+    }
+    if (plc_rf_netsettings_form != NULL){
+        Geometry = plc_rf_netsettings_form->geometry();
+        plc_rf_netsettings_form->deleteLater();
+        plc_rf_netsettings_form = NULL;
     }
     if ((rssimonitor_form == NULL)&&(open_connection_form != NULL)){
         open_connection_form->setGeometry(Geometry);
@@ -890,6 +937,95 @@ void Connections_Form::Create_And_Show_RSSIMonitor_Form(QWidget *parent){
     rssimonitor_form->setGeometry(parent->geometry());
     rssimonitor_form->Set_ConnectionType(Get_ConnectionType());
     rssimonitor_form->show();
+}
+void Connections_Form::Create_And_Show_Interfaces_Control_Form(QRect current_geometry){
+    interfaces_control_form = new Interfaces_Control_Form;
+
+    connect(this->newPort,          SIGNAL(COM_Error()),                        interfaces_control_form,  SLOT(ForceClose()));
+    connect(this->newTCP,           SIGNAL(TCP_Error()),                        interfaces_control_form,  SLOT(ForceClose()));
+    connect(interfaces_control_form,SIGNAL(ForcedClosed()),                     this,                  SLOT(show()));
+    connect(interfaces_control_form,SIGNAL(Get_Geometry(QRect)),                this,                  SLOT(Set_Geometry(QRect)));
+
+    connect(interfaces_control_form,SIGNAL(Get_Console(QPlainTextEdit*)),       this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(interfaces_control_form,SIGNAL(Cancel(QRect)),                      this,                  SLOT(Define_Pre_Form(QRect)));
+    connect(interfaces_control_form,SIGNAL(Next(QRect)),                        this,                  SLOT(Define_Next_Form(QRect)));
+
+    connect(interfaces_control_form,SIGNAL(Settings(QWidget*)),                 this,                  SLOT(Create_And_Show_Settings_Form(QWidget*)));
+    connect(interfaces_control_form,SIGNAL(Updating(QWidget*)),                 this,                  SLOT(Create_And_Show_Firmware_Updating_Form(QWidget*)));
+
+    connect(interfaces_control_form,SIGNAL(isCreated()),                        MODEM,                 SLOT(ChangedOut_PLC_RF433_Modem_Properties()));
+    connect(interfaces_control_form,SIGNAL(isCreated()),                        MODEM,                 SLOT(ChangedIn_PLC_RF433_Modem_Properties()));
+    connect(MODEM,                  SIGNAL(sIn_PLC_RF433_Modem_Properties(PlcRfModemPropertiesClass*)), interfaces_control_form,  SLOT(Set_In_PLC_RF433_Modem_Properties(PlcRfModemPropertiesClass *)));
+    connect(MODEM,                  SIGNAL(sOut_PLC_RF433_Modem_Properties(PlcRfModemPropertiesClass*)),interfaces_control_form,  SLOT(Set_Out_PLC_RF433_Modem_Properties(PlcRfModemPropertiesClass *)));
+
+    connect(interfaces_control_form,SIGNAL(StartSendingProcess(uint,uint)),     ConnectHandler,           SLOT(StartSendingProcess(uint,uint)));
+    connect(ConnectHandler,         SIGNAL(isAOPEN()),                          interfaces_control_form,  SLOT(isOPEND()));
+    connect(ConnectHandler,         SIGNAL(isRF_RESET()),                       interfaces_control_form,  SLOT(isRF_Reset()));
+    connect(ConnectHandler,         SIGNAL(isINTERFACES_CONTROL()),             interfaces_control_form,  SLOT(isInterfaces_Control()));
+    connect(ConnectHandler,         SIGNAL(Progress(uint)),                     interfaces_control_form,  SLOT(SetProgress(uint)));
+
+    connect(interfaces_control_form,SIGNAL(SendSerialNumber(QString,bool)),     DataLogic,                SLOT(setSerialNumberMode(QString,bool)));
+    connect(interfaces_control_form,SIGNAL(Stop_Send_Data()),                   DataLogic,                SLOT(STOP_SEND_DATA()));
+    connect(DataLogic,              SIGNAL(STOPPED()),                          interfaces_control_form,  SLOT(isStopped()));
+    connect(DataLogic,              SIGNAL(noANSWER()),                         interfaces_control_form,  SLOT(isStopped()));
+
+    interfaces_control_form->Set_In_Firmware_Information(MODEM->getIn_Firmware_Information());
+    interfaces_control_form->setGeometry(current_geometry);
+    this->hide();
+    interfaces_control_form->Set_ConnectionType(Get_ConnectionType());
+    interfaces_control_form->show();
+}
+void Connections_Form::Create_And_Show_PLC_RF_NetSettings_Form(QRect current_geometry){
+    plc_rf_netsettings_form = new PLC_RF_NetSettings_Form;
+
+    connect(this->newPort,          SIGNAL(COM_Error()),                        plc_rf_netsettings_form,SLOT(ForceClose()));
+    connect(this->newTCP,           SIGNAL(TCP_Error()),                        plc_rf_netsettings_form,SLOT(ForceClose()));
+    connect(plc_rf_netsettings_form,SIGNAL(ForcedClosed()),                     this,                   SLOT(show()));
+    connect(plc_rf_netsettings_form,SIGNAL(Get_Geometry(QRect)),                this,                   SLOT(Set_Geometry(QRect)));
+
+    connect(plc_rf_netsettings_form,SIGNAL(Get_Console(QPlainTextEdit*)),       this,                   SLOT(Set_ActiveConsole(QPlainTextEdit*)));
+    connect(plc_rf_netsettings_form,SIGNAL(Cancel(QRect)),                      this,                   SLOT(Define_Pre_Form(QRect)));
+    connect(plc_rf_netsettings_form,SIGNAL(Next(QRect)),                        this,                   SLOT(Define_Next_Form(QRect)));
+
+    connect(plc_rf_netsettings_form,SIGNAL(Settings(QWidget*)),                 this,                   SLOT(Create_And_Show_Settings_Form(QWidget*)));
+    connect(plc_rf_netsettings_form,SIGNAL(Updating(QWidget*)),                 this,                   SLOT(Create_And_Show_Firmware_Updating_Form(QWidget*)));
+
+    connect(plc_rf_netsettings_form,SIGNAL(isCreated()),                        MODEM,                  SLOT(ChangedOut_Retranslator_Properties()));
+    connect(plc_rf_netsettings_form,SIGNAL(isCreated()),                        MODEM,                  SLOT(ChangedIn_Retranslator_Properties()));
+    connect(plc_rf_netsettings_form,SIGNAL(isCreated()),                        MODEM,                  SLOT(ChangedOut_Sniffer_Properties()));
+    connect(plc_rf_netsettings_form,SIGNAL(isCreated()),                        MODEM,                  SLOT(ChangedIn_Sniffer_Properties()));
+    connect(plc_rf_netsettings_form,SIGNAL(isCreated()),                        MODEM,                  SLOT(ChangedOut_PLC_RF433_Modem_Properties()));
+    connect(plc_rf_netsettings_form,SIGNAL(isCreated()),                        MODEM,                  SLOT(ChangedIn_PLC_RF433_Modem_Properties()));
+    connect(MODEM, SIGNAL(sIn_Retranslator_Properties(RetranslatorPropertiesClass*)),  plc_rf_netsettings_form, SLOT(Set_In_Retranslator_Properties(RetranslatorPropertiesClass*)));
+    connect(MODEM, SIGNAL(sOut_Retranslator_Properties(RetranslatorPropertiesClass*)), plc_rf_netsettings_form, SLOT(Set_Out_Retranslator_Properties(RetranslatorPropertiesClass*)));
+    connect(MODEM, SIGNAL(sIn_Sniffer_Properties(SnifferPropertiesClass*)),            plc_rf_netsettings_form, SLOT(Set_In_Sniffer_Properties(SnifferPropertiesClass*)));
+    connect(MODEM, SIGNAL(sOut_Sniffer_Properties(SnifferPropertiesClass*)),           plc_rf_netsettings_form, SLOT(Set_Out_Sniffer_Properties(SnifferPropertiesClass*)));
+    connect(MODEM, SIGNAL(sIn_PLC_RF433_Modem_Properties(PlcRfModemPropertiesClass*)), plc_rf_netsettings_form, SLOT(Set_In_PLC_RF433_Modem_Properties(PlcRfModemPropertiesClass *)));
+    connect(MODEM, SIGNAL(sOut_PLC_RF433_Modem_Properties(PlcRfModemPropertiesClass*)),plc_rf_netsettings_form, SLOT(Set_Out_PLC_RF433_Modem_Properties(PlcRfModemPropertiesClass *)));
+
+    connect(plc_rf_netsettings_form,SIGNAL(StartSendingProcess(uint,uint)),     ConnectHandler,         SLOT(StartSendingProcess(uint,uint)));
+    connect(ConnectHandler,         SIGNAL(isAOPEN()),                          plc_rf_netsettings_form,SLOT(isOPEND()));
+    connect(ConnectHandler,         SIGNAL(isRF_RESET()),                       plc_rf_netsettings_form,SLOT(isRF_Reset()));
+    connect(ConnectHandler,         SIGNAL(isINTERFACES_CONTROL()),             plc_rf_netsettings_form,SLOT(isInterfaces_Control()));
+    connect(ConnectHandler,         SIGNAL(isUPLINK_MODE()),                    plc_rf_netsettings_form,SLOT(isUpLink_Mode()));
+    connect(ConnectHandler,         SIGNAL(isBROADCASTING_MODE()),              plc_rf_netsettings_form,SLOT(isBroadcasting_Mode()));
+    connect(ConnectHandler,         SIGNAL(isCRC_CHECK_MODE()),                 plc_rf_netsettings_form,SLOT(isCRC_Disable_Mode()));
+    connect(ConnectHandler,         SIGNAL(isMASK_DESTINATION()),               plc_rf_netsettings_form,SLOT(isMask_Destination()));
+    connect(ConnectHandler,         SIGNAL(isSWITCH_MODE()),                    plc_rf_netsettings_form,SLOT(isSwitchMode()));
+    connect(ConnectHandler,         SIGNAL(isSWITCH_LEVEL()),                   plc_rf_netsettings_form,SLOT(isSwitchLevel()));
+    connect(ConnectHandler,         SIGNAL(isSWITCH_TIMEOUT()),                 plc_rf_netsettings_form,SLOT(isSwitchTimeout()));
+    connect(ConnectHandler,         SIGNAL(Progress(uint)),                     plc_rf_netsettings_form,SLOT(SetProgress(uint)));
+
+    connect(plc_rf_netsettings_form,SIGNAL(SendSerialNumber(QString,bool)),     DataLogic,              SLOT(setSerialNumberMode(QString,bool)));
+    connect(plc_rf_netsettings_form,SIGNAL(Stop_Send_Data()),                   DataLogic,              SLOT(STOP_SEND_DATA()));
+    connect(DataLogic,              SIGNAL(STOPPED()),                          plc_rf_netsettings_form,SLOT(isStopped()));
+    connect(DataLogic,              SIGNAL(noANSWER()),                         plc_rf_netsettings_form,SLOT(isStopped()));
+
+    plc_rf_netsettings_form->Set_In_Firmware_Information(MODEM->getIn_Firmware_Information());
+    plc_rf_netsettings_form->setGeometry(current_geometry);
+    this->hide();
+    plc_rf_netsettings_form->Set_ConnectionType(Get_ConnectionType());
+    plc_rf_netsettings_form->show();
 }
 
 //+++++++++++++[Процедура вывода данных в консоль]++++++++++++++++++++++++++++++++++++++++

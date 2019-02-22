@@ -68,7 +68,7 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
 
     // Информация об устройстве
     FirmwareInformationClass* In_Firmware_Information = MODEM->getIn_Firmware_Information();
-
+    Interfaces_Control_Type   In_Interfaces_Control = MODEM->getIn_PLC_RF433_Modem_Properties()->getPLC_RF433_Interfaces_Control();
     uint ModuleChoice = EnableModuleChoiceMode(In_Firmware_Information);
     if (ModuleChoice != NONE){
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = ModuleChoice; // выбор модуля
@@ -80,6 +80,14 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         emit SendLog(QString::fromUtf8(">> ======= Подключение к устройству\r"),NONE);
         // Формируем очередь команд
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_AOPEN;   // запрос версии ПО
+        break;
+    }
+    case SEND_READ_INTERFACES_CONTROL:
+    {
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Считываем состояние интерфейсов\r"),NONE);
+        // Формируем очередь команд
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_INTERFACES_CONTROL;
         break;
     }
     case SEND_READ_ALL_DATA:{
@@ -109,8 +117,8 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_CALIBPROPS_FROM_FLASH;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00_CALIB;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00_CALIB;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_MODE;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_LEVEL;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_TIMEOUT;
@@ -118,17 +126,29 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_TX_TIMEOUT;
         }
         else if (In_Firmware_Information->getDevice_Name().compare(RF_PLC_MODEM) == 0){
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_PROPERTYS_FROM_FLASH;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_CALIBPROPS_FROM_FLASH;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_MODE;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_LAST_AOPEN_TIME;
+            // Если PLC интерфейс включён
+            if (In_Interfaces_Control.Field.PLC_EN != 0){
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_ST750_PARAMETERS;
+            }
+            // Если RF интерфейс включён
+            if (In_Interfaces_Control.Field.RF_EN != 0){
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_PROPERTYS_FROM_FLASH;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_CALIBPROPS_FROM_FLASH;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00_CALIB;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00_CALIB;
+            }
+            // Если RS интерфейс включён
+            if (In_Interfaces_Control.Field.RS_EN != 0){
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_DEBUG_CONTROL;
+            }
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_LEVEL;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_TIMEOUT;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_RX_TIMEOUT;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_TX_TIMEOUT;
+            //ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_RX_TIMEOUT;
+            //ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_TX_TIMEOUT;
+            //ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_TABLE_ELEMENT;
         }
         else if (In_Firmware_Information->getDevice_Name().compare(RF_SNIFFER_SI4432) == 0){
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SI4432_PARAMETERS;
@@ -152,24 +172,39 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_CALIBPROPS_FROM_FLASH;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00_CALIB;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00_CALIB;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_LEVEL;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_RX_TIMEOUT;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_TX_TIMEOUT;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_TABLE_ELEMENT;
         }
         else if (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0){
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_PROPERTYS_FROM_FLASH;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_CALIBPROPS_FROM_FLASH;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_LEVEL;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_RX_TIMEOUT;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_TX_TIMEOUT;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_TABLE_ELEMENT;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_LAST_AOPEN_TIME;
+            // Если PLC интерфейс включён
+            if (In_Interfaces_Control.Field.PLC_EN != 0){
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_ST750_PARAMETERS;
+            }
+            // Если RF интерфейс включён
+            if (In_Interfaces_Control.Field.RF_EN != 0){
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_PROPERTYS_FROM_FLASH;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_CALIBPROPS_FROM_FLASH;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00_CALIB;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00_CALIB;
+            }
+            // Если RS интерфейс включён
+            if (In_Interfaces_Control.Field.RS_EN != 0){
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_DEBUG_CONTROL;
+            }
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_MASK_DESTINATION;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_UPLINK_MODE;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_CRC_CHECK_MODE;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_BROADCASTING_MODE;
+            //ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_RX_TIMEOUT;
+            //ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_TX_TIMEOUT;
+            //ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_TABLE_ELEMENT;
         }
         else if (In_Firmware_Information->getDevice_Name().compare(TERMINAL) == 0){
 
@@ -177,7 +212,15 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         else if (In_Firmware_Information->getDevice_Name().compare(GSM_MODEM) == 0){
 
         }
-
+        break;
+    }
+    case SEND_WRITE_INTERFACES_CONTROL:
+    {
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Считываем состояние интерфейсов\r"),NONE);
+        // Формируем очередь команд
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_INTERFACES_CONTROL;
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_INTERFACES_CONTROL;
         break;
     }
     case SEND_WRITE_SWITCH_MODE:{
@@ -237,15 +280,15 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_AF_00_AC_00;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_8B_21_88_00;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_LOAD_PROPERTYS_TO_FLASH;
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_AF_00_AC_00;
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_8B_21_88_00;
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_AF_00_AC_00_CALIB;
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_8B_21_88_00_CALIB;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_LOAD_CALIBPROPS_TO_FLASH;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_PROPERTYS_FROM_FLASH;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_CALIBPROPS_FROM_FLASH;
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00_CALIB;
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00_CALIB;
         break;
     }
     case SEND_WRITE_ST750_PARAMETERS:{
@@ -384,124 +427,165 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
 
 void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode)
 {
-    emit Progress(100);
+    // Информация об устройстве
+    FirmwareInformationClass* In_Firmware_Information = MODEM->getIn_Firmware_Information();
+
     switch (SelectComandQueue)
     {
     case SEND_AOPEN:{
          // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Устройство определено\r"),NONE);
+        if ((In_Firmware_Information->getDevice_Name().compare(RF_PLC_MODEM) == 0) ||
+            (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0)){
+            StartSendingProcess(SEND_READ_INTERFACES_CONTROL, SendMode);
+        }
+        else{
+            StartSendingProcess(SEND_READ_ALL_DATA, SendMode);
+        }
+        break;
+    }
+    case SEND_READ_INTERFACES_CONTROL:{
+        emit SendLog(QString::fromUtf8(">> ======= Состояние интерфейсов считано успешно\r"),NONE);
         StartSendingProcess(SEND_READ_ALL_DATA, SendMode);
         break;
     }
     case SEND_READ_ALL_DATA:{
+        emit Progress(100);
          // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Чтение параметров завершено успешно\r"),NONE);
         emit isAOPEN();
         break;
     }
+    case SEND_WRITE_INTERFACES_CONTROL:
+    {
+        emit Progress(100);
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись интерфейсов прошла успешно\r"),NONE);
+        // Формируем очередь команд
+        emit isINTERFACES_CONTROL();
+        break;
+    }
     case SEND_WRITE_SWITCH_MODE:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись режима ретрансляции прошла успешно\r"),NONE);
         emit isSWITCH_MODE();
         break;
     }
     case SEND_WRITE_SWITCH_LEVEL:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись маски сети прошла успешно\r"),NONE);
         emit isSWITCH_LEVEL();
         break;
     }
     case SEND_WRITE_SWITCH_TIMEOUT:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись таймаута ретрасляции прошла успешно\r"),NONE);
         emit isSWITCH_TIMEOUT();
         break;
     }
     case SEND_READ_LRSSI_AFC:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Чтение уровня сигнала RSSI завершено успешно\r"),NONE);
         emit isLRSSI_AFC();
         break;
     }
     case SEND_WRITE_SI4432_PARAMETERS:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись RF-настроек прошла успешно\\r"),NONE);
         emit isRFSI4432_PARAMETERS();
         break;
     }
     case SEND_WRITE_RFSI4463_PARAMETERS:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись RF-настроек прошла успешно\r"),NONE);
         emit isRFSI4463_PARAMETERS();
         break;
     }
     case SEND_WRITE_ST750_PARAMETERS:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись PLC-настроек прошла успешно\r"),NONE);
         emit isPLCST750_PARAMETERS();
         break;
     }
     case SEND_RF_RESET:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Сброс выполнен\r"),NONE);
         emit isRF_RESET();
         break;
     }
     case SEND_WRITE_SNIFER_MODE:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись режима прошла успешно\r"),NONE);
         emit isSNIFER_MODE();
         break;
     }
     case SEND_WRITE_UPLINK_MODE:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись бита направления Up_Link прошла успешно\r"),NONE);
         emit isUPLINK_MODE();
         break;
     }
     case SEND_WRITE_CRC_CHECK_MODE:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись режима проверки CRC прошла успешно\r"),NONE);
         emit isCRC_CHECK_MODE();
         break;
     }
     case SEND_WRITE_BROADCASTING_MODE:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись режима широковещания прошла успешно\r"),NONE);
         emit isBROADCASTING_MODE();
         break;
     }
     case SEND_WRITE_MASK_DESTINATION:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись маски прошла успешно\r"),NONE);
         emit isMASK_DESTINATION();
         break;
     }
     case SEND_WRITE_SWITCH_TABLE_ELEMENT:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись таблицы ретрансляции прошла успешно\r"),NONE);
         emit isSWITCH_TABLE();
         break;
     }
     case SEND_READ_SWITCH_TABLE_ELEMENT:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Чтение таблицы ретрансляции завершено успешно\r"),NONE);
         emit isSWITCH_TABLE();
         break;
     }
     case SEND_DELET_SWITCH_TABLE:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Удаление таблицы ретрансляции завершено успешно\r"),NONE);
         emit isDELET_SWITCH_TABLE();
         break;
     }
     case UPDATE_HANDLING:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Обновление ПО прошло успешно\r"),NONE);
         emit isUPDATED();
         break;
     }
     case DELETE_HANDLING:{
+        emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Удаление ПО прошло успешно\r"),NONE);
         emit isDELETED();

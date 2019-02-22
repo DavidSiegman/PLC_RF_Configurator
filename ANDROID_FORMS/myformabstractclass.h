@@ -3,10 +3,15 @@
 
 #include <QObject>
 #include <QWidget>
-#include <QIcon>
+#include <QScreen>
+#include <QScrollBar>
+#include <QSettings>
 #include <QPlainTextEdit>
+#include <QIcon>
 #include <OTHER_FUNCTIONS/mess_enum.h>
 #include "MODEM/firmwareinformationclass.h"
+#include "RESIZE_CALCULATING/resizecalculating.h"
+#include "STYLE/style.h"
 
 class myFormAbstractClass : public QWidget
 {

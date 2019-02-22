@@ -7,16 +7,19 @@ MODEMClass::MODEMClass(Ui::MainWindow *ui, QObject *parent) : QObject(parent)
 
 MODEMClass::MODEMClass(QObject *parent)
 {
-    In_Firmware_Information     = new FirmwareInformationClass();
+    In_Firmware_Information        = new FirmwareInformationClass();
 
-    In_Retranslator_Properties  = new RetranslatorPropertiesClass();
-    Out_Retranslator_Properties = new RetranslatorPropertiesClass();
+    In_Retranslator_Properties     = new RetranslatorPropertiesClass();
+    Out_Retranslator_Properties    = new RetranslatorPropertiesClass();
 
-    In_Sniffer_Properties       = new SnifferPropertiesClass();
-    Out_Sniffer_Properties      = new SnifferPropertiesClass();
+    In_Sniffer_Properties          = new SnifferPropertiesClass();
+    Out_Sniffer_Properties         = new SnifferPropertiesClass();
 
-    In_Modem_Properties         = new ModemPropertiesClass();
-    Out_Modem_Properties        = new ModemPropertiesClass();
+    In_Modem_Properties            = new ModemPropertiesClass();
+    Out_Modem_Properties           = new ModemPropertiesClass();
+
+    In_PLC_RF433_Modem_Properties  = new PlcRfModemPropertiesClass();
+    Out_PLC_RF433_Modem_Properties = new PlcRfModemPropertiesClass();
 }
 FirmwareInformationClass* MODEMClass::getIn_Firmware_Information(void){
     return this->In_Firmware_Information;
@@ -60,6 +63,19 @@ ModemPropertiesClass*         MODEMClass::getOut_Modem_Properties(void){
 void                          MODEMClass::ChangedOut_Modem_Properties(void){
     emit sOut_Modem_Properties(this->Out_Modem_Properties);
 }
+PlcRfModemPropertiesClass*    MODEMClass::getIn_PLC_RF433_Modem_Properties(void){
+    return this->In_PLC_RF433_Modem_Properties;
+}
+void                          MODEMClass::ChangedIn_PLC_RF433_Modem_Properties(void){
+    emit sIn_PLC_RF433_Modem_Properties(this->In_PLC_RF433_Modem_Properties);
+}
+PlcRfModemPropertiesClass*    MODEMClass::getOut_PLC_RF433_Modem_Properties(void){
+    return this->Out_PLC_RF433_Modem_Properties;
+}
+void                          MODEMClass::ChangedOut_PLC_RF433_Modem_Properties(void){
+    emit sOut_PLC_RF433_Modem_Properties(this->Out_PLC_RF433_Modem_Properties);
+}
+
 void                          MODEMClass::ClearAllData(){
     In_Firmware_Information->Clear_Data();
 
@@ -71,6 +87,9 @@ void                          MODEMClass::ClearAllData(){
 
     In_Modem_Properties->Clear_Data();
     Out_Modem_Properties->Clear_Data();
+
+    In_PLC_RF433_Modem_Properties->Clear_Data();
+    Out_PLC_RF433_Modem_Properties->Clear_Data();
 }
 
 

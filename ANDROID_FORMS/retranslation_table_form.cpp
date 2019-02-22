@@ -13,20 +13,21 @@ Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->Add_NetItem->setStyleSheet(Basic_Buttons_Style);
-    ui->Del_NetItem->setStyleSheet(Basic_Buttons_Style);
-    ui->Read_NetTable->setStyleSheet(Basic_Buttons_Style);
-    ui->None->setStyleSheet(Basic_Buttons_Style);
-    ui->Del_NetTable->setStyleSheet(Basic_Buttons_Style);
-    ui->Write->setStyleSheet(Basic_Buttons_Style);
-    ui->Stop->setStyleSheet(Basic_Buttons_Style);
-    ui->Reset->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->Add_NetItem->setStyleSheet(Basic_PushButtons_Style);
+    ui->Del_NetItem->setStyleSheet(Basic_PushButtons_Style);
+    ui->Read_NetTable->setStyleSheet(Basic_PushButtons_Style);
+    ui->None->setStyleSheet(Basic_PushButtons_Style);
+    ui->Del_NetTable->setStyleSheet(Basic_PushButtons_Style);
+    ui->Write->setStyleSheet(Basic_PushButtons_Style);
+    ui->Stop->setStyleSheet(Basic_PushButtons_Style);
+    ui->Reset->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
     ui->Next->setEnabled(false);
 
     model = new QStandardItemModel;
@@ -38,6 +39,7 @@ Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
     connect(model,             SIGNAL(itemChanged(QStandardItem*)), this,           SLOT(ModelItemChanged(QStandardItem*)));
 }
 Retranslation_Table_Form::~Retranslation_Table_Form(){
+    emit Get_Console(NULL);
     delete ui;
 }
 
@@ -144,6 +146,8 @@ void Retranslation_Table_Form::resizeEvent(QResizeEvent *event)
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
+    emit Get_Console(ui->console);
 }
 
 void Retranslation_Table_Form::Set_In_Retranslator_Properties (RetranslatorPropertiesClass* new_data)

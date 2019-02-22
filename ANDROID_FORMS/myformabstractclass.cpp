@@ -20,6 +20,7 @@ void myFormAbstractClass::Set_Geometry(QRect new_value){
 void myFormAbstractClass::ForceCloseHandler(void){
     emit Stop_Send_Data();
     emit Get_Geometry(this->geometry());
+    //emit Get_Console(NULL);
     emit ForcedClosed();
     this->deleteLater();
 }
@@ -34,11 +35,11 @@ void myFormAbstractClass::Reset_ClickHandler(void){
 }
 void myFormAbstractClass::Back_ClickHandler(void){
     emit Stop_Send_Data();
-    emit Get_Console(NULL);
+    //emit Get_Console(NULL);
 }
 void myFormAbstractClass::Next_ClickHandler(void){
     emit Stop_Send_Data();
-    emit Get_Console(NULL);
+    //emit Get_Console(NULL);
     emit Next(this->geometry());
 }
 void myFormAbstractClass::Setting_ClickHandler(void){

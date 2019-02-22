@@ -13,16 +13,17 @@ Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->OpenBin->setStyleSheet(Basic_Buttons_Style);
-    ui->UpdateStart->setStyleSheet(Basic_Buttons_Style);
-    ui->Stop->setStyleSheet(Basic_Buttons_Style);
-    ui->Clear->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->OpenBin->setStyleSheet(Basic_PushButtons_Style);
+    ui->UpdateStart->setStyleSheet(Basic_PushButtons_Style);
+    ui->Stop->setStyleSheet(Basic_PushButtons_Style);
+    ui->Clear->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
 
     ui->PatchBin->setStyleSheet(Work_Area_Style + Text_Green);
 
@@ -49,6 +50,7 @@ Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
 }
 
 Firmware_Updating_Form::~Firmware_Updating_Form(){
+    emit Get_Console(NULL);
     delete ui;
 }
 void Firmware_Updating_Form::on_Back_clicked(){
@@ -133,6 +135,8 @@ void Firmware_Updating_Form::resizeEvent(QResizeEvent *event){
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
+    emit Get_Console(ui->console);
 }
 
 void Firmware_Updating_Form::Set_In_Firmware_Information(FirmwareInformationClass *FirmwareInformation){

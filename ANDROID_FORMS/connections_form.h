@@ -48,11 +48,13 @@
 #include "si4463_registers_form.h"
 #include "rssimonitor_form.h"
 #include "about_form.h"
+#include "interfaces_control_form.h"
+#include "plc_rf_netsettings_form.h"
 
 /* Defining */
 #define ORGANIZATION_NAME   "MILANDR"
 #define ORGANIZATION_DOMAIN "www.milandr.ru"
-#define APPLICATION_NAME    "Конфигуратор PLC/RF"
+#define APPLICATION_NAME    "Конфигуратор PLC_RF"
 
 #define TCP_SETTINGS_IP     "TCP_Settings/IP"
 #define TCP_SETTINGS_PORT   "TCP_Settings/PORT"
@@ -106,6 +108,8 @@ private slots:
     void Create_And_Show_SI4432_Settings_Form(QRect);
     void Create_And_Show_SI4463_Settings_Form(QRect);
     void Create_And_Show_PLC_Settings_Form(QRect);
+    void Create_And_Show_Interfaces_Control_Form(QRect);
+    void Create_And_Show_PLC_RF_NetSettings_Form(QRect);
 
     void Create_And_Show_Hands_Enter_Form(QWidget*);
     void Create_And_Show_Settings_Form(QWidget*);
@@ -156,6 +160,8 @@ private:
     RSSIMonitor_Form         *rssimonitor_form;
     PLC_Settings_Form        *plc_settings_form;
     About_Form               *about_form;
+    Interfaces_Control_Form  *interfaces_control_form;
+    PLC_RF_NetSettings_Form  *plc_rf_netsettings_form;
 
     QSysInfo                 *SysInfo;
     QRegExp                   RegSystemName;

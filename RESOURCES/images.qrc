@@ -7,5 +7,14 @@
         <file>images/Settings.png</file>
         <file>images/Settings_2.png</file>
         <file>images/AppIcon.ico</file>
+        <file>images/left_green.png</file>
+        <file>images/left_red.png</file>
+        <file>images/right_green.png</file>
+        <file>images/right_red.png</file>
+        <file>images/down_green.png</file>
+        <file>images/down_red.png</file>
+        <file>images/up_green.png</file>
+        <file>images/up_red.png</file>
+        <file>images/up_blue.png</file>
     </qresource>
 </RCC>

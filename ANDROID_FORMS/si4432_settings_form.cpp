@@ -13,15 +13,16 @@ SI4432_Settings_Form::SI4432_Settings_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->Write->setStyleSheet(Basic_Buttons_Style);
-    ui->Stop->setStyleSheet(Basic_Buttons_Style);
-    ui->Reset->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->Write->setStyleSheet(Basic_PushButtons_Style);
+    ui->Stop->setStyleSheet(Basic_PushButtons_Style);
+    ui->Reset->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
     ui->Next->setEnabled(false);
 
     ui->MT->setStyleSheet(Background_White);       ui->PA->setStyleSheet(Background_White);       ui->DR->setStyleSheet(Background_White);
@@ -37,6 +38,7 @@ SI4432_Settings_Form::SI4432_Settings_Form(QWidget *parent) :
 }
 
 SI4432_Settings_Form::~SI4432_Settings_Form(){
+    emit Get_Console(NULL);
     delete ui;
 }
 void SI4432_Settings_Form::on_Back_clicked(){
@@ -258,6 +260,7 @@ void SI4432_Settings_Form::resizeEvent(QResizeEvent *event){
     }
     ui->FCAR->setCurrentIndex(current_index);
     DeviceVersionHandling();
+    emit Get_Console(ui->console);
     this->Set_resizing_going(0);
 }
 void SI4432_Settings_Form::DeviceVersionHandling(void){
@@ -320,6 +323,65 @@ void SI4432_Settings_Form::setIn_SI4432_Parameters(SI4432ConfigurationClass* new
     Out_SI4432_Parameters->setRF_Config_struct(In_SI4432_Parameters->getRF_Config_struct());
 }
 
+void SI4432_Settings_Form::on_Write_clicked()
+{
+    emit Get_Console(ui->console);
+
+    ui->Stop->setEnabled(true);
+    ui->Write->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->SettingsWidget->setEnabled(false);
+
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+
+    emit StartSendingProcess(SEND_WRITE_SI4432_PARAMETERS,CONFIG_SEND_CONTROL);
+}
+
+void SI4432_Settings_Form::isSI4432_Parameters(void)
+{
+    In_SI4432_Parameters->calcSI4432_CLOAD();
+    In_SI4432_Parameters->calcSI4432_Rb();
+    //In_SI4432_Parameters->calcSI4432_IFBW();
+    In_SI4432_Parameters->calcSI4432_IFBW_bits();
+    In_SI4432_Parameters->calcSI4432_RXOSR();  // !!! без манчестерского кода !!!
+    In_SI4432_Parameters->calcSI4432_NCOFF();  // !!! без манчестерского кода !!!
+    In_SI4432_Parameters->calcSI4432_CRGAIN(); // !!! без манчестерского кода !!!
+
+    setMTToUI(In_SI4432_Parameters->getSI4432_MT());
+    setPAToUI(In_SI4432_Parameters->getSI4432_PA());
+    setDIV_DRToUI(In_SI4432_Parameters->getSI4432_DivDR());
+    setDRToUI(In_SI4432_Parameters->getSI4432_TXDR());
+    setHBToUI(In_SI4432_Parameters->getSI4432_hb());
+    setFCToUI(In_SI4432_Parameters->getSI4432_FC());
+    setFNOMToUI(In_SI4432_Parameters->getSI4432_NFREQ());
+    setFOFFToUI(In_SI4432_Parameters->getSI4432_Fo());
+    setDVToUI(In_SI4432_Parameters->getSI4432_Fd());
+    setIFBWToUI(In_SI4432_Parameters->getSI4432_IFBW());
+    setSNW_NToUI(In_SI4432_Parameters->getSI4432_SWC());
+    setHEAD_NToUI(In_SI4432_Parameters->getSI4432_HC());
+    setSNWToUI(In_SI4432_Parameters->getSYNCH_WORD());
+    setHEAD_TXToUI(In_SI4432_Parameters->getTX_HAEDER());
+    setHEAD_RXToUI(In_SI4432_Parameters->getRX_HAEDER());
+
+    setCLOADToUI(In_SI4432_Parameters->getSI4432_CLOAD());
+    setCLOAD_PFToUI(In_SI4432_Parameters->getCOscill_CLoad());
+
+    setRXOSRToUI(In_SI4432_Parameters->getRXOSR());
+    setNCOFFToUI(In_SI4432_Parameters->getNCOFF());
+    setCRGAINToUI(In_SI4432_Parameters->getCRGAIN());
+    setNdecToUI(In_SI4432_Parameters->getndec());
+    setDwn3ToUI(In_SI4432_Parameters->getdwn3());
+    setFilsetToUI(In_SI4432_Parameters->getfilset());
+
+    ui->Stop->setEnabled(false);
+    ui->Write->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->SettingsWidget->setEnabled(true);
+
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+}
 void SI4432_Settings_Form::on_MT_currentIndexChanged(int index)
 {
     if ((index >= 0)&&(index < 2)&&(this->Get_resizing_going() == 0))
@@ -991,64 +1053,3 @@ void SI4432_Settings_Form::setFilsetToUI(unsigned char new_value)
 {
     ui->filset->setText(QString::number(new_value));
 }
-
-void SI4432_Settings_Form::on_Write_clicked()
-{
-    emit Get_Console(ui->console);
-
-    ui->Stop->setEnabled(true);
-    ui->Write->setEnabled(false);
-    ui->Reset->setEnabled(false);
-    ui->SettingsWidget->setEnabled(false);
-
-    ui->Back->setEnabled(false);
-    ui->btnSettings->setEnabled(false);
-
-    emit StartSendingProcess(SEND_WRITE_SI4432_PARAMETERS,CONFIG_SEND_CONTROL);
-}
-
-void SI4432_Settings_Form::isSI4432_Parameters(void)
-{
-    In_SI4432_Parameters->calcSI4432_CLOAD();
-    In_SI4432_Parameters->calcSI4432_Rb();
-    //In_SI4432_Parameters->calcSI4432_IFBW();
-    In_SI4432_Parameters->calcSI4432_IFBW_bits();
-    In_SI4432_Parameters->calcSI4432_RXOSR();  // !!! без манчестерского кода !!!
-    In_SI4432_Parameters->calcSI4432_NCOFF();  // !!! без манчестерского кода !!!
-    In_SI4432_Parameters->calcSI4432_CRGAIN(); // !!! без манчестерского кода !!!
-
-    setMTToUI(In_SI4432_Parameters->getSI4432_MT());
-    setPAToUI(In_SI4432_Parameters->getSI4432_PA());
-    setDIV_DRToUI(In_SI4432_Parameters->getSI4432_DivDR());
-    setDRToUI(In_SI4432_Parameters->getSI4432_TXDR());
-    setHBToUI(In_SI4432_Parameters->getSI4432_hb());
-    setFCToUI(In_SI4432_Parameters->getSI4432_FC());
-    setFNOMToUI(In_SI4432_Parameters->getSI4432_NFREQ());
-    setFOFFToUI(In_SI4432_Parameters->getSI4432_Fo());
-    setDVToUI(In_SI4432_Parameters->getSI4432_Fd());
-    setIFBWToUI(In_SI4432_Parameters->getSI4432_IFBW());
-    setSNW_NToUI(In_SI4432_Parameters->getSI4432_SWC());
-    setHEAD_NToUI(In_SI4432_Parameters->getSI4432_HC());
-    setSNWToUI(In_SI4432_Parameters->getSYNCH_WORD());
-    setHEAD_TXToUI(In_SI4432_Parameters->getTX_HAEDER());
-    setHEAD_RXToUI(In_SI4432_Parameters->getRX_HAEDER());
-
-    setCLOADToUI(In_SI4432_Parameters->getSI4432_CLOAD());
-    setCLOAD_PFToUI(In_SI4432_Parameters->getCOscill_CLoad());
-
-    setRXOSRToUI(In_SI4432_Parameters->getRXOSR());
-    setNCOFFToUI(In_SI4432_Parameters->getNCOFF());
-    setCRGAINToUI(In_SI4432_Parameters->getCRGAIN());
-    setNdecToUI(In_SI4432_Parameters->getndec());
-    setDwn3ToUI(In_SI4432_Parameters->getdwn3());
-    setFilsetToUI(In_SI4432_Parameters->getfilset());
-
-    ui->Stop->setEnabled(false);
-    ui->Write->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->SettingsWidget->setEnabled(true);
-
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-}
-

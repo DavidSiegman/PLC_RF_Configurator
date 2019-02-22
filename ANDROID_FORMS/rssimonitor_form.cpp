@@ -16,16 +16,17 @@ RSSIMonitor_Form::RSSIMonitor_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->readLatchRSSI->setStyleSheet(Basic_Buttons_Style);
-    ui->MonitorStart->setStyleSheet(Basic_Buttons_Style);
-    ui->Stop->setStyleSheet(Basic_Buttons_Style);
-    ui->Reset->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->readLatchRSSI->setStyleSheet(Basic_PushButtons_Style);
+    ui->MonitorStart->setStyleSheet(Basic_PushButtons_Style);
+    ui->Stop->setStyleSheet(Basic_PushButtons_Style);
+    ui->Reset->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
 
     ui->Interface->setStyleSheet(Background_White);
     ui->ModuleType->setStyleSheet(Background_White);
@@ -83,6 +84,7 @@ RSSIMonitor_Form::RSSIMonitor_Form(QWidget *parent) :
 
 RSSIMonitor_Form::~RSSIMonitor_Form()
 {
+    emit Get_Console(NULL);
     delete ui;
 }
 void RSSIMonitor_Form::on_Back_clicked(){
@@ -276,6 +278,7 @@ void RSSIMonitor_Form::resizeEvent(QResizeEvent *event)
     pRSSI->removePolygon(scene);
     pRSSI->drawPolygon(&pfRSSI, scene);
 
+    emit Get_Console(ui->console);
     this->Set_resizing_going(0);
 }
 

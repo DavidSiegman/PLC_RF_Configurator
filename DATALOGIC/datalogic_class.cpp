@@ -178,6 +178,8 @@ void DataLogic_Class::ComandHandling(uint SendComand, uint SendMode)
 
     ModemPropertiesClass*        Out_Modem_Properties = MODEM->getOut_Modem_Properties();
 
+    PlcRfModemPropertiesClass*   Out_PLC_RF433_Modem_Properties = MODEM->getOut_PLC_RF433_Modem_Properties();
+
     QByteArray data;
     data.append((char)(0xFF));
     data.append((char)(0xFF));
@@ -190,314 +192,22 @@ void DataLogic_Class::ComandHandling(uint SendComand, uint SendMode)
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
-    case SEND_RF_RESET:{
-        int u[2] = {0xE4,0x00};length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_SWITCH_MODE:{
-        int u[2] = {0xF0,0x00};length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_SWITCH_MODE:{
-        uchar Retranslator_Mode = Out_Retranslator_Properties->getRetranslator_Mode();
-        int u[10] = {0xEF,0x07,Retranslator_Mode,0xE0,0x96,0xF8,0xA5,0xC9,0xDC,0x0C}; length = 10;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_LRSSI_AFC:{
-        int u[2] = {0xE5,0x00}; length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        emit RSSI_RequestSended();
-        break;
-    }
-    case SEND_READ_SWITCH_TIMEOUT:{
-        int u[3] = {0xE3,0x01,0x00};length = 3;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_RELOAD_DEVICE:{
-        uint Reset_Device_Timeout = Out_Modem_Properties->getReset_Device_Timeout();
-        if (Reset_Device_Timeout == 0){
-            int u[3] = {0xE4,0x00};length = 2;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        }
-        else{
-            int u[6] = {0xE4,0x04,((int)(Reset_Device_Timeout >> 0)  & 0xFF),((int)(Reset_Device_Timeout >> 8) & 0xFF),
-                                  ((int)(Reset_Device_Timeout >> 16) & 0xFF),((int)(Reset_Device_Timeout >> 24) & 0xFF)};length = 6;
-            for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        }
-        break;
-    }
-    case SEND_WRITE_SWITCH_TIMEOUT:{
-        uint Retranslator_Timeout = Out_Retranslator_Properties->getRetranslator_Timeout();
-        int u[6] = {0xE3,0x04,((int)(Retranslator_Timeout >> 0)  & 0xFF),((int)(Retranslator_Timeout >> 8) & 0xFF),
-                              ((int)(Retranslator_Timeout >> 16) & 0xFF),((int)(Retranslator_Timeout >> 24) & 0xFF)};length = 6;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_RX_TIMEOUT:{
-        int u[3] = {0xE2,0x01,0x00};length = 3;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_TX_TIMEOUT:{
-        int u[3] = {0xE1,0x01,0x00}; length = 3;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_SWITCH_LEVEL:{
-        int u[3] = {0xE0,0x01,0x00};length = 3;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_SWITCH_LEVEL:{
-        int Retranslator_Level = Out_Retranslator_Properties->getRetranslator_Level();
-        int u[6] = {0xE0,0x04,
-                    ((Retranslator_Level >> 0)  & 0xFF),
-                    ((Retranslator_Level >> 8)  & 0xFF),
-                    ((Retranslator_Level >> 16) & 0xFF),
-                    ((Retranslator_Level >> 24) & 0xFF)};
-        length = 6;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_BF_03_00_AC_00:{
-        int u[5] = {0xBF,0x03,0x00,0xAC,0x00};length = 5;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_BF_03_21_88_00:{
-        int u[5] = {0xBF,0x03,0x21,0x88,0x00};length = 5;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_BF_AF_00_AC_00:{
-        int u[5] = {0xBF,0xAF,0x00,0xAC,0x00};length = 5;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        for(int i = 0; i < 0xAC; i++)
-        {
-            data.append(SI4463Conf->aSI4463_GET_PROPERTYS(0x00, 0x00, i, CurrentSI4463_PROPERTYS_structur));
-        }
-        break;
-    }
-    case SEND_BF_8B_21_88_00:{
-        int u[5] = {0xBF,0x8B,0x21,0x88,0x00};length = 5;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        for(int i = 0; i < 0x88; i++)
-        {
-            data.append(SI4463Conf->aSI4463_GET_PROPERTYS(0x21, 0x00, i, CurrentSI4463_PROPERTYS_structur));
-        }
-        break;
-    }
-    case SEND_READ_LRSSI_AFC_CURRENT:{
-        int u[2] = {0xBB,0x00}; length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_LOAD_PROPERTYS_TO_FLASH:{
-        int u[18] = {0xBE,0x10,'L','o','a','d','P','r','o','p','s','T','o','F','l','a','s','h'}; length = 18;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_PROPERTYS_FROM_FLASH:{
-        int u[20] = {0xBE,0x12,'R','e','a','d','P','r','o','p','s','F','r','o','m','F','l','a','s','h'}; length = 20;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_LOAD_CALIBPROPS_TO_FLASH:{
-        int u[18] = {0xBE,0x10,'L','o','a','d','C','a','l','P','r','T','o','F','l','a','s','h'}; length = 18;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_CALIBPROPS_FROM_FLASH:{
-        int u[20] = {0xBE,0x12,'R','e','a','d','C','a','l','P','r','F','r','o','m','F','l','a','s','h'}; length = 20;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_SNIFER_MODE:{
-        int u[2] = {0xD9,0x00}; length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_SNIFER_MODE:{
-        uchar Sniffer_Mode = Out_Sniffer_Properties->getSniffer_Mode();
-        int u[3] = {0xD9,0x01,(int)(Sniffer_Mode)}; length = 3;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_UPLINK_MODE:{
-        int u[2] = {0xDA,0x00}; length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_UPLINK_MODE:{
-        uchar UpLink_Value = Out_Sniffer_Properties->getUpLink_Value();
-        int u[3] = {0xDA,0x01,(int)(UpLink_Value)}; length = 3;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_CRC_CHECK_MODE:{
-        int u[2] = {0xBC,0x00}; length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_CRC_CHECK_MODE:{
-        uchar CRC_Check_Disable = Out_Sniffer_Properties->getCRC_Check_Disable();
-        int u[3] = {0xBC,0x01,(int)(CRC_Check_Disable)}; length = 3;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_BROADCASTING_MODE:{
-        int u[2] = {0xBC,0x00}; length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_BROADCASTING_MODE:{
-        uchar Broadcasting = Out_Sniffer_Properties->getBroadcasting();
-        int u[3] = {0xD8,0x01,(int)(Broadcasting)}; length = 3;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_SWITCH_TABLE_ELEMENT:{
-        //QList<QString> Retranslation_Table = MODEM->getOut_Retranslator_Properties()->getRetranslator_Table();
-        int u[3] = {0xEB,0x01,(int)(MODEM->getIn_Retranslator_Properties()->getRetranslator_Table().length())}; length = 3;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_DELET_SWITCH_TABLE:{
-        int u[9] = {0xE9,0x07,0x5A,0xCD,0x8F,0x9C,0xC0,0x0E,0x69}; length = 9;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_SWITCH_TABLE_ELEMENT:{
-        QList<QString> Retranslation_Table = Out_Retranslator_Properties->getRetranslator_Table();
-        uint switchelement = Retranslation_Table.at(Out_Retranslator_Properties->getRetranslator_Table_Current_Index()).toInt();
-        int u[14] = {0xEA,0x0C,(int)(Out_Retranslator_Properties->getRetranslator_Table_Current_Index()),
-                               (int)(switchelement >> 0) &0xFF,
-                               (int)(switchelement >> 8) &0xFF,
-                               (int)(switchelement >> 16)&0xFF,
-                               (int)(switchelement >> 24)&0xFF,
-                     0xF8,0xC9,0xDC,0xA5,0x96,0xE0,0x0C}; length = 14;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-
-        break;
-    }
-    case SEND_LOAD_SWITCH_TABLE_TO_FLASH:{
-        int u[9] = {0xE8,0x07,0xCD,0xA5,0xC9,0xF8,0xE0,0xC0,0x96}; length = 9;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_SI4432_PARAMETERS:{
-        int u[2] = {0xE6,0x00}; length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_SI4432_PARAMETERS:{
-        RF_Config_struct RF_Config = SI4432Conf->getOut_SI4432_RF_Config()->getRF_Config_struct();
-        int u[26] = {0xE7,0x18,
-                    (int)(RF_Config.RF_CONF_REG_1.reg >> 0) &0xFF,
-                    (int)(RF_Config.RF_CONF_REG_1.reg >> 8) &0xFF,
-                    (int)(RF_Config.RF_CONF_REG_1.reg >> 16)&0xFF,
-                    (int)(RF_Config.RF_CONF_REG_1.reg >> 24)&0xFF,
-                    (int)(RF_Config.RF_CONF_REG_2.reg >> 0) &0xFF,
-                    (int)(RF_Config.RF_CONF_REG_2.reg >> 8) &0xFF,
-                    (int)(RF_Config.RF_CONF_REG_2.reg >> 16)&0xFF,
-                    (int)(RF_Config.RF_CONF_REG_2.reg >> 24)&0xFF,
-                    (int)(RF_Config.RF_NOM_FREQUENC >> 0)   &0xFF,
-                    (int)(RF_Config.RF_NOM_FREQUENC >> 8)   &0xFF,
-                    (int)(RF_Config.RF_NOM_FREQUENC >> 16)  &0xFF,
-                    (int)(RF_Config.RF_NOM_FREQUENC >> 24)  &0xFF,
-                    (int)(RF_Config.RF_SYNCH_WORD >> 0)     &0xFF,
-                    (int)(RF_Config.RF_SYNCH_WORD >> 8)     &0xFF,
-                    (int)(RF_Config.RF_SYNCH_WORD >> 16)    &0xFF,
-                    (int)(RF_Config.RF_SYNCH_WORD >> 24)    &0xFF,
-                    (int)(RF_Config.RF_RX_HAEDER  >> 0)     &0xFF,
-                    (int)(RF_Config.RF_RX_HAEDER  >> 8)     &0xFF,
-                    (int)(RF_Config.RF_RX_HAEDER  >> 16)    &0xFF,
-                    (int)(RF_Config.RF_RX_HAEDER  >> 24)    &0xFF,
-                    (int)(RF_Config.RF_TX_HAEDER  >> 0)     &0xFF,
-                    (int)(RF_Config.RF_TX_HAEDER  >> 8)     &0xFF,
-                    (int)(RF_Config.RF_TX_HAEDER  >> 16)    &0xFF,
-                    (int)(RF_Config.RF_TX_HAEDER  >> 24)    &0xFF,
-                   }; length = 26;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_SI4432_REGISTER:{
-        RF_RegRead_struct RF_RegRead = SI4432Conf->getSI4432_RF_RegRead();
-
-        int u[4] = {0xBB,0x02,RF_RegRead.MODE,RF_RegRead.REG}; length = 4;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_SI4432_REGISTER:{
-        RF_RegRead_struct RF_RegRead = SI4432Conf->getSI4432_RF_RegRead();
-
-        int u[5] = {0xBB,0x03,RF_RegRead.MODE,RF_RegRead.REG,RF_RegRead.VALUE}; length = 5;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_SI4432_09_REGISTER:{
-        RF_RegRead_struct RF_RegRead;
-        RF_RegRead.MODE = 0x00;
-        RF_RegRead.REG  = 0x09;
-        int u[4] = {0xBB,0x02,RF_RegRead.MODE,RF_RegRead.REG}; length = 4;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_SI4432_09_REGISTER:{
-        RF_RegRead_struct RF_RegRead;
-        RF_RegRead.MODE = 0x01;
-        RF_RegRead.REG  = 0x09;
-        RF_RegRead.VALUE = (unsigned char)(SI4432Conf->getOut_SI4432_RF_Config()->getSI4432_CLOAD());
-        int u[5] = {0xBB,0x03,RF_RegRead.MODE,RF_RegRead.REG,RF_RegRead.VALUE}; length = 5;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_ST750_PARAMETERS:{
-        int u[2] = {0xEE,0x00}; length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_ST750_PARAMETERS:{
-        PLC_Config_struct PLC_Config = PLCConf->getOut_ST750_PLC_Config()->getPLC_Config_struct();
-        int u[15] = {0xED,0x0D,
-                    (int)(PLC_Config.HIGHF >> 0) &0xFF,
-                    (int)(PLC_Config.HIGHF >> 8) &0xFF,
-                    (int)(PLC_Config.HIGHF >> 16)&0xFF,
-                    (int)(PLC_Config.LOWF  >> 0) &0xFF,
-                    (int)(PLC_Config.LOWF  >> 8) &0xFF,
-                    (int)(PLC_Config.LOWF  >> 16)&0xFF,
-                    0x96,0xF8,0x0C,0xDC,0xA5,0xC9,0xE0}; length = 15;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_READ_MASK_DESTINATION:{
-        int u[2] = {0xD6,0x00}; length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
-    case SEND_WRITE_MASK_DESTINATION:{
-        uint Sniffer_Level_Destination =  Out_Sniffer_Properties->getSniffer_Level_Destination();
-        int u[6] = {0xD6,0x04,
-                   (int)(Sniffer_Level_Destination >> 0)  &0xFF,
-                   (int)(Sniffer_Level_Destination >> 8)  &0xFF,
-                   (int)(Sniffer_Level_Destination >> 16) &0xFF,
-                   (int)(Sniffer_Level_Destination >> 24) &0xFF,
-                   }; length = 6;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
-        break;
-    }
     case SEND_ENABLE_BOOT:{
         int u[9] = {0xFE,0x07,0xE0,0xDC,0xA5,0xF8,0xC9,0x96,0x0C}; length = 9;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
-    case SEND_READ_WRITED_PAGES:{
-        int u[2] = {0xF9,0x00}; length = 2;
-        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+    case SEND_WRITE_SECTOR:{
+        emit SendLog(QString::fromUtf8("\r>> ======= Записываем Блок: ") +
+                     QString::number(nUPDATE->getCurrent_BLOCK()) +
+                     QString::fromUtf8(" Сектор: ") +
+                     QString::number(nUPDATE->getCurrent_SECTOR()) +
+                     QString::fromUtf8(" Байт записано: ") +
+                     QString::number(nUPDATE->getWrited_BYTES()) +
+                     QString::fromUtf8("\r"),NONE);
+
+        data.append(0xFC);
+        nUPDATE->getCurrent_SECTOR_DATA(&data);
         break;
     }
     case SEND_FIRMWARE_DATA:{
@@ -538,26 +248,370 @@ void DataLogic_Class::ComandHandling(uint SendComand, uint SendMode)
         }
         break;
     }
-    case SEND_WRITE_SECTOR:{
-        emit SendLog(QString::fromUtf8("\r>> ======= Записываем Блок: ") +
-                     QString::number(nUPDATE->getCurrent_BLOCK()) +
-                     QString::fromUtf8(" Сектор: ") +
-                     QString::number(nUPDATE->getCurrent_SECTOR()) +
-                     QString::fromUtf8(" Байт записано: ") +
-                     QString::number(nUPDATE->getWrited_BYTES()) +
-                     QString::fromUtf8("\r"),NONE);
-
-        data.append(0xFC);
-        nUPDATE->getCurrent_SECTOR_DATA(&data);
-        break;
-    }
     case SEND_DELETE_FIRMWARE:{
         int u[9] = {0xFA,0x07,0xA5,0xDC,0xE0,0x0C,0x96,0xC9,0xF8}; length = 9;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
+    case SEND_READ_WRITED_PAGES:{
+        int u[2] = {0xF9,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
     case SEND_CHOICE_ADDITIONAL_MODULE:{
         int u[9] = {0xF1,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_SWITCH_MODE:{
+        int u[2] = {0xF0,0x00};length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_SWITCH_MODE:{
+        uchar Retranslator_Mode = Out_Retranslator_Properties->getRetranslator_Mode();
+        int u[10] = {0xEF,0x07,Retranslator_Mode,0xE0,0x96,0xF8,0xA5,0xC9,0xDC,0x0C}; length = 10;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_ST750_PARAMETERS:{
+        int u[2] = {0xEE,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_ST750_PARAMETERS:{
+        PLC_Config_struct PLC_Config = PLCConf->getOut_ST750_PLC_Config()->getPLC_Config_struct();
+        int u[15] = {0xED,0x0D,
+                    (int)(PLC_Config.HIGHF >> 0) &0xFF,
+                    (int)(PLC_Config.HIGHF >> 8) &0xFF,
+                    (int)(PLC_Config.HIGHF >> 16)&0xFF,
+                    (int)(PLC_Config.LOWF  >> 0) &0xFF,
+                    (int)(PLC_Config.LOWF  >> 8) &0xFF,
+                    (int)(PLC_Config.LOWF  >> 16)&0xFF,
+                    0x96,0xF8,0x0C,0xDC,0xA5,0xC9,0xE0}; length = 15;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_SWITCH_TABLE_ELEMENT:{
+        //QList<QString> Retranslation_Table = MODEM->getOut_Retranslator_Properties()->getRetranslator_Table();
+        int u[3] = {0xEB,0x01,(int)(MODEM->getIn_Retranslator_Properties()->getRetranslator_Table().length())}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_SWITCH_TABLE_ELEMENT:{
+        QList<QString> Retranslation_Table = Out_Retranslator_Properties->getRetranslator_Table();
+        uint switchelement = Retranslation_Table.at(Out_Retranslator_Properties->getRetranslator_Table_Current_Index()).toInt();
+        int u[14] = {0xEA,0x0C,(int)(Out_Retranslator_Properties->getRetranslator_Table_Current_Index()),
+                               (int)(switchelement >> 0) &0xFF,
+                               (int)(switchelement >> 8) &0xFF,
+                               (int)(switchelement >> 16)&0xFF,
+                               (int)(switchelement >> 24)&0xFF,
+                     0xF8,0xC9,0xDC,0xA5,0x96,0xE0,0x0C}; length = 14;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+
+        break;
+    }
+    case SEND_DELET_SWITCH_TABLE:{
+        int u[9] = {0xE9,0x07,0x5A,0xCD,0x8F,0x9C,0xC0,0x0E,0x69}; length = 9;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_LOAD_SWITCH_TABLE_TO_FLASH:{
+        int u[9] = {0xE8,0x07,0xCD,0xA5,0xC9,0xF8,0xE0,0xC0,0x96}; length = 9;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_LAST_AOPEN_TIME:{
+        int u[2] = {0xE7,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_SI4432_PARAMETERS:{
+        RF_Config_struct RF_Config = SI4432Conf->getOut_SI4432_RF_Config()->getRF_Config_struct();
+        int u[26] = {0xE7,0x18,
+                    (int)(RF_Config.RF_CONF_REG_1.reg >> 0) &0xFF,
+                    (int)(RF_Config.RF_CONF_REG_1.reg >> 8) &0xFF,
+                    (int)(RF_Config.RF_CONF_REG_1.reg >> 16)&0xFF,
+                    (int)(RF_Config.RF_CONF_REG_1.reg >> 24)&0xFF,
+                    (int)(RF_Config.RF_CONF_REG_2.reg >> 0) &0xFF,
+                    (int)(RF_Config.RF_CONF_REG_2.reg >> 8) &0xFF,
+                    (int)(RF_Config.RF_CONF_REG_2.reg >> 16)&0xFF,
+                    (int)(RF_Config.RF_CONF_REG_2.reg >> 24)&0xFF,
+                    (int)(RF_Config.RF_NOM_FREQUENC >> 0)   &0xFF,
+                    (int)(RF_Config.RF_NOM_FREQUENC >> 8)   &0xFF,
+                    (int)(RF_Config.RF_NOM_FREQUENC >> 16)  &0xFF,
+                    (int)(RF_Config.RF_NOM_FREQUENC >> 24)  &0xFF,
+                    (int)(RF_Config.RF_SYNCH_WORD >> 0)     &0xFF,
+                    (int)(RF_Config.RF_SYNCH_WORD >> 8)     &0xFF,
+                    (int)(RF_Config.RF_SYNCH_WORD >> 16)    &0xFF,
+                    (int)(RF_Config.RF_SYNCH_WORD >> 24)    &0xFF,
+                    (int)(RF_Config.RF_RX_HAEDER  >> 0)     &0xFF,
+                    (int)(RF_Config.RF_RX_HAEDER  >> 8)     &0xFF,
+                    (int)(RF_Config.RF_RX_HAEDER  >> 16)    &0xFF,
+                    (int)(RF_Config.RF_RX_HAEDER  >> 24)    &0xFF,
+                    (int)(RF_Config.RF_TX_HAEDER  >> 0)     &0xFF,
+                    (int)(RF_Config.RF_TX_HAEDER  >> 8)     &0xFF,
+                    (int)(RF_Config.RF_TX_HAEDER  >> 16)    &0xFF,
+                    (int)(RF_Config.RF_TX_HAEDER  >> 24)    &0xFF,
+                   }; length = 26;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_SI4432_PARAMETERS:{
+        int u[2] = {0xE6,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_LRSSI_AFC:{
+        int u[2] = {0xE5,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        emit RSSI_RequestSended();
+        break;
+    }
+    case SEND_RF_RESET:{
+        int u[2] = {0xE4,0x00};length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_RELOAD_DEVICE:{
+        uint Reset_Device_Timeout = Out_Modem_Properties->getReset_Device_Timeout();
+        if (Reset_Device_Timeout == 0){
+            int u[3] = {0xE4,0x00};length = 2;
+            for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        }
+        else{
+            int u[6] = {0xE4,0x04,((int)(Reset_Device_Timeout >> 0)  & 0xFF),((int)(Reset_Device_Timeout >> 8) & 0xFF),
+                                  ((int)(Reset_Device_Timeout >> 16) & 0xFF),((int)(Reset_Device_Timeout >> 24) & 0xFF)};length = 6;
+            for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        }
+        break;
+    }
+    case SEND_READ_SWITCH_TIMEOUT:{
+        int u[3] = {0xE3,0x01,0x00};length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_SWITCH_TIMEOUT:{
+        uint Retranslator_Timeout = Out_Retranslator_Properties->getRetranslator_Timeout();
+        int u[6] = {0xE3,0x04,((int)(Retranslator_Timeout >> 0)  & 0xFF),((int)(Retranslator_Timeout >> 8) & 0xFF),
+                              ((int)(Retranslator_Timeout >> 16) & 0xFF),((int)(Retranslator_Timeout >> 24) & 0xFF)};length = 6;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_RX_TIMEOUT:{
+        int u[3] = {0xE2,0x01,0x00};length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_TX_TIMEOUT:{
+        int u[3] = {0xE1,0x01,0x00}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_SWITCH_LEVEL:{
+        int u[3] = {0xE0,0x01,0x00};length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_SWITCH_LEVEL:{
+        int Retranslator_Level = Out_Retranslator_Properties->getRetranslator_Level();
+        int u[6] = {0xE0,0x04,
+                    ((Retranslator_Level >> 0)  & 0xFF),
+                    ((Retranslator_Level >> 8)  & 0xFF),
+                    ((Retranslator_Level >> 16) & 0xFF),
+                    ((Retranslator_Level >> 24) & 0xFF)};
+        length = 6;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_UPLINK_MODE:{
+        int u[2] = {0xDA,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_UPLINK_MODE:{
+        uchar UpLink_Value = Out_Sniffer_Properties->getUpLink_Value();
+        int u[3] = {0xDA,0x01,(int)(UpLink_Value)}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_SNIFER_MODE:{
+        int u[2] = {0xD9,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_SNIFER_MODE:{
+        uchar Sniffer_Mode = Out_Sniffer_Properties->getSniffer_Mode();
+        int u[3] = {0xD9,0x01,(int)(Sniffer_Mode)}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_INTERFACES_CONTROL:{
+        Interfaces_Control_Type Interfaces_Control = Out_PLC_RF433_Modem_Properties->getPLC_RF433_Interfaces_Control();
+        int u[6] = {0xD9,0x04,
+                    (((int)Interfaces_Control.Word >> 0)  & 0xFF),
+                    (((int)Interfaces_Control.Word >> 8)  & 0xFF),
+                    (((int)Interfaces_Control.Word >> 16) & 0xFF),
+                    (((int)Interfaces_Control.Word >> 24) & 0xFF)
+                   }; length = 6;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_BROADCASTING_MODE:{
+        uchar Broadcasting = Out_Sniffer_Properties->getBroadcasting();
+        int u[3] = {0xD8,0x01,(int)(Broadcasting)}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_BROADCASTING_MODE:{
+        int u[2] = {0xD8,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_MASK_DESTINATION:{
+        int u[2] = {0xD6,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_MASK_DESTINATION:{
+        uint Sniffer_Level_Destination =  Out_Sniffer_Properties->getSniffer_Level_Destination();
+        int u[6] = {0xD6,0x04,
+                   (int)(Sniffer_Level_Destination >> 0)  &0xFF,
+                   (int)(Sniffer_Level_Destination >> 8)  &0xFF,
+                   (int)(Sniffer_Level_Destination >> 16) &0xFF,
+                   (int)(Sniffer_Level_Destination >> 24) &0xFF,
+                   }; length = 6;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_BF_03_00_AC_00:{
+        int u[5] = {0xBF,0x03,0x00,0xAC,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        setCurrentSI4463_PROPERTYS_structur(0);
+        break;
+    }
+    case SEND_BF_03_21_88_00:{
+        int u[5] = {0xBF,0x03,0x21,0x88,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        setCurrentSI4463_PROPERTYS_structur(0);
+        break;
+    }
+    case SEND_BF_03_00_AC_00_CALIB:{
+        int u[5] = {0xBF,0x03,0x00,0xAC,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        setCurrentSI4463_PROPERTYS_structur(1);
+        break;
+    }
+    case SEND_BF_03_21_88_00_CALIB:{
+        int u[5] = {0xBF,0x03,0x21,0x88,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        setCurrentSI4463_PROPERTYS_structur(1);
+        break;
+    }
+    case SEND_BF_AF_00_AC_00:{
+        int u[5] = {0xBF,0xAF,0x00,0xAC,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        for(int i = 0; i < 0xAC; i++)
+        {
+            data.append(SI4463Conf->aSI4463_GET_PROPERTYS(0x00, 0x00, i, CurrentSI4463_PROPERTYS_structur));
+        }
+        setCurrentSI4463_PROPERTYS_structur(0);
+        break;
+    }
+    case SEND_BF_8B_21_88_00:{
+        int u[5] = {0xBF,0x8B,0x21,0x88,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        for(int i = 0; i < 0x88; i++)
+        {
+            data.append(SI4463Conf->aSI4463_GET_PROPERTYS(0x21, 0x00, i, CurrentSI4463_PROPERTYS_structur));
+        }
+        setCurrentSI4463_PROPERTYS_structur(0);
+        break;
+    }
+    case SEND_BF_AF_00_AC_00_CALIB:{
+        int u[5] = {0xBF,0xAF,0x00,0xAC,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        for(int i = 0; i < 0xAC; i++)
+        {
+            data.append(SI4463Conf->aSI4463_GET_PROPERTYS(0x00, 0x00, i, CurrentSI4463_PROPERTYS_structur));
+        }
+        setCurrentSI4463_PROPERTYS_structur(1);
+        break;
+    }
+    case SEND_BF_8B_21_88_00_CALIB:{
+        int u[5] = {0xBF,0x8B,0x21,0x88,0x00};length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        for(int i = 0; i < 0x88; i++)
+        {
+            data.append(SI4463Conf->aSI4463_GET_PROPERTYS(0x21, 0x00, i, CurrentSI4463_PROPERTYS_structur));
+        }
+        setCurrentSI4463_PROPERTYS_structur(1);
+        break;
+    }
+    case SEND_LOAD_PROPERTYS_TO_FLASH:{
+        int u[18] = {0xBE,0x10,'L','o','a','d','P','r','o','p','s','T','o','F','l','a','s','h'}; length = 18;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_PROPERTYS_FROM_FLASH:{
+        int u[20] = {0xBE,0x12,'R','e','a','d','P','r','o','p','s','F','r','o','m','F','l','a','s','h'}; length = 20;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_LOAD_CALIBPROPS_TO_FLASH:{
+        int u[18] = {0xBE,0x10,'L','o','a','d','C','a','l','P','r','T','o','F','l','a','s','h'}; length = 18;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_CALIBPROPS_FROM_FLASH:{
+        int u[20] = {0xBE,0x12,'R','e','a','d','C','a','l','P','r','F','r','o','m','F','l','a','s','h'}; length = 20;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_CRC_CHECK_MODE:{
+        int u[2] = {0xBC,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_CRC_CHECK_MODE:{
+        uchar CRC_Check_Disable = Out_Sniffer_Properties->getCRC_Check_Disable();
+        int u[3] = {0xBC,0x01,(int)(CRC_Check_Disable)}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_LRSSI_AFC_CURRENT:{
+        int u[2] = {0xBB,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_SI4432_REGISTER:{
+        RF_RegRead_struct RF_RegRead = SI4432Conf->getSI4432_RF_RegRead();
+
+        int u[4] = {0xBB,0x02,RF_RegRead.MODE,RF_RegRead.REG}; length = 4;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_SI4432_REGISTER:{
+        RF_RegRead_struct RF_RegRead = SI4432Conf->getSI4432_RF_RegRead();
+
+        int u[5] = {0xBB,0x03,RF_RegRead.MODE,RF_RegRead.REG,RF_RegRead.VALUE}; length = 5;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_SI4432_09_REGISTER:{
+        RF_RegRead_struct RF_RegRead;
+        RF_RegRead.MODE = 0x00;
+        RF_RegRead.REG  = 0x09;
+        int u[4] = {0xBB,0x02,RF_RegRead.MODE,RF_RegRead.REG}; length = 4;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_SI4432_09_REGISTER:{
+        RF_RegRead_struct RF_RegRead;
+        RF_RegRead.MODE = 0x01;
+        RF_RegRead.REG  = 0x09;
+        RF_RegRead.VALUE = (unsigned char)(SI4432Conf->getOut_SI4432_RF_Config()->getSI4432_CLOAD());
+        int u[5] = {0xBB,0x03,RF_RegRead.MODE,RF_RegRead.REG,RF_RegRead.VALUE}; length = 5;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
@@ -1015,10 +1069,9 @@ void DataLogic_Class::ParceData(uint n)
         }
         case 0xEA: // Запись Элемента таблицы ретрансляции в буфер для записи
         {
-            if (ComandState == 1)
-            {
-                if(MODEM->getOut_Retranslator_Properties()->getRetranslator_Table_Current_Index() < MODEM->getOut_Retranslator_Properties()->getRetranslator_Table().length()-1)
-                {
+            if (ComandState == 1){
+                if(MODEM->getOut_Retranslator_Properties()->getRetranslator_Table_Current_Index() <
+                   MODEM->getOut_Retranslator_Properties()->getRetranslator_Table().length()-1){
                     //if (this->stop)
                     //{
                     //    this->stop = false;
@@ -1039,14 +1092,11 @@ void DataLogic_Class::ParceData(uint n)
                         //ComandHandling(SEND_WRITE_SWITCH_TABLE_ELEMENT,CONFIG_SEND_CONTROL);
                     //}
                 }
-                else
-                {
+                else{
                     MODEM->getOut_Retranslator_Properties()->clearRetranslation_Table();
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
-
-                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
-                    {
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
                         emit outConnect(DataLogicMode,1,SEND_MODE);
                     }
                 }
@@ -1055,14 +1105,11 @@ void DataLogic_Class::ParceData(uint n)
         }
         case 0xE9: // Стирание таблицы ретрансляции из флэш памяти модема
         {
-            if (ComandState == 1)
-            {
+            if (ComandState == 1){
                 MODEM->getIn_Retranslator_Properties()->clearRetranslation_Table();
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
-
-                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
-                {
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
                     emit outConnect(DataLogicMode,ComandState,SEND_MODE);
                 }
             }
@@ -1070,13 +1117,10 @@ void DataLogic_Class::ParceData(uint n)
         }
         case 0xE8: // Запись таблицы ретрансляции во флэш память модема из буфера
         {
-            if (ComandState == 1)
-            {
+            if (ComandState == 1){
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
-
-                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
-                {
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
                     emit outConnect(DataLogicMode,ComandState,SEND_MODE);
                 }
             }
@@ -1084,13 +1128,24 @@ void DataLogic_Class::ParceData(uint n)
         }
         case 0xE7: // Запсиь RF Параметров SI4432
         {
-            if (ComandState == 1)
-            {
+            if (ComandState == 1){
+                if (NumbOfBytes == 0x09)
+                {
+                    RealTime In_LastAOPEN;
+                    In_LastAOPEN.Filed.Seconds = In_Data.at(0);
+                    In_LastAOPEN.Filed.Minutes = In_Data.at(1);
+                    In_LastAOPEN.Filed.Hours   = In_Data.at(2);
+                    In_LastAOPEN.Filed.WeekDay = In_Data.at(3);
+                    In_LastAOPEN.Filed.Day     = In_Data.at(4);
+                    In_LastAOPEN.Filed.Month   = In_Data.at(5);
+                    In_LastAOPEN.Filed.Year    = In_Data.at(6);
+
+                    MODEM->getIn_Modem_Properties()->setLastAOPENTime(In_LastAOPEN);
+                    MODEM->ChangedIn_Modem_Properties();
+                }
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
-
-                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
-                {
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
                     emit outConnect(DataLogicMode,ComandState,SEND_MODE);
                 }
             }
@@ -1098,27 +1153,32 @@ void DataLogic_Class::ParceData(uint n)
         }
         case 0xE6: // Чтение RF Параметров SI4432
         {
-            if (ComandState == 1)
-            {
-                if (In_Data.length() >= NumbOfBytes-3)
-                {
-                    RF_Config_struct RF_Config = SI4432Conf->getIn_SI4432_RF_Config()->getRF_Config_struct();
+            if (ComandState == 1){
+                if (In_Data.length() >= NumbOfBytes-3){
+                    // если кол-во байт 6 - значит параметры Debug_Control PLC-RF433 Модуля
+                    if (NumbOfBytes == 0x06){
+                        DEBUG_Control_Type In_DEBUG_Control;
+                        In_DEBUG_Control.Word = (((uint)(In_Data.at(0)) &0xFF) << 0)|(((uint)(In_Data.at(1)) &0xFF) << 8)|(((uint)(In_Data.at(2)) &0xFF) << 16)|(((uint)(In_Data.at(3)) &0xFF) << 24);
+                        MODEM->getIn_PLC_RF433_Modem_Properties()->setPLC_RF433_DEBUG_Control(In_DEBUG_Control);
+                        MODEM->ChangedIn_PLC_RF433_Modem_Properties();
+                    }
+                    else{
+                        RF_Config_struct RF_Config = SI4432Conf->getIn_SI4432_RF_Config()->getRF_Config_struct();
 
-                    RF_Config.RF_CONF_REG_1.reg = (((uint)(In_Data.at(0)) &0xFF) << 0)|(((uint)(In_Data.at(1)) &0xFF) << 8)|(((uint)(In_Data.at(2)) &0xFF) << 16)|(((uint)(In_Data.at(3)) &0xFF) << 24);
-                    RF_Config.RF_CONF_REG_2.reg = (((uint)(In_Data.at(4)) &0xFF) << 0)|(((uint)(In_Data.at(5)) &0xFF) << 8)|(((uint)(In_Data.at(6)) &0xFF) << 16)|(((uint)(In_Data.at(7)) &0xFF) << 24);
-                    RF_Config.RF_NOM_FREQUENC   = (((uint)(In_Data.at(8)) &0xFF) << 0)|(((uint)(In_Data.at(9)) &0xFF) << 8)|(((uint)(In_Data.at(10))&0xFF) << 16)|(((uint)(In_Data.at(11))&0xFF) << 24);
-                    RF_Config.RF_SYNCH_WORD     = (((uint)(In_Data.at(12))&0xFF) << 0)|(((uint)(In_Data.at(13))&0xFF) << 8)|(((uint)(In_Data.at(14))&0xFF) << 16)|(((uint)(In_Data.at(15))&0xFF) << 24);
-                    RF_Config.RF_RX_HAEDER      = (((uint)(In_Data.at(16))&0xFF) << 0)|(((uint)(In_Data.at(17))&0xFF) << 8)|(((uint)(In_Data.at(18))&0xFF) << 16)|(((uint)(In_Data.at(19))&0xFF) << 24);
-                    RF_Config.RF_TX_HAEDER      = (((uint)(In_Data.at(20))&0xFF) << 0)|(((uint)(In_Data.at(21))&0xFF) << 8)|(((uint)(In_Data.at(22))&0xFF) << 16)|(((uint)(In_Data.at(23))&0xFF) << 24);
+                        RF_Config.RF_CONF_REG_1.reg = (((uint)(In_Data.at(0)) &0xFF) << 0)|(((uint)(In_Data.at(1)) &0xFF) << 8)|(((uint)(In_Data.at(2)) &0xFF) << 16)|(((uint)(In_Data.at(3)) &0xFF) << 24);
+                        RF_Config.RF_CONF_REG_2.reg = (((uint)(In_Data.at(4)) &0xFF) << 0)|(((uint)(In_Data.at(5)) &0xFF) << 8)|(((uint)(In_Data.at(6)) &0xFF) << 16)|(((uint)(In_Data.at(7)) &0xFF) << 24);
+                        RF_Config.RF_NOM_FREQUENC   = (((uint)(In_Data.at(8)) &0xFF) << 0)|(((uint)(In_Data.at(9)) &0xFF) << 8)|(((uint)(In_Data.at(10))&0xFF) << 16)|(((uint)(In_Data.at(11))&0xFF) << 24);
+                        RF_Config.RF_SYNCH_WORD     = (((uint)(In_Data.at(12))&0xFF) << 0)|(((uint)(In_Data.at(13))&0xFF) << 8)|(((uint)(In_Data.at(14))&0xFF) << 16)|(((uint)(In_Data.at(15))&0xFF) << 24);
+                        RF_Config.RF_RX_HAEDER      = (((uint)(In_Data.at(16))&0xFF) << 0)|(((uint)(In_Data.at(17))&0xFF) << 8)|(((uint)(In_Data.at(18))&0xFF) << 16)|(((uint)(In_Data.at(19))&0xFF) << 24);
+                        RF_Config.RF_TX_HAEDER      = (((uint)(In_Data.at(20))&0xFF) << 0)|(((uint)(In_Data.at(21))&0xFF) << 8)|(((uint)(In_Data.at(22))&0xFF) << 16)|(((uint)(In_Data.at(23))&0xFF) << 24);
 
-                    SI4432Conf->getIn_SI4432_RF_Config()->setRF_Config_struct(RF_Config);
-
+                        SI4432Conf->getIn_SI4432_RF_Config()->setRF_Config_struct(RF_Config);
+                        SI4432Conf->ChangedIn_SI4432_RF_Config();
+                    }
                     Repeat_Counter = Repeat_Number;
                     timerRepeat->stop();
 
-                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
-                    {
-                        SI4432Conf->ChangedIn_SI4432_RF_Config();
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
                         emit outConnect(DataLogicMode,ComandState,SEND_MODE);
                     }
                 }
@@ -1267,8 +1327,8 @@ void DataLogic_Class::ParceData(uint n)
                 uint RX_TIMEOUT       = 0;
                 RX_TIMEOUT           |= *((uint*)(In_Data.data()));
 
-                if ( MODEM->getIn_Modem_Properties()->getRX_Timeout() != RX_TIMEOUT){
-                    MODEM->getIn_Modem_Properties()->setRX_Timeout(RX_TIMEOUT);
+                if ( MODEM->getIn_Modem_Properties()->getRF_RX_Timeout() != RX_TIMEOUT){
+                    MODEM->getIn_Modem_Properties()->setRF_RX_Timeout(RX_TIMEOUT);
                     MODEM->ChangedIn_Modem_Properties();
                 }
 
@@ -1297,8 +1357,8 @@ void DataLogic_Class::ParceData(uint n)
                 uint TX_TIMEOUT       = 0;
                 TX_TIMEOUT           |= *((uint*)(In_Data.data()));
 
-                if ( MODEM->getIn_Modem_Properties()->getTX_Timeout() != TX_TIMEOUT){
-                    MODEM->getIn_Modem_Properties()->setTX_Timeout(TX_TIMEOUT);
+                if ( MODEM->getIn_Modem_Properties()->getRF_TX_Timeout() != TX_TIMEOUT){
+                    MODEM->getIn_Modem_Properties()->setRF_TX_Timeout(TX_TIMEOUT);
                     MODEM->ChangedIn_Modem_Properties();
                 }
 
@@ -1372,6 +1432,12 @@ void DataLogic_Class::ParceData(uint n)
                         MODEM->getIn_Sniffer_Properties()->setSniffer_Mode((uchar)(In_Data.at(0)));
                         MODEM->ChangedIn_Sniffer_Properties();
                     }
+                }
+                if (NumbOfBytes == 6){
+                    Interfaces_Control_Type In_Interfaces_Control;
+                    In_Interfaces_Control.Word = (((uint)(In_Data.at(0)) &0xFF) << 0)|(((uint)(In_Data.at(1)) &0xFF) << 8)|(((uint)(In_Data.at(2)) &0xFF) << 16)|(((uint)(In_Data.at(3)) &0xFF) << 24);
+                    MODEM->getIn_PLC_RF433_Modem_Properties()->setPLC_RF433_Interfaces_Control(In_Interfaces_Control);
+                    MODEM->ChangedIn_PLC_RF433_Modem_Properties();
                 }
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();

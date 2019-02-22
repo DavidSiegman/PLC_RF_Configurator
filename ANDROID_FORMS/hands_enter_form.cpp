@@ -19,19 +19,20 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
     ui->label_2->setStyleSheet(Basic_Text_Style);
     ui->label_3->setStyleSheet(Basic_Text_Style);
     ui->CRC_OUT->setStyleSheet(Basic_Text_Style);
     ui->CRC16_2->setStyleSheet(Basic_Text_Style);
 
-    ui->cBtnSend->setStyleSheet(Basic_Buttons_Style);
-    ui->Cyclic->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->cBtnSend->setStyleSheet(Basic_PushButtons_Style);
+    ui->Cyclic->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
     ui->Next->setEnabled(false);
 
     ui->SN_TEXT->setStyleSheet(Background_White+Basic_Text_Style);
@@ -59,12 +60,14 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
 
 Hands_Enter_Form::~Hands_Enter_Form()
 {
+    emit Get_Console(NULL);
     delete ui;
 }
 
 void Hands_Enter_Form::on_Back_clicked(){
     this->Back_ClickHandler();
     emit Cancel(this->geometry());
+    this->deleteLater();
 }
 void Hands_Enter_Form::ForceClose(void){
     this->ForceCloseHandler();
@@ -111,6 +114,8 @@ void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
+    emit Get_Console(ui->console);
 }
 void Hands_Enter_Form::on_cBtnSend_clicked()
 {

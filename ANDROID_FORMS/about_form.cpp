@@ -10,6 +10,7 @@ About_Form::About_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
     ui->AppName->setStyleSheet(Basic_Text_Style + Text_Green);
     ui->AppName->setText(APPLICATION_NAME);
@@ -25,9 +26,9 @@ About_Form::About_Form(QWidget *parent) :
     ui->BuildingCRC->setText(BUILDING_CRC);
     ui->BuildingTime->setText(BUILDING_TIME);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->None->setStyleSheet(Buttons_Style);
-    ui->Apply->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->None->setStyleSheet(PushButtons_Style);
+    ui->Apply->setStyleSheet(PushButtons_Style);
 
     ui->Back->setEnabled(false);
     ui->None->setEnabled(false);

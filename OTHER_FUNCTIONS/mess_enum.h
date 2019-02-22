@@ -51,8 +51,12 @@ enum
     SEND_READ_ALL_DATA,
     SEND_BF_03_00_AC_00,             // чтение первой части параметров SI4463
     SEND_BF_03_21_88_00,             // чтение второй части параметров SI4463
+    SEND_BF_03_00_AC_00_CALIB,       // чтение первой части параметров SI4463
+    SEND_BF_03_21_88_00_CALIB,       // чтение второй части параметров SI4463
     SEND_BF_AF_00_AC_00,             // запись первой части параметров SI4463
     SEND_BF_8B_21_88_00,             // запись второй части параметров SI4463
+    SEND_BF_AF_00_AC_00_CALIB,       // запись первой части параметров SI4463
+    SEND_BF_8B_21_88_00_CALIB,       // запись второй части параметров SI4463
     SEND_RF_RESET,
     SEND_READ_SNIFER_MODE,
     SEND_WRITE_SNIFER_MODE,
@@ -100,8 +104,14 @@ enum
     SEND_WRITE_SECTOR,
     SEND_DELETE_FIRMWARE,
     SEND_CHOICE_ADDITIONAL_MODULE,
-    SEND_CHOICE_MAIN_MODULE
+    SEND_CHOICE_MAIN_MODULE,
+    SEND_WRITE_INTERFACES_CONTROL,
+    SEND_READ_LAST_AOPEN_TIME
 };
+
+// Пересекающиеся команды для разных устройств
+#define SEND_READ_INTERFACES_CONTROL (SEND_READ_SNIFER_MODE)
+#define SEND_READ_DEBUG_CONTROL      (SEND_READ_SI4432_PARAMETERS)
 
 #endif // MESS_ENUM
 
