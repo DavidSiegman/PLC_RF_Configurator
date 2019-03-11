@@ -47,9 +47,13 @@ private slots:
     void on_Write_clicked();
     void on_PLC_HighF_valueChanged(int arg1);
     void on_PLC_LowF_valueChanged(int arg1);
+    void on_PLC_Power_valueChanged(int value);
+    void on_PLC_Power_sliderReleased();
+    void on_PLCModulation_currentIndexChanged(int index);
 
     void setLOWFToUI(unsigned int);
     void setHIGHFToUI(unsigned int);
+    void setTransmit_ConditionsToUI(TX_Conditions_Type);
 
     void DeviceVersionHandling(void);
 

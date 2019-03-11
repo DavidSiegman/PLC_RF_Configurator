@@ -8,11 +8,13 @@ Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
 {
     ui = new Ui::Firmware_Updating_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
     ui->OpenBin->setStyleSheet(Basic_PushButtons_Style);
@@ -102,13 +104,13 @@ void Firmware_Updating_Form::resizeEvent(QResizeEvent *event){
     icons_size.setHeight(resize_calculating.get_icons_size());
 
     QFont font_1 = ui->label_1->font();    font_1.setPixelSize(text_size_1);
-    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_2);
+    //QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_4);
     QFont font_3 = ui->OpenBin->font();    font_3.setPixelSize(text_size_3);
     QFont font_4 = ui->label_3->font();    font_4.setPixelSize(text_size_4);
     QFont font_5 = ui->console->font();    font_5.setPixelSize(text_size_5);
 
     ui->label_1->setFont(font_1);
-    ui->label_2->setFont(font_2);
+    //ui->label_2->setFont(font_2);
     ui->label_3->setFont(font_4);
     ui->label_4->setFont(font_4);
 
@@ -127,10 +129,6 @@ void Firmware_Updating_Form::resizeEvent(QResizeEvent *event){
     ui->curr_v->setFont(font_5);
     ui->curr_Size->setFont(font_5);
     ui->curr_CRC->setFont(font_5);
-
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
 
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);

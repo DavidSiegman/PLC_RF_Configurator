@@ -16,7 +16,7 @@ void Port :: run(){
     qDebug("Hello World in COM Thread!");
 
     connect(this->thisPort, SIGNAL(error(QSerialPort::SerialPortError)),         this, SLOT(COM_ErrorHandler(QSerialPort::SerialPortError)));
-    connect(this->thisPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(COM_ErrorHandler(QSerialPort::SerialPortError)));
+    //connect(this->thisPort, SIGNAL(errorOccurred(QSerialPort::SerialPortError)), this, SLOT(COM_ErrorHandler(QSerialPort::SerialPortError)));
     connect(this->thisPort, SIGNAL(readyRead()),                                 this, SLOT(COM_ReadDATA()));
     emit COM_Started();
 }

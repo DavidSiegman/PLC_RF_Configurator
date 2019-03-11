@@ -50,7 +50,9 @@
 #include "about_form.h"
 #include "interfaces_control_form.h"
 #include "plc_rf_netsettings_form.h"
+#include "rs_settings_form.h"
 
+// Конфигуратор УСПД Milan RF 1.2 © АО "ПКК Миландр", 2019
 /* Defining */
 #define ORGANIZATION_NAME   "MILANDR"
 #define ORGANIZATION_DOMAIN "www.milandr.ru"
@@ -59,9 +61,11 @@
 #define TCP_SETTINGS_IP     "TCP_Settings/IP"
 #define TCP_SETTINGS_PORT   "TCP_Settings/PORT"
 
-#define BUILDING_VERSION    "v3.02"
-#define BUILDING_CRC        "19.001"
-#define BUILDING_TIME       "Feb. 02 2019 в 13:00"
+#define BUILDING_VERSION    "3.03"
+#define BUILDING_CRC        "19.003"
+#define BUILDING_TIME       "Mar. 06 2019 в 15:12"
+
+#define WINDOW_TITLE        ((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION + " © АО \"ПКК Миландр\", 2019")
 
 enum{
     COM_ConnectionType = 0,
@@ -110,6 +114,7 @@ private slots:
     void Create_And_Show_PLC_Settings_Form(QRect);
     void Create_And_Show_Interfaces_Control_Form(QRect);
     void Create_And_Show_PLC_RF_NetSettings_Form(QRect);
+    void Create_And_Show_RS_Settings_Form(QRect);
 
     void Create_And_Show_Hands_Enter_Form(QWidget*);
     void Create_And_Show_Settings_Form(QWidget*);
@@ -117,7 +122,7 @@ private slots:
     void Create_And_Show_Firmware_Updating_Form(QWidget*);
     void Create_And_Show_Retranslation_Table_Form(QWidget*);
     void Create_And_Show_SI4463_Registers_Form(QWidget*);
-    void Create_And_Show_RSSIMonitor_Form(QWidget*);
+    void Create_And_Show_RSSIMonitor_Form(uchar, QWidget*);
 
     void on_TCPConnect_clicked();
     void on_PortNameBox_currentIndexChanged(const QString &arg1);
@@ -125,6 +130,7 @@ private slots:
     void on_btnSettings_clicked();
     void on_btnHandsEnter_clicked();
     void on_RSSIMonitor_clicked();
+    void on_PGAMonitor_clicked();
     void on_IPInput_textEdited(const QString &arg1);
     void on_PORTInput_textChanged(const QString &arg1);
 
@@ -162,6 +168,7 @@ private:
     About_Form               *about_form;
     Interfaces_Control_Form  *interfaces_control_form;
     PLC_RF_NetSettings_Form  *plc_rf_netsettings_form;
+    RS_Settings_Form         *rs_settings_form;
 
     QSysInfo                 *SysInfo;
     QRegExp                   RegSystemName;

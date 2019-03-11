@@ -15,13 +15,13 @@ void ConnectHandlerClass::STOP(){
     emit SendLog(QString::fromUtf8(">> ======= Запрос остановлен\r"),NONE);
 }
 
-void ConnectHandlerClass::StartMonitor(){
+void ConnectHandlerClass::StartMonitor(uint Message){
    emit SendLog(QString::fromUtf8("\r>> ======= Старт RSSI Монитор\r"),NONE);
    Monitor = new MonitorClass(DataLogic->Delay_Time,1);
    connect(Monitor,SIGNAL(SendComand(uint,uint)),this   ,SLOT(StartSendingProcess(uint,uint)));
-   connect(this,SIGNAL(MonitorStart()),          Monitor,SLOT(startMonitor()));
+   connect(this,SIGNAL(MonitorStart(uint)),      Monitor,SLOT(startMonitor(uint)));
    connect(this,SIGNAL(MonitorStop()),           Monitor,SLOT(stopMonitor()));
-   emit MonitorStart();
+   emit MonitorStart(Message);
 }
 
 void ConnectHandlerClass::StopMonitor(){
@@ -95,7 +95,7 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         emit SendLog(QString::fromUtf8(">> ======= Считываем основные параметры\r"),NONE);
         // Вычитываем различные наборы параметров в зависимости от устройства
         if(In_Firmware_Information->getDevice_Name().compare(PLC_MODEM) == 0){
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_ST750_PARAMETERS;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_ST750_FREQ;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_MODE;
         }
         else if (In_Firmware_Information->getDevice_Name().compare(RF_MODEM_SI4432) == 0){
@@ -128,11 +128,11 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         else if (In_Firmware_Information->getDevice_Name().compare(RF_PLC_MODEM) == 0){
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_LAST_AOPEN_TIME;
             // Если PLC интерфейс включён
-            if (In_Interfaces_Control.Field.PLC_EN != 0){
+            if (In_Interfaces_Control.Field.PLC_EN != INTERFACE_DISABLE){
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_ST750_PARAMETERS;
             }
             // Если RF интерфейс включён
-            if (In_Interfaces_Control.Field.RF_EN != 0){
+            if (In_Interfaces_Control.Field.RF_EN != INTERFACE_DISABLE){
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_PROPERTYS_FROM_FLASH;
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
@@ -141,9 +141,10 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00_CALIB;
             }
             // Если RS интерфейс включён
-            if (In_Interfaces_Control.Field.RS_EN != 0){
+            if (In_Interfaces_Control.Field.RS_EN != INTERFACE_DISABLE){
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_DEBUG_CONTROL;
             }
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_MODE;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_LEVEL;
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_TIMEOUT;
             //ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_RX_TIMEOUT;
@@ -182,11 +183,11 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         else if (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0){
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_LAST_AOPEN_TIME;
             // Если PLC интерфейс включён
-            if (In_Interfaces_Control.Field.PLC_EN != 0){
+            if (In_Interfaces_Control.Field.PLC_EN != INTERFACE_DISABLE){
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_ST750_PARAMETERS;
             }
             // Если RF интерфейс включён
-            if (In_Interfaces_Control.Field.RF_EN != 0){
+            if (In_Interfaces_Control.Field.RF_EN != INTERFACE_DISABLE){
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_PROPERTYS_FROM_FLASH;
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_00_AC_00;
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00;
@@ -195,7 +196,7 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00_CALIB;
             }
             // Если RS интерфейс включён
-            if (In_Interfaces_Control.Field.RS_EN != 0){
+            if (In_Interfaces_Control.Field.RS_EN != INTERFACE_DISABLE){
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_DEBUG_CONTROL;
             }
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_MASK_DESTINATION;
@@ -221,6 +222,15 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         // Формируем очередь команд
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_INTERFACES_CONTROL;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_INTERFACES_CONTROL;
+        break;
+    }
+    case SEND_WRITE_DEBUG_CONTROL:
+    {
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Считываем настройки отладочного интерфейса\r"),NONE);
+        // Формируем очередь команд
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_DEBUG_CONTROL;
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_DEBUG_CONTROL;
         break;
     }
     case SEND_WRITE_SWITCH_MODE:{
@@ -252,6 +262,13 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         emit SendLog(QString::fromUtf8(">> ======= Чтение уровня сигнала RSSI\r"),NONE);
         // Формируем очередь команд
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_LRSSI_AFC;
+        break;
+    }
+    case SEND_READ_LPGA:{
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Чтение усиления принятого сигнала PGA\r"),NONE);
+        // Формируем очередь команд
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_LPGA;
         break;
     }
     case SEND_WRITE_SI4432_PARAMETERS:{
@@ -291,9 +308,17 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_BF_03_21_88_00_CALIB;
         break;
     }
+    case SEND_WRITE_ST750_FREQ:{
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись PLC-настроек\r"),NONE);
+        // Формируем очередь команд
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_ST750_FREQ;
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_ST750_FREQ;
+        break;
+    }
     case SEND_WRITE_ST750_PARAMETERS:{
         // Выводим сообщение в Лог
-        emit SendLog(QString::fromUtf8(">> ======= Запись радио-настроек\r"),NONE);
+        emit SendLog(QString::fromUtf8(">> ======= Запись PLC-настроек\r"),NONE);
         // Формируем очередь команд
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_ST750_PARAMETERS;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_ST750_PARAMETERS;
@@ -465,6 +490,15 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode
         emit isINTERFACES_CONTROL();
         break;
     }
+    case SEND_WRITE_DEBUG_CONTROL:
+    {
+        emit Progress(100);
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись отладочного интерфейса прошла успешно\r"),NONE);
+        // Формируем очередь команд
+        emit isDEBUG_CONTROL();
+        break;
+    }
     case SEND_WRITE_SWITCH_MODE:{
         emit Progress(100);
         // Выводим сообщение в Лог
@@ -493,6 +527,13 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode
         emit isLRSSI_AFC();
         break;
     }
+    case SEND_READ_LPGA:{
+        emit Progress(100);
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Чтение усиления сигнала PGA завершено успешно\r"),NONE);
+        emit isLRSSI_AFC();
+        break;
+    }
     case SEND_WRITE_SI4432_PARAMETERS:{
         emit Progress(100);
         // Выводим сообщение в Лог
@@ -505,6 +546,13 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись RF-настроек прошла успешно\r"),NONE);
         emit isRFSI4463_PARAMETERS();
+        break;
+    }
+    case SEND_WRITE_ST750_FREQ:{
+        emit Progress(100);
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись PLC-настроек прошла успешно\r"),NONE);
+        emit isPLCST750_PARAMETERS();
         break;
     }
     case SEND_WRITE_ST750_PARAMETERS:{

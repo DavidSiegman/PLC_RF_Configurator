@@ -8,7 +8,7 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
 {
     ui = new Ui::Hands_Enter_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     ui->SN_ENABLE->setChecked(settings.value(MANUAL_SETTINGS_SN_ENABLE).toBool());
@@ -90,7 +90,7 @@ void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
     icons_size.setHeight(resize_calculating.get_icons_size());
 
     QFont font_1 = ui->label_1->font();    font_1.setPixelSize(text_size_1);
-    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_2);
+    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_4);
     QFont font_3 = ui->cBtnSend->font();   font_3.setPixelSize(text_size_3);
     //QFont font_4 = ui->label_4->font();  font_4.setPixelSize(text_size_4);
     QFont font_5 = ui->console->font();    font_5.setPixelSize(text_size_5);
@@ -108,8 +108,10 @@ void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
     ui->console->setFont(font_5);
 
     QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
+    QScrollBar *VerticalScrollBar2 = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
 
     ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
+    ui->console->setVerticalScrollBar(VerticalScrollBar2);
 
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);

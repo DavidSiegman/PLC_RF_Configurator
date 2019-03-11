@@ -49,6 +49,7 @@ private slots:
     void on_btnRSEnable_released();
 
     void setInterfaces_ControlToUI(Interfaces_Control_Type);
+    void setLastAOPENTimeToUI(RealTime time);
 
 private:
     Ui::Interfaces_Control_Form *ui;

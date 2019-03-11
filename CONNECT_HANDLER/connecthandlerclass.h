@@ -43,7 +43,7 @@ private:
 signals:
     void SendComand(uint n, uint m);
     void SendLog(QString data, uint n);
-    void MonitorStart();
+    void MonitorStart(uint Message);
     void MonitorStop();
 
     void Progress(uint progress);
@@ -69,12 +69,13 @@ signals:
     void isUPDATED();
     void isDELETED();
     void isINTERFACES_CONTROL();
+    void isDEBUG_CONTROL();
 
 public slots:
     void STOP();
     void StartSendingProcess(uint SelectComandQueue, uint SendMode);
 
-    void StartMonitor();
+    void StartMonitor(uint Message);
     void StopMonitor();
 
     void SetModuleType(uchar);

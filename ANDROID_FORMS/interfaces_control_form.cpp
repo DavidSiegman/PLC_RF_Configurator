@@ -6,12 +6,14 @@ Interfaces_Control_Form::Interfaces_Control_Form(QWidget *parent) :
 {
     ui = new Ui::Interfaces_Control_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
     ui->btnPLCEnable->setStyleSheet(Basic_ToolButtons_Style);
@@ -27,7 +29,6 @@ Interfaces_Control_Form::Interfaces_Control_Form(QWidget *parent) :
     ui->Back->setStyleSheet(PushButtons_Style);
     ui->btnSettings->setStyleSheet(PushButtons_Style);
     ui->Next->setStyleSheet(PushButtons_Style);
-    ui->Next->setEnabled(true);
 
     ui->PLCStatus->setStyleSheet(Work_Area_Style + Text_Red_Disabled);
     ui->RFStatus->setStyleSheet(Work_Area_Style + Text_Red_Disabled);
@@ -101,6 +102,8 @@ void Interfaces_Control_Form::isRF_Reset(void){
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
     ui->Next->setEnabled(true);
+
+    this->Back_ClickHandler();
 }
 
 void Interfaces_Control_Form::resizeEvent(QResizeEvent *event){
@@ -155,10 +158,6 @@ void Interfaces_Control_Form::resizeEvent(QResizeEvent *event){
     ui->RSStatus->setFont(font_4_1);
     ui->EEPROMStatus->setFont(font_4_1);
 
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
-
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
@@ -173,14 +172,18 @@ void Interfaces_Control_Form::Set_In_PLC_RF433_Modem_Properties(PlcRfModemProper
     In_PLC_RF433_Modem_Properties = new_value;
 
     setInterfaces_ControlToUI(In_PLC_RF433_Modem_Properties->getPLC_RF433_Interfaces_Control());
+    setLastAOPENTimeToUI(In_PLC_RF433_Modem_Properties->getLastAOPENTime());
 
-    //Out_PLC_RF433_Modem_Properties->setPLC_RF433_DEBUG_Control(In_PLC_RF433_Modem_Properties->getPLC_RF433_DEBUG_Control());
+    //Out_PLC_RF433_Modem_Properties->setPLC_RF433_Debug_Control(In_PLC_RF433_Modem_Properties->getPLC_RF433_Debug_Control());
     Out_PLC_RF433_Modem_Properties->setPLC_RF433_Interfaces_Control(In_PLC_RF433_Modem_Properties->getPLC_RF433_Interfaces_Control());
 }
 void Interfaces_Control_Form::setInterfaces_ControlToUI(Interfaces_Control_Type Interfaces_Control){
+    ui->Next_Widget->setEnabled(false);
     if(Interfaces_Control.Field.PLC_INIT_OK == 1){
         ui->PLCStatus->setText(INIT_OK_STRING);
         ui->PLCStatus->setStyleSheet(Work_Area_Style + Text_Green_Disabled);
+        ui->Next_Widget->setEnabled(true);
+        ui->Next->setEnabled(true);
     }
     if(Interfaces_Control.Field.PLC_EN != 0){
         ui->btnPLCEnable->setChecked(true);
@@ -200,6 +203,8 @@ void Interfaces_Control_Form::setInterfaces_ControlToUI(Interfaces_Control_Type 
     if(Interfaces_Control.Field.RF_INIT_OK == 1){
         ui->RFStatus->setText(INIT_OK_STRING);
         ui->RFStatus->setStyleSheet(Work_Area_Style + Text_Green_Disabled);
+        ui->Next_Widget->setEnabled(true);
+        ui->Next->setEnabled(true);
     }
     if(Interfaces_Control.Field.RF_EN != 0){
         ui->btnRFEnable->setChecked(true);
@@ -219,6 +224,8 @@ void Interfaces_Control_Form::setInterfaces_ControlToUI(Interfaces_Control_Type 
     if(Interfaces_Control.Field.RS_INIT_OK == 1){
         ui->RSStatus->setText(INIT_OK_STRING);
         ui->RSStatus->setStyleSheet(Work_Area_Style + Text_Green_Disabled);
+        ui->Next_Widget->setEnabled(true);
+        ui->Next->setEnabled(true);
     }
     if(Interfaces_Control.Field.RS_EN != 0){
         ui->btnRSEnable->setChecked(true);
@@ -241,6 +248,34 @@ void Interfaces_Control_Form::setInterfaces_ControlToUI(Interfaces_Control_Type 
         ui->EEPROMStatus->setStyleSheet(Work_Area_Style + Text_Red_Disabled);
     }
 }
+void Interfaces_Control_Form::setLastAOPENTimeToUI(RealTime time){
+    QString time_string;
+    if ((time.Filed.Day > 31)||(time.Filed.Month > 12)||
+        (time.Filed.Hours > 24)||(time.Filed.Minutes > 59)||
+        (time.Filed.Seconds > 59)){
+        ui->LastAOPEN->setText("Не определено");
+    }else{
+        if (time.Filed.Day < 10){time_string.append("0");}
+        time_string.append(QString::number(time.Filed.Day));
+        time_string.append(".");
+        if (time.Filed.Month < 10){time_string.append("0");}
+        time_string.append(QString::number(time.Filed.Month));
+        time_string.append(".");
+        time_string.append(QString::number(time.Filed.Year));
+        time_string.append(" ");
+        if (time.Filed.Hours < 10){time_string.append("0");}
+        time_string.append(QString::number(time.Filed.Hours));
+        time_string.append(":");
+        if (time.Filed.Minutes < 10){time_string.append("0");}
+        time_string.append(QString::number(time.Filed.Minutes));
+        time_string.append(":");
+        if (time.Filed.Seconds < 10){time_string.append("0");}
+        time_string.append(QString::number(time.Filed.Seconds));
+
+        ui->LastAOPEN->setText(time_string);
+    }
+
+}
 void Interfaces_Control_Form::on_btnPLCEnable_toggled(bool checked){
     if (checked == true){
         ui->btnPLCEnable->setText("Включен");
@@ -248,7 +283,6 @@ void Interfaces_Control_Form::on_btnPLCEnable_toggled(bool checked){
         ui->btnPLCEnable->setText("Выключен");
     }
 }
-
 void Interfaces_Control_Form::on_btnRFEnable_toggled(bool checked){
     if (checked == true){
         ui->btnRFEnable->setText("Включен");
@@ -256,23 +290,19 @@ void Interfaces_Control_Form::on_btnRFEnable_toggled(bool checked){
         ui->btnRFEnable->setText("Выключен");
     }
 }
-
-void Interfaces_Control_Form::on_btnRSEnable_toggled(bool checked)
-{
+void Interfaces_Control_Form::on_btnRSEnable_toggled(bool checked){
     if (checked == true){
         ui->btnRSEnable->setText("Включен");
     }else{
         ui->btnRSEnable->setText("Выключен");
     }
 }
-
-void Interfaces_Control_Form::on_btnPLCEnable_released()
-{
+void Interfaces_Control_Form::on_btnPLCEnable_released(){
     emit Get_Console(ui->console);
     if (ui->btnPLCEnable->isChecked() == true){
-        Out_PLC_RF433_Modem_Properties->setPLC_EN(3);
+        Out_PLC_RF433_Modem_Properties->setPLC_EN(INTERFACE_ENABLE);
     }else{
-        Out_PLC_RF433_Modem_Properties->setPLC_EN(0);
+        Out_PLC_RF433_Modem_Properties->setPLC_EN(INTERFACE_DISABLE);
     }
     ui->Stop->setEnabled(true);
     ui->Iterfaces_Widget->setEnabled(false);
@@ -283,13 +313,12 @@ void Interfaces_Control_Form::on_btnPLCEnable_released()
     emit StartSendingProcess(SEND_WRITE_INTERFACES_CONTROL,CONFIG_SEND_CONTROL);
 }
 
-void Interfaces_Control_Form::on_btnRFEnable_released()
-{
+void Interfaces_Control_Form::on_btnRFEnable_released(){
     emit Get_Console(ui->console);
     if (ui->btnRFEnable->isChecked() == true){
-        Out_PLC_RF433_Modem_Properties->setRF_EN(3);
+        Out_PLC_RF433_Modem_Properties->setRF_EN(INTERFACE_ENABLE);
     }else{
-        Out_PLC_RF433_Modem_Properties->setRF_EN(0);
+        Out_PLC_RF433_Modem_Properties->setRF_EN(INTERFACE_DISABLE);
     }
     ui->Stop->setEnabled(true);
     ui->Iterfaces_Widget->setEnabled(false);
@@ -300,13 +329,12 @@ void Interfaces_Control_Form::on_btnRFEnable_released()
     emit StartSendingProcess(SEND_WRITE_INTERFACES_CONTROL,CONFIG_SEND_CONTROL);
 }
 
-void Interfaces_Control_Form::on_btnRSEnable_released()
-{
+void Interfaces_Control_Form::on_btnRSEnable_released(){
     emit Get_Console(ui->console);
     if (ui->btnRSEnable->isChecked() == true){
-        Out_PLC_RF433_Modem_Properties->setRS_EN(3);
+        Out_PLC_RF433_Modem_Properties->setRS_EN(INTERFACE_ENABLE);
     }else{
-        Out_PLC_RF433_Modem_Properties->setRS_EN(0);
+        Out_PLC_RF433_Modem_Properties->setRS_EN(INTERFACE_DISABLE);
     }
     ui->Stop->setEnabled(true);
     ui->Iterfaces_Widget->setEnabled(false);

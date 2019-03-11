@@ -50,6 +50,8 @@ private slots:
     void on_Write_clicked();
     void on_Registers_clicked();
 
+    void DeviceVersionHandling(void);
+
 private:
     Ui::SI4463_Settings_Form *ui;
 

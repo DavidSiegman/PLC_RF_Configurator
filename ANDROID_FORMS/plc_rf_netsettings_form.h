@@ -5,9 +5,9 @@
 #include "myformabstractclass.h"
 #include "MODEM/modemclass.h"
 
-namespace Ui {
-class PLC_RF_NetSettings_Form;
-}
+//namespace Ui {
+//class PLC_RF_NetSettings_Form;
+//}
 
 class PLC_RF_NetSettings_Form : public myFormAbstractClass
 {
@@ -31,6 +31,7 @@ public slots:
     void isCRC_Disable_Mode(void);
     void isBroadcasting_Mode(void);
     void isMask_Destination(void);
+    void isSwitchMode(void);
     void isSwitchTimeout(void);
     void isSwitchLevel(void);
 
@@ -55,8 +56,10 @@ private slots:
     void on_Up_Link_stateChanged(int arg1);
     //void on_Sniffer_Mode_currentIndexChanged(int index);
     void on_Disable_CRC_stateChanged(int arg1);
+    void on_Disable_MODBUS_CRC_stateChanged(int arg1);
     void on_Broadcasting_stateChanged(int arg1);
     void on_SetDestinationMASK_clicked();
+    void on_Switch_stateChanged(int arg1);
     void on_SetMask_clicked();
     void on_SetTimeout_clicked();
     void on_LVL0_valueChanged(int arg1);
@@ -88,6 +91,8 @@ private slots:
     uchar Get_Broadcasting(void);
     void  Set_Mask_Destination(uint);
     uint  Get_Mask_Destination(void);
+    void  Set_SwitchMode(uchar);
+    uchar Get_SwitchMode(void);
     void  Set_SwitchTimeout(uint);
     void  Set_SwitchMask(uint);
     uint  Get_SwitchMask(void);
@@ -97,7 +102,9 @@ private slots:
 
     void SetUpLink_ModeToUI(uchar);
     void SetCRC_Disable_ModeToUI(uchar);
+    void SetMODBUSCRC_Disable_ModeToUI(uchar);
     void SetBroadcasting_ModeToUI(uchar);
+    void SetSwitchModeToUI(uchar);
     void SetSwitchTimeoutToUI(uint);
     void SetSwitchMaskToUI(uint);
     void setInterfaces_ControlToUI(Interfaces_Control_Type);

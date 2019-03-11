@@ -5,14 +5,16 @@ About_Form::About_Form(QWidget *parent) :
     myFormAbstractClass(parent){
     ui = new Ui::About_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    //ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->AppName->setStyleSheet(Basic_Text_Style + Text_Green);
+    ui->AppName->setStyleSheet(Basic_Text_Style);
     ui->AppName->setText(APPLICATION_NAME);
     ui->label_3->setStyleSheet(Basic_Text_Style);
     ui->label_4->setStyleSheet(Basic_Text_Style);
@@ -63,10 +65,6 @@ void About_Form::resizeEvent(QResizeEvent *event){
     ui->label_3->setFont(font_3);
     ui->label_4->setFont(font_3);
     ui->label_5->setFont(font_3);
-
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
 
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Apply->setIconSize(icons_size); ui->Apply->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);

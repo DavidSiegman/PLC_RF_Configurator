@@ -3,22 +3,51 @@
 
 #include <Qt>
 
+enum
+{
+    INTERFACE_DISABLE = 0,
+    INTERFACE_ENABLE
+};
+enum
+{
+    INTERFACE_NOT_INIT = 0,
+    INTERFACE_OK_INIT
+};
+
+typedef union RealTime_Type{
+    struct{
+        unsigned          Seconds: 8;
+        unsigned          Minutes: 8;
+        unsigned          Hours:   8;
+        unsigned          WeekDay: 8;
+        unsigned          Day:     8;
+        unsigned          Month:   8;
+        unsigned          Year:    8;
+        unsigned          Unused:  8;
+    }Filed;
+    uint Words[2];
+}RealTime;
+
 typedef union{
     struct{
         unsigned  Modem_Mode:  			      2; // байт 1
-        unsigned  PLC_EN:      			      2;
-        unsigned  RF_EN:       			      2;
-        unsigned  RS_EN:       			      2;
-        unsigned  PLC_TO_PLC_RET_EN:          1; // байт 2
+        unsigned  PLC_EN:      			      1;
+        unsigned  RF_EN:       			      1;
+        unsigned  RS_EN:       			      1;
+        unsigned  PLC_TO_PLC_RET_EN:          1;
         unsigned  PLC_TO_RF_RET_EN:           1;
         unsigned  RF_TO_RF_RET_EN:            1;
-        unsigned  RF_TO_PLC_RET_EN:           1;
+        unsigned  RF_TO_PLC_RET_EN:           1; // байт 2
         unsigned  RS_TO_RF_RET_EN:            1;
         unsigned  RF_TO_RS_RET_EN:            1;
         unsigned  RS_TO_PLC_RET_EN:           1;
         unsigned  PLC_TO_RS_RET_EN:           1;
-        unsigned  RS_USE_AS_DEBUG_OUTPUT:     1; // байт 3
-        unsigned  UNUSED_0:                   7;
+        unsigned  RS_USE_AS_DEBUG_OUTPUT:     1;
+        unsigned  RS_TO_RF_UP_LINK:           1;
+        unsigned  RS_TO_PLC_UP_LINK:          1;
+        unsigned  MODBUS_CRC_CHECK_DISABLE:   1; // байт 3
+        unsigned  UNUSED_0:                   3; // байт 4
+        unsigned  RS_BAUDRATE:                4;
         unsigned  UNUSED_1:                   4; // байт 4
         unsigned  EEPROM_INIT_OK:             1; // не хранится во FLASH
         unsigned  PLC_INIT_OK:                1; // не хранится во FLASH
@@ -28,7 +57,7 @@ typedef union{
     unsigned int Word;
 }Interfaces_Control_Type;
 
-typedef union DEBUG_Control_Type_Def{
+typedef union Debug_Control_Type_Def{
     struct{
         // бит глобального включения отладочного интерфейса
         unsigned DEBUG_GLOBAL_EN:             1;
@@ -59,7 +88,7 @@ typedef union DEBUG_Control_Type_Def{
         unsigned RS_DEBUG_EN: 1;
     }Field;
     unsigned int Word;
-}DEBUG_Control_Type;
+}Debug_Control_Type;
 
 class PlcRfModemPropertiesClass
 {
@@ -69,9 +98,9 @@ public:
     void            Clear_Data();
 
     Interfaces_Control_Type getPLC_RF433_Interfaces_Control(void);
-    DEBUG_Control_Type      getPLC_RF433_DEBUG_Control(void);
+    Debug_Control_Type      getPLC_RF433_Debug_Control(void);
     void setPLC_RF433_Interfaces_Control(Interfaces_Control_Type);
-    void setPLC_RF433_DEBUG_Control(DEBUG_Control_Type);
+    void setPLC_RF433_Debug_Control(Debug_Control_Type);
 
     unsigned char  getModem_Mode(void);
     unsigned char  getPLC_EN(void);
@@ -86,6 +115,10 @@ public:
     unsigned char  getRS_TO_PLC_RET_EN(void);
     unsigned char  getPLC_TO_RS_RET_EN(void);
     unsigned char  getRS_USE_AS_DEBUG_OUTPUT(void);
+    unsigned char  getRS_TO_RF_UP_LINK(void);
+    unsigned char  getRS_TO_PLC_UP_LINK(void);
+    unsigned char  getMODBUS_CRC_CHECK_DISABLE(void);
+    unsigned char  getRS_BAUDRATE(void);
 
     unsigned char  getEEPROM_INIT_OK(void);
     unsigned char  getPLC_INIT_OK(void);
@@ -121,6 +154,10 @@ public:
     void setRS_TO_PLC_RET_EN(unsigned char);
     void setPLC_TO_RS_RET_EN(unsigned char);
     void setRS_USE_AS_DEBUG_OUTPUT(unsigned char);
+    void setRS_TO_RF_UP_LINK(unsigned char);
+    void setRS_TO_PLC_UP_LINK(unsigned char);
+    void setMODBUS_CRC_CHECK_DISABLE(unsigned char);
+    void setRS_BAUDRATE(unsigned char);
 
     void setEEPROM_INIT_OK(unsigned char);
     void setPLC_INIT_OK(unsigned char);
@@ -143,10 +180,14 @@ public:
     void setRETRANSLATION_DEBUG_EN(unsigned char);
     void setRS_DEBUG_EN(unsigned char);
 
+    RealTime        getLastAOPENTime();
+    void            setLastAOPENTime(RealTime);
+
 private:
     // used in RF433/PLC Modules
     Interfaces_Control_Type PLC_RF433_Interfaces_Control;
-    DEBUG_Control_Type      PLC_RF433_DEBUG_Control;
+    Debug_Control_Type      PLC_RF433_DEBUG_Control;
+    RealTime                LastAOPENTime;
 };
 
 #endif // PlcRfModemPropertiesClass_H

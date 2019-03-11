@@ -8,11 +8,13 @@ Net_Settings_Form::Net_Settings_Form(QWidget *parent) :
 {
     ui = new Ui::Net_Settings_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
     ui->SetMask->setStyleSheet(Basic_PushButtons_Style);
@@ -28,6 +30,8 @@ Net_Settings_Form::Net_Settings_Form(QWidget *parent) :
     ui->Back->setStyleSheet(PushButtons_Style);
     ui->btnSettings->setStyleSheet(PushButtons_Style);
     ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Next_Widget->setEnabled(true);
+    ui->Next->setEnabled(true);
 
     ui->LVL0->setStyleSheet(Background_White);
     ui->LVL1->setStyleSheet(Background_White);
@@ -151,10 +155,6 @@ void Net_Settings_Form::resizeEvent(QResizeEvent *event)
     ui->SwitchTM->setFont(font_4);
 
     ui->console->setFont(font_5);
-
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
 
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);

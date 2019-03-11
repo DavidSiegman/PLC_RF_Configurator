@@ -3,20 +3,6 @@
 
 #include <Qt>
 
-typedef union RealTime_Type{
-    struct{
-        unsigned          Seconds: 8;
-        unsigned          Minutes: 8;
-        unsigned          Hours:   8;
-        unsigned          WeekDay: 8;
-        unsigned          Day:     8;
-        unsigned          Month:   8;
-        unsigned          Year:    8;
-        unsigned          Unused:  8;
-    }Filed;
-    uint Words[2];
-}RealTime;
-
 typedef struct Modem_Properties_Type{
     uint          RF_RX_Timeout;
     uint          RF_TX_Timeout;
@@ -24,7 +10,6 @@ typedef struct Modem_Properties_Type{
     uint          PLC_TX_Timeout;
     uchar         LED_Logic;
     uint          Reset_Device_Timeout;
-    RealTime      LastAOPENTime;
 }Modem_Properties;
 
 class ModemPropertiesClass
@@ -51,9 +36,6 @@ public:
 
     uint            getReset_Device_Timeout();
     void            setReset_Device_Timeout(uint);
-
-    RealTime        getLastAOPENTime();
-    void            setLastAOPENTime(RealTime);
 
 private:
 

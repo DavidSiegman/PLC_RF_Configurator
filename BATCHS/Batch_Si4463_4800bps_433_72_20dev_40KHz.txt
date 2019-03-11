@@ -1,7 +1,7 @@
 #BatchName Si4463
 #Crys_freq(Hz): 30000000    Crys_tol(ppm): 20    IF_mode: 2    High_perf_Ch_Fil: 1    OSRtune: 0    Ch_Fil_Bw_AFC: 1    ANT_DIV: 1    PM_pattern: 0    
 #MOD_type: 3    Rsymb(sps): 4800    Fdev(Hz): 20000    RXBW(Hz): 40000    Manchester: 0    AFC_en: 1    Rsymb_error: 0.0    Chip-Version: 2    
-#RF Freq.(MHz): 433.9    API_TC: 29    fhst: 50000    inputBW: 1    BERT: 0    RAW_dout: 0    D_source: 0    Hi_pfm_div: 1    
+#RF Freq.(MHz): 433.72    API_TC: 29    fhst: 50000    inputBW: 1    BERT: 0    RAW_dout: 0    D_source: 0    Hi_pfm_div: 1    
 #
 # RX IF frequency is  -468750 Hz
 # WB filter 4 (BW =  41.32 kHz);  NB-filter 4 (BW = 41.32 kHz)
@@ -248,8 +248,8 @@ RESET
 'SET_PROPERTY' 'PA_TC' 3D
 'SET_PROPERTY' 'FREQ_CONTROL_INTE' 38
 'SET_PROPERTY' 'FREQ_CONTROL_FRAC_2' 0E
-'SET_PROPERTY' 'FREQ_CONTROL_FRAC_1' D3
-'SET_PROPERTY' 'FREQ_CONTROL_FRAC_0' A0
+'SET_PROPERTY' 'FREQ_CONTROL_FRAC_1' A2
+'SET_PROPERTY' 'FREQ_CONTROL_FRAC_0' 79
 'SET_PROPERTY' 'FREQ_CONTROL_CHANNEL_STEP_SIZE_1' 0D
 'SET_PROPERTY' 'FREQ_CONTROL_CHANNEL_STEP_SIZE_0' A7
 'SET_PROPERTY' 'FREQ_CONTROL_W_SIZE' 20

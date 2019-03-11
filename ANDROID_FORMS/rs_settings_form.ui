@@ -13,21 +13,21 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_3">
+  <layout class="QVBoxLayout" name="verticalLayout_9">
    <property name="spacing">
     <number>0</number>
    </property>
    <property name="leftMargin">
-    <number>5</number>
+    <number>0</number>
    </property>
    <property name="topMargin">
-    <number>5</number>
+    <number>0</number>
    </property>
    <property name="rightMargin">
-    <number>5</number>
+    <number>0</number>
    </property>
    <property name="bottomMargin">
-    <number>5</number>
+    <number>0</number>
    </property>
    <item>
     <widget class="QLabel" name="label_1">
@@ -60,739 +60,820 @@
     </widget>
    </item>
    <item>
-    <widget class="QScrollArea" name="scrollArea">
-     <property name="horizontalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOff</enum>
+    <widget class="QWidget" name="Main_Widget" native="true">
+     <property name="styleSheet">
+      <string notr="true"/>
      </property>
-     <property name="widgetResizable">
-      <bool>true</bool>
-     </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>311</width>
-        <height>650</height>
-       </rect>
+     <layout class="QVBoxLayout" name="verticalLayout_6">
+      <property name="spacing">
+       <number>0</number>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="spacing">
-        <number>2</number>
-       </property>
-       <property name="leftMargin">
-        <number>2</number>
-       </property>
-       <property name="topMargin">
-        <number>2</number>
-       </property>
-       <property name="rightMargin">
-        <number>2</number>
-       </property>
-       <property name="bottomMargin">
-        <number>2</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="label_14">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
+      <property name="leftMargin">
+       <number>2</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>2</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="horizontalScrollBarPolicy">
+         <enum>Qt::ScrollBarAlwaysOff</enum>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>317</width>
+           <height>660</height>
+          </rect>
          </property>
-         <property name="font">
-          <font>
-           <family>Microsoft YaHei UI</family>
-           <pointsize>10</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Режим работы модуля</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QGridLayout" name="gridLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_15">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <family>Microsoft YaHei UI</family>
-             <pointsize>8</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>Режим работы модуля</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QComboBox" name="comboBox">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="font">
-            <font>
-             <family>Microsoft YaHei UI</family>
-            </font>
-           </property>
-           <item>
-            <property name="text">
-             <string>Интерфейс связи</string>
-            </property>
-           </item>
-           <item>
-            <property name="text">
-             <string>Интерфейс отладки</string>
-            </property>
-           </item>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QWidget" name="RS_Settings_Widget" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout_8">
+         <layout class="QVBoxLayout" name="verticalLayout_2">
           <property name="spacing">
-           <number>3</number>
+           <number>2</number>
           </property>
           <property name="leftMargin">
-           <number>0</number>
+           <number>2</number>
           </property>
           <property name="topMargin">
-           <number>0</number>
+           <number>2</number>
           </property>
           <property name="rightMargin">
-           <number>0</number>
+           <number>2</number>
           </property>
           <property name="bottomMargin">
-           <number>0</number>
+           <number>2</number>
           </property>
           <item>
-           <layout class="QGridLayout" name="gridLayout_4">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_10">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-               </font>
-              </property>
-              <property name="text">
-               <string>Скорость передачи</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QComboBox" name="comboBox_2">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-               </font>
-              </property>
-              <property name="currentIndex">
-               <number>5</number>
-              </property>
-              <item>
-               <property name="text">
-                <string>300 [bps] </string>
+           <widget class="QWidget" name="RS_Mode_Widget" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>5</number>
+             </property>
+             <property name="topMargin">
+              <number>5</number>
+             </property>
+             <property name="rightMargin">
+              <number>5</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_2">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>600 [bps] </string>
+               <property name="font">
+                <font>
+                 <family>Microsoft YaHei UI</family>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
                </property>
-              </item>
-              <item>
                <property name="text">
-                <string>1200 [bps] </string>
+                <string>Режим работы интерфейса</string>
                </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>2400 [bps] </string>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
                </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>4800 [bps] </string>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="RS_Mode">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
                </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>9600 [bps] </string>
+               <property name="font">
+                <font>
+                 <family>Microsoft YaHei UI</family>
+                </font>
                </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>19200 [bps] </string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>38400 [bps] </string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>57600 [bps] </string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>115200 [bps] </string>
-               </property>
-              </item>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_21">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>Microsoft YaHei UI</family>
-              <pointsize>10</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Ретрансляция RS485</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
-            </property>
+               <item>
+                <property name="text">
+                 <string>Интерфейс связи</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Интерфейс отладки</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
            </widget>
           </item>
           <item>
-           <layout class="QGridLayout" name="gridLayout_2">
-            <property name="horizontalSpacing">
+           <widget class="QWidget" name="RS_Settings_Widget" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout_8">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>5</number>
+             </property>
+             <property name="topMargin">
+              <number>5</number>
+             </property>
+             <property name="rightMargin">
+              <number>5</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_3">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Microsoft YaHei UI</family>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Скорость передачи</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="RS_Speed">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Microsoft YaHei UI</family>
+                </font>
+               </property>
+               <property name="currentIndex">
+                <number>5</number>
+               </property>
+               <item>
+                <property name="text">
+                 <string>300 [bps] </string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>600 [bps] </string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>1200 [bps] </string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>2400 [bps] </string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>4800 [bps] </string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>9600 [bps] </string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>19200 [bps] </string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>38400 [bps] </string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>57600 [bps] </string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>115200 [bps] </string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="label_4">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Microsoft YaHei UI</family>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Ретрансляция RS485</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QGridLayout" name="gridLayout_6">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_9">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>PLC</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="label_6">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>PLC</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QToolButton" name="btnRSToPLCRet">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">background-color: qradialgradient(spread:pad, cx:0.503114, cy:0.168, radius:0.824, fx:0.497929, fy:0.99116, stop:0.153257 rgba(255, 65, 0, 59), stop:1 rgba(0, 0, 0, 0));</string>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../RESOURCES/images.qrc">
+                   <normaloff>:/images/icons/images/down_red.png</normaloff>
+                   <normalon>:/images/icons/images/down_green.png</normalon>:/images/icons/images/down_red.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>20</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_5">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>RS</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="3">
+                <widget class="QToolButton" name="btnRFToRSRet">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string/>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../RESOURCES/images.qrc">
+                   <normaloff>:/images/icons/images/down_red.png</normaloff>
+                   <normalon>:/images/icons/images/down_green.png</normalon>:/images/icons/images/down_red.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>20</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLabel" name="label_10">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>RS</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QToolButton" name="btnPLCToRSRet">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Х</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../RESOURCES/images.qrc">
+                   <normaloff>:/images/icons/images/down_red.png</normaloff>
+                   <normalon>:/images/icons/images/down_green.png</normalon>:/images/icons/images/down_red.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>20</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="2">
+                <widget class="QToolButton" name="btnRSToRFRet">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Х</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="../RESOURCES/images.qrc">
+                   <normaloff>:/images/icons/images/down_red.png</normaloff>
+                   <normalon>:/images/icons/images/down_green.png</normalon>:/images/icons/images/down_red.png</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>20</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                 <property name="checkable">
+                  <bool>true</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QLabel" name="label_8">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>RF433</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="3">
+                <widget class="QLabel" name="label_12">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>RS</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="2">
+                <widget class="QLabel" name="label_11">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>RF433</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QLabel" name="label_7">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>RS</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QGridLayout" name="gridLayout_5">
+               <item row="0" column="1">
+                <widget class="QCheckBox" name="RSToRFUp_Link">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                   <weight>50</weight>
+                   <bold>false</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>RS -&gt; RF Set Up_Linc</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="RSToPLCUp_Link">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                   <weight>50</weight>
+                   <bold>false</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string> RS -&gt; PLC Set Up_Linc</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="RS_Debug_Widget" native="true">
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>5</number>
+             </property>
+             <property name="topMargin">
+              <number>5</number>
+             </property>
+             <property name="rightMargin">
+              <number>5</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="label_13">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Microsoft YaHei UI</family>
+                 <pointsize>10</pointsize>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Выбор отладочной информации</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QGridLayout" name="gridLayout_3">
+               <item row="3" column="0">
+                <widget class="QCheckBox" name="DebugPLCInititalisation">
+                 <property name="text">
+                  <string>PLC Initialisation</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="0">
+                <widget class="QCheckBox" name="DebugFlashEnable">
+                 <property name="text">
+                  <string>FLASH Debug Enable</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="1">
+                <widget class="QCheckBox" name="DebugSI4463Initialisation">
+                 <property name="text">
+                  <string>SI4463 Iitialisation</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QCheckBox" name="DebugHOSTUART">
+                 <property name="text">
+                  <string>HOST UART RX Handling</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QCheckBox" name="DebugRFEnable">
+                 <property name="text">
+                  <string>SI4463 Debug Enable</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="7" column="1">
+                <widget class="QCheckBox" name="DebugFlashFull">
+                 <property name="text">
+                  <string>FLASH Full Data Debug</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QCheckBox" name="DebugGlobalEnable">
+                 <property name="text">
+                  <string>Debug Global Enable</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QCheckBox" name="DebugPLCHandling">
+                 <property name="text">
+                  <string>PLC RX/TX Handling</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QCheckBox" name="DebugSPIEnable">
+                 <property name="text">
+                  <string>SPI Debug Enable</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QCheckBox" name="DebugPLCUART">
+                 <property name="text">
+                  <string>PLC UART</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QCheckBox" name="DebugInterfaceControl">
+                 <property name="text">
+                  <string>Interface Control</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QCheckBox" name="DebugToHostHandling">
+                 <property name="text">
+                  <string>To Host  Handling</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QCheckBox" name="DebugFromHostHandling">
+                 <property name="text">
+                  <string>From Host Handling</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QCheckBox" name="DebugRetranslationHandling">
+                 <property name="text">
+                  <string>Retranslation Handling</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QCheckBox" name="DebugRSEnable">
+                 <property name="text">
+                  <string>RS485 Debug Enable</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="progress">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>9</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>9</height>
+             </size>
+            </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="value">
              <number>0</number>
             </property>
-            <property name="verticalSpacing">
-             <number>6</number>
-            </property>
-            <item row="0" column="2">
-             <widget class="QLabel" name="label_7">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-               </font>
-              </property>
-              <property name="text">
-               <string>RS -&gt; RF</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="1">
-             <widget class="QLabel" name="label_8">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-               </font>
-              </property>
-              <property name="text">
-               <string>RS &lt;- PLC</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="3">
-             <widget class="QLabel" name="label_12">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-               </font>
-              </property>
-              <property name="text">
-               <string>RS &lt;- RF</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <widget class="QToolButton" name="btnRSEnable_4">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-               </font>
-              </property>
-              <property name="text">
-               <string>Включить</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QToolButton" name="btnRFEnable_2">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-               </font>
-              </property>
-              <property name="text">
-               <string>Включить</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="2">
-             <widget class="QToolButton" name="btnRSEnable_2">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-               </font>
-              </property>
-              <property name="text">
-               <string>Включить</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QToolButton" name="btnPLCEnable_2">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-               </font>
-              </property>
-              <property name="text">
-               <string>Включить</string>
-              </property>
-              <property name="checkable">
-               <bool>true</bool>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_6">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-               </font>
-              </property>
-              <property name="text">
-               <string>RS -&gt; PLC</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_5">
-            <item row="0" column="1">
-             <widget class="QCheckBox" name="RSToRF_Up_Link">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-                <weight>50</weight>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>RS -&gt; RF Set Up_Linc</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QCheckBox" name="RSToPLC_Up_Link">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-                <weight>50</weight>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string> RS -&gt; PLC Set Up_Linc</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QWidget" name="RS_Debug_Widget" native="true">
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QLabel" name="label_22">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <family>Microsoft YaHei UI</family>
-              <pointsize>10</pointsize>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Выбор отладочной информации</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignCenter</set>
+            <property name="textVisible">
+             <bool>false</bool>
             </property>
            </widget>
           </item>
           <item>
-           <layout class="QGridLayout" name="gridLayout_3">
-            <item row="3" column="0">
-             <widget class="QCheckBox" name="checkBox_2">
-              <property name="text">
-               <string>PLC Initialisation</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QCheckBox" name="checkBox_9">
-              <property name="text">
-               <string>FLASH Debug Enable</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="1">
-             <widget class="QCheckBox" name="checkBox_6">
-              <property name="text">
-               <string>SI4463 Iitialisation</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="1">
-             <widget class="QCheckBox" name="checkBox_8">
-              <property name="text">
-               <string>HOST UART RX Handling</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QCheckBox" name="checkBox_7">
-              <property name="text">
-               <string>SI4463 Debug Enable</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="1">
-             <widget class="QCheckBox" name="checkBox_10">
-              <property name="text">
-               <string>FLASH Full Data Debug</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QCheckBox" name="checkBox">
-              <property name="text">
-               <string>Debug Global Enable</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QCheckBox" name="checkBox_4">
-              <property name="text">
-               <string>PLC RX/TX Handling</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0">
-             <widget class="QCheckBox" name="checkBox_5">
-              <property name="text">
-               <string>SPI Debug Enable</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="1">
-             <widget class="QCheckBox" name="checkBox_3">
-              <property name="text">
-               <string>PLC UART</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QCheckBox" name="checkBox_11">
-              <property name="text">
-               <string>Interface Control</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QCheckBox" name="checkBox_12">
-              <property name="text">
-               <string>To Host  Handling</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QCheckBox" name="checkBox_13">
-              <property name="text">
-               <string>From Host Handling</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QCheckBox" name="checkBox_14">
-              <property name="text">
-               <string>Retranslation Handling</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="1">
-             <widget class="QCheckBox" name="checkBox_15">
-              <property name="text">
-               <string>RS485 Debug Enable</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QProgressBar" name="progress">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>9</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>9</height>
-          </size>
-         </property>
-         <property name="layoutDirection">
-          <enum>Qt::LeftToRight</enum>
-         </property>
-         <property name="value">
-          <number>0</number>
-         </property>
-         <property name="textVisible">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_4">
-         <property name="spacing">
-          <number>0</number>
-         </property>
-         <item>
-          <widget class="QPushButton" name="Read">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Microsoft YaHei UI</family>
-            </font>
-           </property>
-           <property name="text">
-            <string>Обновить статус</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QPushButton" name="Stop">
-           <property name="enabled">
-            <bool>false</bool>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>16777215</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>Microsoft YaHei UI</family>
-            </font>
-           </property>
-           <property name="text">
-            <string>Стоп</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QWidget" name="Reset_Widget" native="true">
-           <layout class="QVBoxLayout" name="verticalLayout_4">
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
             <property name="spacing">
              <number>0</number>
             </property>
-            <property name="leftMargin">
-             <number>0</number>
-            </property>
-            <property name="topMargin">
-             <number>0</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
-            <property name="bottomMargin">
-             <number>0</number>
-            </property>
             <item>
-             <widget class="QPushButton" name="Reset">
+             <widget class="QPushButton" name="Read">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
                 <horstretch>0</horstretch>
@@ -817,74 +898,158 @@
                </font>
               </property>
               <property name="text">
-               <string>Modem Reset</string>
+               <string/>
               </property>
              </widget>
             </item>
+            <item>
+             <widget class="QPushButton" name="Stop">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <family>Microsoft YaHei UI</family>
+               </font>
+              </property>
+              <property name="text">
+               <string>Стоп</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QWidget" name="Reset_Widget" native="true">
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <property name="spacing">
+                <number>0</number>
+               </property>
+               <property name="leftMargin">
+                <number>0</number>
+               </property>
+               <property name="topMargin">
+                <number>0</number>
+               </property>
+               <property name="rightMargin">
+                <number>0</number>
+               </property>
+               <property name="bottomMargin">
+                <number>0</number>
+               </property>
+               <item>
+                <widget class="QPushButton" name="Reset">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <family>Microsoft YaHei UI</family>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Modem Reset</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
            </layout>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="Line" name="line_2">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
+          </item>
+          <item>
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="ClearConsole">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft YaHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Очистить Лог</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPlainTextEdit" name="console">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>200</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>Microsoft YaHei UI</family>
+              <pointsize>7</pointsize>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">border: none;</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="ClearConsole">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Microsoft YaHei UI</family>
-           <pointsize>8</pointsize>
-          </font>
-         </property>
-         <property name="text">
-          <string>Очистить Лог</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPlainTextEdit" name="console">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>200</height>
-          </size>
-         </property>
-         <property name="font">
-          <font>
-           <family>Microsoft YaHei UI</family>
-           <pointsize>7</pointsize>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">border: none;</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
+       </widget>
+      </item>
+     </layout>
     </widget>
    </item>
    <item>
@@ -981,35 +1146,59 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="Next">
+         <widget class="QWidget" name="Next_Widget" native="true">
           <property name="enabled">
            <bool>false</bool>
           </property>
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>40</height>
-           </size>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="icon">
-           <iconset resource="../RESOURCES/images.qrc">
-            <normaloff>:/images/icons/images/NEXT.png</normaloff>:/images/icons/images/NEXT.png</iconset>
-          </property>
-          <property name="iconSize">
-           <size>
-            <width>30</width>
-            <height>30</height>
-           </size>
-          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QPushButton" name="Next">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>40</height>
+              </size>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="icon">
+              <iconset resource="../RESOURCES/images.qrc">
+               <normaloff>:/images/icons/images/NEXT.png</normaloff>:/images/icons/images/NEXT.png</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>30</width>
+               <height>30</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>

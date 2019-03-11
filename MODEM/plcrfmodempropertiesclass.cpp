@@ -14,10 +14,10 @@ Interfaces_Control_Type PlcRfModemPropertiesClass::getPLC_RF433_Interfaces_Contr
 void                    PlcRfModemPropertiesClass::setPLC_RF433_Interfaces_Control(Interfaces_Control_Type new_value){
     this->PLC_RF433_Interfaces_Control = new_value;
 }
-DEBUG_Control_Type      PlcRfModemPropertiesClass::getPLC_RF433_DEBUG_Control(void){
+Debug_Control_Type      PlcRfModemPropertiesClass::getPLC_RF433_Debug_Control(void){
     return this->PLC_RF433_DEBUG_Control;
 }
-void                    PlcRfModemPropertiesClass::setPLC_RF433_DEBUG_Control(DEBUG_Control_Type new_value){
+void                    PlcRfModemPropertiesClass::setPLC_RF433_Debug_Control(Debug_Control_Type new_value){
     this->PLC_RF433_DEBUG_Control = new_value;
 }
 unsigned char  PlcRfModemPropertiesClass::getModem_Mode(void){
@@ -30,19 +30,19 @@ unsigned char  PlcRfModemPropertiesClass::getPLC_EN(void){
     return this->PLC_RF433_Interfaces_Control.Field.PLC_EN;
 }
 void           PlcRfModemPropertiesClass::setPLC_EN(unsigned char new_value){
-    this->PLC_RF433_Interfaces_Control.Field.PLC_EN = (new_value & 3);
+    this->PLC_RF433_Interfaces_Control.Field.PLC_EN = (new_value & 1);
 }
 unsigned char  PlcRfModemPropertiesClass::getRF_EN(void){
     return this->PLC_RF433_Interfaces_Control.Field.RF_EN;
 }
 void           PlcRfModemPropertiesClass::setRF_EN(unsigned char new_value){
-    this->PLC_RF433_Interfaces_Control.Field.RF_EN = (new_value & 3);
+    this->PLC_RF433_Interfaces_Control.Field.RF_EN = (new_value & 1);
 }
 unsigned char  PlcRfModemPropertiesClass::getRS_EN(void){
     return this->PLC_RF433_Interfaces_Control.Field.RS_EN;
 }
 void           PlcRfModemPropertiesClass::setRS_EN(unsigned char new_value){
-    this->PLC_RF433_Interfaces_Control.Field.RS_EN = (new_value & 3);
+    this->PLC_RF433_Interfaces_Control.Field.RS_EN = (new_value & 1);
 }
 unsigned char  PlcRfModemPropertiesClass::getPLC_TO_PLC_RET_EN(void){
     return this->PLC_RF433_Interfaces_Control.Field.PLC_TO_PLC_RET_EN;
@@ -97,6 +97,30 @@ unsigned char  PlcRfModemPropertiesClass::getRS_USE_AS_DEBUG_OUTPUT(void){
 }
 void           PlcRfModemPropertiesClass::setRS_USE_AS_DEBUG_OUTPUT(unsigned char new_value){
     this->PLC_RF433_Interfaces_Control.Field.RS_USE_AS_DEBUG_OUTPUT = (new_value & 1);
+}
+unsigned char  PlcRfModemPropertiesClass::getRS_TO_RF_UP_LINK(void){
+    return this->PLC_RF433_Interfaces_Control.Field.RS_TO_RF_UP_LINK;
+}
+void           PlcRfModemPropertiesClass::setRS_TO_RF_UP_LINK(unsigned char new_value){
+    this->PLC_RF433_Interfaces_Control.Field.RS_TO_RF_UP_LINK = (new_value & 1);
+}
+unsigned char  PlcRfModemPropertiesClass::getRS_TO_PLC_UP_LINK(void){
+    return this->PLC_RF433_Interfaces_Control.Field.RS_TO_PLC_UP_LINK;
+}
+void           PlcRfModemPropertiesClass::setRS_TO_PLC_UP_LINK(unsigned char new_value){
+    this->PLC_RF433_Interfaces_Control.Field.RS_TO_PLC_UP_LINK = (new_value & 1);
+}
+unsigned char  PlcRfModemPropertiesClass::getMODBUS_CRC_CHECK_DISABLE(void){
+    return this->PLC_RF433_Interfaces_Control.Field.MODBUS_CRC_CHECK_DISABLE;
+}
+void           PlcRfModemPropertiesClass::setMODBUS_CRC_CHECK_DISABLE(unsigned char new_value){
+    this->PLC_RF433_Interfaces_Control.Field.MODBUS_CRC_CHECK_DISABLE = (new_value & 1);
+}
+unsigned char  PlcRfModemPropertiesClass::getRS_BAUDRATE(void){
+    return this->PLC_RF433_Interfaces_Control.Field.RS_BAUDRATE;
+}
+void           PlcRfModemPropertiesClass::setRS_BAUDRATE(unsigned char new_value){
+    this->PLC_RF433_Interfaces_Control.Field.RS_BAUDRATE = (new_value & 0xF);
 }
 
 unsigned char  PlcRfModemPropertiesClass::getEEPROM_INIT_OK(void){
@@ -213,4 +237,10 @@ unsigned char  PlcRfModemPropertiesClass::getRS_DEBUG_EN(void){
 }
 void           PlcRfModemPropertiesClass::setRS_DEBUG_EN(unsigned char new_value){
     this->PLC_RF433_DEBUG_Control.Field.RS_DEBUG_EN = (new_value & 1);
+}
+RealTime   PlcRfModemPropertiesClass::getLastAOPENTime(){
+    return this->LastAOPENTime;
+}
+void       PlcRfModemPropertiesClass::setLastAOPENTime(RealTime new_value){
+    this->LastAOPENTime = new_value;
 }

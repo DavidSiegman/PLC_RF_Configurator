@@ -6,12 +6,14 @@ PLC_RF_NetSettings_Form::PLC_RF_NetSettings_Form(QWidget *parent) :
 {
     ui = new Ui::PLC_RF_NetSettings_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
     ui->btnPLCToPLCRet->setStyleSheet(Basic_ToolButtons_Style);
@@ -73,8 +75,7 @@ PLC_RF_NetSettings_Form::PLC_RF_NetSettings_Form(QWidget *parent) :
     connect(ui->ClearConsole, SIGNAL(clicked(bool)), ui->console, SLOT(clear()));
 }
 
-PLC_RF_NetSettings_Form::~PLC_RF_NetSettings_Form()
-{
+PLC_RF_NetSettings_Form::~PLC_RF_NetSettings_Form(){
     emit Get_Console(NULL);
     delete ui;
 }
@@ -101,7 +102,10 @@ void PLC_RF_NetSettings_Form::on_Reset_clicked(){
     emit Get_Console(ui->console);
 
     ui->Stop->setEnabled(true);
-    //ui->Iterfaces_Widget->setEnabled(false);
+    ui->Mode->setEnabled(false);
+    ui->SlaveMode_Widget->setEnabled(false);
+    ui->MasterMode_Widget->setEnabled(false);
+    ui->CRC_Control_Widget->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
@@ -111,7 +115,10 @@ void PLC_RF_NetSettings_Form::on_Reset_clicked(){
 }
 void PLC_RF_NetSettings_Form::isStopped(void){
     ui->Stop->setEnabled(false);
-    //ui->Iterfaces_Widget->setEnabled(true);
+    ui->Mode->setEnabled(true);
+    ui->SlaveMode_Widget->setEnabled(true);
+    ui->MasterMode_Widget->setEnabled(true);
+    ui->CRC_Control_Widget->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -119,11 +126,16 @@ void PLC_RF_NetSettings_Form::isStopped(void){
 }
 void PLC_RF_NetSettings_Form::isRF_Reset(void){
     ui->Stop->setEnabled(false);
-    //ui->Iterfaces_Widget->setEnabled(true);
+    ui->Mode->setEnabled(true);
+    ui->SlaveMode_Widget->setEnabled(true);
+    ui->MasterMode_Widget->setEnabled(true);
+    ui->CRC_Control_Widget->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
     ui->Next->setEnabled(true);
+
+    this->Back_ClickHandler();
 }
 void PLC_RF_NetSettings_Form::resizeEvent(QResizeEvent *event){
     emit isCreated();
@@ -209,10 +221,6 @@ void PLC_RF_NetSettings_Form::resizeEvent(QResizeEvent *event){
 
     ui->console->setFont(font_5);
 
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
-
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
@@ -238,7 +246,7 @@ void PLC_RF_NetSettings_Form::Set_In_PLC_RF433_Modem_Properties(PlcRfModemProper
 
     setInterfaces_ControlToUI(In_PLC_RF433_Modem_Properties->getPLC_RF433_Interfaces_Control());
 
-    //Out_PLC_RF433_Modem_Properties->setPLC_RF433_DEBUG_Control(In_PLC_RF433_Modem_Properties->getPLC_RF433_DEBUG_Control());
+    //Out_PLC_RF433_Modem_Properties->setPLC_RF433_Debug_Control(In_PLC_RF433_Modem_Properties->getPLC_RF433_Debug_Control());
     Out_PLC_RF433_Modem_Properties->setPLC_RF433_Interfaces_Control(In_PLC_RF433_Modem_Properties->getPLC_RF433_Interfaces_Control());
 }
 void PLC_RF_NetSettings_Form::Set_Out_Sniffer_Properties(SnifferPropertiesClass* new_data){
@@ -269,7 +277,7 @@ void PLC_RF_NetSettings_Form::Set_In_Retranslator_Properties (RetranslatorProper
     Out_Retranslator_Properties->setRetranslator_Mode(In_Retranslator_Properties->getRetranslator_Mode());
     Out_Retranslator_Properties->setRetranslator_Timeout(In_Retranslator_Properties->getRetranslator_Timeout());
 
-    //SetSwitchModeToUI(Out_Retranslator_Properties->getRetranslator_Mode());
+    SetSwitchModeToUI(Out_Retranslator_Properties->getRetranslator_Mode());
     //SetSwitchLevelToUI(Out_Retranslator_Properties->getRetranslator_Level());
     SetSwitchTimeoutToUI(Out_Retranslator_Properties->getRetranslator_Timeout());
     SetSwitchMaskToUI(Out_Retranslator_Properties->getRetranslator_Level());
@@ -279,7 +287,10 @@ void PLC_RF_NetSettings_Form::on_Mode_currentIndexChanged(int index){
         emit Get_Console(ui->console);
         Out_PLC_RF433_Modem_Properties->setModem_Mode((uchar)(index));
         ui->Stop->setEnabled(true);
-        //ui->SettingsWidget->setEnabled(false);
+        ui->Mode->setEnabled(false);
+        ui->SlaveMode_Widget->setEnabled(false);
+        ui->MasterMode_Widget->setEnabled(false);
+        ui->CRC_Control_Widget->setEnabled(false);
         ui->Reset->setEnabled(false);
         ui->Back->setEnabled(false);
         ui->btnSettings->setEnabled(false);
@@ -297,7 +308,10 @@ void PLC_RF_NetSettings_Form::on_btnPLCToPLCRet_released()
         Out_PLC_RF433_Modem_Properties->setPLC_TO_PLC_RET_EN(0);
     }
     ui->Stop->setEnabled(true);
-    //ui->Iterfaces_Widget->setEnabled(false);
+    ui->Mode->setEnabled(false);
+    ui->SlaveMode_Widget->setEnabled(false);
+    ui->MasterMode_Widget->setEnabled(false);
+    ui->CRC_Control_Widget->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
@@ -313,7 +327,10 @@ void PLC_RF_NetSettings_Form::on_btnPLCToRFRet_released()
         Out_PLC_RF433_Modem_Properties->setPLC_TO_RF_RET_EN(0);
     }
     ui->Stop->setEnabled(true);
-    //ui->Iterfaces_Widget->setEnabled(false);
+    ui->Mode->setEnabled(false);
+    ui->SlaveMode_Widget->setEnabled(false);
+    ui->MasterMode_Widget->setEnabled(false);
+    ui->CRC_Control_Widget->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
@@ -329,7 +346,10 @@ void PLC_RF_NetSettings_Form::on_btnRFToPLCRet_released()
         Out_PLC_RF433_Modem_Properties->setRF_TO_PLC_RET_EN(0);
     }
     ui->Stop->setEnabled(true);
-    //ui->Iterfaces_Widget->setEnabled(false);
+    ui->Mode->setEnabled(false);
+    ui->SlaveMode_Widget->setEnabled(false);
+    ui->MasterMode_Widget->setEnabled(false);
+    ui->CRC_Control_Widget->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
@@ -345,18 +365,53 @@ void PLC_RF_NetSettings_Form::on_btnRFToRFRet_released()
         Out_PLC_RF433_Modem_Properties->setRF_TO_RF_RET_EN(0);
     }
     ui->Stop->setEnabled(true);
-    //ui->Iterfaces_Widget->setEnabled(false);
+    ui->Mode->setEnabled(false);
+    ui->SlaveMode_Widget->setEnabled(false);
+    ui->MasterMode_Widget->setEnabled(false);
+    ui->CRC_Control_Widget->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
     ui->Next->setEnabled(false);
     emit StartSendingProcess(SEND_WRITE_INTERFACES_CONTROL,CONFIG_SEND_CONTROL);
 }
+void PLC_RF_NetSettings_Form::on_Switch_stateChanged(int arg1){
+    if ((arg1 == 0)&&(Get_SwitchMode() != 0)){
+        emit Get_Console(ui->console);
+        Set_SwitchMode(0);
+        ui->Stop->setEnabled(true);
+        ui->Mode->setEnabled(false);
+        ui->SlaveMode_Widget->setEnabled(false);
+        ui->MasterMode_Widget->setEnabled(false);
+        ui->CRC_Control_Widget->setEnabled(false);
+        ui->Reset->setEnabled(false);
+        ui->Back->setEnabled(false);
+        ui->btnSettings->setEnabled(false);
+        ui->Next->setEnabled(false);
+        emit StartSendingProcess(SEND_WRITE_SWITCH_MODE,CONFIG_SEND_CONTROL);
+    }
+    else if ((arg1 == 2)&&(Get_SwitchMode() != 1)){
+        emit Get_Console(ui->console);
+        Set_SwitchMode(1);
+        ui->Stop->setEnabled(true);
+        ui->Mode->setEnabled(false);
+        ui->SlaveMode_Widget->setEnabled(false);
+        ui->MasterMode_Widget->setEnabled(false);
+        ui->CRC_Control_Widget->setEnabled(false);
+        ui->Reset->setEnabled(false);
+        ui->Back->setEnabled(false);
+        ui->btnSettings->setEnabled(false);
+        ui->Next->setEnabled(false);
+        emit StartSendingProcess(SEND_WRITE_SWITCH_MODE,CONFIG_SEND_CONTROL);
+    }
+}
 void PLC_RF_NetSettings_Form::on_SetMask_clicked(){
     emit Get_Console(ui->console);
     ui->Stop->setEnabled(true);
-    //ui->SettingsWidget->setEnabled(false);
-    //ui->NetTable->setEnabled(false);
+    ui->Mode->setEnabled(false);
+    ui->SlaveMode_Widget->setEnabled(false);
+    ui->MasterMode_Widget->setEnabled(false);
+    ui->CRC_Control_Widget->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
@@ -367,8 +422,10 @@ void PLC_RF_NetSettings_Form::on_SetTimeout_clicked(){
     emit Get_Console(ui->console);
     Set_SwitchTimeout(ui->SwitchTM->text().toInt());
     ui->Stop->setEnabled(true);
-    //ui->SettingsWidget->setEnabled(false);
-    //ui->NetTable->setEnabled(false);
+    ui->Mode->setEnabled(false);
+    ui->SlaveMode_Widget->setEnabled(false);
+    ui->MasterMode_Widget->setEnabled(false);
+    ui->CRC_Control_Widget->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
@@ -385,7 +442,10 @@ void PLC_RF_NetSettings_Form::on_Up_Link_stateChanged(int arg1){
             Set_UpLink(1);
         }
         ui->Stop->setEnabled(true);
-        //ui->SettingsWidget->setEnabled(false);
+        ui->Mode->setEnabled(false);
+        ui->SlaveMode_Widget->setEnabled(false);
+        ui->MasterMode_Widget->setEnabled(false);
+        ui->CRC_Control_Widget->setEnabled(false);
         ui->Reset->setEnabled(false);
         ui->Back->setEnabled(false);
         ui->btnSettings->setEnabled(false);
@@ -405,13 +465,39 @@ void PLC_RF_NetSettings_Form::on_Disable_CRC_stateChanged(int arg1){
         }
 
         ui->Stop->setEnabled(true);
-        //ui->SettingsWidget->setEnabled(false);
+        ui->Mode->setEnabled(false);
+        ui->SlaveMode_Widget->setEnabled(false);
+        ui->MasterMode_Widget->setEnabled(false);
+        ui->CRC_Control_Widget->setEnabled(false);
         ui->Reset->setEnabled(false);
         ui->Back->setEnabled(false);
         ui->btnSettings->setEnabled(false);
         ui->Next->setEnabled(false);
 
         emit StartSendingProcess(SEND_WRITE_CRC_CHECK_MODE,CONFIG_SEND_CONTROL);
+    }
+}
+void PLC_RF_NetSettings_Form::on_Disable_MODBUS_CRC_stateChanged(int arg1){
+    if (this->Get_resizing_going() == 0){
+        emit Get_Console(ui->console);
+        if (arg1 == 0){
+            Out_PLC_RF433_Modem_Properties->setMODBUS_CRC_CHECK_DISABLE(0);
+        }
+        else{
+            Out_PLC_RF433_Modem_Properties->setMODBUS_CRC_CHECK_DISABLE(1);
+        }
+
+        ui->Stop->setEnabled(true);
+        ui->Mode->setEnabled(false);
+        ui->SlaveMode_Widget->setEnabled(false);
+        ui->MasterMode_Widget->setEnabled(false);
+        ui->CRC_Control_Widget->setEnabled(false);
+        ui->Reset->setEnabled(false);
+        ui->Back->setEnabled(false);
+        ui->btnSettings->setEnabled(false);
+        ui->Next->setEnabled(false);
+
+        emit StartSendingProcess(SEND_WRITE_INTERFACES_CONTROL,CONFIG_SEND_CONTROL);
     }
 }
 void PLC_RF_NetSettings_Form::on_Broadcasting_stateChanged(int arg1)
@@ -426,7 +512,10 @@ void PLC_RF_NetSettings_Form::on_Broadcasting_stateChanged(int arg1)
         }
 
         ui->Stop->setEnabled(true);
-        //ui->SettingsWidget->setEnabled(false);
+        ui->Mode->setEnabled(false);
+        ui->SlaveMode_Widget->setEnabled(false);
+        ui->MasterMode_Widget->setEnabled(false);
+        ui->CRC_Control_Widget->setEnabled(false);
         ui->Reset->setEnabled(false);
         ui->Back->setEnabled(false);
         ui->btnSettings->setEnabled(false);
@@ -441,7 +530,10 @@ void PLC_RF_NetSettings_Form::on_SetDestinationMASK_clicked()
         emit Get_Console(ui->console);
 
         ui->Stop->setEnabled(true);
-        //ui->SettingsWidget->setEnabled(false);
+        ui->Mode->setEnabled(false);
+        ui->SlaveMode_Widget->setEnabled(false);
+        ui->MasterMode_Widget->setEnabled(false);
+        ui->CRC_Control_Widget->setEnabled(false);
         ui->Reset->setEnabled(false);
         ui->Back->setEnabled(false);
         ui->btnSettings->setEnabled(false);
@@ -474,35 +566,52 @@ void PLC_RF_NetSettings_Form::setInterfaces_ControlToUI(Interfaces_Control_Type 
     }else{
         ui->btnRFToRFRet->setChecked(false);
     }
-    if ((Interfaces_Control.Field.PLC_EN == 3) && (Interfaces_Control.Field.PLC_INIT_OK == 1)){
-        ui->btnPLCToPLCRet->setEnabled(true);
-        ui->btnPLCToRFRet->setEnabled(true);
-        ui->btnRFToPLCRet->setEnabled(true);
-    }else{
+    if ((Interfaces_Control.Field.PLC_EN != INTERFACE_ENABLE) || (Interfaces_Control.Field.PLC_INIT_OK != INTERFACE_OK_INIT)){
         ui->btnPLCToPLCRet->setEnabled(false);
-        ui->btnPLCToRFRet->setEnabled(false);
-        ui->btnRFToPLCRet->setEnabled(false);
     }
-    if ((Interfaces_Control.Field.RF_EN == 3) && (Interfaces_Control.Field.RF_INIT_OK == 1)){
-        ui->btnRFToRFRet->setEnabled(true);
-        ui->btnPLCToRFRet->setEnabled(true);
-        ui->btnRFToPLCRet->setEnabled(true);
-    }else{
+    if ((Interfaces_Control.Field.RF_EN != INTERFACE_ENABLE) || (Interfaces_Control.Field.RF_INIT_OK != INTERFACE_OK_INIT)){
         ui->btnRFToRFRet->setEnabled(false);
+    }
+    if ((Interfaces_Control.Field.PLC_EN != INTERFACE_ENABLE) || (Interfaces_Control.Field.PLC_INIT_OK != INTERFACE_OK_INIT) ||
+        (Interfaces_Control.Field.RF_EN != INTERFACE_ENABLE) || (Interfaces_Control.Field.RF_INIT_OK != INTERFACE_OK_INIT)){
         ui->btnPLCToRFRet->setEnabled(false);
         ui->btnRFToPLCRet->setEnabled(false);
     }
     if ((ui->btnPLCToPLCRet->isChecked() == false) &&
         (ui->btnPLCToRFRet->isChecked() == false) &&
         (ui->btnRFToPLCRet->isChecked() == false) &&
-        (ui->btnPLCToRFRet->isChecked() == false)
+        (ui->btnRFToRFRet->isChecked() == false)
        ){
         ui->NetMask_Widget->setEnabled(false);
         ui->Timeout_Widget->setEnabled(false);
     }else{
-        ui->NetMask_Widget->setEnabled(true);
-        ui->Timeout_Widget->setEnabled(true);
+        if (ui->Switch->isChecked() == true){
+            ui->NetMask_Widget->setEnabled(true);
+            ui->Timeout_Widget->setEnabled(true);
+        }
     }
+    // если хотябы один интерфейс актевирован, разблокируем кнопку next
+    if (((Interfaces_Control.Field.PLC_EN == INTERFACE_ENABLE) && (Interfaces_Control.Field.PLC_INIT_OK == INTERFACE_OK_INIT)) ||
+        ((Interfaces_Control.Field.RF_EN == INTERFACE_ENABLE) && (Interfaces_Control.Field.RF_INIT_OK == INTERFACE_OK_INIT))   ||
+        ((Interfaces_Control.Field.RS_EN == INTERFACE_ENABLE) && (Interfaces_Control.Field.RS_INIT_OK == INTERFACE_OK_INIT)) ){
+        ui->Next_Widget->setEnabled(true);
+        ui->Next->setEnabled(true);
+    }else{
+        ui->Next_Widget->setEnabled(false);
+    }
+    if (Interfaces_Control.Field.MODBUS_CRC_CHECK_DISABLE == 1){
+        ui->Disable_MODBUS_CRC->setChecked(true);
+    }else{
+        ui->Disable_MODBUS_CRC->setChecked(false);
+    }
+}
+void PLC_RF_NetSettings_Form::Set_SwitchMode(uchar  new_value)
+{
+    Out_Retranslator_Properties->setRetranslator_Mode(new_value);
+}
+uchar PLC_RF_NetSettings_Form::Get_SwitchMode(void)
+{
+    return Out_Retranslator_Properties->getRetranslator_Mode();
 }
 void PLC_RF_NetSettings_Form::SetUpLink_ModeToUI(uchar new_value){
     if(((new_value&1) == 0)&&(ui->Up_Link->isChecked() == true)){
@@ -518,6 +627,14 @@ void PLC_RF_NetSettings_Form::SetCRC_Disable_ModeToUI(uchar new_value){
     }
     else if (((new_value&1) == 1)&&(ui->Disable_CRC->isChecked() == false)){
         ui->Disable_CRC->setChecked(true);
+    }
+}
+void PLC_RF_NetSettings_Form::SetMODBUSCRC_Disable_ModeToUI(uchar new_value){
+    if(((new_value&1) == 0)&&(ui->Disable_MODBUS_CRC->isChecked() == true)){
+        ui->Disable_MODBUS_CRC->setChecked(false);
+    }
+    else if (((new_value&1) == 1)&&(ui->Disable_MODBUS_CRC->isChecked() == false)){
+        ui->Disable_MODBUS_CRC->setChecked(true);
     }
 }
 void PLC_RF_NetSettings_Form::SetBroadcasting_ModeToUI(uchar new_value){
@@ -543,12 +660,25 @@ void PLC_RF_NetSettings_Form::SetMaskDestinationToUI(uint mask){
     ui->LVL8_2->setValue(new_mask.Field.Retranslation_MASK_0.Field.LVL8);
     ui->LVL9_2->setValue(new_mask.Field.Retranslation_MASK_1.Field.LVL9);
 }
-void PLC_RF_NetSettings_Form::SetSwitchTimeoutToUI(uint new_value)
+void PLC_RF_NetSettings_Form::SetSwitchModeToUI(uchar new_value)
 {
+    if (new_value == 0){
+        ui->Switch->setChecked(false);
+        ui->NetMask_Widget->setEnabled(false);
+        ui->RF_PLC_Net_Widget->setEnabled(false);
+        ui->Timeout_Widget->setEnabled(false);
+    }
+    else if (new_value == 1){
+        ui->Switch->setChecked(true);
+        ui->NetMask_Widget->setEnabled(true);
+        ui->RF_PLC_Net_Widget->setEnabled(true);
+        ui->Timeout_Widget->setEnabled(true);
+    }
+}
+void PLC_RF_NetSettings_Form::SetSwitchTimeoutToUI(uint new_value){
     ui->SwitchTM->setValue(new_value);
 }
-void PLC_RF_NetSettings_Form::SetSwitchMaskToUI(uint new_value)
-{
+void PLC_RF_NetSettings_Form::SetSwitchMaskToUI(uint new_value){
     RF_Switch_Mask new_mask;
     (*(uint*)&(new_mask)) = new_value;
 
@@ -566,7 +696,10 @@ void PLC_RF_NetSettings_Form::SetSwitchMaskToUI(uint new_value)
 
 void PLC_RF_NetSettings_Form::isInterfaces_Control(){
     ui->Stop->setEnabled(false);
-    //ui->Iterfaces_Widget->setEnabled(true);
+    ui->Mode->setEnabled(true);
+    ui->SlaveMode_Widget->setEnabled(true);
+    ui->MasterMode_Widget->setEnabled(true);
+    ui->CRC_Control_Widget->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -575,7 +708,10 @@ void PLC_RF_NetSettings_Form::isInterfaces_Control(){
 void PLC_RF_NetSettings_Form::isUpLink_Mode(void)
 {
     ui->Stop->setEnabled(false);
-    //ui->SettingsWidget->setEnabled(true);
+    ui->Mode->setEnabled(true);
+    ui->SlaveMode_Widget->setEnabled(true);
+    ui->MasterMode_Widget->setEnabled(true);
+    ui->CRC_Control_Widget->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -584,7 +720,10 @@ void PLC_RF_NetSettings_Form::isUpLink_Mode(void)
 void PLC_RF_NetSettings_Form::isCRC_Disable_Mode(void)
 {
     ui->Stop->setEnabled(false);
-    //ui->SettingsWidget->setEnabled(true);
+    ui->Mode->setEnabled(true);
+    ui->SlaveMode_Widget->setEnabled(true);
+    ui->MasterMode_Widget->setEnabled(true);
+    ui->CRC_Control_Widget->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -593,7 +732,10 @@ void PLC_RF_NetSettings_Form::isCRC_Disable_Mode(void)
 void PLC_RF_NetSettings_Form::isBroadcasting_Mode(void)
 {
     ui->Stop->setEnabled(false);
-    //ui->SettingsWidget->setEnabled(true);
+    ui->Mode->setEnabled(true);
+    ui->SlaveMode_Widget->setEnabled(true);
+    ui->MasterMode_Widget->setEnabled(true);
+    ui->CRC_Control_Widget->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -605,7 +747,21 @@ void PLC_RF_NetSettings_Form::isMask_Destination(void)
     SetMaskDestinationToUI(Get_Mask_Destination());
 
     ui->Stop->setEnabled(false);
-    //ui->SettingsWidget->setEnabled(true);
+    ui->Mode->setEnabled(true);
+    ui->SlaveMode_Widget->setEnabled(true);
+    ui->MasterMode_Widget->setEnabled(true);
+    ui->CRC_Control_Widget->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
+void PLC_RF_NetSettings_Form::isSwitchMode(){
+    ui->Stop->setEnabled(false);
+    ui->Mode->setEnabled(true);
+    ui->SlaveMode_Widget->setEnabled(true);
+    ui->MasterMode_Widget->setEnabled(true);
+    ui->CRC_Control_Widget->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -613,8 +769,10 @@ void PLC_RF_NetSettings_Form::isMask_Destination(void)
 }
 void PLC_RF_NetSettings_Form::isSwitchLevel(){
     ui->Stop->setEnabled(false);
-    //ui->SettingsWidget->setEnabled(true);
-    //ui->NetTable->setEnabled(true);
+    ui->Mode->setEnabled(true);
+    ui->SlaveMode_Widget->setEnabled(true);
+    ui->MasterMode_Widget->setEnabled(true);
+    ui->CRC_Control_Widget->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -622,8 +780,10 @@ void PLC_RF_NetSettings_Form::isSwitchLevel(){
 }
 void PLC_RF_NetSettings_Form::isSwitchTimeout(){
     ui->Stop->setEnabled(false);
-    //ui->SettingsWidget->setEnabled(true);
-    //ui->NetTable->setEnabled(true);
+    ui->Mode->setEnabled(true);
+    ui->SlaveMode_Widget->setEnabled(true);
+    ui->MasterMode_Widget->setEnabled(true);
+    ui->CRC_Control_Widget->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);

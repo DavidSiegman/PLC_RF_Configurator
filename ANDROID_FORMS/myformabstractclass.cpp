@@ -11,6 +11,12 @@ FirmwareInformationClass* myFormAbstractClass::Get_In_Firmware_Information(void)
 {
     return In_Firmware_Information;
 }
+void myFormAbstractClass::Set_In_Interfaces_Control(Interfaces_Control_Type Interfaces_Control){
+    In_Interfaces_Control = Interfaces_Control;
+}
+Interfaces_Control_Type myFormAbstractClass::Get_In_Interfaces_Control(void){
+    return In_Interfaces_Control;
+}
 void myFormAbstractClass::SetProgress(uint progress){
 
 }

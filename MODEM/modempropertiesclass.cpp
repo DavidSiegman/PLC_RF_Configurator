@@ -49,10 +49,4 @@ uint       ModemPropertiesClass::getReset_Device_Timeout(){
 void       ModemPropertiesClass::setReset_Device_Timeout(uint new_value){
     Modem_Properties_Data.Reset_Device_Timeout = new_value;
 }
-RealTime   ModemPropertiesClass::getLastAOPENTime(){
-    return Modem_Properties_Data.LastAOPENTime;
-}
-void       ModemPropertiesClass::setLastAOPENTime(RealTime new_value){
-    Modem_Properties_Data.LastAOPENTime = new_value;
-}
 

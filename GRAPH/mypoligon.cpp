@@ -57,23 +57,23 @@ void myPoligon::drawPolygon(QPolygonF *newPolygon, myGraphScene *scene)
         int x_coordinate = newPolygon->at(j).x()/scene->x_div*scene->X_GridPixStep + scene->getOXYPoint().x();
         int y_coordinate = newPolygon->at(j).y()/scene->y_div*scene->Y_GridPixStep - scene->getOXYPoint().y();
 
-        if ((newPolygon->at(j).y()) <= 0 && (newPolygon->at(j).y() > -1*26)){
+        if ((y_coordinate >= scene->height()*66/200) && (y_coordinate < scene->height()*100/200)){
             b_point.setColor(QColor::fromRgb(60,180,5,255));
             p_curve.setColor(QColor::fromRgb(60,180,5,255));
         }
-        else if ((newPolygon->at(j).y()) <= -1*26 && (newPolygon->at(j).y() > -2*26)){
+        else if ((y_coordinate >= scene->height()*33/200) && (y_coordinate < scene->height()*66/200)){
             b_point.setColor(QColor::fromRgb(120,180,5,255));
             p_curve.setColor(QColor::fromRgb(120,180,5,255));
         }
-        else if ((newPolygon->at(j).y()) <= -2*26 && (newPolygon->at(j).y() > -3*26)){
+        else if ((y_coordinate >= scene->height()*0/200) && (y_coordinate < scene->height()*33/200)){
             b_point.setColor(QColor::fromRgb(180,180,5,255));
             p_curve.setColor(QColor::fromRgb(180,180,5,255));
         }
-        else if ((newPolygon->at(j).y()) <= -3*26 && (newPolygon->at(j).y() > -4*26)){
+        else if ((y_coordinate >= scene->height()*(-33)/200) && (y_coordinate < scene->height()*0/200)){
             b_point.setColor(QColor::fromRgb(180,120,5,255));
             p_curve.setColor(QColor::fromRgb(180,120,5,255));
         }
-        else if ((newPolygon->at(j).y()) <= -4*26 && (newPolygon->at(j).y() > -5*26)){
+        else if ((y_coordinate >= scene->height()*(-66)/200) && (y_coordinate < scene->height()*(-33)/200)){
             b_point.setColor(QColor::fromRgb(180,60,5,255));
             p_curve.setColor(QColor::fromRgb(180,60,5,255));
         }
@@ -108,23 +108,23 @@ void myPoligon::drawPolygon(QPolygonF *newPolygon, myGraphScene *scene)
             int x_c = newPolygon->at(PointNumb-1).x()/scene->x_div*scene->X_GridPixStep + scene->getOXYPoint().x();
             int y_c = newPolygon->at(PointNumb-1).y()/scene->y_div*scene->Y_GridPixStep - scene->getOXYPoint().y();
 
-            if ((newPolygon->at(PointNumb-1).y()) <= 0 && (newPolygon->at(PointNumb-1).y() > -1*26)){
+            if ((y_c >= scene->height()*66/200) && (y_c < scene->height()*100/200)){
                 b_point.setColor(QColor::fromRgb(60,180,5,255));
                 p_curve.setColor(QColor::fromRgb(60,180,5,255));
             }
-            else if ((newPolygon->at(PointNumb-1).y()) <= -1*26 && (newPolygon->at(PointNumb-1).y() > -2*26)){
+            else if ((y_c >= scene->height()*33/200) && (y_c < scene->height()*66/200)){
                 b_point.setColor(QColor::fromRgb(120,180,5,255));
                 p_curve.setColor(QColor::fromRgb(120,180,5,255));
             }
-            else if ((newPolygon->at(PointNumb-1).y()) <= -2*26 && (newPolygon->at(PointNumb-1).y() > -3*26)){
+            else if ((y_c >= scene->height()*0/200) && (y_c < scene->height()*33/200)){
                 b_point.setColor(QColor::fromRgb(180,180,5,255));
                 p_curve.setColor(QColor::fromRgb(180,180,5,255));
             }
-            else if ((newPolygon->at(PointNumb-1).y()) <= -3*26 && (newPolygon->at(PointNumb-1).y() > -4*26)){
+            else if ((y_c >= scene->height()*(-33)/200) && (y_c < scene->height()*0/200)){
                 b_point.setColor(QColor::fromRgb(180,120,5,255));
                 p_curve.setColor(QColor::fromRgb(180,120,5,255));
             }
-            else if ((newPolygon->at(PointNumb-1).y()) <= -4*26 && (newPolygon->at(PointNumb-1).y() > -5*26)){
+            else if ((y_c >= scene->height()*(-66)/200) && (y_c < scene->height()*(-33)/200)){
                 b_point.setColor(QColor::fromRgb(180,60,5,255));
                 p_curve.setColor(QColor::fromRgb(180,60,5,255));
             }

@@ -7,7 +7,7 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
 {
     ui = new (Ui::Open_Connection_Form);
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     ui->SN->setValue(settings.value(CONNECTION_SETTINGS_SN).toInt());
@@ -17,6 +17,8 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
     ui->Update->setStyleSheet(Basic_PushButtons_Style);
@@ -28,6 +30,7 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     ui->Back->setStyleSheet(PushButtons_Style);
     ui->btnSettings->setStyleSheet(PushButtons_Style);
     ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Next_Widget->setEnabled(true);
 
     ui->Interface->setStyleSheet(Background_White);
     ui->ModuleType->setStyleSheet(Background_White);
@@ -105,7 +108,7 @@ void Open_Connection_Form::on_Reset_clicked(){
     ui->Update->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Next->setEnabled(false);
-    //ui->InterfaceWidget->setEnabled(false);
+    ui->InterfaceWidget->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
 
@@ -123,7 +126,7 @@ void Open_Connection_Form::isStopped(void){
        ui->Reset->setEnabled(false);
        ui->Update->setEnabled(false);
     }
-    //ui->InterfaceWidget->setEnabled(true);
+    ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(false);
     ui->btnSettings->setEnabled(true);
@@ -133,7 +136,7 @@ void Open_Connection_Form::isRF_Reset(){
     ui->Connect->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Update->setEnabled(false);
-    //ui->InterfaceWidget->setEnabled(true);
+    ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -229,10 +232,6 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->fw_Size->setFont(font_5);
     ui->fw_CRC->setFont(font_5);
 
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
-
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
@@ -280,7 +279,7 @@ void Open_Connection_Form::on_Connect_clicked(){
     ui->Update->setEnabled(false);
     ui->Connect->setEnabled(false);
     ui->Reset->setEnabled(false);
-    //ui->InterfaceWidget->setEnabled(false);
+    ui->InterfaceWidget->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->Next->setEnabled(false);
     ui->btnSettings->setEnabled(false);
@@ -302,7 +301,7 @@ void Open_Connection_Form::isOPEND(){
     ui->Connect->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Update->setEnabled(true);
-    //ui->InterfaceWidget->setEnabled(true);
+    ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(true);
     ui->btnSettings->setEnabled(true);

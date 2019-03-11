@@ -14,6 +14,7 @@
 #include "UPDATE/update.h"
 #include <OTHER_FUNCTIONS/mess_enum.h>
 
+#define DATA_LOGIC_DEBUG
 
 typedef union RF_Message_type {
     struct {
@@ -137,6 +138,7 @@ signals:
     void outConnect(uint n, uint state, uint repeate);
     void outCurrentRSSI(signed short RSSI);
     void outLRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,signed short ANT2_RSSI,double AFC);
+    void outLPGA(signed short Received_Power,double PGA_Value);
     void noANSWER();
     void outPROGRESS(uint value);
     void STOPPED();

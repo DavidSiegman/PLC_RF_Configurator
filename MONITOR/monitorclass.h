@@ -17,13 +17,14 @@ private:
     uint Timeout, Parameter;
     uint ThreadState;
     bool ThreadStarted;
+    uint Message;
 
 
 signals:
     void SendComand(uint SelectComandQueue,uint SendMode);
 public slots:
     void handlingMonitor();
-    void startMonitor();
+    void startMonitor(uint Message);
     void stopMonitor();
 };
 
