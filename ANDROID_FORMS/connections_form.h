@@ -62,7 +62,7 @@
 #define TCP_SETTINGS_PORT   "TCP_Settings/PORT"
 
 #define BUILDING_VERSION    "3.03"
-#define BUILDING_CRC        "19.003"
+#define BUILDING_CRC        "19.004"
 #define BUILDING_TIME       "Mar. 06 2019 в 15:12"
 
 #define WINDOW_TITLE        ((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION + " © АО \"ПКК Миландр\", 2019")

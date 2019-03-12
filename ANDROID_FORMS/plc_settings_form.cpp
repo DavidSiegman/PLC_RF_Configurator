@@ -250,12 +250,20 @@ void PLC_Settings_Form::on_Write_clicked(){
     }
 }
 void PLC_Settings_Form::on_PLC_LowF_valueChanged(int arg1){
+    if (arg1 > ui->PLC_HighF->value()){
+        arg1 = ui->PLC_HighF->value();
+        setLOWFToUI(arg1);
+    }
     Out_ST750_Parameters->setST750_LOWF((unsigned int)(arg1));
 }
 void PLC_Settings_Form::setLOWFToUI(unsigned int new_value){
     ui->PLC_LowF->setValue((int)(new_value));
 }
 void PLC_Settings_Form::on_PLC_HighF_valueChanged(int arg1){
+    if (arg1 < ui->PLC_LowF->value()){
+        arg1 = ui->PLC_LowF->value();
+        setHIGHFToUI(arg1);
+    }
     Out_ST750_Parameters->setST750_HIGHF((int)(arg1));
 }
 void PLC_Settings_Form::setHIGHFToUI(unsigned int new_value){

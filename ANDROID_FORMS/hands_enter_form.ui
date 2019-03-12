@@ -139,7 +139,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Serial number</string>
+             <string>Serial Number</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>

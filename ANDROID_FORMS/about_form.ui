@@ -136,7 +136,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Конфигуратор RF/PLC</string>
+             <string>Конфигуратор PLC_RF</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -222,7 +222,7 @@
                </font>
               </property>
               <property name="text">
-               <string> v3.02</string>
+               <string> 3.2.1</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -284,7 +284,7 @@
                </font>
               </property>
               <property name="text">
-               <string>19.001</string>
+               <string>19.003</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -292,6 +292,22 @@
              </widget>
             </item>
            </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="label">
+            <property name="font">
+             <font>
+              <family>Microsoft YaHei UI</family>
+              <pointsize>8</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>© АО &quot;ПКК Миландр&quot;, 2019</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
           </item>
           <item>
            <spacer name="verticalSpacer">

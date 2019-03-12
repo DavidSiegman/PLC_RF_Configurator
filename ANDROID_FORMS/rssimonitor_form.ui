@@ -430,7 +430,7 @@
                      </font>
                     </property>
                     <property name="text">
-                     <string>NAN</string>
+                     <string>-</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -499,7 +499,7 @@
                      </font>
                     </property>
                     <property name="text">
-                     <string>NAN</string>
+                     <string>-</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>
@@ -568,7 +568,7 @@
                      </font>
                     </property>
                     <property name="text">
-                     <string>NAN</string>
+                     <string>-</string>
                     </property>
                     <property name="alignment">
                      <set>Qt::AlignCenter</set>

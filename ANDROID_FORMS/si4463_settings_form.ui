@@ -444,7 +444,7 @@
                   </font>
                  </property>
                  <property name="text">
-                  <string>WB filter:</string>
+                  <string>WB-filter:</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -690,7 +690,7 @@
                   </font>
                  </property>
                  <property name="text">
-                  <string>ANT_DIV</string>
+                  <string>ANT DIV</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
