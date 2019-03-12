@@ -10,7 +10,7 @@ QT      += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
-TARGET   = PLC_RF_Configurator
+TARGET   = RF_PLC_Configurator
 TEMPLATE = app
 
 RC_ICONS = RESOURCES/images/AppIcon.ico
@@ -31,6 +31,7 @@ HEADERS += \
     MODEM/retranslatorpropertiesclass.h \
     MODEM/snifferpropertiesclass.h \
     MODEM/modempropertiesclass.h \
+    MODEM/plcrfmodempropertiesclass.h \
     GRAPH/mygraphgrid.h \
     GRAPH/mygraphlegend.h \
     GRAPH/mygraphscene.h \
@@ -48,6 +49,7 @@ HEADERS += \
     UPDATE/update.h \
     CRC/crc32_class.h \
     OTHER_FUNCTIONS/barr_to_string.h \
+    RESIZE_CALCULATING/resizecalculating.h \
     ANDROID_FORMS/connections_form.h \
     ANDROID_FORMS/myformabstractclass.h \
     ANDROID_FORMS/settings_form.h \
@@ -63,9 +65,9 @@ HEADERS += \
     ANDROID_FORMS/si4463_registers_form.h \
     ANDROID_FORMS/rssimonitor_form.h \
     ANDROID_FORMS/about_form.h\
-    RESIZE_CALCULATING/resizecalculating.h \
-    MODEM/plcrfmodempropertiesclass.h
-
+    ANDROID_FORMS/interfaces_control_form.h \
+    ANDROID_FORMS/plc_rf_netsettings_form.h \
+    ANDROID_FORMS/rs_settings_form.h
 
 SOURCES += \
     COM/port.cpp \
@@ -79,6 +81,7 @@ SOURCES += \
     MODEM/retranslatorpropertiesclass.cpp \
     MODEM/snifferpropertiesclass.cpp \
     MODEM/modempropertiesclass.cpp \
+    MODEM/plcrfmodempropertiesclass.cpp \
     GRAPH/mygraphgrid.cpp \
     GRAPH/mygraphlegend.cpp \
     GRAPH/mygraphscene.cpp \
@@ -97,6 +100,7 @@ SOURCES += \
     UPDATE/update.cpp \
     CRC/crc32_class.cpp \
     OTHER_FUNCTIONS/barr_to_string.cpp \
+    RESIZE_CALCULATING/resizecalculating.cpp \
     ANDROID_FORMS/connections_form.cpp \
     ANDROID_FORMS/myformabstractclass.cpp \
     ANDROID_FORMS/settings_form.cpp \
@@ -112,8 +116,9 @@ SOURCES += \
     ANDROID_FORMS/si4463_registers_form.cpp \
     ANDROID_FORMS/rssimonitor_form.cpp \
     ANDROID_FORMS/about_form.cpp \
-    RESIZE_CALCULATING/resizecalculating.cpp \
-    MODEM/plcrfmodempropertiesclass.cpp
+    ANDROID_FORMS/interfaces_control_form.cpp \
+    ANDROID_FORMS/plc_rf_netsettings_form.cpp \
+    ANDROID_FORMS/rs_settings_form.cpp
 
 FORMS += \
     WINDOWS_FORMS/mainwindow.ui \
@@ -130,7 +135,10 @@ FORMS += \
     ANDROID_FORMS/retranslation_table_form.ui \
     ANDROID_FORMS/si4463_registers_form.ui \
     ANDROID_FORMS/rssimonitor_form.ui \
-    ANDROID_FORMS/about_form.ui
+    ANDROID_FORMS/about_form.ui \
+    ANDROID_FORMS/interfaces_control_form.ui \
+    ANDROID_FORMS/plc_rf_netsettings_form.ui \
+    ANDROID_FORMS/rs_settings_form.ui
 
 RESOURCES += \
     RESOURCES/images.qrc

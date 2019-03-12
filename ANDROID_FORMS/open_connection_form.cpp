@@ -17,16 +17,20 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->Update->setStyleSheet(Basic_Buttons_Style);
-    ui->Connect->setStyleSheet(Basic_Buttons_Style);
-    ui->Stop->setStyleSheet(Basic_Buttons_Style);
-    ui->Reset->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->Update->setStyleSheet(Basic_PushButtons_Style);
+    ui->Connect->setStyleSheet(Basic_PushButtons_Style);
+    ui->Stop->setStyleSheet(Basic_PushButtons_Style);
+    ui->Reset->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Next_Widget->setEnabled(true);
 
     ui->Interface->setStyleSheet(Background_White);
     ui->ModuleType->setStyleSheet(Background_White);
@@ -53,6 +57,7 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
 }
 
 Open_Connection_Form::~Open_Connection_Form(){
+    emit Get_Console(NULL);
     delete ui;
 }
 
@@ -92,7 +97,6 @@ void Open_Connection_Form::on_btnSettings_clicked(){
 void Open_Connection_Form::SetProgress(uint progress){
     ui->progress->setValue(progress);
 }
-
 void Open_Connection_Form::on_Stop_clicked(){
     this->Stop_ClickHandler();
 }
@@ -104,7 +108,7 @@ void Open_Connection_Form::on_Reset_clicked(){
     ui->Update->setEnabled(false);
     ui->Reset->setEnabled(false);
     ui->Next->setEnabled(false);
-    //ui->InterfaceWidget->setEnabled(false);
+    ui->InterfaceWidget->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->btnSettings->setEnabled(false);
 
@@ -122,7 +126,7 @@ void Open_Connection_Form::isStopped(void){
        ui->Reset->setEnabled(false);
        ui->Update->setEnabled(false);
     }
-    //ui->InterfaceWidget->setEnabled(true);
+    ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(false);
     ui->btnSettings->setEnabled(true);
@@ -132,7 +136,7 @@ void Open_Connection_Form::isRF_Reset(){
     ui->Connect->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Update->setEnabled(false);
-    //ui->InterfaceWidget->setEnabled(true);
+    ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -169,7 +173,7 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
 
     QFont font_1   = ui->label_1->font();  font_1.setPixelSize(text_size_1);
     QFont font_2   = ui->label_2->font();  font_2.setPixelSize(text_size_2);
-    QFont font_2_1 = ui->label_2->font();  font_2_1.setPixelSize(text_size_3);
+    QFont font_2_1 = ui->label_2->font();  font_2_1.setPixelSize(text_size_4);
     QFont font_3   = ui->Connect->font();  font_3.setPixelSize(text_size_3);
     QFont font_4_1 = ui->label_2->font();  font_4_1.setPixelSize(text_size_4);
     QFont font_4_2 = ui->label_6->font();  font_4_2.setPixelSize(text_size_4);
@@ -228,10 +232,6 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->fw_Size->setFont(font_5);
     ui->fw_CRC->setFont(font_5);
 
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
-
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
@@ -279,7 +279,7 @@ void Open_Connection_Form::on_Connect_clicked(){
     ui->Update->setEnabled(false);
     ui->Connect->setEnabled(false);
     ui->Reset->setEnabled(false);
-    //ui->InterfaceWidget->setEnabled(false);
+    ui->InterfaceWidget->setEnabled(false);
     ui->Back->setEnabled(false);
     ui->Next->setEnabled(false);
     ui->btnSettings->setEnabled(false);
@@ -301,7 +301,7 @@ void Open_Connection_Form::isOPEND(){
     ui->Connect->setEnabled(true);
     ui->Reset->setEnabled(true);
     ui->Update->setEnabled(true);
-    //ui->InterfaceWidget->setEnabled(true);
+    ui->InterfaceWidget->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->Next->setEnabled(true);
     ui->btnSettings->setEnabled(true);
@@ -328,23 +328,23 @@ void Open_Connection_Form::SetCurrentFitmwareToUI(uchar new_value)
 
 }
 void Open_Connection_Form::SetBootloaderVersionToUI(QString new_value){
-    this->ui->boot_v->setText("-");
+    this->ui->boot_v->setText("NAN");
     if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0)){
         this->ui->boot_v->setText(new_value);
     }
 }
 void Open_Connection_Form::SetBootloaderSizeToUI(uint new_value){
-    this->ui->boot_Size->setText("-");
+    this->ui->boot_Size->setText("NAN");
     if (new_value > 0){
         this->ui->boot_Size->setText(QString::number(new_value));
     }
 }
 void Open_Connection_Form::SetBootloaderCRCToUI(QByteArray new_value){
-    this->ui->boot_CRC->setText("-");
+    this->ui->boot_CRC->setText("NAN");
     if (new_value.length() == 4){
         if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
             (new_value.at(2) == 0) && (new_value.at(3) == 0)){
-            this->ui->boot_CRC->setText("-");
+            this->ui->boot_CRC->setText("NAN");
         }
         else{
             this->ui->boot_CRC->setText(QByteAray_To_QString(new_value).toUpper());
@@ -352,23 +352,23 @@ void Open_Connection_Form::SetBootloaderCRCToUI(QByteArray new_value){
     }
 }
 void Open_Connection_Form::SetUpgradableVersionToUI(QString new_value){
-    this->ui->fw_v->setText("-");
+    this->ui->fw_v->setText("NAN");
     if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0)){
         this->ui->fw_v->setText(new_value);
     }
 }
 void Open_Connection_Form::SetUpgradableSizeToUI(uint new_value){
-    this->ui->fw_Size->setText("-");
+    this->ui->fw_Size->setText("NAN");
     if (new_value > 0){
         this->ui->fw_Size->setText(QString::number(new_value));
     }
 }
 void Open_Connection_Form::SetUpgradableCRCToUI(QByteArray new_value){
-    this->ui->fw_CRC->setText("-");
+    this->ui->fw_CRC->setText("NAN");
     if (new_value.length() == 4){
         if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
             (new_value.at(2) == 0) && (new_value.at(3) == 0)){
-            this->ui->fw_CRC->setText("-");
+            this->ui->fw_CRC->setText("NAN");
         }
         else{
             this->ui->fw_CRC->setText(QByteAray_To_QString(new_value).toUpper());

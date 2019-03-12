@@ -1,14 +1,10 @@
 #ifndef SI4432_SETTINGS_FORM_H
 #define SI4432_SETTINGS_FORM_H
 
-#include <QWidget>
-#include <QPlainTextEdit>
-
-#include "SI4432/si4432class.h"
-#include "myformabstractclass.h"
 #include "ui_si4432_settings_form.h"
+#include "myformabstractclass.h"
+#include "SI4432/si4432class.h"
 #include "OTHER_FUNCTIONS/barr_to_string.h"
-#include "RESIZE_CALCULATING/resizecalculating.h"
 
 //namespace Ui {
 //class SI4432_Settings_Form;
@@ -92,12 +88,14 @@ private slots:
     void DeviceVersionHandling(void);
 
 private:
-    Ui::SI4432_Settings_Form *ui;
+    Ui::SI4432_Settings_Form    *ui;
+    QSysInfo                    *SysInfo;
+    QRegExp                      RegSystemName;
+    ResizeCalculating            resize_calculating;
 
-    SI4432ConfigurationClass  *In_SI4432_Parameters;
-    SI4432ConfigurationClass  *Out_SI4432_Parameters;
+    SI4432ConfigurationClass    *In_SI4432_Parameters;
+    SI4432ConfigurationClass    *Out_SI4432_Parameters;
 
-    ResizeCalculating          resize_calculating;
 };
 
 #endif // SI4432_SETTINGS_FORM_H

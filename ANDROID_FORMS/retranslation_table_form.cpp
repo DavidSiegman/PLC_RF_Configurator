@@ -13,20 +13,23 @@ Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->Add_NetItem->setStyleSheet(Basic_Buttons_Style);
-    ui->Del_NetItem->setStyleSheet(Basic_Buttons_Style);
-    ui->Read_NetTable->setStyleSheet(Basic_Buttons_Style);
-    ui->None->setStyleSheet(Basic_Buttons_Style);
-    ui->Del_NetTable->setStyleSheet(Basic_Buttons_Style);
-    ui->Write->setStyleSheet(Basic_Buttons_Style);
-    ui->Stop->setStyleSheet(Basic_Buttons_Style);
-    ui->Reset->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->Add_NetItem->setStyleSheet(Basic_PushButtons_Style);
+    ui->Del_NetItem->setStyleSheet(Basic_PushButtons_Style);
+    ui->Read_NetTable->setStyleSheet(Basic_PushButtons_Style);
+    ui->None->setStyleSheet(Basic_PushButtons_Style);
+    ui->Del_NetTable->setStyleSheet(Basic_PushButtons_Style);
+    ui->Write->setStyleSheet(Basic_PushButtons_Style);
+    ui->Stop->setStyleSheet(Basic_PushButtons_Style);
+    ui->Reset->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
     ui->Next->setEnabled(false);
 
     model = new QStandardItemModel;
@@ -38,6 +41,7 @@ Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
     connect(model,             SIGNAL(itemChanged(QStandardItem*)), this,           SLOT(ModelItemChanged(QStandardItem*)));
 }
 Retranslation_Table_Form::~Retranslation_Table_Form(){
+    emit Get_Console(NULL);
     delete ui;
 }
 
@@ -85,7 +89,7 @@ void Retranslation_Table_Form::isStopped(void){
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
-    //ui->Next->setEnabled(true);
+    ui->Next->setEnabled(true);
 }
 void Retranslation_Table_Form::isRF_Reset(void)
 {
@@ -97,7 +101,7 @@ void Retranslation_Table_Form::isRF_Reset(void)
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
-    //ui->Next->setEnabled(true);
+    ui->Next->setEnabled(true);
 }
 void Retranslation_Table_Form::resizeEvent(QResizeEvent *event)
 {
@@ -118,7 +122,7 @@ void Retranslation_Table_Form::resizeEvent(QResizeEvent *event)
     icons_size.setHeight(resize_calculating.get_icons_size());
 
     QFont font_1 = ui->label_1->font();    font_1.setPixelSize(text_size_1);
-    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_2);
+    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_4);
     QFont font_3 = ui->Add_NetItem->font();font_3.setPixelSize(text_size_3);
     QFont font_4 = ui->Add_NetItem->font();font_4.setPixelSize(text_size_4);
     QFont font_5 = ui->console->font();    font_5.setPixelSize(text_size_5);
@@ -137,13 +141,10 @@ void Retranslation_Table_Form::resizeEvent(QResizeEvent *event)
 
     ui->console->setFont(font_5);
 
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
-
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
     emit Get_Console(ui->console);
 }
 
@@ -238,7 +239,7 @@ void Retranslation_Table_Form::isSwitch_Table(void){
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
-    //ui->Next->setEnabled(true);
+    ui->Next->setEnabled(true);
 }
 void Retranslation_Table_Form::on_Del_NetTable_clicked(){
     emit Get_Console(ui->console);
@@ -264,7 +265,7 @@ void Retranslation_Table_Form::isDelet_Switch_Table(void){
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
-    //ui->Next->setEnabled(true);
+    ui->Next->setEnabled(true);
     Out_Retranslator_Properties->clearRetranslation_Table();
     modelChanging = 1;
     this->model->clear();

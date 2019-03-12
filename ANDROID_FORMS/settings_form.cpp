@@ -15,16 +15,19 @@ Settings_Form::Settings_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    //ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
     ui->label_2->setStyleSheet(Basic_Text_Style);
     ui->label_3->setStyleSheet(Basic_Text_Style);
 
-    ui->btnCOMSettings->setStyleSheet(Basic_Buttons_Style);
-    ui->btnAbout->setStyleSheet(Basic_Buttons_Style);
+    ui->btnCOMSettings->setStyleSheet(Basic_PushButtons_Style);
+    ui->btnAbout->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->None->setStyleSheet(Buttons_Style);
-    ui->Apply->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->None->setStyleSheet(PushButtons_Style);
+    ui->Apply->setStyleSheet(PushButtons_Style);
 
     ui->None->setEnabled(false);
 
@@ -47,6 +50,7 @@ Settings_Form::Settings_Form(QWidget *parent) :
     }
 }
 Settings_Form::~Settings_Form(){
+    emit Get_Console(NULL);
     delete ui;
 }
 void Settings_Form::on_Back_clicked(){
@@ -86,10 +90,6 @@ void Settings_Form::resizeEvent(QResizeEvent *event){
 
     ui->btnCOMSettings->setFont(font_3);
     ui->btnAbout->setFont(font_3);
-
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
 
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Apply->setIconSize(icons_size); ui->Apply->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);

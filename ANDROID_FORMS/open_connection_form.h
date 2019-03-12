@@ -1,15 +1,8 @@
 #ifndef OPEN_CONNECTION_FORM_H
 #define OPEN_CONNECTION_FORM_H
 
-#include <QWidget>
-#include <QScreen>
-#include <QScrollBar>
-#include <QSettings>
-#include <QPlainTextEdit>
 #include "ui_open_connection_form.h"
 #include "myformabstractclass.h"
-#include "RESIZE_CALCULATING/resizecalculating.h"
-#include "STYLE/style.h"
 
 #define CONNECTION_SETTINGS_INTERFACE   "Connection_Settings/INTERFACE"
 #define CONNECTION_SETTINGS_SN          "Connection_Settings/SN"

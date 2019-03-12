@@ -1,43 +1,91 @@
 #include "si4463_settings_form.h"
 #include "connections_form.h"
-#include "ui_si4463_settings_form.h"
-
-#include "STYLE/style.h"
 
 SI4463_Settings_Form::SI4463_Settings_Form(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::SI4463_Settings_Form)
+    myFormAbstractClass(parent)
 {
+    ui = new Ui::SI4463_Settings_Form;
     ui->setupUi(this);
     this->setWindowTitle(WINDOW_TITLE);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->FileOpen->setStyleSheet(Basic_Buttons_Style);
-    ui->Write->setStyleSheet(Basic_Buttons_Style);
-    ui->Stop->setStyleSheet(Basic_Buttons_Style);
-    ui->Reset->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
-    ui->Registers->setStyleSheet(Basic_Buttons_Style);
+    ui->FileOpen->setStyleSheet(Basic_PushButtons_Style);
+    ui->Write->setStyleSheet(Basic_PushButtons_Style);
+    ui->Stop->setStyleSheet(Basic_PushButtons_Style);
+    ui->Reset->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
+    ui->Registers->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
 
     connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
-
 }
-
-SI4463_Settings_Form::~SI4463_Settings_Form()
-{
+SI4463_Settings_Form::~SI4463_Settings_Form(){
+    emit Get_Console(NULL);
     delete ui;
 }
+void SI4463_Settings_Form::on_Back_clicked(){
+    this->Back_ClickHandler();
+    emit Cancel(this->geometry());
+}
+void SI4463_Settings_Form::on_Next_clicked(){
+    this->Next_ClickHandler();
+}
+void SI4463_Settings_Form::ForceClose(void){
+    this->ForceCloseHandler();
+}
+void SI4463_Settings_Form::on_btnSettings_clicked(){
+    emit Settings(this);
+}
+void SI4463_Settings_Form::SetProgress(uint progress){
+    ui->progress->setValue(progress);
+}
 
+void SI4463_Settings_Form::on_Stop_clicked(){
+    this->Stop_ClickHandler();
+}
+void SI4463_Settings_Form::on_Reset_clicked(){
+    emit Get_Console(ui->console);
+
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
+
+    this->Reset_ClickHandler();
+}
+void SI4463_Settings_Form::isStopped(){
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+}
+void SI4463_Settings_Form::isRF_Reset(){
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
+
+    this->Back_ClickHandler();
+}
 void SI4463_Settings_Form::resizeEvent(QResizeEvent *event)
 {
     emit isCreated();
+    this->Set_resizing_going(1);
 
     resize_calculating.set_form_geometry(this->geometry());
 
@@ -77,44 +125,57 @@ void SI4463_Settings_Form::resizeEvent(QResizeEvent *event)
 
     ui->console->setFont(font_5);
 
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
-
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
+    DeviceVersionHandling();
     emit Get_Console(ui->console);
+    this->Set_resizing_going(0);
 }
 
-void SI4463_Settings_Form::on_Back_clicked()
+void SI4463_Settings_Form::DeviceVersionHandling(void){
+    FirmwareInformationClass* In_Firmware_Information = myFormAbstractClass::Get_In_Firmware_Information();
+    Interfaces_Control_Type In_Interfaces_Control = myFormAbstractClass::Get_In_Interfaces_Control();
+
+    if (In_Firmware_Information->getDevice_Name() == RF_PLC_MODEM){
+        if ((In_Interfaces_Control.Field.RS_EN == INTERFACE_ENABLE) &&
+            (In_Interfaces_Control.Field.RS_INIT_OK == INTERFACE_OK_INIT)){
+            ui->Next_Widget->setEnabled(true);
+            ui->Next->setEnabled(true);
+        }else{
+            ui->Next_Widget->setEnabled(false);
+        }
+    }else if (In_Firmware_Information->getDevice_Name() == RF_PLC_SNIFFER){
+        if ((In_Interfaces_Control.Field.RS_EN == INTERFACE_ENABLE) &&
+            (In_Interfaces_Control.Field.RS_INIT_OK == INTERFACE_OK_INIT)){
+            ui->Next_Widget->setEnabled(true);
+            ui->Next->setEnabled(true);
+        }else{
+            ui->Next_Widget->setEnabled(false);
+        }
+    }
+}
+
+void SI4463_Settings_Form::on_Write_clicked()
 {
-    emit Get_Console(NULL);
-    emit Cancel(this->geometry());
+    emit Get_Console(ui->console);
+    ui->Stop->setEnabled(true);
+    ui->SettingsWidget->setEnabled(false);
+    ui->Reset->setEnabled(false);
+    ui->Back->setEnabled(false);
+    ui->btnSettings->setEnabled(false);
+    ui->Next->setEnabled(false);
+    emit StartSendingProcess(SEND_WRITE_RFSI4463_PARAMETERS,CONFIG_SEND_CONTROL);
 }
-
-void SI4463_Settings_Form::on_Next_clicked()
-{
-    emit Get_Console(NULL);
-    emit Cancel(this->geometry());
-    //emit Next(this->geometry());
+void SI4463_Settings_Form::isSI4463_Parameters(){
+    ui->Stop->setEnabled(false);
+    ui->SettingsWidget->setEnabled(true);
+    ui->Reset->setEnabled(true);
+    ui->Back->setEnabled(true);
+    ui->btnSettings->setEnabled(true);
+    ui->Next->setEnabled(true);
 }
-
-void SI4463_Settings_Form::on_btnSettings_clicked()
-{
-    emit Settings(this);
-}
-
-void SI4463_Settings_Form::SetProgress(uint progress)
-{
-    ui->progress->setValue(progress);
-}
-
-void SI4463_Settings_Form::Set_Geometry(QRect new_value)
-{
-    this->setGeometry(new_value);
-}
-
 void SI4463_Settings_Form::Set_Model(QStandardItemModel *model)
 {
     //ui->SI4436_PROPSView      ->setModel(model);
@@ -124,6 +185,12 @@ void SI4463_Settings_Form::Set_Model(QStandardItemModel *model)
 
 void SI4463_Settings_Form::Set_Prameters(QList<Params> *params)
 {
+    ui->DataRate->setText("-");  ui->Freq->setText("-");
+    ui->MODULATION->setText("-");ui->Fdev->setText("-");
+    ui->RXBW->setText("-");      ui->AFC_State->setText("-");
+    ui->WB_Filter->setText("-"); ui->NB_Filter->setText("-");
+    ui->WB_BW->setText("-");     ui->NB_BW->setText("-");
+    ui->MOD_INDEX->setText("-"); ui->ANT_DIV->setText("-");
     int index = 0;
     for(int i = 0; i < params->length();i++)
     {
@@ -184,94 +251,21 @@ void SI4463_Settings_Form::Set_Prameters(QList<Params> *params)
     }
     ui->Write->setEnabled(true);
 }
-
-void SI4463_Settings_Form::on_Stop_clicked()
-{
-    emit Get_Console(ui->console);
-
-    emit Stop_Send_Data();
-}
-
-void SI4463_Settings_Form::isStopped()
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
-}
-
-void SI4463_Settings_Form::on_Reset_clicked()
-{
-    emit Get_Console(ui->console);
-
-    ui->Stop->setEnabled(true);
-    ui->SettingsWidget->setEnabled(false);
-    ui->Reset->setEnabled(false);
-    ui->Back->setEnabled(false);
-    ui->btnSettings->setEnabled(false);
-    ui->Next->setEnabled(false);
-
-    emit Send_RF_Reset();
-}
-
-void SI4463_Settings_Form::isRF_Reset()
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
-}
-
-void SI4463_Settings_Form::isSI4463_Parameters()
-{
-    ui->Stop->setEnabled(false);
-    ui->SettingsWidget->setEnabled(true);
-    ui->Reset->setEnabled(true);
-    ui->Back->setEnabled(true);
-    ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
-}
-
-
-void SI4463_Settings_Form::on_FileOpen_clicked()
-{
+void SI4463_Settings_Form::on_FileOpen_clicked(){
     QString str = QFileDialog::getOpenFileName(0, "Open Dialog", "", "*.txt");
 
     QString s = "";
-    for(uint i = (str.length()); i > 0; i--)
-    {
-        if (str.at(i-1) != '/')
-        {
+    for(uint i = (str.length()); i > 0; i--){
+        if (str.at(i-1) != '/'){
             s.push_front(str.at(i-1));
         }
-        else
-        {
+        else{
             break;
         }
     }
-
     ui->FileName->setText(s);
-
     emit Start_Parcer(str);
 }
-
-void SI4463_Settings_Form::on_Write_clicked()
-{
-    emit Get_Console(ui->console);
-    ui->Stop->setEnabled(true);
-    ui->SettingsWidget->setEnabled(false);
-    ui->Reset->setEnabled(false);
-    ui->Back->setEnabled(false);
-    ui->btnSettings->setEnabled(false);
-    ui->Next->setEnabled(false);
-    emit Write_SI4463_Parameters();
-}
-
-void SI4463_Settings_Form::on_Registers_clicked()
-{
+void SI4463_Settings_Form::on_Registers_clicked(){
     emit Open_RegistersWindow(this);
 }

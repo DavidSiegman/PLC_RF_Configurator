@@ -3,10 +3,16 @@
 
 #include <QObject>
 #include <QWidget>
-#include <QIcon>
+#include <QScreen>
+#include <QScrollBar>
+#include <QSettings>
 #include <QPlainTextEdit>
+#include <QIcon>
 #include <OTHER_FUNCTIONS/mess_enum.h>
 #include "MODEM/firmwareinformationclass.h"
+#include "MODEM/plcrfmodempropertiesclass.h"
+#include "RESIZE_CALCULATING/resizecalculating.h"
+#include "STYLE/style.h"
 
 class myFormAbstractClass : public QWidget
 {
@@ -44,11 +50,14 @@ public slots:
 
     void Set_In_Firmware_Information(FirmwareInformationClass*);
     FirmwareInformationClass* Get_In_Firmware_Information(void);
+    void Set_In_Interfaces_Control(Interfaces_Control_Type);
+    Interfaces_Control_Type Get_In_Interfaces_Control(void);
     void Set_ConnectionType(uchar);
     uchar Get_ConnectionType(void);
 
 private:
     FirmwareInformationClass *In_Firmware_Information;
+    Interfaces_Control_Type   In_Interfaces_Control;
     uchar                     ConnectionType;
     uchar                     resizing_going;
 };

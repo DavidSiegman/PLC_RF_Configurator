@@ -19,19 +19,20 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
     ui->label_2->setStyleSheet(Basic_Text_Style);
     ui->label_3->setStyleSheet(Basic_Text_Style);
     ui->CRC_OUT->setStyleSheet(Basic_Text_Style);
     ui->CRC16_2->setStyleSheet(Basic_Text_Style);
 
-    ui->cBtnSend->setStyleSheet(Basic_Buttons_Style);
-    ui->Cyclic->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->cBtnSend->setStyleSheet(Basic_PushButtons_Style);
+    ui->Cyclic->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
     ui->Next->setEnabled(false);
 
     ui->SN_TEXT->setStyleSheet(Background_White+Basic_Text_Style);
@@ -59,6 +60,7 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
 
 Hands_Enter_Form::~Hands_Enter_Form()
 {
+    emit Get_Console(NULL);
     delete ui;
 }
 
@@ -88,7 +90,7 @@ void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
     icons_size.setHeight(resize_calculating.get_icons_size());
 
     QFont font_1 = ui->label_1->font();    font_1.setPixelSize(text_size_1);
-    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_2);
+    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_4);
     QFont font_3 = ui->cBtnSend->font();   font_3.setPixelSize(text_size_3);
     //QFont font_4 = ui->label_4->font();  font_4.setPixelSize(text_size_4);
     QFont font_5 = ui->console->font();    font_5.setPixelSize(text_size_5);
@@ -106,8 +108,10 @@ void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
     ui->console->setFont(font_5);
 
     QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
+    QScrollBar *VerticalScrollBar2 = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
 
     ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
+    ui->console->setVerticalScrollBar(VerticalScrollBar2);
 
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);

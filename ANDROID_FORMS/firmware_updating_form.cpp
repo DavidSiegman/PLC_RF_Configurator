@@ -13,16 +13,19 @@ Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->OpenBin->setStyleSheet(Basic_Buttons_Style);
-    ui->UpdateStart->setStyleSheet(Basic_Buttons_Style);
-    ui->Stop->setStyleSheet(Basic_Buttons_Style);
-    ui->Clear->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->OpenBin->setStyleSheet(Basic_PushButtons_Style);
+    ui->UpdateStart->setStyleSheet(Basic_PushButtons_Style);
+    ui->Stop->setStyleSheet(Basic_PushButtons_Style);
+    ui->Clear->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
 
     ui->PatchBin->setStyleSheet(Work_Area_Style + Text_Green);
 
@@ -43,12 +46,13 @@ Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
 
     connect(ui->ClearConsole, SIGNAL(clicked(bool)), ui->console, SLOT(clear()));
 
-    ui->new_v->setText("-");
-    ui->new_Size->setText("-");
-    ui->new_CRC->setText("-");
+    ui->new_v->setText("NAN");
+    ui->new_Size->setText("NAN");
+    ui->new_CRC->setText("NAN");
 }
 
 Firmware_Updating_Form::~Firmware_Updating_Form(){
+    emit Get_Console(NULL);
     delete ui;
 }
 void Firmware_Updating_Form::on_Back_clicked(){
@@ -71,10 +75,10 @@ void Firmware_Updating_Form::isStopped(){
     SetProgress(0);
     ui->Stop->setEnabled(false);
     ui->OpenBin->setEnabled(true);
-    if ((ui->new_v->text().compare("-") != 0)&&(ui->new_v->text().length() > 0)){
+    if ((ui->new_v->text().compare("NAN") != 0)&&(ui->new_v->text().length() > 0)){
         ui->UpdateStart->setEnabled(true);
     }
-    if ((ui->curr_v->text().compare("-") != 0)&&(ui->curr_v->text().length() > 0)){
+    if ((ui->curr_v->text().compare("NAN") != 0)&&(ui->curr_v->text().length() > 0)){
         ui->Clear->setEnabled(true);
     }
     ui->Back->setEnabled(true);
@@ -100,13 +104,13 @@ void Firmware_Updating_Form::resizeEvent(QResizeEvent *event){
     icons_size.setHeight(resize_calculating.get_icons_size());
 
     QFont font_1 = ui->label_1->font();    font_1.setPixelSize(text_size_1);
-    QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_2);
+    //QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_4);
     QFont font_3 = ui->OpenBin->font();    font_3.setPixelSize(text_size_3);
     QFont font_4 = ui->label_3->font();    font_4.setPixelSize(text_size_4);
     QFont font_5 = ui->console->font();    font_5.setPixelSize(text_size_5);
 
     ui->label_1->setFont(font_1);
-    ui->label_2->setFont(font_2);
+    //ui->label_2->setFont(font_2);
     ui->label_3->setFont(font_4);
     ui->label_4->setFont(font_4);
 
@@ -125,10 +129,6 @@ void Firmware_Updating_Form::resizeEvent(QResizeEvent *event){
     ui->curr_v->setFont(font_5);
     ui->curr_Size->setFont(font_5);
     ui->curr_CRC->setFont(font_5);
-
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
 
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
@@ -200,31 +200,31 @@ void Firmware_Updating_Form::on_OpenBin_clicked(){
         }
     }
     else{
-        ui->new_v->setText("-");
-        ui->new_Size->setText("-");
-        ui->new_CRC->setText("-");
+        ui->new_v->setText("NAN");
+        ui->new_Size->setText("NAN");
+        ui->new_CRC->setText("NAN");
         ui->UpdateStart->setEnabled(false);
     }
 }
 void Firmware_Updating_Form::SetUpgradableVersionToUI(QString new_value){
-    this->ui->curr_v->setText("-");
+    this->ui->curr_v->setText("NAN");
     if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0)){
         this->ui->curr_v->setText(new_value);
         this->ui->Clear->setEnabled(true);
     }
 }
 void Firmware_Updating_Form::SetUpgradableSizeToUI(uint new_value){
-    this->ui->curr_Size->setText("-");
+    this->ui->curr_Size->setText("NAN");
     if (new_value > 0){
         this->ui->curr_Size->setText(QString::number(new_value));
     }
 }
 void Firmware_Updating_Form::SetUpgradableCRCToUI(QByteArray new_value){
-    this->ui->curr_CRC->setText("-");
+    this->ui->curr_CRC->setText("NAN");
     if (new_value.length() == 4){
         if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
             (new_value.at(2) == 0) && (new_value.at(3) == 0)){
-            this->ui->curr_CRC->setText("-");
+            this->ui->curr_CRC->setText("NAN");
         }
         else{
             this->ui->curr_CRC->setText(QByteAray_To_QString(new_value).toUpper());
@@ -248,7 +248,7 @@ void Firmware_Updating_Form::isDeleted(void){
     ui->Stop->setEnabled(false);
     ui->OpenBin->setEnabled(true);
     ui->UpdateStart->setEnabled(false);
-    if ((ui->new_v->text().compare("-") != 0)&&(ui->new_v->text().length() > 0)){
+    if ((ui->new_v->text().compare("NAN") != 0)&&(ui->new_v->text().length() > 0)){
         ui->UpdateStart->setEnabled(true);
     }
     ui->Clear->setEnabled(false);

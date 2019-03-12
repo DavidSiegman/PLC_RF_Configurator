@@ -1,13 +1,9 @@
 #ifndef SNIFFER_SETTINGS_FORM_H
 #define SNIFFER_SETTINGS_FORM_H
 
-#include <QWidget>
-#include <QPlainTextEdit>
-#include "MODEM/modemclass.h"
-#include "myformabstractclass.h"
 #include "ui_sniffer_settings_form.h"
-#include "RESIZE_CALCULATING/resizecalculating.h"
-#include "STYLE/style.h"
+#include "myformabstractclass.h"
+#include "MODEM/modemclass.h"
 
 //namespace Ui {
 //class Sniffer_Settings_Form;

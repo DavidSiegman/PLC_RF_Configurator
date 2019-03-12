@@ -22,8 +22,8 @@ void ResizeCalculating::set_form_geometry(QRect geometry)
         max_side = this->form_geometry.width()*70/100;
     }
 
-    this->text_size_1 = max_side*28/560;
-    if (this->text_size_1 < 26){this->text_size_1 = 26;}
+    this->text_size_1 = max_side*24/560;
+    if (this->text_size_1 < 20){this->text_size_1 = 20;}
     this->text_size_2 = max_side*18/560;
     if (this->text_size_2 < 16){this->text_size_2 = 16;}
     this->text_size_3 = max_side*16/560;

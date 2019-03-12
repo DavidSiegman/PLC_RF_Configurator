@@ -12,18 +12,23 @@ Sniffer_Settings_Form::Sniffer_Settings_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->SetDestinationMASK->setStyleSheet(Basic_Buttons_Style);
-    ui->SetNetLevel->setStyleSheet(Basic_Buttons_Style);
-    ui->SetDeviceMonitorSN->setStyleSheet(Basic_Buttons_Style);
-    ui->Write->setStyleSheet(Basic_Buttons_Style);
-    ui->Stop->setStyleSheet(Basic_Buttons_Style);
-    ui->Reset->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->SetDestinationMASK->setStyleSheet(Basic_PushButtons_Style);
+    ui->SetNetLevel->setStyleSheet(Basic_PushButtons_Style);
+    ui->SetDeviceMonitorSN->setStyleSheet(Basic_PushButtons_Style);
+    ui->Write->setStyleSheet(Basic_PushButtons_Style);
+    ui->Stop->setStyleSheet(Basic_PushButtons_Style);
+    ui->Reset->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Next_Widget->setEnabled(true);
+    ui->Next->setEnabled(true);
 
     ui->Sniffer_Mode->setStyleSheet(Background_White);
     ui->LVL0->setStyleSheet(Background_White);
@@ -45,6 +50,7 @@ Sniffer_Settings_Form::Sniffer_Settings_Form(QWidget *parent) :
     connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
 Sniffer_Settings_Form::~Sniffer_Settings_Form(){
+    emit Get_Console(NULL);
     delete ui;
 }
 void Sniffer_Settings_Form::on_Back_clicked(){
@@ -155,10 +161,6 @@ void Sniffer_Settings_Form::resizeEvent(QResizeEvent *event){
     ui->ClearConsole->setFont(font_3);
 
     ui->console->setFont(font_5);
-
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
 
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);

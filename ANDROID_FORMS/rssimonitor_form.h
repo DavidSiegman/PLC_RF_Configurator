@@ -19,6 +19,11 @@
 #define CONNECTION_SETTINGS_SN          "Connection_Settings/SN"
 #define CONNECTION_SETTINGS_MODULE_TYPE "Connection_Settings/MODULE_TYPE"
 
+enum{
+    RSSI_MODE_FORM = 0,
+    PGA_MODE_FORM
+};
+
 //namespace Ui {
 //class RSSIMonitor_Form;
 //}
@@ -28,7 +33,7 @@ class RSSIMonitor_Form : public myFormAbstractClass
     Q_OBJECT
 
 public:
-    explicit RSSIMonitor_Form(QWidget *parent = 0);
+    explicit RSSIMonitor_Form(uchar Mode, QWidget *parent = 0);
     void resizeEvent(QResizeEvent *event);
     ~RSSIMonitor_Form();
 
@@ -39,7 +44,7 @@ signals:
     void SendInterface(uchar);
     void ClearAllData(void);
     void SendReadLatchRSSI_AFC();
-    void StartRSSIMonitor();
+    void StartRSSIMonitor(uint Message);
     void StopRSSIMonitor();
 
 public slots:
@@ -48,6 +53,7 @@ public slots:
     void isRF_Reset(void);
     void RSSI_RequestSended(void);
     void isLatchRSSI_AFC(signed short RSSI,signed short ANT1_RSSI,signed short ANT2_RSSI,double AFC);
+    void isLatchPGA(signed short Received_Power,double PGA_Value);
 
     void Set_ConnectionType(uchar);
 
@@ -66,6 +72,8 @@ private slots:
     void SetRSSIANT1ToUI(int);
     void SetRSSIANT2ToUI(int);
     void SetAFCToUI(int);
+    void SetReseivedPowerToUI(int);
+    void SetPGA_ValueToUI(int);
     void SetMsgCounterToUI(int);
     void SetYesAnswerToUI(int);
     void SetNoAnswerToUI(int);
@@ -88,6 +96,8 @@ private:
 
     uchar                     RSSI_RequestAnswerDetector;
     uchar                     ConnectionType;
+
+    uchar                     Mode_Form;
 };
 
 #endif // RSSIMONITOR_FORM_H

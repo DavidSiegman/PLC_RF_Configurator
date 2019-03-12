@@ -13,20 +13,25 @@ Net_Settings_Form::Net_Settings_Form(QWidget *parent) :
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
-    ui->SetMask->setStyleSheet(Basic_Buttons_Style);
-    ui->SetLevel->setStyleSheet(Basic_Buttons_Style);
-    ui->SetTimeout->setStyleSheet(Basic_Buttons_Style);
-    ui->Write->setStyleSheet(Basic_Buttons_Style);
-    ui->Stop->setStyleSheet(Basic_Buttons_Style);
-    ui->Reset->setStyleSheet(Basic_Buttons_Style);
-    ui->ClearConsole->setStyleSheet(Basic_Buttons_Style);
+    ui->SetMask->setStyleSheet(Basic_PushButtons_Style);
+    ui->SetLevel->setStyleSheet(Basic_PushButtons_Style);
+    ui->SetTimeout->setStyleSheet(Basic_PushButtons_Style);
+    ui->Write->setStyleSheet(Basic_PushButtons_Style);
+    ui->Stop->setStyleSheet(Basic_PushButtons_Style);
+    ui->Reset->setStyleSheet(Basic_PushButtons_Style);
+    ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->NetTable->setStyleSheet(Basic_Buttons_Style);
+    ui->NetTable->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(Buttons_Style);
-    ui->btnSettings->setStyleSheet(Buttons_Style);
-    ui->Next->setStyleSheet(Buttons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style);
+    ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Next_Widget->setEnabled(true);
+    ui->Next->setEnabled(true);
 
     ui->LVL0->setStyleSheet(Background_White);
     ui->LVL1->setStyleSheet(Background_White);
@@ -49,6 +54,7 @@ Net_Settings_Form::Net_Settings_Form(QWidget *parent) :
 
 Net_Settings_Form::~Net_Settings_Form()
 {
+    emit Get_Console(NULL);
     delete ui;
 }
 
@@ -150,16 +156,11 @@ void Net_Settings_Form::resizeEvent(QResizeEvent *event)
 
     ui->console->setFont(font_5);
 
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
-
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
     DeviceVersionHandling();
-
     emit Get_Console(ui->console);
 }
 void Net_Settings_Form::DeviceVersionHandling(void)
