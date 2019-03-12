@@ -385,7 +385,7 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
     }
     case SEND_WRITE_MASK_DESTINATION:{
         // Выводим сообщение в Лог
-        emit SendLog(QString::fromUtf8(">> ======= Запись режима широковещания\r"),NONE);
+        emit SendLog(QString::fromUtf8(">> ======= Запись маски назначения\r"),NONE);
         // Формируем очередь команд
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_MASK_DESTINATION;
         ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_MASK_DESTINATION;
@@ -600,7 +600,7 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode
     case SEND_WRITE_MASK_DESTINATION:{
         emit Progress(100);
         // Выводим сообщение в Лог
-        emit SendLog(QString::fromUtf8(">> ======= Запись маски прошла успешно\r"),NONE);
+        emit SendLog(QString::fromUtf8(">> ======= Запись маски назначения прошла успешно\r"),NONE);
         emit isMASK_DESTINATION();
         break;
     }

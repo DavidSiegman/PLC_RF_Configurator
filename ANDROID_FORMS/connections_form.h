@@ -61,11 +61,11 @@
 #define TCP_SETTINGS_IP     "TCP_Settings/IP"
 #define TCP_SETTINGS_PORT   "TCP_Settings/PORT"
 
-#define BUILDING_VERSION    "3.03"
+#define BUILDING_VERSION    "3.3.0"
 #define BUILDING_CRC        "19.004"
 #define BUILDING_TIME       "Mar. 06 2019 в 15:12"
 
-#define WINDOW_TITLE        ((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION + " © АО \"ПКК Миландр\", 2019")
+#define WINDOW_TITLE        ((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION)
 
 enum{
     COM_ConnectionType = 0,

@@ -30,14 +30,14 @@ typedef union RealTime_Type{
 
 typedef union{
     struct{
-        unsigned  Modem_Mode:  			      2; // Р±Р°Р№С‚ 1
+        unsigned  Modem_Mode:  			      2; // байт 1
         unsigned  PLC_EN:      			      1;
         unsigned  RF_EN:       			      1;
         unsigned  RS_EN:       			      1;
         unsigned  PLC_TO_PLC_RET_EN:          1;
         unsigned  PLC_TO_RF_RET_EN:           1;
         unsigned  RF_TO_RF_RET_EN:            1;
-        unsigned  RF_TO_PLC_RET_EN:           1; // Р±Р°Р№С‚ 2
+        unsigned  RF_TO_PLC_RET_EN:           1; // байт 2
         unsigned  RS_TO_RF_RET_EN:            1;
         unsigned  RF_TO_RS_RET_EN:            1;
         unsigned  RS_TO_PLC_RET_EN:           1;
@@ -45,46 +45,46 @@ typedef union{
         unsigned  RS_USE_AS_DEBUG_OUTPUT:     1;
         unsigned  RS_TO_RF_UP_LINK:           1;
         unsigned  RS_TO_PLC_UP_LINK:          1;
-        unsigned  MODBUS_CRC_CHECK_DISABLE:   1; // Р±Р°Р№С‚ 3
-        unsigned  UNUSED_0:                   3; // Р±Р°Р№С‚ 4
+        unsigned  MODBUS_CRC_CHECK_DISABLE:   1; // байт 3
+        unsigned  UNUSED_0:                   3; // байт 4
         unsigned  RS_BAUDRATE:                4;
-        unsigned  UNUSED_1:                   4; // Р±Р°Р№С‚ 4
-        unsigned  EEPROM_INIT_OK:             1; // РЅРµ С…СЂР°РЅРёС‚СЃСЏ РІРѕ FLASH
-        unsigned  PLC_INIT_OK:                1; // РЅРµ С…СЂР°РЅРёС‚СЃСЏ РІРѕ FLASH
-        unsigned  RF_INIT_OK:                 1; // РЅРµ С…СЂР°РЅРёС‚СЃСЏ РІРѕ FLASH
-        unsigned  RS_INIT_OK:                 1; // РЅРµ С…СЂР°РЅРёС‚СЃСЏ РІРѕ FLASH
+        unsigned  UNUSED_1:                   4; // байт 4
+        unsigned  EEPROM_INIT_OK:             1; // не хранится во FLASH
+        unsigned  PLC_INIT_OK:                1; // не хранится во FLASH
+        unsigned  RF_INIT_OK:                 1; // не хранится во FLASH
+        unsigned  RS_INIT_OK:                 1; // не хранится во FLASH
     }Field;
     unsigned int Word;
 }Interfaces_Control_Type;
 
 typedef union Debug_Control_Type_Def{
     struct{
-        // Р±РёС‚ РіР»РѕР±Р°Р»СЊРЅРѕРіРѕ РІРєР»СЋС‡РµРЅРёСЏ РѕС‚Р»Р°РґРѕС‡РЅРѕРіРѕ РёРЅС‚РµСЂС„РµР№СЃР°
+        // бит глобального включения отладочного интерфейса
         unsigned DEBUG_GLOBAL_EN:             1;
-        // Р±РёС‚С‹ РІРєР»СЋС‡РµРЅРёСЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ PLC
+        // биты включения отладочных сообщений PLC
         unsigned PLC_INIT_DEBUG_EN:           1;
         unsigned PLC_UART_RX_DEBUG_EN:        1;
         unsigned PLC_RX_TX_DATA_DEBUG_EN:     1;
 
-        // Р±РёС‚С‹ РІРєР»СЋС‡РµРЅРёСЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ SPI Рё RF
+        // биты включения отладочных сообщений SPI и RF
         unsigned SPI_DEBUG_EN:                1;
         unsigned SI4463_INIT_DEBUG_EN:        1;
         unsigned SI4463_DEBUG_EN:             1;
 
-        // Р±РёС‚С‹ РІРєР»СЋС‡РµРЅРёСЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ HOST
+        // биты включения отладочных сообщений HOST
         unsigned HOST_UART_RX_DEBUG_EN:       1;
 
-        // Р±РёС‚С‹ РІРєР»СЋС‡РµРЅРёСЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ FLASH
+        // биты включения отладочных сообщений FLASH
         unsigned FLASH_DEBUG_EN:              1;
         unsigned FLASH_FULL_DATA_DEBUG_EN:    1;
 
-        // Р±РёС‚С‹ РІРєР»СЋС‡РµРЅРёСЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ INTERFACES_CONTROL
+        // биты включения отладочных сообщений INTERFACES_CONTROL
         unsigned INTERFACES_CONTROL_DEBUG_EN: 1;
         unsigned UART_TO_INTERFACES_DEBUG_EN: 1;
         unsigned INTERFACES_TO_UART_DEBUG_EN: 1;
         unsigned RETRANSLATION_DEBUG_EN:      1;
 
-        // Р±РёС‚С‹ РІРєР»СЋС‡РµРЅРёСЏ РѕС‚Р»Р°РґРѕС‡РЅС‹С… СЃРѕРѕР±С‰РµРЅРёР№ RS
+        // биты включения отладочных сообщений RS
         unsigned RS_DEBUG_EN: 1;
     }Field;
     unsigned int Word;

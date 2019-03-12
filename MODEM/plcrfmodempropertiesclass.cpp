@@ -244,3 +244,4 @@ RealTime   PlcRfModemPropertiesClass::getLastAOPENTime(){
 void       PlcRfModemPropertiesClass::setLastAOPENTime(RealTime new_value){
     this->LastAOPENTime = new_value;
 }
+

@@ -100,13 +100,13 @@ stop:1 rgba(147,29,18,127));</string>
        <number>0</number>
       </property>
       <property name="leftMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="topMargin">
        <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="bottomMargin">
        <number>0</number>
@@ -130,7 +130,7 @@ stop:1 rgba(147,29,18,127));</string>
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>334</width>
+           <width>338</width>
            <height>488</height>
           </rect>
          </property>

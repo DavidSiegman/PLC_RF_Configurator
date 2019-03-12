@@ -49,4 +49,3 @@ uint       ModemPropertiesClass::getReset_Device_Timeout(){
 void       ModemPropertiesClass::setReset_Device_Timeout(uint new_value){
     Modem_Properties_Data.Reset_Device_Timeout = new_value;
 }
-

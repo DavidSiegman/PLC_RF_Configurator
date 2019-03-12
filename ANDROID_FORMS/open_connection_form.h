@@ -1,7 +1,6 @@
 #ifndef OPEN_CONNECTION_FORM_H
 #define OPEN_CONNECTION_FORM_H
 
-
 #include "ui_open_connection_form.h"
 #include "myformabstractclass.h"
 

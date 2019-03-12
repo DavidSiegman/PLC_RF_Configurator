@@ -44,6 +44,7 @@ Connections_Form::Connections_Form(QWidget *parent) :
     ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
     ui->RSSIMonitor->setStyleSheet(Basic_PushButtons_Style);
     ui->PGAMonitor->setStyleSheet(Basic_PushButtons_Style);
+    ui->PGAMonitor->setVisible(false);
 
     ui->btnHandsEnter->setStyleSheet(PushButtons_Style);
     ui->btnSettings->setStyleSheet(PushButtons_Style);

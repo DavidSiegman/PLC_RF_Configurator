@@ -101,7 +101,7 @@ void DataLogic_Class::In_DataBuffer(QByteArray data){
                                                         // ====================================
                                                         #endif
 
-    if(CRC16->Check_Byte_Stream_CRC16(&InDataBuffer) && (length > 4)){                                                   
+    if(CRC16->Check_Byte_Stream_CRC16(&InDataBuffer) && (length > 4)){
                                                         #ifdef DATA_LOGIC_DEBUG
                                                         // ====================================
                                                         QString s = "Stop timer - CRC Correct";
@@ -206,6 +206,7 @@ void DataLogic_Class::Parce_DataBuffer(void)
 
 void DataLogic_Class::ComandHandling(uint SendComand, uint SendMode)
 {
+    QString s;
     RetranslatorPropertiesClass* Out_Retranslator_Properties = MODEM->getOut_Retranslator_Properties();
 
     SnifferPropertiesClass*      Out_Sniffer_Properties = MODEM->getOut_Sniffer_Properties();
@@ -224,7 +225,7 @@ void DataLogic_Class::ComandHandling(uint SendComand, uint SendMode)
     case SEND_AOPEN:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_AOPEN";
+s = "SEND_AOPEN";
 qDebug() << s;
 // ====================================
 #endif
@@ -235,7 +236,7 @@ qDebug() << s;
     case SEND_ENABLE_BOOT:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_ENABLE_BOOT";
+s = "SEND_ENABLE_BOOT";
 qDebug() << s;
 // ====================================
 #endif
@@ -246,7 +247,7 @@ qDebug() << s;
     case SEND_WRITE_SECTOR:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_SECTOR";
+s = "SEND_WRITE_SECTOR";
 qDebug() << s;
 // ====================================
 #endif
@@ -265,7 +266,7 @@ qDebug() << s;
     case SEND_FIRMWARE_DATA:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_FIRMWARE_DATA";
+s = "SEND_FIRMWARE_DATA";
 qDebug() << s;
 // ====================================
 #endif
@@ -309,7 +310,7 @@ qDebug() << s;
     case SEND_DELETE_FIRMWARE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_DELETE_FIRMWARE";
+s = "SEND_DELETE_FIRMWARE";
 qDebug() << s;
 // ====================================
 #endif
@@ -320,7 +321,7 @@ qDebug() << s;
     case SEND_READ_WRITED_PAGES:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_WRITED_PAGES";
+s = "SEND_READ_WRITED_PAGES";
 qDebug() << s;
 // ====================================
 #endif
@@ -331,7 +332,7 @@ qDebug() << s;
     case SEND_CHOICE_ADDITIONAL_MODULE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_CHOICE_ADDITIONAL_MODULE";
+s = "SEND_CHOICE_ADDITIONAL_MODULE";
 qDebug() << s;
 // ====================================
 #endif
@@ -342,7 +343,7 @@ qDebug() << s;
     case SEND_READ_SWITCH_MODE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_SWITCH_MODE";
+s = "SEND_READ_SWITCH_MODE";
 qDebug() << s;
 // ====================================
 #endif
@@ -353,7 +354,7 @@ qDebug() << s;
     case SEND_WRITE_SWITCH_MODE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_SWITCH_MODE";
+s = "SEND_WRITE_SWITCH_MODE";
 qDebug() << s;
 // ====================================
 #endif
@@ -365,7 +366,7 @@ qDebug() << s;
     case SEND_READ_ST750_FREQ:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_ST750_FREQ";
+s = "SEND_READ_ST750_FREQ";
 qDebug() << s;
 // ====================================
 #endif
@@ -376,7 +377,7 @@ qDebug() << s;
     case SEND_READ_ST750_PARAMETERS:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_ST750_PARAMETERS";
+s = "SEND_READ_ST750_PARAMETERS";
 qDebug() << s;
 // ====================================
 #endif
@@ -387,7 +388,7 @@ qDebug() << s;
     case SEND_WRITE_ST750_FREQ:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_ST750_FREQ";
+s = "SEND_WRITE_ST750_FREQ";
 qDebug() << s;
 // ====================================
 #endif
@@ -406,7 +407,7 @@ qDebug() << s;
     case SEND_WRITE_ST750_PARAMETERS:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_ST750_PARAMETERS";
+s = "SEND_WRITE_ST750_PARAMETERS";
 qDebug() << s;
 // ====================================
 #endif
@@ -427,7 +428,7 @@ qDebug() << s;
     case SEND_READ_SWITCH_TABLE_ELEMENT:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_SWITCH_TABLE_ELEMENT";
+s = "SEND_READ_SWITCH_TABLE_ELEMENT";
 qDebug() << s;
 // ====================================
 #endif
@@ -439,7 +440,7 @@ qDebug() << s;
     case SEND_WRITE_SWITCH_TABLE_ELEMENT:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_SWITCH_TABLE_ELEMENT";
+s = "SEND_WRITE_SWITCH_TABLE_ELEMENT";
 qDebug() << s;
 // ====================================
 #endif
@@ -458,7 +459,7 @@ qDebug() << s;
     case SEND_DELET_SWITCH_TABLE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_DELET_SWITCH_TABLE";
+s = "SEND_DELET_SWITCH_TABLE";
 qDebug() << s;
 // ====================================
 #endif
@@ -469,7 +470,7 @@ qDebug() << s;
     case SEND_LOAD_SWITCH_TABLE_TO_FLASH:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_LOAD_SWITCH_TABLE_TO_FLASH";
+s = "SEND_LOAD_SWITCH_TABLE_TO_FLASH";
 qDebug() << s;
 // ====================================
 #endif
@@ -480,7 +481,7 @@ qDebug() << s;
     case SEND_READ_LAST_AOPEN_TIME:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_LAST_AOPEN_TIME";
+s = "SEND_READ_LAST_AOPEN_TIME";
 qDebug() << s;
 // ====================================
 #endif
@@ -491,7 +492,7 @@ qDebug() << s;
     case SEND_WRITE_SI4432_PARAMETERS:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_SI4432_PARAMETERS";
+s = "SEND_WRITE_SI4432_PARAMETERS";
 qDebug() << s;
 // ====================================
 #endif
@@ -528,7 +529,7 @@ qDebug() << s;
     case SEND_READ_SI4432_PARAMETERS:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_SI4432_PARAMETERS";
+s = "SEND_READ_SI4432_PARAMETERS";
 qDebug() << s;
 // ====================================
 #endif
@@ -539,7 +540,7 @@ qDebug() << s;
     case SEND_WRITE_DEBUG_CONTROL:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_DEBUG_CONTROL";
+s = "SEND_WRITE_DEBUG_CONTROL";
 qDebug() << s;
 // ====================================
 #endif
@@ -556,7 +557,7 @@ qDebug() << s;
     case SEND_READ_LRSSI_AFC:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_LRSSI_AFC";
+s = "SEND_READ_LRSSI_AFC";
 qDebug() << s;
 // ====================================
 #endif
@@ -568,7 +569,7 @@ qDebug() << s;
     case SEND_READ_LPGA:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_LPGA";
+s = "SEND_READ_LPGA";
 qDebug() << s;
 // ====================================
 #endif
@@ -580,7 +581,7 @@ qDebug() << s;
     case SEND_RF_RESET:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_RF_RESET";
+s = "SEND_RF_RESET";
 qDebug() << s;
 // ====================================
 #endif
@@ -591,7 +592,7 @@ qDebug() << s;
     case SEND_RELOAD_DEVICE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_RELOAD_DEVICE";
+s = "SEND_RELOAD_DEVICE";
 qDebug() << s;
 // ====================================
 #endif
@@ -610,7 +611,7 @@ qDebug() << s;
     case SEND_READ_SWITCH_TIMEOUT:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_SWITCH_TIMEOUT";
+s = "SEND_READ_SWITCH_TIMEOUT";
 qDebug() << s;
 // ====================================
 #endif
@@ -621,7 +622,7 @@ qDebug() << s;
     case SEND_WRITE_SWITCH_TIMEOUT:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_SWITCH_TIMEOUT";
+s = "SEND_WRITE_SWITCH_TIMEOUT";
 qDebug() << s;
 // ====================================
 #endif
@@ -634,7 +635,7 @@ qDebug() << s;
     case SEND_READ_RX_TIMEOUT:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_RX_TIMEOUT";
+s = "SEND_READ_RX_TIMEOUT";
 qDebug() << s;
 // ====================================
 #endif
@@ -645,7 +646,7 @@ qDebug() << s;
     case SEND_READ_TX_TIMEOUT:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_TX_TIMEOUT";
+s = "SEND_READ_TX_TIMEOUT";
 qDebug() << s;
 // ====================================
 #endif
@@ -656,7 +657,7 @@ qDebug() << s;
     case SEND_READ_SWITCH_LEVEL:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_SWITCH_LEVEL";
+s = "SEND_READ_SWITCH_LEVEL";
 qDebug() << s;
 // ====================================
 #endif
@@ -667,7 +668,7 @@ qDebug() << s;
     case SEND_WRITE_SWITCH_LEVEL:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_SWITCH_LEVEL";
+s = "SEND_WRITE_SWITCH_LEVEL";
 qDebug() << s;
 // ====================================
 #endif
@@ -684,7 +685,7 @@ qDebug() << s;
     case SEND_READ_UPLINK_MODE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_UPLINK_MODE";
+s = "SEND_READ_UPLINK_MODE";
 qDebug() << s;
 // ====================================
 #endif
@@ -695,7 +696,7 @@ qDebug() << s;
     case SEND_WRITE_UPLINK_MODE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_UPLINK_MODE";
+s = "SEND_WRITE_UPLINK_MODE";
 qDebug() << s;
 // ====================================
 #endif
@@ -707,7 +708,7 @@ qDebug() << s;
     case SEND_READ_SNIFER_MODE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_SNIFER_MODE";
+s = "SEND_READ_SNIFER_MODE";
 qDebug() << s;
 // ====================================
 #endif
@@ -718,7 +719,7 @@ qDebug() << s;
     case SEND_WRITE_SNIFER_MODE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_SNIFER_MODE";
+s = "SEND_WRITE_SNIFER_MODE";
 qDebug() << s;
 // ====================================
 #endif
@@ -730,7 +731,7 @@ qDebug() << s;
     case SEND_WRITE_INTERFACES_CONTROL:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_INTERFACES_CONTROL";
+s = "SEND_WRITE_INTERFACES_CONTROL";
 qDebug() << s;
 // ====================================
 #endif
@@ -747,7 +748,7 @@ qDebug() << s;
     case SEND_WRITE_BROADCASTING_MODE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_BROADCASTING_MODE";
+s = "SEND_WRITE_BROADCASTING_MODE";
 qDebug() << s;
 // ====================================
 #endif
@@ -759,7 +760,7 @@ qDebug() << s;
     case SEND_READ_BROADCASTING_MODE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_BROADCASTING_MODE";
+s = "SEND_READ_BROADCASTING_MODE";
 qDebug() << s;
 // ====================================
 #endif
@@ -770,7 +771,7 @@ qDebug() << s;
     case SEND_READ_MASK_DESTINATION:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_MASK_DESTINATION";
+s = "SEND_READ_MASK_DESTINATION";
 qDebug() << s;
 // ====================================
 #endif
@@ -781,7 +782,7 @@ qDebug() << s;
     case SEND_WRITE_MASK_DESTINATION:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_MASK_DESTINATION";
+s = "SEND_WRITE_MASK_DESTINATION";
 qDebug() << s;
 // ====================================
 #endif
@@ -798,7 +799,7 @@ qDebug() << s;
     case SEND_BF_03_00_AC_00:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_BF_03_00_AC_00";
+s = "SEND_BF_03_00_AC_00";
 qDebug() << s;
 // ====================================
 #endif
@@ -810,7 +811,7 @@ qDebug() << s;
     case SEND_BF_03_21_88_00:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_BF_03_21_88_00";
+s = "SEND_BF_03_21_88_00";
 qDebug() << s;
 // ====================================
 #endif
@@ -822,7 +823,7 @@ qDebug() << s;
     case SEND_BF_03_00_AC_00_CALIB:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_BF_03_00_AC_00_CALIB";
+s = "SEND_BF_03_00_AC_00_CALIB";
 qDebug() << s;
 // ====================================
 #endif
@@ -834,7 +835,7 @@ qDebug() << s;
     case SEND_BF_03_21_88_00_CALIB:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_BF_03_21_88_00_CALIB";
+s = "SEND_BF_03_21_88_00_CALIB";
 qDebug() << s;
 // ====================================
 #endif
@@ -846,7 +847,7 @@ qDebug() << s;
     case SEND_BF_AF_00_AC_00:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_BF_AF_00_AC_00";
+s = "SEND_BF_AF_00_AC_00";
 qDebug() << s;
 // ====================================
 #endif
@@ -863,7 +864,7 @@ qDebug() << s;
     case SEND_BF_8B_21_88_00:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_BF_8B_21_88_00";
+s = "SEND_BF_8B_21_88_00";
 qDebug() << s;
 // ====================================
 #endif
@@ -880,7 +881,7 @@ qDebug() << s;
     case SEND_BF_AF_00_AC_00_CALIB:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_BF_AF_00_AC_00_CALIB";
+s = "SEND_BF_AF_00_AC_00_CALIB";
 qDebug() << s;
 // ====================================
 #endif
@@ -897,7 +898,7 @@ qDebug() << s;
     case SEND_BF_8B_21_88_00_CALIB:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_BF_8B_21_88_00_CALIB";
+s = "SEND_BF_8B_21_88_00_CALIB";
 qDebug() << s;
 // ====================================
 #endif
@@ -913,7 +914,7 @@ qDebug() << s;
     case SEND_LOAD_PROPERTYS_TO_FLASH:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_LOAD_PROPERTYS_TO_FLASH";
+s = "SEND_LOAD_PROPERTYS_TO_FLASH";
 qDebug() << s;
 // ====================================
 #endif
@@ -924,7 +925,7 @@ qDebug() << s;
     case SEND_READ_PROPERTYS_FROM_FLASH:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_PROPERTYS_FROM_FLASH";
+s = "SEND_READ_PROPERTYS_FROM_FLASH";
 qDebug() << s;
 // ====================================
 #endif
@@ -936,7 +937,7 @@ qDebug() << s;
     case SEND_LOAD_CALIBPROPS_TO_FLASH:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_LOAD_CALIBPROPS_TO_FLASH";
+s = "SEND_LOAD_CALIBPROPS_TO_FLASH";
 qDebug() << s;
 // ====================================
 #endif
@@ -947,7 +948,7 @@ qDebug() << s;
     case SEND_READ_CALIBPROPS_FROM_FLASH:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_CALIBPROPS_FROM_FLASH";
+s = "SEND_READ_CALIBPROPS_FROM_FLASH";
 qDebug() << s;
 // ====================================
 #endif
@@ -959,7 +960,7 @@ qDebug() << s;
     case SEND_READ_CRC_CHECK_MODE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_CRC_CHECK_MODE";
+s = "SEND_READ_CRC_CHECK_MODE";
 qDebug() << s;
 // ====================================
 #endif
@@ -970,7 +971,7 @@ qDebug() << s;
     case SEND_WRITE_CRC_CHECK_MODE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_CRC_CHECK_MODE";
+s = "SEND_WRITE_CRC_CHECK_MODE";
 qDebug() << s;
 // ====================================
 #endif
@@ -982,7 +983,7 @@ qDebug() << s;
     case SEND_READ_LRSSI_AFC_CURRENT:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_LRSSI_AFC_CURRENT";
+s = "SEND_READ_LRSSI_AFC_CURRENT";
 qDebug() << s;
 // ====================================
 #endif
@@ -993,7 +994,7 @@ qDebug() << s;
     case SEND_READ_SI4432_REGISTER:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_SI4432_REGISTER";
+s = "SEND_READ_SI4432_REGISTER";
 qDebug() << s;
 // ====================================
 #endif
@@ -1006,7 +1007,7 @@ qDebug() << s;
     case SEND_WRITE_SI4432_REGISTER:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_SI4432_REGISTER";
+s = "SEND_WRITE_SI4432_REGISTER";
 qDebug() << s;
 // ====================================
 #endif
@@ -1019,7 +1020,7 @@ qDebug() << s;
     case SEND_READ_SI4432_09_REGISTER:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_READ_SI4432_09_REGISTER";
+s = "SEND_READ_SI4432_09_REGISTER";
 qDebug() << s;
 // ====================================
 #endif
@@ -1033,7 +1034,7 @@ qDebug() << s;
     case SEND_WRITE_SI4432_09_REGISTER:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_WRITE_SI4432_09_REGISTER";
+s = "SEND_WRITE_SI4432_09_REGISTER";
 qDebug() << s;
 // ====================================
 #endif
@@ -1048,7 +1049,7 @@ qDebug() << s;
     case SEND_CHOICE_MAIN_MODULE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_CHOICE_MAIN_MODULE";
+s = "SEND_CHOICE_MAIN_MODULE";
 qDebug() << s;
 // ====================================
 #endif
@@ -1066,6 +1067,7 @@ qDebug() << s;
 
 void DataLogic_Class::ParceData(uint n)
 {
+    QString s;
     QByteArray AnswerH;
     for(unsigned int i = 0; i < 6; i++)
     {AnswerH.append((char)(0xFF));}
@@ -1077,7 +1079,7 @@ void DataLogic_Class::ParceData(uint n)
     {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "ParceData(IN_INTERFACE_USO)";
+s = "ParceData(IN_INTERFACE_USO)";
 qDebug() << s;
 // ====================================
 #endif
@@ -1096,7 +1098,7 @@ qDebug() << s;
     {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "ParceData(IN_INTERFACE_RF_PLC)";
+s = "ParceData(IN_INTERFACE_RF_PLC)";
 qDebug() << s;
 // ====================================
 #endif
@@ -1115,7 +1117,7 @@ qDebug() << s;
     {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "ParceData(IN_SNIFER_PLUS_PREAMBLE)";
+s = "ParceData(IN_SNIFER_PLUS_PREAMBLE)";
 qDebug() << s;
 // ====================================
 #endif
@@ -1200,7 +1202,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xFF - Запрос версий ПО";
+s = "Comande = 0xFF - Запрос версий ПО";
 qDebug() << s;
 // ====================================
 #endif
@@ -1277,7 +1279,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xFE - Перезагрузка в Бутлоадер";
+s = "Comande = 0xFE - Перезагрузка в Бутлоадер";
 qDebug() << s;
 // ====================================
 #endif
@@ -1307,7 +1309,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xFC - Запись сектора";
+s = "Comande = 0xFC - Запись сектора";
 qDebug() << s;
 // ====================================
 #endif
@@ -1369,7 +1371,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xFB - Запись информации о прошивке";
+s = "Comande = 0xFB - Запись информации о прошивке";
 qDebug() << s;
 // ====================================
 #endif
@@ -1389,7 +1391,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xFA - Удаление прошивки";
+s = "Comande = 0xFA - Удаление прошивки";
 qDebug() << s;
 // ====================================
 #endif
@@ -1409,7 +1411,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xF9 - Запрос количества записанных страниц и CRC";
+s = "Comande = 0xF9 - Запрос количества записанных страниц и CRC";
 qDebug() << s;
 // ====================================
 #endif
@@ -1441,7 +1443,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xF1 - Выбор основного интерфейсного модуля";
+s = "Comande = 0xF1 - Выбор основного интерфейсного модуля";
 qDebug() << s;
 // ====================================
 #endif
@@ -1458,7 +1460,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xF0 - Запрос режима ретрансляции";
+s = "Comande = 0xF0 - Запрос режима ретрансляции";
 qDebug() << s;
 // ====================================
 #endif
@@ -1480,7 +1482,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xEF - Запись режима ретрансляции";
+s = "Comande = 0xEF - Запись режима ретрансляции";
 qDebug() << s;
 // ====================================
 #endif
@@ -1500,7 +1502,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xEE - Считывание параметров PLC Модедма";
+s = "Comande = 0xEE - Считывание параметров PLC Модедма";
 qDebug() << s;
 // ====================================
 #endif
@@ -1535,7 +1537,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xED - Записть параметров PLC Модедма";
+s = "Comande = 0xED - Записть параметров PLC Модедма";
 qDebug() << s;
 // ====================================
 #endif
@@ -1555,7 +1557,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xEC - Cчитывание серийного адреса устройства";
+s = "Comande = 0xEC - Cчитывание серийного адреса устройства";
 qDebug() << s;
 // ====================================
 #endif
@@ -1565,7 +1567,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xEB - Чтение Элемента таблицы ретрансляции";
+s = "Comande = 0xEB - Чтение Элемента таблицы ретрансляции";
 qDebug() << s;
 // ====================================
 #endif
@@ -1611,7 +1613,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xEA - Запись Элемента таблицы ретрансляции в буфер для записи";
+s = "Comande = 0xEA - Запись Элемента таблицы ретрансляции в буфер для записи";
 qDebug() << s;
 // ====================================
 #endif
@@ -1653,7 +1655,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xE9 - Стирание таблицы ретрансляции из флэш памяти модема";
+s = "Comande = 0xE9 - Стирание таблицы ретрансляции из флэш памяти модема";
 qDebug() << s;
 // ====================================
 #endif
@@ -1671,7 +1673,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xE8 - Запись таблицы ретрансляции во флэш память модема из буфера";
+s = "Comande = 0xE8 - Запись таблицы ретрансляции во флэш память модема из буфера";
 qDebug() << s;
 // ====================================
 #endif
@@ -1688,7 +1690,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xE7 - Запсиь RF Параметров SI4432";
+s = "Comande = 0xE7 - Запсиь RF Параметров SI4432";
 qDebug() << s;
 // ====================================
 #endif
@@ -1719,7 +1721,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xE6 - Чтение RF Параметров SI4432";
+s = "Comande = 0xE6 - Чтение RF Параметров SI4432";
 qDebug() << s;
 // ====================================
 #endif
@@ -1759,7 +1761,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xE5 - Чтение Latch RSSI";
+s = "Comande = 0xE5 - Чтение Latch RSSI";
 qDebug() << s;
 // ====================================
 #endif
@@ -1852,7 +1854,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xE4 - Modem Reset";
+s = "Comande = 0xE4 - Modem Reset";
 qDebug() << s;
 // ====================================
 #endif
@@ -1872,7 +1874,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xE3 - SWITCH_TIMEOUT";
+s = "Comande = 0xE3 - SWITCH_TIMEOUT";
 qDebug() << s;
 // ====================================
 #endif
@@ -1913,7 +1915,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xE2 - RX_TIMEOUT";
+s = "Comande = 0xE2 - RX_TIMEOUT";
 qDebug() << s;
 // ====================================
 #endif
@@ -1950,7 +1952,7 @@ qDebug() << s;
         case 0xE1:{ // Таймаут TX
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xE1 - TX_TIMEOUT";
+s = "Comande = 0xE1 - TX_TIMEOUT";
 qDebug() << s;
 // ====================================
 #endif
@@ -1985,7 +1987,7 @@ qDebug() << s;
         case 0xE0:{ // Уровень свича
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xE0 - Уровень свича";
+s = "Comande = 0xE0 - Уровень свича";
 qDebug() << s;
 // ====================================
 #endif
@@ -2017,7 +2019,7 @@ qDebug() << s;
         case 0xDA:{ // Установить UP_Linc  (только для снифера)
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xDA - Установить UP_Linc";
+s = "Comande = 0xDA - Установить UP_Linc";
 qDebug() << s;
 // ====================================
 #endif
@@ -2041,7 +2043,7 @@ qDebug() << s;
         case 0xD9:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xD9 - Режим пропускания сообщений";
+s = "Comande = 0xD9 - Режим пропускания сообщений";
 qDebug() << s;
 // ====================================
 #endif
@@ -2071,7 +2073,7 @@ qDebug() << s;
         case 0xD8:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xD8 - Режим широковещания";
+s = "Comande = 0xD8 - Режим широковещания";
 qDebug() << s;
 // ====================================
 #endif
@@ -2094,7 +2096,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xD6 - Записать маску назначения";
+s = "Comande = 0xD6 - Записать маску назначения";
 qDebug() << s;
 // ====================================
 #endif
@@ -2119,7 +2121,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xBF - Чтение свойств SI4463 из памяти RF модэма v5+, или запись свойств в буфер";
+s = "Comande = 0xBF - Чтение свойств SI4463 из памяти RF модэма v5+, или запись свойств в буфер";
 qDebug() << s;
 // ====================================
 #endif
@@ -2172,7 +2174,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xBE - Запись свойств SI4463 из флэша в RAM и наоборот в RF модэмах v5+";
+s = "Comande = 0xBE - Запись свойств SI4463 из флэша в RAM и наоборот в RF модэмах v5+";
 qDebug() << s;
 // ====================================
 #endif
@@ -2192,7 +2194,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xBE - Установка логики мигания светодиодов";
+s = "Comande = 0xBE - Установка логики мигания светодиодов";
 qDebug() << s;
 // ====================================
 #endif
@@ -2217,7 +2219,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xBC - Отключение проверки CRC";
+s = "Comande = 0xBC - Отключение проверки CRC";
 qDebug() << s;
 // ====================================
 #endif
@@ -2243,7 +2245,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xBB - Current RSSI SI4463 или регистры SI4432";
+s = "Comande = 0xBB - Current RSSI SI4463 или регистры SI4432";
 qDebug() << s;
 // ====================================
 #endif
@@ -2311,7 +2313,7 @@ qDebug() << s;
         {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "Comande = 0xB1 - Выбор дополнительного интерфейсного модуля";
+s = "Comande = 0xB1 - Выбор дополнительного интерфейсного модуля";
 qDebug() << s;
 // ====================================
 #endif
@@ -2372,6 +2374,7 @@ void DataLogic_Class::STOP_SEND_DATA(){
 //+++++++++++++[Процедура ОТПРАВКИ СООБЩЕНИЙ]++++++++++++++++++++++++++++++++++++++++
 
 void DataLogic_Class::SEND_DATA(QByteArray data, uint n){
+    QString s;
     SEND_MODE = n;
     switch (n)
     {
@@ -2379,7 +2382,7 @@ void DataLogic_Class::SEND_DATA(QByteArray data, uint n){
     {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_DATA(data, CONFIG_SEND_CONTROL)";
+s = "SEND_DATA(data, CONFIG_SEND_CONTROL)";
 qDebug() << s;
 // ====================================
 #endif
@@ -2408,7 +2411,7 @@ qDebug() << s;
     case CONFIG_SEND_WHITOUT_REPEAT:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_DATA(data, CONFIG_SEND_WHITOUT_REPEAT)";
+s = "SEND_DATA(data, CONFIG_SEND_WHITOUT_REPEAT)";
 qDebug() << s;
 // ====================================
 #endif
@@ -2434,7 +2437,7 @@ qDebug() << s;
     case MONITOR_SEND_CONTROL:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_DATA(data, MONITOR_SEND_CONTROL)";
+s = "SEND_DATA(data, MONITOR_SEND_CONTROL)";
 qDebug() << s;
 // ====================================
 #endif
@@ -2459,7 +2462,7 @@ qDebug() << s;
     {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_DATA(data, MANUAL_SEND_CONTROL)";
+s = "SEND_DATA(data, MANUAL_SEND_CONTROL)";
 qDebug() << s;
 // ====================================
 #endif
@@ -2472,7 +2475,7 @@ qDebug() << s;
     {
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
-QString s = "SEND_DATA(data, MANUAL_CYCLIC_SEND_CONTROL)";
+s = "SEND_DATA(data, MANUAL_CYCLIC_SEND_CONTROL)";
 qDebug() << s;
 // ====================================
 #endif
