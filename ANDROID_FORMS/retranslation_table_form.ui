@@ -73,7 +73,7 @@
         <x>0</x>
         <y>0</y>
         <width>311</width>
-        <height>548</height>
+        <height>545</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
@@ -501,6 +501,9 @@
          </property>
          <property name="styleSheet">
           <string notr="true">border: none;</string>
+         </property>
+         <property name="maximumBlockCount">
+          <number>5000</number>
          </property>
         </widget>
        </item>

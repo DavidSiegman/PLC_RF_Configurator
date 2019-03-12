@@ -8,7 +8,7 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
 {
     ui = new Ui::Hands_Enter_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     ui->SN_ENABLE->setChecked(settings.value(MANUAL_SETTINGS_SN_ENABLE).toBool());
@@ -65,6 +65,7 @@ Hands_Enter_Form::~Hands_Enter_Form()
 void Hands_Enter_Form::on_Back_clicked(){
     this->Back_ClickHandler();
     emit Cancel(this->geometry());
+    this->deleteLater();
 }
 void Hands_Enter_Form::ForceClose(void){
     this->ForceCloseHandler();
@@ -111,6 +112,8 @@ void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
+    emit Get_Console(ui->console);
 }
 void Hands_Enter_Form::on_cBtnSend_clicked()
 {

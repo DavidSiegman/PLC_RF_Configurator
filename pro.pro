@@ -10,7 +10,7 @@ QT      += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
-TARGET   = RF_PLC_Configurator
+TARGET   = PLC_RF_Configurator
 TEMPLATE = app
 
 RC_ICONS = RESOURCES/images/AppIcon.ico
@@ -63,7 +63,8 @@ HEADERS += \
     ANDROID_FORMS/si4463_registers_form.h \
     ANDROID_FORMS/rssimonitor_form.h \
     ANDROID_FORMS/about_form.h\
-    RESIZE_CALCULATING/resizecalculating.h
+    RESIZE_CALCULATING/resizecalculating.h \
+    MODEM/plcrfmodempropertiesclass.h
 
 
 SOURCES += \
@@ -112,6 +113,7 @@ SOURCES += \
     ANDROID_FORMS/rssimonitor_form.cpp \
     ANDROID_FORMS/about_form.cpp \
     RESIZE_CALCULATING/resizecalculating.cpp \
+    MODEM/plcrfmodempropertiesclass.cpp
 
 FORMS += \
     WINDOWS_FORMS/mainwindow.ui \

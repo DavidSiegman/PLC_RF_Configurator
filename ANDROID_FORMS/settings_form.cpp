@@ -6,7 +6,7 @@ Settings_Form::Settings_Form(QWidget *parent) :
     myFormAbstractClass(parent){
     ui = new Ui::Settings_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     ui->Repeat->setValue(settings.value(CONNECTION_SETTINGS_REPEATE).toInt());

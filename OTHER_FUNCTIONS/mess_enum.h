@@ -49,17 +49,21 @@ enum
     DELETE_HANDLING,
     SEND_AOPEN,
     SEND_READ_ALL_DATA,
-    SEND_BF_03_00_AC_00,             // чтение первой части параметров SI4463
-    SEND_BF_03_21_88_00,             // чтение второй части параметров SI4463
-    SEND_BF_AF_00_AC_00,             // запись первой части параметров SI4463
-    SEND_BF_8B_21_88_00,             // запись второй части параметров SI4463
+    SEND_BF_03_00_AC_00,             //    чтение первой части параметров SI4463
+    SEND_BF_03_21_88_00,             //    чтение второй части параметров SI4463
+    SEND_BF_03_00_AC_00_CALIB,       //    чтение первой части параметров SI4463
+    SEND_BF_03_21_88_00_CALIB,       //    чтение второй части параметров SI4463
+    SEND_BF_AF_00_AC_00,             // 10 запись первой части параметров SI4463
+    SEND_BF_8B_21_88_00,             //    запись второй части параметров SI4463
+    SEND_BF_AF_00_AC_00_CALIB,       //    запись первой части параметров SI4463
+    SEND_BF_8B_21_88_00_CALIB,       //    запись второй части параметров SI4463
     SEND_RF_RESET,
     SEND_READ_SNIFER_MODE,
     SEND_WRITE_SNIFER_MODE,
     SEND_READ_UPLINK_MODE,
     SEND_WRITE_UPLINK_MODE,
     SEND_READ_CRC_CHECK_MODE,
-    SEND_WRITE_CRC_CHECK_MODE,
+    SEND_WRITE_CRC_CHECK_MODE,       // 20
     SEND_READ_BROADCASTING_MODE,
     SEND_WRITE_BROADCASTING_MODE,
     SEND_READ_SWITCH_TABLE_ELEMENT,
@@ -69,7 +73,7 @@ enum
     SEND_READ_SWITCH_MODE,
     SEND_WRITE_SWITCH_MODE,
     SEND_READ_SWITCH_LEVEL,
-    SEND_WRITE_SWITCH_LEVEL,
+    SEND_WRITE_SWITCH_LEVEL,         // 30
     SEND_READ_SWITCH_TIMEOUT,
     SEND_WRITE_SWITCH_TIMEOUT,
     SEND_READ_RX_TIMEOUT,
@@ -77,6 +81,7 @@ enum
     SEND_READ_TX_TIMEOUT,
     SEND_WRITE_TX_TIMEOUT,
     SEND_READ_LRSSI_AFC,
+    SEND_READ_LPGA,
     SEND_READ_LRSSI_AFC_CURRENT,
     SEND_RELOAD_DEVICE,
     SEND_WRITE_RFSI4463_PARAMETERS,
@@ -90,6 +95,8 @@ enum
     SEND_WRITE_SI4432_REGISTER,
     SEND_READ_SI4432_09_REGISTER,
     SEND_WRITE_SI4432_09_REGISTER,
+    SEND_READ_ST750_FREQ,
+    SEND_WRITE_ST750_FREQ,
     SEND_READ_ST750_PARAMETERS,
     SEND_WRITE_ST750_PARAMETERS,
     SEND_READ_MASK_DESTINATION,
@@ -100,9 +107,19 @@ enum
     SEND_WRITE_SECTOR,
     SEND_DELETE_FIRMWARE,
     SEND_CHOICE_ADDITIONAL_MODULE,
-    SEND_CHOICE_MAIN_MODULE
+    SEND_CHOICE_MAIN_MODULE,
+    SEND_WRITE_INTERFACES_CONTROL,
+    SEND_WRITE_DEBUG_CONTROL,
+    SEND_READ_LAST_AOPEN_TIME
 };
 
+// Пересекающиеся команды для разных устройств
+#define SEND_READ_INTERFACES_CONTROL (SEND_READ_SNIFER_MODE)
+#define SEND_READ_DEBUG_CONTROL      (SEND_READ_SI4432_PARAMETERS)
+
 #endif // MESS_ENUM
+
+
+
 
 

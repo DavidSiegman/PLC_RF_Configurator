@@ -68,6 +68,7 @@ signals:
     void isMASK_DESTINATION();
     void isUPDATED();
     void isDELETED();
+    void isINTERFACES_CONTROL();
 
 public slots:
     void STOP();

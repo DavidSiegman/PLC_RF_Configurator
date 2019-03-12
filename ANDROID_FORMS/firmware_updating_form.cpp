@@ -8,7 +8,7 @@ Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
 {
     ui = new Ui::Firmware_Updating_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
@@ -43,9 +43,9 @@ Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
 
     connect(ui->ClearConsole, SIGNAL(clicked(bool)), ui->console, SLOT(clear()));
 
-    ui->new_v->setText("NAN");
-    ui->new_Size->setText("NAN");
-    ui->new_CRC->setText("NAN");
+    ui->new_v->setText("-");
+    ui->new_Size->setText("-");
+    ui->new_CRC->setText("-");
 }
 
 Firmware_Updating_Form::~Firmware_Updating_Form(){
@@ -71,10 +71,10 @@ void Firmware_Updating_Form::isStopped(){
     SetProgress(0);
     ui->Stop->setEnabled(false);
     ui->OpenBin->setEnabled(true);
-    if ((ui->new_v->text().compare("NAN") != 0)&&(ui->new_v->text().length() > 0)){
+    if ((ui->new_v->text().compare("-") != 0)&&(ui->new_v->text().length() > 0)){
         ui->UpdateStart->setEnabled(true);
     }
-    if ((ui->curr_v->text().compare("NAN") != 0)&&(ui->curr_v->text().length() > 0)){
+    if ((ui->curr_v->text().compare("-") != 0)&&(ui->curr_v->text().length() > 0)){
         ui->Clear->setEnabled(true);
     }
     ui->Back->setEnabled(true);
@@ -133,6 +133,8 @@ void Firmware_Updating_Form::resizeEvent(QResizeEvent *event){
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
+    emit Get_Console(ui->console);
 }
 
 void Firmware_Updating_Form::Set_In_Firmware_Information(FirmwareInformationClass *FirmwareInformation){
@@ -198,31 +200,31 @@ void Firmware_Updating_Form::on_OpenBin_clicked(){
         }
     }
     else{
-        ui->new_v->setText("NAN");
-        ui->new_Size->setText("NAN");
-        ui->new_CRC->setText("NAN");
+        ui->new_v->setText("-");
+        ui->new_Size->setText("-");
+        ui->new_CRC->setText("-");
         ui->UpdateStart->setEnabled(false);
     }
 }
 void Firmware_Updating_Form::SetUpgradableVersionToUI(QString new_value){
-    this->ui->curr_v->setText("NAN");
+    this->ui->curr_v->setText("-");
     if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0)){
         this->ui->curr_v->setText(new_value);
         this->ui->Clear->setEnabled(true);
     }
 }
 void Firmware_Updating_Form::SetUpgradableSizeToUI(uint new_value){
-    this->ui->curr_Size->setText("NAN");
+    this->ui->curr_Size->setText("-");
     if (new_value > 0){
         this->ui->curr_Size->setText(QString::number(new_value));
     }
 }
 void Firmware_Updating_Form::SetUpgradableCRCToUI(QByteArray new_value){
-    this->ui->curr_CRC->setText("NAN");
+    this->ui->curr_CRC->setText("-");
     if (new_value.length() == 4){
         if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
             (new_value.at(2) == 0) && (new_value.at(3) == 0)){
-            this->ui->curr_CRC->setText("NAN");
+            this->ui->curr_CRC->setText("-");
         }
         else{
             this->ui->curr_CRC->setText(QByteAray_To_QString(new_value).toUpper());
@@ -246,7 +248,7 @@ void Firmware_Updating_Form::isDeleted(void){
     ui->Stop->setEnabled(false);
     ui->OpenBin->setEnabled(true);
     ui->UpdateStart->setEnabled(false);
-    if ((ui->new_v->text().compare("NAN") != 0)&&(ui->new_v->text().length() > 0)){
+    if ((ui->new_v->text().compare("-") != 0)&&(ui->new_v->text().length() > 0)){
         ui->UpdateStart->setEnabled(true);
     }
     ui->Clear->setEnabled(false);

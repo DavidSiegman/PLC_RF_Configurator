@@ -7,7 +7,7 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
 {
     ui = new (Ui::Open_Connection_Form);
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     ui->SN->setValue(settings.value(CONNECTION_SETTINGS_SN).toInt());
@@ -236,6 +236,7 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
+    emit Get_Console(ui->console);
     this->Set_resizing_going(0);
 }
 
@@ -327,23 +328,23 @@ void Open_Connection_Form::SetCurrentFitmwareToUI(uchar new_value)
 
 }
 void Open_Connection_Form::SetBootloaderVersionToUI(QString new_value){
-    this->ui->boot_v->setText("NAN");
+    this->ui->boot_v->setText("-");
     if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0)){
         this->ui->boot_v->setText(new_value);
     }
 }
 void Open_Connection_Form::SetBootloaderSizeToUI(uint new_value){
-    this->ui->boot_Size->setText("NAN");
+    this->ui->boot_Size->setText("-");
     if (new_value > 0){
         this->ui->boot_Size->setText(QString::number(new_value));
     }
 }
 void Open_Connection_Form::SetBootloaderCRCToUI(QByteArray new_value){
-    this->ui->boot_CRC->setText("NAN");
+    this->ui->boot_CRC->setText("-");
     if (new_value.length() == 4){
         if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
             (new_value.at(2) == 0) && (new_value.at(3) == 0)){
-            this->ui->boot_CRC->setText("NAN");
+            this->ui->boot_CRC->setText("-");
         }
         else{
             this->ui->boot_CRC->setText(QByteAray_To_QString(new_value).toUpper());
@@ -351,23 +352,23 @@ void Open_Connection_Form::SetBootloaderCRCToUI(QByteArray new_value){
     }
 }
 void Open_Connection_Form::SetUpgradableVersionToUI(QString new_value){
-    this->ui->fw_v->setText("NAN");
+    this->ui->fw_v->setText("-");
     if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0)){
         this->ui->fw_v->setText(new_value);
     }
 }
 void Open_Connection_Form::SetUpgradableSizeToUI(uint new_value){
-    this->ui->fw_Size->setText("NAN");
+    this->ui->fw_Size->setText("-");
     if (new_value > 0){
         this->ui->fw_Size->setText(QString::number(new_value));
     }
 }
 void Open_Connection_Form::SetUpgradableCRCToUI(QByteArray new_value){
-    this->ui->fw_CRC->setText("NAN");
+    this->ui->fw_CRC->setText("-");
     if (new_value.length() == 4){
         if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
             (new_value.at(2) == 0) && (new_value.at(3) == 0)){
-            this->ui->fw_CRC->setText("NAN");
+            this->ui->fw_CRC->setText("-");
         }
         else{
             this->ui->fw_CRC->setText(QByteAray_To_QString(new_value).toUpper());

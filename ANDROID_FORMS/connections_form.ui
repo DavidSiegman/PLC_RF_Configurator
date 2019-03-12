@@ -173,7 +173,7 @@ color: rgb(150, 80, 0);</string>
                <string notr="true">color: rgb(50, 20, 20);</string>
               </property>
               <property name="text">
-               <string>TCP Соединение</string>
+               <string>TCP-Соединение</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -211,7 +211,7 @@ color: rgb(150, 80, 0);</string>
                  </font>
                 </property>
                 <property name="text">
-                 <string>IP Адрес</string>
+                 <string>IP-Адрес</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
@@ -444,7 +444,7 @@ color: rgb(150, 80, 0);</string>
                <string notr="true">color: rgb(50, 20, 20);</string>
               </property>
               <property name="text">
-               <string>СОМ Соединение</string>
+               <string>СОМ-Соединение</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignCenter</set>
@@ -476,7 +476,7 @@ color: rgb(150, 80, 0);</string>
                  </font>
                 </property>
                 <property name="text">
-                 <string>COM Порт: </string>
+                 <string>COM-Порт: </string>
                 </property>
                </widget>
               </item>
@@ -577,7 +577,7 @@ color: rgb(150, 80, 0);</string>
             </font>
            </property>
            <property name="text">
-            <string>RSSI Монитор</string>
+            <string>RSSI-Монитор</string>
            </property>
            <property name="tabletTracking" stdset="0">
             <bool>true</bool>
@@ -638,6 +638,9 @@ color: rgb(150, 80, 0);</string>
            </property>
            <property name="readOnly">
             <bool>true</bool>
+           </property>
+           <property name="maximumBlockCount">
+            <number>5000</number>
            </property>
           </widget>
          </item>

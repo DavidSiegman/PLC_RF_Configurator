@@ -73,7 +73,7 @@
         <x>0</x>
         <y>0</y>
         <width>328</width>
-        <height>477</height>
+        <height>478</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -118,7 +118,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Serial number</string>
+          <string>Serial Number</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -443,6 +443,9 @@
          </property>
          <property name="readOnly">
           <bool>true</bool>
+         </property>
+         <property name="maximumBlockCount">
+          <number>5000</number>
          </property>
         </widget>
        </item>

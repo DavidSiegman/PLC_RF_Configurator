@@ -414,7 +414,7 @@
                     </font>
                    </property>
                    <property name="text">
-                    <string>NAN</string>
+                    <string>-</string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignCenter</set>
@@ -483,7 +483,7 @@
                     </font>
                    </property>
                    <property name="text">
-                    <string>NAN</string>
+                    <string>-</string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignCenter</set>
@@ -552,7 +552,7 @@
                     </font>
                    </property>
                    <property name="text">
-                    <string>NAN</string>
+                    <string>-</string>
                    </property>
                    <property name="alignment">
                     <set>Qt::AlignCenter</set>
@@ -1053,6 +1053,9 @@
            </property>
            <property name="styleSheet">
             <string notr="true">border: none;</string>
+           </property>
+           <property name="maximumBlockCount">
+            <number>5000</number>
            </property>
           </widget>
          </item>

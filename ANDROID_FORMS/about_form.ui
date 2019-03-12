@@ -84,13 +84,13 @@
         <number>0</number>
        </property>
        <property name="topMargin">
-        <number>2</number>
+        <number>0</number>
        </property>
        <property name="rightMargin">
         <number>0</number>
        </property>
        <property name="bottomMargin">
-        <number>2</number>
+        <number>0</number>
        </property>
        <item>
         <widget class="QLabel" name="AppName">
@@ -115,7 +115,7 @@
           </font>
          </property>
          <property name="text">
-          <string>Конфигуратор RF/PLC</string>
+          <string>Конфигуратор RF_PLC</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -271,6 +271,22 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="label_2">
+         <property name="font">
+          <font>
+           <family>Microsoft YaHei UI</family>
+           <pointsize>8</pointsize>
+          </font>
+         </property>
+         <property name="text">
+          <string>© АО &quot;ПКК Миландр&quot;, 2019</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
        </item>
        <item>
         <spacer name="verticalSpacer">

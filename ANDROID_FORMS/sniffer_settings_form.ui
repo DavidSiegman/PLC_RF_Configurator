@@ -812,6 +812,9 @@
          <property name="styleSheet">
           <string notr="true">border: none;</string>
          </property>
+         <property name="maximumBlockCount">
+          <number>5000</number>
+         </property>
         </widget>
        </item>
       </layout>

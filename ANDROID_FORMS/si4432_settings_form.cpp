@@ -8,7 +8,7 @@ SI4432_Settings_Form::SI4432_Settings_Form(QWidget *parent) :
 {
     ui = new (Ui::SI4432_Settings_Form);
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
@@ -258,6 +258,7 @@ void SI4432_Settings_Form::resizeEvent(QResizeEvent *event){
     }
     ui->FCAR->setCurrentIndex(current_index);
     DeviceVersionHandling();
+    emit Get_Console(ui->console);
     this->Set_resizing_going(0);
 }
 void SI4432_Settings_Form::DeviceVersionHandling(void){

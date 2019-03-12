@@ -7,7 +7,7 @@ Sniffer_Settings_Form::Sniffer_Settings_Form(QWidget *parent) :
 {
     ui = new (Ui::Sniffer_Settings_Form);
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
@@ -164,6 +164,7 @@ void Sniffer_Settings_Form::resizeEvent(QResizeEvent *event){
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
+    emit Get_Console(ui->console);
     this->Set_resizing_going(0);
 }
 

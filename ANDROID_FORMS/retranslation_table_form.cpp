@@ -8,7 +8,7 @@ Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
 {
     ui = new Ui::Retranslation_Table_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
@@ -85,7 +85,7 @@ void Retranslation_Table_Form::isStopped(void){
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
+    //ui->Next->setEnabled(true);
 }
 void Retranslation_Table_Form::isRF_Reset(void)
 {
@@ -97,7 +97,7 @@ void Retranslation_Table_Form::isRF_Reset(void)
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
+    //ui->Next->setEnabled(true);
 }
 void Retranslation_Table_Form::resizeEvent(QResizeEvent *event)
 {
@@ -144,6 +144,7 @@ void Retranslation_Table_Form::resizeEvent(QResizeEvent *event)
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    emit Get_Console(ui->console);
 }
 
 void Retranslation_Table_Form::Set_In_Retranslator_Properties (RetranslatorPropertiesClass* new_data)
@@ -237,7 +238,7 @@ void Retranslation_Table_Form::isSwitch_Table(void){
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
+    //ui->Next->setEnabled(true);
 }
 void Retranslation_Table_Form::on_Del_NetTable_clicked(){
     emit Get_Console(ui->console);
@@ -263,7 +264,7 @@ void Retranslation_Table_Form::isDelet_Switch_Table(void){
     ui->Reset->setEnabled(true);
     ui->Back->setEnabled(true);
     ui->btnSettings->setEnabled(true);
-    ui->Next->setEnabled(true);
+    //ui->Next->setEnabled(true);
     Out_Retranslator_Properties->clearRetranslation_Table();
     modelChanging = 1;
     this->model->clear();

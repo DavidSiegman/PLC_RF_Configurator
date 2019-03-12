@@ -11,7 +11,7 @@ Connections_Form::Connections_Form(QWidget *parent) :
     ui(new Ui::Connections_Form)
 {
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
 
     //TextInfoReading();
 
@@ -552,8 +552,8 @@ void Connections_Form::Create_And_Show_Hands_Enter_Form(QWidget *parent){
     connect(hands_enter_form,SIGNAL(ForcedClosed()),                         this,                  SLOT(show()));
     connect(hands_enter_form,SIGNAL(Get_Geometry(QRect)),                    this,                  SLOT(Set_Geometry(QRect)));
 
+    connect(hands_enter_form,SIGNAL(Cancel(QRect)),                          parent,                SLOT(Set_Geometry(QRect)));
     connect(hands_enter_form,SIGNAL(Cancel(QRect)),                          parent,                SLOT(show()));
-    connect(hands_enter_form,SIGNAL(Get_Geometry(QRect)),                    parent,                SLOT(Set_Geometry(QRect)));
     connect(hands_enter_form,SIGNAL(Send_Data(QByteArray,uint)),             DataLogic,             SLOT(SEND_DATA(QByteArray,uint)));
     connect(hands_enter_form,SIGNAL(Get_Console(QPlainTextEdit*)),           this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
     connect(hands_enter_form,SIGNAL(Settings(QWidget*)),                     this,                  SLOT(Create_And_Show_Settings_Form(QWidget*)));

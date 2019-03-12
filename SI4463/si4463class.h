@@ -21,7 +21,6 @@ public:
     QStandardItemModel *model;
 
     void aSI4463_SET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP_COUNTER, uchar PROP_DATA, SI4463_PROPERTYS_structur* struc);
-
     uchar  aSI4463_GET_PROPERTYS(uchar GROUP, uchar START_PROP, uint PROP_COUNTER, SI4463_PROPERTYS_structur* struc);
 
 private:
@@ -58,6 +57,7 @@ signals:
 public slots:
     void request_Model_handling(void);
     void request_Prameters_handling(void);
+    void request_currentPrameters_handling(void);
 
     SI4463_PROPERTYS_structur*     aSI4463_PROPERTYS(void);
     SI4463_PROPERTYS_structur*     aSI4463_PROPERTYS_FROM_FILE(void);
@@ -82,6 +82,11 @@ public slots:
     uchar* SI4463_PROPS_GROUP_30(SI4463_PROPERTYS_structur* struc);
     uchar* SI4463_PROPS_GROUP_40(SI4463_PROPERTYS_structur* struc);
     uchar* SI4463_PROPS_GROUP_50(SI4463_PROPERTYS_structur* struc);
+
 };
+
+uint GetFreqMHZ(SI4463_PROPERTYS_structur* struc);
+uint GetDataRate(SI4463_PROPERTYS_structur* struc);
+uint GetFDevHz(SI4463_PROPERTYS_structur* struc);
 
 #endif // SI4463CLASS_H

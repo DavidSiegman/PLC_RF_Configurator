@@ -8,7 +8,7 @@ Net_Settings_Form::Net_Settings_Form(QWidget *parent) :
 {
     ui = new Ui::Net_Settings_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
@@ -159,6 +159,8 @@ void Net_Settings_Form::resizeEvent(QResizeEvent *event)
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
     DeviceVersionHandling();
+
+    emit Get_Console(ui->console);
 }
 void Net_Settings_Form::DeviceVersionHandling(void)
 {

@@ -52,14 +52,17 @@
 /* Defining */
 #define ORGANIZATION_NAME   "MILANDR"
 #define ORGANIZATION_DOMAIN "www.milandr.ru"
-#define APPLICATION_NAME    "Конфигуратор PLC/RF"
+#define APPLICATION_NAME    "Конфигуратор PLC_RF"
 
 #define TCP_SETTINGS_IP     "TCP_Settings/IP"
 #define TCP_SETTINGS_PORT   "TCP_Settings/PORT"
 
-#define BUILDING_VERSION    "v3.02"
-#define BUILDING_CRC        "19.001"
-#define BUILDING_TIME       "Feb. 02 2019 в 13:00"
+#define BUILDING_VERSION    "3.2.1"
+#define BUILDING_CRC        "19.003"
+#define BUILDING_TIME       "Mar. 12 2019 в 8:25"
+#define COPYRIGHT           "© АО \"ПКК Миландр\", 2019"
+
+#define WINDOW_TITLE        ((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION)
 
 enum{
     COM_ConnectionType = 0,

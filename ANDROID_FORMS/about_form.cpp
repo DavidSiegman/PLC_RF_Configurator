@@ -5,7 +5,7 @@ About_Form::About_Form(QWidget *parent) :
     myFormAbstractClass(parent){
     ui = new Ui::About_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
@@ -59,6 +59,7 @@ void About_Form::resizeEvent(QResizeEvent *event){
 
     ui->label_1->setFont(font_1);
     ui->AppName->setFont(font_2);
+    ui->label_2->setFont(font_3);
     ui->label_3->setFont(font_3);
     ui->label_4->setFont(font_3);
     ui->label_5->setFont(font_3);

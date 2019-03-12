@@ -6,7 +6,7 @@ PLC_Settings_Form::PLC_Settings_Form(QWidget *parent) :
 {
     ui = new Ui::PLC_Settings_Form;
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
@@ -146,6 +146,7 @@ void PLC_Settings_Form::resizeEvent(QResizeEvent *event){
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
     DeviceVersionHandling();
+    emit Get_Console(ui->console);
     this->Set_resizing_going(0);
 }
 void PLC_Settings_Form::DeviceVersionHandling(void){
@@ -196,12 +197,20 @@ void PLC_Settings_Form::on_Write_clicked(){
     emit StartSendingProcess(SEND_WRITE_ST750_PARAMETERS,CONFIG_SEND_CONTROL);
 }
 void PLC_Settings_Form::on_PLC_LowF_valueChanged(int arg1){
+    if (arg1 > ui->PLC_HighF->value()){
+        arg1 = ui->PLC_HighF->value();
+        setLOWFToUI(arg1);
+    }
     Out_ST750_Parameters->setST750_LOWF((unsigned int)(arg1));
 }
 void PLC_Settings_Form::setLOWFToUI(unsigned int new_value){
     ui->PLC_LowF->setValue((int)(new_value));
 }
 void PLC_Settings_Form::on_PLC_HighF_valueChanged(int arg1){
+    if (arg1 < ui->PLC_LowF->value()){
+        arg1 = ui->PLC_LowF->value();
+        setHIGHFToUI(arg1);
+    }
     Out_ST750_Parameters->setST750_HIGHF((int)(arg1));
 }
 void PLC_Settings_Form::setHIGHFToUI(unsigned int new_value){

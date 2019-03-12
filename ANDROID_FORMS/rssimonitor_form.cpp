@@ -7,7 +7,7 @@ RSSIMonitor_Form::RSSIMonitor_Form(QWidget *parent) :
 {
     ui = new (Ui::RSSIMonitor_Form);
     ui->setupUi(this);
-    this->setWindowTitle((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION);
+    this->setWindowTitle(WINDOW_TITLE);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     ui->SN->setValue(settings.value(CONNECTION_SETTINGS_SN).toInt());
     ui->ModuleType->setCurrentIndex(settings.value(CONNECTION_SETTINGS_MODULE_TYPE).toInt());
@@ -72,9 +72,9 @@ RSSIMonitor_Form::RSSIMonitor_Form(QWidget *parent) :
 
     Monitor_running = 0;
     SetRSSILvlToUI(-1300);
-    ui->RSSI_ANT1->setText("NAN");
-    ui->RSSI_ANT2->setText("NAN");
-    ui->AFC->setText("NAN");
+    ui->RSSI_ANT1->setText("-");
+    ui->RSSI_ANT2->setText("-");
+    ui->AFC->setText("-");
     SetMsgCounterToUI(0);
     SetYesAnswerToUI(0);
     SetNoAnswerToUI(0);
@@ -170,9 +170,9 @@ void RSSIMonitor_Form::isRF_Reset(){
     ui->btnSettings->setEnabled(true);
 
     SetRSSILvlToUI(-1300);
-    ui->RSSI_ANT1->setText("NAN");
-    ui->RSSI_ANT2->setText("NAN");
-    ui->AFC->setText("NAN");
+    ui->RSSI_ANT1->setText("-");
+    ui->RSSI_ANT2->setText("-");
+    ui->AFC->setText("-");
     SetMsgCounterToUI(0);
     SetYesAnswerToUI(0);
     SetNoAnswerToUI(0);
@@ -276,6 +276,7 @@ void RSSIMonitor_Form::resizeEvent(QResizeEvent *event)
     pRSSI->removePolygon(scene);
     pRSSI->drawPolygon(&pfRSSI, scene);
 
+    emit Get_Console(ui->console);
     this->Set_resizing_going(0);
 }
 
@@ -300,9 +301,9 @@ void RSSIMonitor_Form::on_MonitorStart_clicked(){
     ui->btnSettings->setEnabled(false);
 
     SetRSSILvlToUI(-1300);
-    ui->RSSI_ANT1->setText("NAN");
-    ui->RSSI_ANT2->setText("NAN");
-    ui->AFC->setText("NAN");
+    ui->RSSI_ANT1->setText("-");
+    ui->RSSI_ANT2->setText("-");
+    ui->AFC->setText("-");
     SetMsgCounterToUI(0);
     SetYesAnswerToUI(0);
     SetNoAnswerToUI(0);
@@ -345,7 +346,7 @@ void RSSIMonitor_Form::SetRSSILvlToUI(int new_value){
 }
 void RSSIMonitor_Form::SetRSSIANT1ToUI(int new_value){
     if (new_value < -1300){new_value = -1300;}
-    if (new_value >= 0){ui->RSSI_ANT1->setText("NAN");}
+    if (new_value >= 0){ui->RSSI_ANT1->setText("-");}
     if ((new_value >= -1300)&&(new_value < 0)){
         double r = (double)(new_value);
         r/=10;
@@ -355,7 +356,7 @@ void RSSIMonitor_Form::SetRSSIANT1ToUI(int new_value){
 }
 void RSSIMonitor_Form::SetRSSIANT2ToUI(int new_value){
     if (new_value < -1300){new_value = -1300;}
-    if (new_value >= 0){ui->RSSI_ANT2->setText("NAN");}
+    if (new_value >= 0){ui->RSSI_ANT2->setText("-");}
     if ((new_value >= -1300)&&(new_value < 0)){
         double r = (double)(new_value);
         r/=10;
@@ -527,9 +528,9 @@ void RSSIMonitor_Form::on_ModuleType_currentIndexChanged(int index)
 void RSSIMonitor_Form::Clear_Form(void){
     emit ClearAllData();
     SetRSSILvlToUI(-1300);
-    ui->RSSI_ANT1->setText("NAN");
-    ui->RSSI_ANT2->setText("NAN");
-    ui->AFC->setText("NAN");
+    ui->RSSI_ANT1->setText("-");
+    ui->RSSI_ANT2->setText("-");
+    ui->AFC->setText("-");
     SetMsgCounterToUI(0);
     SetYesAnswerToUI(0);
     SetNoAnswerToUI(0);

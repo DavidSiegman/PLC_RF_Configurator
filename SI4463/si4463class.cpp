@@ -399,6 +399,52 @@ void SI4463Class::request_Prameters_handling()
     emit get_Prameters(&Parameters);
 }
 
+void SI4463Class::request_currentPrameters_handling(void){
+    Params p;
+    p.name.append("RF Freq.(MHz):");
+    p.value.append(QString::number((double)GetFreqMHZ(&SI4463_PROPERTYS)/1000));
+    Parameters.append(p);
+    p.name.clear();
+    p.value.clear();
+
+    p.name.append("Rsymb(sps):");
+    p.value.append(QString::number(GetDataRate(&SI4463_PROPERTYS)));
+    Parameters.append(p);
+    p.name.clear();
+    p.value.clear();
+
+    p.name.append("Fdev(Hz):");
+    p.value.append(QString::number(GetFDevHz(&SI4463_PROPERTYS)));
+    Parameters.append(p);
+    p.name.clear();
+    p.value.clear();
+
+    p.name.append("MOD_type:");
+    p.value.append(QString::number(SI4463_PROPERTYS.Field.GROUP_20.Field.MODEM_MOD_TYPE.Field.MOD_TYPE));
+    Parameters.append(p);
+    p.name.clear();
+    p.value.clear();
+
+    p.name.append("AFC_en:");
+    p.value.append(QString::number(SI4463_PROPERTYS.Field.GROUP_20.Field.MODEM_AFC_GAIN.Field.ENAFC));
+    Parameters.append(p);
+    p.name.clear();
+    p.value.clear();
+
+    p.name.append("ANT_DIV:");
+    if (SI4463_PROPERTYS.Field.GROUP_20.Field.MODEM_ANT_DIV_CONTROL.Field.ANTDIV == 0){
+        p.value.append("0");
+    }else{
+        p.value.append("1");
+    }
+
+    Parameters.append(p);
+    p.name.clear();
+    p.value.clear();
+
+    emit get_Prameters(&Parameters);
+}
+
 SI4463_PROPERTYS_structur*        SI4463Class::aSI4463_PROPERTYS(void)
 {
     return &SI4463_PROPERTYS;
@@ -554,5 +600,96 @@ uchar* SI4463Class::SI4463_PROPS_GROUP_40(SI4463_PROPERTYS_structur* struc)
 uchar* SI4463Class::SI4463_PROPS_GROUP_50(SI4463_PROPERTYS_structur* struc)
 {
     return (uchar *)(struc->Field.GROUP_50.Bytes);
+}
+
+uint GetFreqMHZ(SI4463_PROPERTYS_structur *struc)
+{
+    double FreqMHZ = 0;
+    uint INTE = struc->Field.GROUP_40.Field.FREQ_CONTROL_INTE.Field.INTE;
+    uint FRAC = ((uint)(struc->Field.GROUP_40.Field.FREQ_CONTROL_FRAC.Field.FRAC_0) << 0) +
+                ((uint)(struc->Field.GROUP_40.Field.FREQ_CONTROL_FRAC.Field.FRAC_1) << 8) +
+                ((uint)(struc->Field.GROUP_40.Field.FREQ_CONTROL_FRAC.Field.FRAC_2) << 16);
+    uint NPRESC = 4;
+    if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.SY_SEL == 1){
+        NPRESC = 2;
+    }
+    uint OUTDIV = 4;
+    if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.BAND == 1){
+        OUTDIV = 6;
+    }else if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.BAND == 2){
+        OUTDIV = 8;
+    }else if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.BAND == 3){
+        OUTDIV = 12;
+    }else if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.BAND == 4){
+        OUTDIV = 16;
+    }else if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.BAND >= 5){
+        OUTDIV = 24;
+    }
+    uint Fxtal = 30000;
+
+    FreqMHZ = FRAC;
+    FreqMHZ /= (1 << 19);
+    FreqMHZ += INTE;
+    FreqMHZ *= NPRESC*Fxtal;
+    FreqMHZ /= OUTDIV;
+
+    return (uint)FreqMHZ + 1;
+}
+
+uint GetDataRate(SI4463_PROPERTYS_structur* struc){
+    double DataRate = 0;
+    uint DATA_RATE = ((uint)(struc->Field.GROUP_20.Field.MODEM_DATA_RATE.Field.DATA_RATE_0) << 0) +
+                     ((uint)(struc->Field.GROUP_20.Field.MODEM_DATA_RATE.Field.DATA_RATE_1) << 8) +
+                     ((uint)(struc->Field.GROUP_20.Field.MODEM_DATA_RATE.Field.DATA_RATE_2) << 16);
+
+    uint NCOMOD = ((uint)(struc->Field.GROUP_20.Field.MODEM_TX_NCO_MODE.Field.NCOMOD_0) << 0) +
+                  ((uint)(struc->Field.GROUP_20.Field.MODEM_TX_NCO_MODE.Field.NCOMOD_1) << 8) +
+                  ((uint)(struc->Field.GROUP_20.Field.MODEM_TX_NCO_MODE.Field.NCOMOD_2) << 16)+
+                  ((uint)(struc->Field.GROUP_20.Field.MODEM_TX_NCO_MODE.Field.NCOMOD_3) << 24);
+
+    uint TXOSR = 10;
+    if (struc->Field.GROUP_20.Field.MODEM_TX_NCO_MODE.Field.TXOSR == 1){
+        TXOSR = 40;
+    }
+    if (struc->Field.GROUP_20.Field.MODEM_TX_NCO_MODE.Field.TXOSR == 2){
+        TXOSR = 20;
+    }
+    uint Fxtal = 30000000;
+    DataRate = (double)DATA_RATE*Fxtal;
+    DataRate /= NCOMOD;
+    DataRate /= TXOSR;
+
+    return (uint)DataRate;
+}
+uint GetFDevHz(SI4463_PROPERTYS_structur* struc){
+    double FDevHz = 0;
+
+    uint FREQDEV = ((uint)(struc->Field.GROUP_20.Field.MODEM_FREQ_DEV.Field.FREQDEV_0) << 0) +
+                   ((uint)(struc->Field.GROUP_20.Field.MODEM_FREQ_DEV.Field.FREQDEV_1) << 8) +
+                   ((uint)(struc->Field.GROUP_20.Field.MODEM_FREQ_DEV.Field.FREQDEV_2) << 16);
+
+    uint NPRESC = 4;
+    if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.SY_SEL == 1){
+        NPRESC = 2;
+    }
+    uint OUTDIV = 4;
+    if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.BAND == 1){
+        OUTDIV = 6;
+    }else if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.BAND == 2){
+        OUTDIV = 8;
+    }else if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.BAND == 3){
+        OUTDIV = 12;
+    }else if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.BAND == 4){
+        OUTDIV = 16;
+    }else if (struc->Field.GROUP_20.Field.MODEM_CLKGEN_BAND.Field.BAND >= 5){
+        OUTDIV = 24;
+    }
+    uint Fxtal = 30000000;
+
+    FDevHz = (double)(FREQDEV)*NPRESC*Fxtal;
+    FDevHz /= (1 << 19);
+    FDevHz /= OUTDIV;
+
+    return (uint)FDevHz;
 }
 
