@@ -10,13 +10,13 @@ RSSIMonitor_Form::RSSIMonitor_Form(uchar Mode, QWidget *parent) :
 
     this->setWindowTitle(WINDOW_TITLE);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    ui->SN->setValue(settings.value(CONNECTION_SETTINGS_SN).toInt());
+    //ui->SN->setValue(settings.value(CONNECTION_SETTINGS_SN).toInt());
     ui->ModuleType->setCurrentIndex(settings.value(CONNECTION_SETTINGS_MODULE_TYPE).toInt());
     ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
-    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style + ToolTip_Style);
     ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
@@ -27,13 +27,22 @@ RSSIMonitor_Form::RSSIMonitor_Form(uchar Mode, QWidget *parent) :
     ui->Reset->setStyleSheet(Basic_PushButtons_Style);
     ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(PushButtons_Style);
-    ui->btnSettings->setStyleSheet(PushButtons_Style);
-    ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->Next->setStyleSheet(PushButtons_Style+ToolTip_Style);
 
     ui->Interface->setStyleSheet(Background_White);
+    ui->Interface->setEditable(true);
+    ui->Interface->lineEdit()->setReadOnly(true);
+    ui->Interface->lineEdit()->setAlignment(Qt::AlignCenter);
     ui->ModuleType->setStyleSheet(Background_White);
+    ui->ModuleType->setEditable(true);
+    ui->ModuleType->lineEdit()->setReadOnly(true);
+    ui->ModuleType->lineEdit()->setAlignment(Qt::AlignCenter);
     ui->SN->setStyleSheet(Background_White);
+    ui->SN->lineEdit()->setAlignment(Qt::AlignCenter);
+    ui->SN->lineEdit()->setValidator(new QIntValidator);
+    ui->SN->lineEdit()->setMaxLength(10);
 
     ui->AFC->setStyleSheet(Work_Area_Style + Text_Green_Disabled);
     ui->RSSI_ANT1->setStyleSheet(Work_Area_Style + Text_Green_Disabled);
@@ -42,6 +51,8 @@ RSSIMonitor_Form::RSSIMonitor_Form(uchar Mode, QWidget *parent) :
     ui->YesAnswer->setStyleSheet(Work_Area_Style + Text_Green_Disabled);
     ui->NoAnswer->setStyleSheet(Work_Area_Style + Text_Green_Disabled);
     ui->AValue->setStyleSheet(Work_Area_Style + Text_Green_Disabled);
+
+    ui->console->setStyleSheet(ToolTip_Style);
 
     SysInfo              = new QSysInfo;
     QString product_name = SysInfo->prettyProductName();
@@ -72,12 +83,10 @@ RSSIMonitor_Form::RSSIMonitor_Form(uchar Mode, QWidget *parent) :
     pRSSI->BrushColor         = QColor::fromRgbF(1,0.6,1,1);
     pRSSI->CurveColor         = QColor::fromRgbF(0.1,0.0,0.3,1);
 
-    connect(ui->ClearConsole, SIGNAL(clicked(bool)), ui->console, SLOT(clear()));
-
     Monitor_running = 0;
-    ui->RSSI_ANT1->setText("NAN");
-    ui->RSSI_ANT2->setText("NAN");
-    ui->AFC->setText("NAN");
+    ui->RSSI_ANT1->setText("-");
+    ui->RSSI_ANT2->setText("-");
+    ui->AFC->setText("-");
     SetMsgCounterToUI(0);
     SetYesAnswerToUI(0);
     SetNoAnswerToUI(0);
@@ -100,7 +109,10 @@ RSSIMonitor_Form::RSSIMonitor_Form(uchar Mode, QWidget *parent) :
         SetRSSILvlToUI(-1300);
     }
 }
-
+void RSSIMonitor_Form::on_ClearConsole_clicked(){
+    WriteLogToFile(ui->console);
+    ui->console->clear();
+}
 RSSIMonitor_Form::~RSSIMonitor_Form()
 {
     emit Get_Console(NULL);
@@ -108,32 +120,35 @@ RSSIMonitor_Form::~RSSIMonitor_Form()
 }
 void RSSIMonitor_Form::on_Back_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
+    WriteLogToFile(ui->console);
     this->Back_ClickHandler();
     emit Cancel(this->geometry());
 }
 void RSSIMonitor_Form::on_Next_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
+    WriteLogToFile(ui->console);
     this->Next_ClickHandler();
 }
 void RSSIMonitor_Form::ForceClose(void){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
+    WriteLogToFile(ui->console);
     this->ForceCloseHandler();
 }
 void RSSIMonitor_Form::on_btnSettings_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
@@ -191,9 +206,9 @@ void RSSIMonitor_Form::isRF_Reset(){
     ui->btnSettings->setEnabled(true);
 
     SetRSSILvlToUI(-1300);
-    ui->RSSI_ANT1->setText("NAN");
-    ui->RSSI_ANT2->setText("NAN");
-    ui->AFC->setText("NAN");
+    ui->RSSI_ANT1->setText("-");
+    ui->RSSI_ANT2->setText("-");
+    ui->AFC->setText("-");
     SetMsgCounterToUI(0);
     SetYesAnswerToUI(0);
     SetNoAnswerToUI(0);
@@ -236,13 +251,16 @@ void RSSIMonitor_Form::resizeEvent(QResizeEvent *event)
     ui->label_10->setFont(font_5);
     ui->label_11->setFont(font_5);
 
+    ui->Interface->lineEdit()->setFont(font_4_2);
     ui->Interface->setFont(font_4_2);
     ui->Interface->clear();
     ui->Interface->addItem("COM/УСО (Оптопорт)");
+    ui->Interface->setItemData(0, Qt::AlignCenter, Qt::TextAlignmentRole);
     ui->Interface->addItem("PLC/RF");
+    ui->Interface->setItemData(1, Qt::AlignCenter, Qt::TextAlignmentRole);
     ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
 
-    if (this->ConnectionType == TCP_ConnectionType)
+    if (Get_ConnectionType() == TCP_ConnectionType)
     {
         ui->Interface->setCurrentIndex(1);
         ui->Interface->setEnabled(false);
@@ -257,14 +275,27 @@ void RSSIMonitor_Form::resizeEvent(QResizeEvent *event)
         ui->ModuleType->setEnabled(false);
     }
 
+    ui->ModuleType->lineEdit()->setFont(font_4_2);
     ui->ModuleType->setFont(font_4_2);
     ui->ModuleType->clear();
     ui->ModuleType->addItem("Дополнительный");
+    ui->ModuleType->setItemData(0, Qt::AlignCenter, Qt::TextAlignmentRole);
     ui->ModuleType->addItem("Основной");
+    ui->ModuleType->setItemData(1, Qt::AlignCenter, Qt::TextAlignmentRole);
     ui->ModuleType->setCurrentIndex(settings.value(CONNECTION_SETTINGS_MODULE_TYPE).toInt());
 
     ui->SN->setFont(font_4_2);
-    //ui->DeviceType->setFont(font_2_1);
+    ui->SN->lineEdit()->setFont(font_4_2);
+    ui->SN->clear();
+    QString SN_String;
+    int size = settings.beginReadArray(CONNECTION_SETTINGS_SN);
+    for (int i = 0; i < size; i++) {
+        settings.setArrayIndex(i);
+        SN_String = settings.value("SN").toString();
+        ui->SN->addItem(SN_String);
+        ui->SN->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
+    }
+    settings.endArray();
 
     ui->readLatchRSSI->setFont(font_3);
     ui->MonitorStart->setFont(font_3);
@@ -284,6 +315,7 @@ void RSSIMonitor_Form::resizeEvent(QResizeEvent *event)
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->label_1->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
     int w = ui->graphicsView->geometry().width();
     int h = ui->graphicsView->geometry().height();
@@ -305,7 +337,7 @@ void RSSIMonitor_Form::on_MonitorStart_clicked(){
     RSSI_RequestAnswerDetector = 0;
 
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ui->ModuleType->currentIndex());
     settings.sync();
@@ -322,19 +354,41 @@ void RSSIMonitor_Form::on_MonitorStart_clicked(){
     ui->btnSettings->setEnabled(false);
 
 
-    ui->RSSI_ANT1->setText("NAN");
-    ui->RSSI_ANT2->setText("NAN");
-    ui->AFC->setText("NAN");
+    ui->RSSI_ANT1->setText("-");
+    ui->RSSI_ANT2->setText("-");
+    ui->AFC->setText("-");
     SetMsgCounterToUI(0);
     SetYesAnswerToUI(0);
     SetNoAnswerToUI(0);
     SetAValueUI(0);
 
+    QString SN = ui->SN->lineEdit()->text();
+
+    for (int i = ui->SN->count(); i > 0; i--) {
+        if (ui->SN->itemText(i) == SN){
+            ui->SN->removeItem(i);
+        }
+    }
+    ui->SN->insertItem(0,SN);
+    ui->SN->setItemData(0, Qt::AlignCenter, Qt::TextAlignmentRole);
+    ui->SN->setCurrentIndex(0);
+
+    while(ui->SN->count() > 5){
+        ui->SN->removeItem(ui->SN->count()-1);
+    }
+
+    settings.beginWriteArray(CONNECTION_SETTINGS_SN);
+    for (int i = 0; i < ui->SN->count(); i++) {
+        settings.setArrayIndex(i);
+        settings.setValue("SN", ui->SN->itemText(i));
+    }
+    settings.endArray();
+
     if (ui->Interface->currentIndex() == COM_USO_INTERFACE){
-        emit SendSerialNumber(QString::number(ui->SN->value()), false);
+        emit SendSerialNumber(SN, false);
     }
     else if (ui->Interface->currentIndex() == PLC_RF_INTERFACE){
-        emit SendSerialNumber(QString::number(ui->SN->value()), true);
+        emit SendSerialNumber(SN, true);
     }
     emit SendModuleType(ui->ModuleType->currentIndex());
     emit SendInterface(ui->Interface->currentIndex());
@@ -377,7 +431,7 @@ void RSSIMonitor_Form::SetRSSILvlToUI(int new_value){
 }
 void RSSIMonitor_Form::SetRSSIANT1ToUI(int new_value){
     if (new_value < -1300){new_value = -1300;}
-    if (new_value >= 0){ui->RSSI_ANT1->setText("NAN");}
+    if (new_value >= 0){ui->RSSI_ANT1->setText("-");}
     if ((new_value >= -1300)&&(new_value < 0)){
         double r = (double)(new_value);
         r/=10;
@@ -387,7 +441,7 @@ void RSSIMonitor_Form::SetRSSIANT1ToUI(int new_value){
 }
 void RSSIMonitor_Form::SetRSSIANT2ToUI(int new_value){
     if (new_value < -1300){new_value = -1300;}
-    if (new_value >= 0){ui->RSSI_ANT2->setText("NAN");}
+    if (new_value >= 0){ui->RSSI_ANT2->setText("-");}
     if ((new_value >= -1300)&&(new_value < 0)){
         double r = (double)(new_value);
         r/=10;
@@ -421,7 +475,7 @@ void RSSIMonitor_Form::on_readLatchRSSI_clicked(){
     RSSI_RequestAnswerDetector = 0;
 
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ui->ModuleType->currentIndex());
     settings.sync();
@@ -449,11 +503,33 @@ void RSSIMonitor_Form::on_readLatchRSSI_clicked(){
     ui->graphicsView->setScene(scene);
     ui->graphicsView->show();
 
+    QString SN = ui->SN->lineEdit()->text();
+
+    for (int i = ui->SN->count(); i > 0; i--) {
+        if (ui->SN->itemText(i) == SN){
+            ui->SN->removeItem(i);
+        }
+    }
+    ui->SN->insertItem(0,SN);
+    ui->SN->setItemData(0, Qt::AlignCenter, Qt::TextAlignmentRole);
+    ui->SN->setCurrentIndex(0);
+
+    while(ui->SN->count() > 5){
+        ui->SN->removeItem(ui->SN->count()-1);
+    }
+
+    settings.beginWriteArray(CONNECTION_SETTINGS_SN);
+    for (int i = 0; i < ui->SN->count(); i++) {
+        settings.setArrayIndex(i);
+        settings.setValue("SN", ui->SN->itemText(i));
+    }
+    settings.endArray();
+
     if (ui->Interface->currentIndex() == COM_USO_INTERFACE){
-        emit SendSerialNumber(QString::number(ui->SN->value()), false);
+        emit SendSerialNumber(SN, false);
     }
     else if (ui->Interface->currentIndex() == PLC_RF_INTERFACE){
-        emit SendSerialNumber(QString::number(ui->SN->value()), true);
+        emit SendSerialNumber(SN, true);
     }
     emit SendModuleType(ui->ModuleType->currentIndex());
     emit SendInterface(ui->Interface->currentIndex());
@@ -591,7 +667,7 @@ void RSSIMonitor_Form::on_Interface_currentIndexChanged(int index){
                     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
                     settings.sync();
                     emit SendInterface((uchar)(index));
-                    emit SendSerialNumber(QString::number(ui->SN->value()), false);
+                    emit SendSerialNumber(ui->SN->lineEdit()->text(), false);
                 break;
             }
             case PLC_RF_INTERFACE:{
@@ -601,7 +677,7 @@ void RSSIMonitor_Form::on_Interface_currentIndexChanged(int index){
                     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
                     settings.sync();
                     emit SendInterface((uchar)(index));
-                    emit SendSerialNumber(QString::number(ui->SN->value()), true);
+                    emit SendSerialNumber(ui->SN->lineEdit()->text(), true);
                 break;
             }
         }
@@ -638,9 +714,9 @@ void RSSIMonitor_Form::Clear_Form(void){
     }else{
         SetRSSILvlToUI(-1300);
     }
-    ui->RSSI_ANT1->setText("NAN");
-    ui->RSSI_ANT2->setText("NAN");
-    ui->AFC->setText("NAN");
+    ui->RSSI_ANT1->setText("-");
+    ui->RSSI_ANT2->setText("-");
+    ui->AFC->setText("-");
     SetMsgCounterToUI(0);
     SetYesAnswerToUI(0);
     SetNoAnswerToUI(0);
@@ -650,5 +726,24 @@ void RSSIMonitor_Form::Clear_Form(void){
 void RSSIMonitor_Form::Set_ConnectionType(uchar new_value)
 {
     this->ConnectionType = new_value;
+}
+
+void RSSIMonitor_Form::on_SN_editTextChanged(const QString &arg1){
+    ui->SN->lineEdit()->setStyleSheet(Background_Red);
+    ui->MonitorStart->setEnabled(false);
+    ui->readLatchRSSI->setEnabled(false);
+    //ui->btnHandsEnter->setEnabled(false);
+    //ui->btnNext->setEnabled(false);
+
+    long unsigned int SN_int = arg1.toInt();
+
+    if (SN_int <= 0xFFFFFFFF
+       ){
+       ui->SN->lineEdit()->setStyleSheet(Background_White);
+       ui->MonitorStart->setEnabled(true);
+       ui->readLatchRSSI->setEnabled(true);
+       //ui->btnHandsEnter->setEnabled(true);
+       //ui->btnNext->setEnabled(true);
+    }
 }
 

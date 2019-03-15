@@ -13,6 +13,8 @@
 #include "MODEM/plcrfmodempropertiesclass.h"
 #include "RESIZE_CALCULATING/resizecalculating.h"
 #include "STYLE/style.h"
+#include <QDateTime>
+#include <QDir>
 
 class myFormAbstractClass : public QWidget
 {

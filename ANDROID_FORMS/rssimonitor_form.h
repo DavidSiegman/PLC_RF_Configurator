@@ -67,6 +67,8 @@ private slots:
     void on_ModuleType_currentIndexChanged(int index);
     void on_readLatchRSSI_clicked();
     void on_MonitorStart_clicked();
+    void on_SN_editTextChanged(const QString &arg1);
+    void on_ClearConsole_clicked();
 
     void SetRSSILvlToUI(int);
     void SetRSSIANT1ToUI(int);

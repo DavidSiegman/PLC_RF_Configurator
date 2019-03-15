@@ -21,9 +21,9 @@ SI4463_Registers_Form::SI4463_Registers_Form(QWidget *parent) :
 
     ui->label_1->setStyleSheet(Titel_Widget_Style);
 
-    ui->Back->setStyleSheet(PushButtons_Style);
-    ui->btnSettings->setStyleSheet(PushButtons_Style);
-    ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->Next->setStyleSheet(PushButtons_Style+ToolTip_Style);
 }
 
 SI4463_Registers_Form::~SI4463_Registers_Form()
@@ -56,6 +56,7 @@ void SI4463_Registers_Form::resizeEvent(QResizeEvent *event)
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->label_1->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 }
 
 void SI4463_Registers_Form::Set_Model(QStandardItemModel *model)

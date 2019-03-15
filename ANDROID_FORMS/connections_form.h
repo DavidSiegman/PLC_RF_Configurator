@@ -52,20 +52,22 @@
 #include "plc_rf_netsettings_form.h"
 #include "rs_settings_form.h"
 
-// Конфигуратор УСПД Milan RF 1.2 © АО "ПКК Миландр", 2019
+// Конфигуратор PLC_RF 1.2 © АО "ПКК Миландр", 2019
 /* Defining */
-#define ORGANIZATION_NAME   "MILANDR"
-#define ORGANIZATION_DOMAIN "www.milandr.ru"
-#define APPLICATION_NAME    "Конфигуратор PLC_RF"
+#define ORGANIZATION_NAME    "MILANDR"
+#define ORGANIZATION_DOMAIN  "www.milandr.ru"
+#define APPLICATION_NAME     "Конфигуратор PLC_RF"
 
-#define TCP_SETTINGS_IP     "TCP_Settings/IP"
-#define TCP_SETTINGS_PORT   "TCP_Settings/PORT"
+#define TCP_SETTINGS_IP      "TCP_Settings/IP"
+#define TCP_SETTINGS_PORT    "TCP_Settings/PORT"
 
-#define BUILDING_VERSION    "3.3.0"
-#define BUILDING_CRC        "19.004"
-#define BUILDING_TIME       "Mar. 06 2019 в 15:12"
+#define APPLICATION_GEOMETRY "Geometry"
 
-#define WINDOW_TITLE        ((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION)
+#define BUILDING_VERSION     "3.2.1"
+#define BUILDING_CRC         "19.003"
+#define BUILDING_TIME        "Mar. 15 2019 в 13:53"
+
+#define WINDOW_TITLE         ((QString)(APPLICATION_NAME) + " " + BUILDING_VERSION)
 
 enum{
     COM_ConnectionType = 0,
@@ -131,8 +133,9 @@ private slots:
     void on_btnHandsEnter_clicked();
     void on_RSSIMonitor_clicked();
     void on_PGAMonitor_clicked();
-    void on_IPInput_textEdited(const QString &arg1);
-    void on_PORTInput_textChanged(const QString &arg1);
+    void on_IPInput_editTextChanged(const QString &arg1);
+    void on_PORTInput_editTextChanged(const QString &arg1);
+    void on_ClearConsole_clicked();
 
 private:
     Ui::Connections_Form     *ui;
@@ -178,6 +181,8 @@ private:
     uchar                     ConnectionType;
 
 };
+
+void WriteLogToFile(QPlainTextEdit *console);
 
 //void TextInfoReading(void);
 //QString Get_BUILDING_VERSION(void);

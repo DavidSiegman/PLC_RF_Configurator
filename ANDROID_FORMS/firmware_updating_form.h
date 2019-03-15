@@ -12,6 +12,8 @@
 #include "RESIZE_CALCULATING/resizecalculating.h"
 #include "STYLE/style.h"
 
+#define FIRMWARE_BIN_PATH      "FIRMWARE_BIN/Path"
+
 //namespace Ui {
 //class Firmware_Updating_Form;
 //}
@@ -45,6 +47,7 @@ private slots:
     void on_OpenBin_clicked();
     void on_Clear_clicked();
     void on_UpdateStart_clicked();
+    void on_ClearConsole_clicked();
 
     void SetUpgradableVersionToUI(QString);
     void SetUpgradableSizeToUI(uint);

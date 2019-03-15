@@ -196,6 +196,9 @@
                  <pointsize>8</pointsize>
                 </font>
                </property>
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор интерфейса связи c устройством&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
                <property name="minimumContentsLength">
                 <number>0</number>
                </property>
@@ -240,7 +243,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Интерфейсный Модуль</string>
+                <string>Интерфейсный модуль</string>
                </property>
                <property name="alignment">
                 <set>Qt::AlignCenter</set>
@@ -275,6 +278,9 @@
                  <family>Microsoft YaHei UI</family>
                  <pointsize>8</pointsize>
                 </font>
+               </property>
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор интерфейсного модуля&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="minimumContentsLength">
                 <number>0</number>
@@ -328,23 +334,15 @@
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="SN">
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
+              <widget class="QComboBox" name="SN">
+               <property name="editable">
+                <bool>true</bool>
                </property>
-               <property name="font">
-                <font>
-                 <family>Microsoft YaHei UI</family>
-                </font>
+               <property name="currentText">
+                <string>0</string>
                </property>
-               <property name="alignment">
-                <set>Qt::AlignCenter</set>
-               </property>
-               <property name="maximum">
-                <number>429496729</number>
+               <property name="maxCount">
+                <number>10</number>
                </property>
               </widget>
              </item>
@@ -391,6 +389,9 @@
                     <family>Microsoft YaHei UI</family>
                    </font>
                   </property>
+                  <property name="toolTip">
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Считать значение уровня сигнала RSSI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  </property>
                   <property name="text">
                    <string>Read Latch RSSI</string>
                   </property>
@@ -428,6 +429,9 @@
                      <font>
                       <family>Microsoft YaHei UI</family>
                      </font>
+                    </property>
+                    <property name="toolTip">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Значение смещения частоты автоподстройки&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="text">
                      <string>-</string>
@@ -498,6 +502,9 @@
                       <family>Microsoft YaHei UI</family>
                      </font>
                     </property>
+                    <property name="toolTip">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Значение RSSI первой антенны&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                    </property>
                     <property name="text">
                      <string>-</string>
                     </property>
@@ -566,6 +573,9 @@
                      <font>
                       <family>Microsoft YaHei UI</family>
                      </font>
+                    </property>
+                    <property name="toolTip">
+                     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Значение RSSI второй антенны&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                     </property>
                     <property name="text">
                      <string>-</string>
@@ -685,6 +695,9 @@
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;График RSSI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">border: none;</string>
                  </property>
@@ -789,6 +802,9 @@
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Счётчик отправленных сообщений, оставшихся без ответа&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>0</string>
                  </property>
@@ -818,6 +834,9 @@
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Счётчик ответов на отправленные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="text">
                   <string>0</string>
@@ -869,6 +888,9 @@
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Счётчик отправленных сообщений&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="text">
                   <string>0</string>
@@ -930,6 +952,9 @@
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Среднее значение RSSI за последние 10 запросов&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>0</string>
                  </property>
@@ -970,6 +995,9 @@
                 <family>Microsoft YaHei UI</family>
                </font>
               </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Запустить RSSI-Монитор&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
                <string>Старт</string>
               </property>
@@ -997,6 +1025,9 @@
                 <family>Microsoft YaHei UI</family>
                </font>
               </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Остановить RSSI-Монитор&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
                <string>Стоп</string>
               </property>
@@ -1020,6 +1051,9 @@
                <font>
                 <family>Microsoft YaHei UI</family>
                </font>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Перезагрузить подключенное устройство&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>Modem Reset</string>
@@ -1048,6 +1082,9 @@
               <pointsize>8</pointsize>
              </font>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Очистить поле Лога&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Очистить Лог</string>
             </property>
@@ -1067,8 +1104,14 @@
               <pointsize>7</pointsize>
              </font>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле Лога&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">border: none;</string>
+            </property>
+            <property name="maximumBlockCount">
+             <number>5000</number>
             </property>
            </widget>
           </item>
@@ -1119,6 +1162,9 @@
             <height>40</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Назад&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -1153,6 +1199,9 @@
             <width>16777215</width>
             <height>16777215</height>
            </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Настройки конфигуратора&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
@@ -1209,6 +1258,9 @@
                <width>0</width>
                <height>40</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Microsoft YaHei UI';&quot;&gt;Далее&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string/>

@@ -60,6 +60,7 @@ private slots:
     void on_Stop_clicked();
     void on_Reset_clicked();
     void on_btnSettings_clicked();
+    void on_ClearConsole_clicked();
 
     void setMTToUI(unsigned char);
     void setPAToUI(unsigned char);

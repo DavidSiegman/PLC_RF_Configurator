@@ -11,6 +11,8 @@
 #include "RESIZE_CALCULATING/resizecalculating.h"
 #include "STYLE/style.h"
 
+#define SI4463_BATCH_PATH      "SI4463_BATCH/Path"
+
 //namespace Ui {
 //class SI4463_Settings_Form;
 //}
@@ -49,6 +51,7 @@ private slots:
     void on_FileOpen_clicked();
     void on_Write_clicked();
     void on_Registers_clicked();
+    void on_ClearConsole_clicked();
 
     void DeviceVersionHandling(void);
 

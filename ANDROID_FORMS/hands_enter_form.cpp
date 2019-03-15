@@ -12,13 +12,16 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     ui->SN_ENABLE->setChecked(settings.value(MANUAL_SETTINGS_SN_ENABLE).toBool());
-    ui->SN_TEXT->setText(settings.value(MANUAL_SETTINGS_SN).toString());
+    ui->CRC_OUT->setChecked(settings.value(MANUAL_SETTINGS_CRC16_ENABLE).toBool());
+    //ui->SN_TEXT->setText(settings.value(MANUAL_SETTINGS_SN).toString());
     ui->cEnterText->setText(settings.value(MANUAL_SETTINGS_MESSAGE).toString());
     if (ui->SN_ENABLE->isChecked()){ui->SN_TEXT->setEnabled(true);}
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
     ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style);
+    ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
+    ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
 
     ui->label_2->setStyleSheet(Basic_Text_Style);
@@ -30,13 +33,18 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
     ui->Cyclic->setStyleSheet(Basic_PushButtons_Style);
     ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(PushButtons_Style);
-    ui->btnSettings->setStyleSheet(PushButtons_Style);
-    ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->Next->setStyleSheet(PushButtons_Style+ToolTip_Style);
     ui->Next->setEnabled(false);
 
     ui->SN_TEXT->setStyleSheet(Background_White+Basic_Text_Style);
+    ui->SN_TEXT->lineEdit()->setAlignment(Qt::AlignCenter);
+    ui->SN_TEXT->lineEdit()->setValidator(new QIntValidator);
+    ui->SN_TEXT->lineEdit()->setMaxLength(10);
     ui->cEnterText->setStyleSheet(Background_White+Basic_Text_Style);
+
+    ui->console->setStyleSheet(ToolTip_Style);
 
     SysInfo              = new QSysInfo;
     QString product_name = SysInfo->prettyProductName();
@@ -54,10 +62,11 @@ Hands_Enter_Form::Hands_Enter_Form(QWidget *parent) :
     }
 
     oCRC16                    = new CRC16_Class();
-
-    connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
-
+void Hands_Enter_Form::on_ClearConsole_clicked(){
+    WriteLogToFile(ui->console);
+    ui->console->clear();
+}
 Hands_Enter_Form::~Hands_Enter_Form()
 {
     emit Get_Console(NULL);
@@ -65,11 +74,13 @@ Hands_Enter_Form::~Hands_Enter_Form()
 }
 
 void Hands_Enter_Form::on_Back_clicked(){
+    WriteLogToFile(ui->console);
     this->Back_ClickHandler();
     emit Cancel(this->geometry());
     this->deleteLater();
 }
 void Hands_Enter_Form::ForceClose(void){
+    WriteLogToFile(ui->console);
     this->ForceCloseHandler();
 }
 void Hands_Enter_Form::on_btnSettings_clicked(){
@@ -77,6 +88,7 @@ void Hands_Enter_Form::on_btnSettings_clicked(){
 }
 void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
 {
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
     resize_calculating.set_form_geometry(this->geometry());
 
     int text_size_1 = resize_calculating.get_text_size_1();
@@ -100,6 +112,17 @@ void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
     ui->label_3->setFont(font_2);
 
     ui->SN_TEXT->setFont(font_3);
+    ui->SN_TEXT->lineEdit()->setFont(font_3);
+    ui->SN_TEXT->clear();
+    QString SN_String;
+    int size = settings.beginReadArray(MANUAL_SETTINGS_SN);
+    for (int i = 0; i < size; i++) {
+        settings.setArrayIndex(i);
+        SN_String = settings.value("SN").toString();
+        ui->SN_TEXT->addItem(SN_String);
+        ui->SN_TEXT->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
+    }
+    settings.endArray();
     ui->cEnterText->setFont(font_3);
 
     ui->cBtnSend->setFont(font_3);
@@ -107,15 +130,10 @@ void Hands_Enter_Form::resizeEvent(QResizeEvent *event)
     ui->ClearConsole->setFont(font_3);
     ui->console->setFont(font_5);
 
-    QScrollBar *VerticalScrollBar = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-    QScrollBar *VerticalScrollBar2 = new QScrollBar(); VerticalScrollBar->setStyleSheet(ScrollBar_Style);
-
-    ui->scrollArea->setVerticalScrollBar(VerticalScrollBar);
-    ui->console->setVerticalScrollBar(VerticalScrollBar2);
-
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->label_1->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
     emit Get_Console(ui->console);
 }
@@ -126,7 +144,8 @@ void Hands_Enter_Form::on_cBtnSend_clicked()
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
     settings.setValue(MANUAL_SETTINGS_SN_ENABLE, ui->SN_ENABLE->isChecked());
-    settings.setValue(MANUAL_SETTINGS_SN, ui->SN_TEXT->text());
+    settings.setValue(MANUAL_SETTINGS_CRC16_ENABLE, ui->CRC_OUT->isChecked());
+    //settings.setValue(MANUAL_SETTINGS_SN, ui->SN_TEXT->text());
     settings.setValue(MANUAL_SETTINGS_MESSAGE, ui->cEnterText->text());
     settings.sync();
 
@@ -136,9 +155,31 @@ void Hands_Enter_Form::on_cBtnSend_clicked()
     QString str2;
     str2.clear();
 
+    QString SN = ui->SN_TEXT->lineEdit()->text();
+
+    for (int i = ui->SN_TEXT->count(); i > 0; i--) {
+        if (ui->SN_TEXT->itemText(i) == SN){
+            ui->SN_TEXT->removeItem(i);
+        }
+    }
+    ui->SN_TEXT->insertItem(0,SN);
+    ui->SN_TEXT->setItemData(0, Qt::AlignCenter, Qt::TextAlignmentRole);
+    ui->SN_TEXT->setCurrentIndex(0);
+
+    while(ui->SN_TEXT->count() > 5){
+        ui->SN_TEXT->removeItem(ui->SN_TEXT->count()-1);
+    }
+
+    settings.beginWriteArray(MANUAL_SETTINGS_SN);
+    for (int i = 0; i < ui->SN_TEXT->count(); i++) {
+        settings.setArrayIndex(i);
+        settings.setValue("SN", ui->SN_TEXT->itemText(i));
+    }
+    settings.endArray();
+
     if (ui->SN_ENABLE->isChecked())
     {
-        sn = ui->SN_TEXT->text().toInt();
+        sn = SN.toInt();
         data_to_write.append((char)(sn >> 0));
         data_to_write.append((char)(sn >> 8));
         data_to_write.append((char)(sn >> 16));

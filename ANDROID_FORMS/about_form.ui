@@ -294,7 +294,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="label_2">
             <property name="font">
              <font>
               <family>Microsoft YaHei UI</family>
@@ -441,6 +441,9 @@
            <font>
             <family>Microsoft YaHei UI</family>
            </font>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ок&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string/>

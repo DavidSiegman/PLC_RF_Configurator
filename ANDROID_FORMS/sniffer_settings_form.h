@@ -63,6 +63,7 @@ private slots:
     void on_LVL9_valueChanged(int arg1);
     void on_Stop_clicked();
     void on_btnSettings_clicked();
+    void on_ClearConsole_clicked();
 
     void Set_SnifferMode(uchar);
     uchar Get_SnifferMode(void);

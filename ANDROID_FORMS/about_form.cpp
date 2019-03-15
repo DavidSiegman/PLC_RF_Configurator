@@ -28,7 +28,7 @@ About_Form::About_Form(QWidget *parent) :
     ui->BuildingCRC->setText(BUILDING_CRC);
     ui->BuildingTime->setText(BUILDING_TIME);
 
-    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style+ToolTip_Style);
     ui->None->setStyleSheet(PushButtons_Style);
     ui->Apply->setStyleSheet(PushButtons_Style);
 
@@ -62,12 +62,14 @@ void About_Form::resizeEvent(QResizeEvent *event){
 
     ui->label_1->setFont(font_1);
     ui->AppName->setFont(font_2);
+    ui->label_2->setFont(font_3);
     ui->label_3->setFont(font_3);
     ui->label_4->setFont(font_3);
     ui->label_5->setFont(font_3);
 
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Apply->setIconSize(icons_size); ui->Apply->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->label_1->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 }
 
 void About_Form::on_Apply_clicked(){

@@ -60,6 +60,7 @@ private slots:
     void on_DebugHOSTUART_stateChanged(int);
     void on_DebugFlashEnable_stateChanged(int);
     void on_DebugFlashFull_stateChanged(int);
+    void on_ClearConsole_clicked();
 
     void setInterfaces_ControlToUI(Interfaces_Control_Type);
     void setDebug_ControlToUI(Debug_Control_Type);

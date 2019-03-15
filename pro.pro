@@ -10,7 +10,7 @@ QT      += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
-TARGET   = RF_PLC_Configurator
+TARGET   = PLC_RF_Configurator
 TEMPLATE = app
 
 RC_ICONS = RESOURCES/images/AppIcon.ico

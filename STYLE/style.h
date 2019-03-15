@@ -303,7 +303,6 @@ const QString ToolButtons_Style                  ( "QToolButton{"
                                                    "stop:0.95 rgba(200,200,200,70),"
                                                    "stop:1 rgba(255,255,255,100));}"
                                                   );
-
 const QString PushButtons_Style                  ( "QPushButton{"
                                                    "border-style: solid;"
                                                    "border-top-width: 1px;"
@@ -390,4 +389,12 @@ const QString PushButtons_Style                  ( "QPushButton{"
                                                    "stop:0.95 rgba(200,200,200,30),"
                                                    "stop:1 rgba(147,29,18,127));}"
                                                   );
+const QString ToolTip_Style                      ( "QToolTip{"
+                                                   "color: rgb(100, 100, 100);"
+                                                   "border-style: none;"
+                                                   "border-width: 1px;"
+                                                   "border-color: rgba(255,220,180,255);"
+                                                   "background-color: rgba(255, 255, 255, 240);"
+                                                   "}"
+                                                 );
 #endif // STYLE_H

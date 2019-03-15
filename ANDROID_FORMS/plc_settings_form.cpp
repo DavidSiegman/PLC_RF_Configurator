@@ -9,7 +9,7 @@ PLC_Settings_Form::PLC_Settings_Form(QWidget *parent) :
     this->setWindowTitle(WINDOW_TITLE);
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
-    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style + ToolTip_Style);
     ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
@@ -19,14 +19,16 @@ PLC_Settings_Form::PLC_Settings_Form(QWidget *parent) :
     ui->Reset->setStyleSheet(Basic_PushButtons_Style);
     ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(PushButtons_Style);
-    ui->btnSettings->setStyleSheet(PushButtons_Style);
-    ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->Next->setStyleSheet(PushButtons_Style+ToolTip_Style);
 
     ui->PLC_PowerIndic->setStyleSheet(Background_White + Text_Green);
     ui->PLCModulation->setStyleSheet(Background_White);
     ui->PLC_HighF->setStyleSheet(Background_White);
     ui->PLC_LowF->setStyleSheet(Background_White);
+
+    ui->console->setStyleSheet(ToolTip_Style);
 
     SysInfo              = new QSysInfo;
     QString product_name = SysInfo->prettyProductName();
@@ -42,22 +44,26 @@ PLC_Settings_Form::PLC_Settings_Form(QWidget *parent) :
         this->setWindowModality(Qt::WindowModal);
         //this->setFixedSize (340,560);
     }
-
-    connect(ui->ClearConsole,  SIGNAL(clicked(bool)),         ui->console, SLOT(clear()));
 }
-
+void PLC_Settings_Form::on_ClearConsole_clicked(){
+    WriteLogToFile(ui->console);
+    ui->console->clear();
+}
 PLC_Settings_Form::~PLC_Settings_Form(){
     emit Get_Console(NULL);
     delete ui;
 }
 void PLC_Settings_Form::on_Back_clicked(){
+    WriteLogToFile(ui->console);
     this->Back_ClickHandler();
     emit Cancel(this->geometry());
 }
 void PLC_Settings_Form::on_Next_clicked(){
+    WriteLogToFile(ui->console);
     this->Next_ClickHandler();
 }
 void PLC_Settings_Form::ForceClose(void){
+    WriteLogToFile(ui->console);
     this->ForceCloseHandler();
 }
 void PLC_Settings_Form::on_btnSettings_clicked(){
@@ -169,6 +175,7 @@ void PLC_Settings_Form::resizeEvent(QResizeEvent *event){
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->label_1->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
     DeviceVersionHandling();
     emit Get_Console(ui->console);
@@ -251,7 +258,7 @@ void PLC_Settings_Form::on_Write_clicked(){
 }
 void PLC_Settings_Form::on_PLC_LowF_valueChanged(int arg1){
     if (arg1 > ui->PLC_HighF->value()){
-        arg1 = ui->PLC_HighF->value();
+        arg1 = ui->PLC_HighF->value() - 1;
         setLOWFToUI(arg1);
     }
     Out_ST750_Parameters->setST750_LOWF((unsigned int)(arg1));
@@ -261,7 +268,7 @@ void PLC_Settings_Form::setLOWFToUI(unsigned int new_value){
 }
 void PLC_Settings_Form::on_PLC_HighF_valueChanged(int arg1){
     if (arg1 < ui->PLC_LowF->value()){
-        arg1 = ui->PLC_LowF->value();
+        arg1 = ui->PLC_LowF->value() + 1;
         setHIGHFToUI(arg1);
     }
     Out_ST750_Parameters->setST750_HIGHF((int)(arg1));

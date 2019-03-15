@@ -15,6 +15,7 @@
 #define  MANUAL_SETTINGS_SN_ENABLE          "Manual_Settings/SN_ENABLE"
 #define  MANUAL_SETTINGS_SN                 "Manual_Settings/SN"
 #define  MANUAL_SETTINGS_MESSAGE            "Manual_Settings/MESSAGE"
+#define  MANUAL_SETTINGS_CRC16_ENABLE       "Manual_Settings/CRC16_ENABLE "
 
 //namespace Ui {
 //class Hands_Enter_Form;
@@ -40,6 +41,7 @@ private slots:
     void on_cBtnSend_clicked();
     void on_SN_ENABLE_stateChanged(int arg1);
     void on_btnSettings_clicked();
+    void on_ClearConsole_clicked();
 
 private:
     Ui::Hands_Enter_Form *ui;

@@ -82,6 +82,7 @@ private slots:
     void on_LVL7_2_valueChanged(int arg1);
     void on_LVL8_2_valueChanged(int arg1);
     void on_LVL9_2_valueChanged(int arg1);
+    void on_ClearConsole_clicked();
 
     void  Set_UpLink(uchar);
     uchar Get_UpLink(void);

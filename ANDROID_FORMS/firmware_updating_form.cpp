@@ -12,7 +12,7 @@ Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
-    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style + ToolTip_Style);
     ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
@@ -23,11 +23,13 @@ Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
     ui->Clear->setStyleSheet(Basic_PushButtons_Style);
     ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(PushButtons_Style);
-    ui->btnSettings->setStyleSheet(PushButtons_Style);
-    ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->Next->setStyleSheet(PushButtons_Style+ToolTip_Style);
 
     ui->PatchBin->setStyleSheet(Work_Area_Style + Text_Green);
+
+    ui->console->setStyleSheet(ToolTip_Style);
 
     SysInfo              = new QSysInfo;
     QString product_name = SysInfo->prettyProductName();
@@ -44,22 +46,25 @@ Firmware_Updating_Form::Firmware_Updating_Form(QWidget *parent) :
         //this->setFixedSize (340,560);
     }
 
-    connect(ui->ClearConsole, SIGNAL(clicked(bool)), ui->console, SLOT(clear()));
-
-    ui->new_v->setText("NAN");
-    ui->new_Size->setText("NAN");
-    ui->new_CRC->setText("NAN");
+    ui->new_v->setText("-");
+    ui->new_Size->setText("-");
+    ui->new_CRC->setText("-");
 }
-
+void Firmware_Updating_Form::on_ClearConsole_clicked(){
+    WriteLogToFile(ui->console);
+    ui->console->clear();
+}
 Firmware_Updating_Form::~Firmware_Updating_Form(){
     emit Get_Console(NULL);
     delete ui;
 }
 void Firmware_Updating_Form::on_Back_clicked(){
+    WriteLogToFile(ui->console);
     this->Back_ClickHandler();
     emit Cancel(this->geometry());
 }
 void Firmware_Updating_Form::ForceClose(void){
+    WriteLogToFile(ui->console);
     this->ForceCloseHandler();
 }
 void Firmware_Updating_Form::on_btnSettings_clicked(){
@@ -75,10 +80,10 @@ void Firmware_Updating_Form::isStopped(){
     SetProgress(0);
     ui->Stop->setEnabled(false);
     ui->OpenBin->setEnabled(true);
-    if ((ui->new_v->text().compare("NAN") != 0)&&(ui->new_v->text().length() > 0)){
+    if ((ui->new_v->text().compare("-") != 0)&&(ui->new_v->text().length() > 0)){
         ui->UpdateStart->setEnabled(true);
     }
-    if ((ui->curr_v->text().compare("NAN") != 0)&&(ui->curr_v->text().length() > 0)){
+    if ((ui->curr_v->text().compare("-") != 0)&&(ui->curr_v->text().length() > 0)){
         ui->Clear->setEnabled(true);
     }
     ui->Back->setEnabled(true);
@@ -133,6 +138,7 @@ void Firmware_Updating_Form::resizeEvent(QResizeEvent *event){
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->label_1->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
     emit Get_Console(ui->console);
 }
@@ -145,6 +151,9 @@ void Firmware_Updating_Form::Set_In_Firmware_Information(FirmwareInformationClas
     SetUpgradableCRCToUI(In_Firmware_Information->getUpgradable_CRC32());
 }
 void Firmware_Updating_Form::on_OpenBin_clicked(){
+
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+
     QRegExp RegVER; RegVER      = QRegExp("ver");
     QFile *file; file = NULL;
     uint pos = 0;
@@ -154,7 +163,10 @@ void Firmware_Updating_Form::on_OpenBin_clicked(){
     QString VERSION = "";
     crc32_class CRC32;
 
-    QString patch = QFileDialog::getOpenFileName(0, "Open File", "", "*.bin");
+    QString new_path;
+    QString old_path = settings.value(FIRMWARE_BIN_PATH).toString();
+
+    QString patch = QFileDialog::getOpenFileName(0, "Open File", old_path, "*.bin");
 
     QString s = "";
     for(uint i = (patch.length()); i > 0; i--){
@@ -162,6 +174,10 @@ void Firmware_Updating_Form::on_OpenBin_clicked(){
             s.push_front(patch.at(i-1));
         }
         else{
+            new_path = patch;
+            new_path.remove(i, patch.length()-i);
+            settings.setValue(FIRMWARE_BIN_PATH, new_path);
+            settings.sync();
             break;
         }
     }
@@ -200,31 +216,31 @@ void Firmware_Updating_Form::on_OpenBin_clicked(){
         }
     }
     else{
-        ui->new_v->setText("NAN");
-        ui->new_Size->setText("NAN");
-        ui->new_CRC->setText("NAN");
+        ui->new_v->setText("-");
+        ui->new_Size->setText("-");
+        ui->new_CRC->setText("-");
         ui->UpdateStart->setEnabled(false);
     }
 }
 void Firmware_Updating_Form::SetUpgradableVersionToUI(QString new_value){
-    this->ui->curr_v->setText("NAN");
+    this->ui->curr_v->setText("-");
     if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0)){
         this->ui->curr_v->setText(new_value);
         this->ui->Clear->setEnabled(true);
     }
 }
 void Firmware_Updating_Form::SetUpgradableSizeToUI(uint new_value){
-    this->ui->curr_Size->setText("NAN");
+    this->ui->curr_Size->setText("-");
     if (new_value > 0){
         this->ui->curr_Size->setText(QString::number(new_value));
     }
 }
 void Firmware_Updating_Form::SetUpgradableCRCToUI(QByteArray new_value){
-    this->ui->curr_CRC->setText("NAN");
+    this->ui->curr_CRC->setText("-");
     if (new_value.length() == 4){
         if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
             (new_value.at(2) == 0) && (new_value.at(3) == 0)){
-            this->ui->curr_CRC->setText("NAN");
+            this->ui->curr_CRC->setText("-");
         }
         else{
             this->ui->curr_CRC->setText(QByteAray_To_QString(new_value).toUpper());
@@ -248,7 +264,7 @@ void Firmware_Updating_Form::isDeleted(void){
     ui->Stop->setEnabled(false);
     ui->OpenBin->setEnabled(true);
     ui->UpdateStart->setEnabled(false);
-    if ((ui->new_v->text().compare("NAN") != 0)&&(ui->new_v->text().length() > 0)){
+    if ((ui->new_v->text().compare("-") != 0)&&(ui->new_v->text().length() > 0)){
         ui->UpdateStart->setEnabled(true);
     }
     ui->Clear->setEnabled(false);

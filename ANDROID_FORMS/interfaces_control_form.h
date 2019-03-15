@@ -47,9 +47,12 @@ private slots:
     void on_btnPLCEnable_released();
     void on_btnRFEnable_released();
     void on_btnRSEnable_released();
+    void on_ClearConsole_clicked();
 
     void setInterfaces_ControlToUI(Interfaces_Control_Type);
     void setLastAOPENTimeToUI(RealTime time);
+
+    void DeviceVersionHandling(void);
 
 private:
     Ui::Interfaces_Control_Form *ui;

@@ -10,13 +10,13 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     this->setWindowTitle(WINDOW_TITLE);
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
 
-    ui->SN->setValue(settings.value(CONNECTION_SETTINGS_SN).toInt());
+    //ui->SN->setValue(settings.value(CONNECTION_SETTINGS_SN).toInt());
     ui->ModuleType->setCurrentIndex(settings.value(CONNECTION_SETTINGS_MODULE_TYPE).toInt());
     ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
-    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style + ToolTip_Style);
     ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
@@ -27,16 +27,27 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
     ui->Reset->setStyleSheet(Basic_PushButtons_Style);
     ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(PushButtons_Style);
-    ui->btnSettings->setStyleSheet(PushButtons_Style);
-    ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->Next->setStyleSheet(PushButtons_Style+ToolTip_Style);
     ui->Next_Widget->setEnabled(true);
 
     ui->Interface->setStyleSheet(Background_White);
+    ui->Interface->setEditable(true);
+    ui->Interface->lineEdit()->setReadOnly(true);
+    ui->Interface->lineEdit()->setAlignment(Qt::AlignCenter);
     ui->ModuleType->setStyleSheet(Background_White);
+    ui->ModuleType->setEditable(true);
+    ui->ModuleType->lineEdit()->setReadOnly(true);
+    ui->ModuleType->lineEdit()->setAlignment(Qt::AlignCenter);
     ui->SN->setStyleSheet(Background_White);
+    ui->SN->lineEdit()->setAlignment(Qt::AlignCenter);
+    ui->SN->lineEdit()->setValidator(new QIntValidator);
+    ui->SN->lineEdit()->setMaxLength(10);
 
     ui->DeviceType->setStyleSheet(Work_Area_Style + Text_Green);
+
+    ui->console->setStyleSheet(ToolTip_Style);
 
     SysInfo              = new QSysInfo;
     QString product_name = SysInfo->prettyProductName();
@@ -52,10 +63,11 @@ Open_Connection_Form::Open_Connection_Form(QWidget *parent) :
         this->setWindowModality(Qt::WindowModal);
         //this->setFixedSize (340,560);
     }
-
-    connect(ui->ClearConsole, SIGNAL(clicked(bool)), ui->console, SLOT(clear()));
 }
-
+void Open_Connection_Form::on_ClearConsole_clicked(){
+    WriteLogToFile(ui->console);
+    ui->console->clear();
+}
 Open_Connection_Form::~Open_Connection_Form(){
     emit Get_Console(NULL);
     delete ui;
@@ -63,35 +75,39 @@ Open_Connection_Form::~Open_Connection_Form(){
 
 void Open_Connection_Form::on_Back_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
+    WriteLogToFile(ui->console);
     this->Back_ClickHandler();
     emit Cancel(this->geometry());
 }
 void Open_Connection_Form::on_Next_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
+    WriteLogToFile(ui->console);
     this->Next_ClickHandler();
 }
 void Open_Connection_Form::ForceClose(void){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
+    WriteLogToFile(ui->console);
     this->ForceCloseHandler();
 }
 void Open_Connection_Form::on_btnSettings_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
+    WriteLogToFile(ui->console);
     emit Settings(this);
 }
 void Open_Connection_Form::SetProgress(uint progress){
@@ -188,10 +204,13 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->label_7->setFont(font_4_2);
     ui->label_8->setFont(font_4_1);
 
+    ui->Interface->lineEdit()->setFont(font_4_2);
     ui->Interface->setFont(font_4_2);
     ui->Interface->clear();
     ui->Interface->addItem("COM/УСО (Оптопорт)");
+    ui->Interface->setItemData(0, Qt::AlignCenter, Qt::TextAlignmentRole);
     ui->Interface->addItem("PLC/RF");
+    ui->Interface->setItemData(1, Qt::AlignCenter, Qt::TextAlignmentRole);
     ui->Interface->setCurrentIndex(settings.value(CONNECTION_SETTINGS_INTERFACE).toInt());
 
     if (Get_ConnectionType() == TCP_ConnectionType)
@@ -209,13 +228,28 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
         ui->ModuleType->setEnabled(false);
     }
 
+    ui->ModuleType->lineEdit()->setFont(font_4_2);
     ui->ModuleType->setFont(font_4_2);
     ui->ModuleType->clear();
     ui->ModuleType->addItem("Дополнительный");
+    ui->ModuleType->setItemData(0, Qt::AlignCenter, Qt::TextAlignmentRole);
     ui->ModuleType->addItem("Основной");
+    ui->ModuleType->setItemData(1, Qt::AlignCenter, Qt::TextAlignmentRole);
     ui->ModuleType->setCurrentIndex(settings.value(CONNECTION_SETTINGS_MODULE_TYPE).toInt());
 
     ui->SN->setFont(font_4_2);
+    ui->SN->lineEdit()->setFont(font_4_2);
+    ui->SN->clear();
+    QString SN_String;
+    int size = settings.beginReadArray(CONNECTION_SETTINGS_SN);
+    for (int i = 0; i < size; i++) {
+        settings.setArrayIndex(i);
+        SN_String = settings.value("SN").toString();
+        ui->SN->addItem(SN_String);
+        ui->SN->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
+    }
+    settings.endArray();
+
     ui->DeviceType->setFont(font_2_1);
 
     ui->Update->setFont(font_3);
@@ -235,6 +269,7 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->label_1->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
     emit Get_Console(ui->console);
     this->Set_resizing_going(0);
@@ -243,7 +278,7 @@ void Open_Connection_Form::resizeEvent(QResizeEvent *event)
 void Open_Connection_Form::on_Update_clicked()
 {
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ADDITIONAL_MODULE_TYPE);
     settings.sync();
@@ -267,7 +302,7 @@ void Open_Connection_Form::Set_In_Firmware_Information(FirmwareInformationClass 
 
 void Open_Connection_Form::on_Connect_clicked(){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
+    //settings.setValue(CONNECTION_SETTINGS_SN, ui->SN->value());
     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
     settings.setValue(CONNECTION_SETTINGS_MODULE_TYPE, ui->ModuleType->currentIndex());
     settings.sync();
@@ -284,11 +319,33 @@ void Open_Connection_Form::on_Connect_clicked(){
     ui->Next->setEnabled(false);
     ui->btnSettings->setEnabled(false);
 
+    QString SN = ui->SN->lineEdit()->text();
+
+    for (int i = ui->SN->count(); i > 0; i--) {
+        if (ui->SN->itemText(i) == SN){
+            ui->SN->removeItem(i);
+        }
+    }
+    ui->SN->insertItem(0,SN);
+    ui->SN->setItemData(0, Qt::AlignCenter, Qt::TextAlignmentRole);
+    ui->SN->setCurrentIndex(0);
+
+    while(ui->SN->count() > 5){
+        ui->SN->removeItem(ui->SN->count()-1);
+    }
+
+    settings.beginWriteArray(CONNECTION_SETTINGS_SN);
+    for (int i = 0; i < ui->SN->count(); i++) {
+        settings.setArrayIndex(i);
+        settings.setValue("SN", ui->SN->itemText(i));
+    }
+    settings.endArray();
+
     if (ui->Interface->currentIndex() == COM_USO_INTERFACE){
-        emit SendSerialNumber(QString::number(ui->SN->value()), false);
+        emit SendSerialNumber(SN, false);
     }
     else if (ui->Interface->currentIndex() == PLC_RF_INTERFACE){
-        emit SendSerialNumber(QString::number(ui->SN->value()), true);
+        emit SendSerialNumber(SN, true);
     }
     emit SendModuleType(ui->ModuleType->currentIndex());
     emit SendInterface(ui->Interface->currentIndex());
@@ -328,23 +385,23 @@ void Open_Connection_Form::SetCurrentFitmwareToUI(uchar new_value)
 
 }
 void Open_Connection_Form::SetBootloaderVersionToUI(QString new_value){
-    this->ui->boot_v->setText("NAN");
+    this->ui->boot_v->setText("-");
     if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0)){
         this->ui->boot_v->setText(new_value);
     }
 }
 void Open_Connection_Form::SetBootloaderSizeToUI(uint new_value){
-    this->ui->boot_Size->setText("NAN");
+    this->ui->boot_Size->setText("-");
     if (new_value > 0){
         this->ui->boot_Size->setText(QString::number(new_value));
     }
 }
 void Open_Connection_Form::SetBootloaderCRCToUI(QByteArray new_value){
-    this->ui->boot_CRC->setText("NAN");
+    this->ui->boot_CRC->setText("-");
     if (new_value.length() == 4){
         if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
             (new_value.at(2) == 0) && (new_value.at(3) == 0)){
-            this->ui->boot_CRC->setText("NAN");
+            this->ui->boot_CRC->setText("-");
         }
         else{
             this->ui->boot_CRC->setText(QByteAray_To_QString(new_value).toUpper());
@@ -352,23 +409,23 @@ void Open_Connection_Form::SetBootloaderCRCToUI(QByteArray new_value){
     }
 }
 void Open_Connection_Form::SetUpgradableVersionToUI(QString new_value){
-    this->ui->fw_v->setText("NAN");
+    this->ui->fw_v->setText("-");
     if ((new_value.compare("0.00") != 0)&&(new_value.length() > 0)){
         this->ui->fw_v->setText(new_value);
     }
 }
 void Open_Connection_Form::SetUpgradableSizeToUI(uint new_value){
-    this->ui->fw_Size->setText("NAN");
+    this->ui->fw_Size->setText("-");
     if (new_value > 0){
         this->ui->fw_Size->setText(QString::number(new_value));
     }
 }
 void Open_Connection_Form::SetUpgradableCRCToUI(QByteArray new_value){
-    this->ui->fw_CRC->setText("NAN");
+    this->ui->fw_CRC->setText("-");
     if (new_value.length() == 4){
         if ((new_value.at(0) == 0) && (new_value.at(1) == 0) &&
             (new_value.at(2) == 0) && (new_value.at(3) == 0)){
-            this->ui->fw_CRC->setText("NAN");
+            this->ui->fw_CRC->setText("-");
         }
         else{
             this->ui->fw_CRC->setText(QByteAray_To_QString(new_value).toUpper());
@@ -392,7 +449,7 @@ void Open_Connection_Form::on_Interface_currentIndexChanged(int index){
                     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
                     settings.sync();
                     emit SendInterface((uchar)(index));
-                    emit SendSerialNumber(QString::number(ui->SN->value()), false);
+                    emit SendSerialNumber(ui->SN->lineEdit()->text(), false);
                 break;
             }
             case PLC_RF_INTERFACE:{
@@ -402,7 +459,7 @@ void Open_Connection_Form::on_Interface_currentIndexChanged(int index){
                     settings.setValue(CONNECTION_SETTINGS_INTERFACE, ui->Interface->currentIndex());
                     settings.sync();
                     emit SendInterface((uchar)(index));
-                    emit SendSerialNumber(QString::number(ui->SN->value()), true);
+                    emit SendSerialNumber(ui->SN->lineEdit()->text(), true);
                 break;
             }
         }
@@ -449,3 +506,19 @@ void Open_Connection_Form::Clear_Form(void){
     SetDeviceNameToUI("");
 }
 
+void Open_Connection_Form::on_SN_editTextChanged(const QString &arg1){
+    ui->SN->lineEdit()->setStyleSheet(Background_Red);
+    ui->Connect->setEnabled(false);
+    //ui->btnHandsEnter->setEnabled(false);
+    //ui->btnNext->setEnabled(false);
+
+    long unsigned int SN_int = arg1.toInt();
+
+    if (SN_int <= 0xFFFFFFFF
+       ){
+       ui->SN->lineEdit()->setStyleSheet(Background_White);
+       ui->Connect->setEnabled(true);
+       //ui->btnHandsEnter->setEnabled(true);
+       //ui->btnNext->setEnabled(true);
+    }
+}

@@ -11,7 +11,7 @@ Interfaces_Control_Form::Interfaces_Control_Form(QWidget *parent) :
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
-    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style + ToolTip_Style);
     ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
@@ -26,14 +26,16 @@ Interfaces_Control_Form::Interfaces_Control_Form(QWidget *parent) :
 
     ui->LastAOPEN->setStyleSheet(Work_Area_Style + Text_Green_Disabled);
 
-    ui->Back->setStyleSheet(PushButtons_Style);
-    ui->btnSettings->setStyleSheet(PushButtons_Style);
-    ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->Next->setStyleSheet(PushButtons_Style+ToolTip_Style);
 
     ui->PLCStatus->setStyleSheet(Work_Area_Style + Text_Red_Disabled);
     ui->RFStatus->setStyleSheet(Work_Area_Style + Text_Red_Disabled);
     ui->RSStatus->setStyleSheet(Work_Area_Style + Text_Red_Disabled);
     ui->EEPROMStatus->setStyleSheet(Work_Area_Style + Text_Red_Disabled);
+
+    ui->console->setStyleSheet(ToolTip_Style);
 
     SysInfo              = new QSysInfo;
     QString product_name = SysInfo->prettyProductName();
@@ -49,21 +51,26 @@ Interfaces_Control_Form::Interfaces_Control_Form(QWidget *parent) :
         this->setWindowModality(Qt::WindowModal);
         //this->setFixedSize (340,560);
     }
-
-    connect(ui->ClearConsole, SIGNAL(clicked(bool)), ui->console, SLOT(clear()));
+}
+void Interfaces_Control_Form::on_ClearConsole_clicked(){
+    WriteLogToFile(ui->console);
+    ui->console->clear();
 }
 Interfaces_Control_Form::~Interfaces_Control_Form(){
     emit Get_Console(NULL);
     delete ui;
 }
 void Interfaces_Control_Form::on_Back_clicked(){
+    WriteLogToFile(ui->console);
     this->Back_ClickHandler();
     emit Cancel(this->geometry());
 }
 void Interfaces_Control_Form::on_Next_clicked(){
+    WriteLogToFile(ui->console);
     this->Next_ClickHandler();
 }
 void Interfaces_Control_Form::ForceClose(void){
+    WriteLogToFile(ui->console);
     this->ForceCloseHandler();
 }
 void Interfaces_Control_Form::on_btnSettings_clicked(){
@@ -161,10 +168,21 @@ void Interfaces_Control_Form::resizeEvent(QResizeEvent *event){
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->label_1->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
+    DeviceVersionHandling();
     emit Get_Console(ui->console);
     this->Set_resizing_going(0);
 }
+void Interfaces_Control_Form::DeviceVersionHandling(void){
+    FirmwareInformationClass* In_Firmware_Information = myFormAbstractClass::Get_In_Firmware_Information();
+    if (In_Firmware_Information->getDevice_Name() == RF_PLC_MODEM){
+        ui->LastAOPEN_Widget->setVisible(false);
+    }else if (In_Firmware_Information->getDevice_Name() == RF_PLC_SNIFFER){
+        ui->LastAOPEN_Widget->setVisible(true);
+    }
+}
+
 void Interfaces_Control_Form::Set_Out_PLC_RF433_Modem_Properties(PlcRfModemPropertiesClass* new_value){
     Out_PLC_RF433_Modem_Properties = new_value;
 }

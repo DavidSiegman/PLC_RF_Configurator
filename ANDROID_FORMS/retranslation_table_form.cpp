@@ -12,7 +12,7 @@ Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
 
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
-    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style + ToolTip_Style);
     ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
@@ -27,18 +27,20 @@ Retranslation_Table_Form::Retranslation_Table_Form(QWidget *parent) :
     ui->Reset->setStyleSheet(Basic_PushButtons_Style);
     ui->ClearConsole->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(PushButtons_Style);
-    ui->btnSettings->setStyleSheet(PushButtons_Style);
-    ui->Next->setStyleSheet(PushButtons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->Next->setStyleSheet(PushButtons_Style+ToolTip_Style);
     ui->Next->setEnabled(false);
 
     model = new QStandardItemModel;
 
     ui->NetTable->setModel(model);
 
-    //emit dataChanged(index, index, QVector<int>() << role);
-    connect(ui->ClearConsole,  SIGNAL(clicked(bool)),                   ui->console,    SLOT(clear()));
     connect(model,             SIGNAL(itemChanged(QStandardItem*)), this,           SLOT(ModelItemChanged(QStandardItem*)));
+}
+void Retranslation_Table_Form::on_ClearConsole_clicked(){
+    WriteLogToFile(ui->console);
+    ui->console->clear();
 }
 Retranslation_Table_Form::~Retranslation_Table_Form(){
     emit Get_Console(NULL);
@@ -46,13 +48,16 @@ Retranslation_Table_Form::~Retranslation_Table_Form(){
 }
 
 void Retranslation_Table_Form::on_Back_clicked(){
+    WriteLogToFile(ui->console);
     this->Back_ClickHandler();
     emit Cancel(this->geometry());
 }
 void Retranslation_Table_Form::on_Next_clicked(){
+    WriteLogToFile(ui->console);
     this->Next_ClickHandler();
 }
 void Retranslation_Table_Form::ForceClose(void){
+    WriteLogToFile(ui->console);
     this->ForceCloseHandler();
 }
 void Retranslation_Table_Form::on_btnSettings_clicked(){
@@ -144,6 +149,7 @@ void Retranslation_Table_Form::resizeEvent(QResizeEvent *event)
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Next->setIconSize(icons_size); ui->Next->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->label_1->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 
     emit Get_Console(ui->console);
 }

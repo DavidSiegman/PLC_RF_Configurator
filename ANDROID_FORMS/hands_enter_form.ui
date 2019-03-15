@@ -139,7 +139,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Serial Number</string>
+             <string>Network address</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -168,6 +168,9 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Активировать поле сетевого адреса по MODBUS&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
                <string/>
               </property>
@@ -177,32 +180,12 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="SN_TEXT">
-              <property name="enabled">
-               <bool>false</bool>
+             <widget class="QComboBox" name="SN_TEXT">
+              <property name="editable">
+               <bool>true</bool>
               </property>
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="font">
-               <font>
-                <family>Microsoft YaHei UI</family>
-               </font>
-              </property>
-              <property name="text">
-               <string>0000000000</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignCenter</set>
+              <property name="currentText">
+               <string>0</string>
               </property>
              </widget>
             </item>
@@ -231,7 +214,7 @@
              </font>
             </property>
             <property name="text">
-             <string>Send Data</string>
+             <string>Data to send</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
@@ -265,6 +248,9 @@
                 <family>Microsoft YaHei UI</family>
                </font>
               </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле ввода данных для отправки в HEX&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
              </widget>
             </item>
             <item>
@@ -294,6 +280,9 @@
                <font>
                 <family>Microsoft YaHei UI</family>
                </font>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включение подсчёта CRC16 введённых данных&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>CRC16</string>
@@ -333,6 +322,9 @@
               <family>Microsoft YaHei UI</family>
               <pointsize>8</pointsize>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Подсчёт CRC16 для всего сообщения вместе с сетевым адресом&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
              <string>CRC16</string>
@@ -374,6 +366,9 @@
                <font>
                 <family>Microsoft YaHei UI</family>
                </font>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Отправка сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>Send</string>
@@ -447,6 +442,9 @@
               <family>Microsoft YaHei UI</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Очистить поле Лога&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Очистить Лог</string>
             </property>
@@ -459,11 +457,17 @@
               <pointsize>7</pointsize>
              </font>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле Лога&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">border: none;</string>
             </property>
             <property name="readOnly">
              <bool>true</bool>
+            </property>
+            <property name="maximumBlockCount">
+             <number>5000</number>
             </property>
            </widget>
           </item>
@@ -514,6 +518,9 @@
             <height>40</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Назад&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -548,6 +555,9 @@
             <width>16777215</width>
             <height>16777215</height>
            </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Настройки конфигуратора&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
@@ -604,6 +614,9 @@
                <width>0</width>
                <height>40</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Microsoft YaHei UI';&quot;&gt;Далее&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string/>

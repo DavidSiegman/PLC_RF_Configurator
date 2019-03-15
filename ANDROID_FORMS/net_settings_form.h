@@ -61,6 +61,7 @@ private slots:
     void on_SetLevel_clicked();
     void on_SetTimeout_clicked();
     void on_NetTable_clicked();
+    void on_ClearConsole_clicked();
 
     void SetSwitchModeToUI(uchar);
     void SetSwitchLevelToUI(uint);

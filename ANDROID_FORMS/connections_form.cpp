@@ -29,12 +29,9 @@ Connections_Form::Connections_Form(QWidget *parent) :
         settings.sync();
     }
 
-    ui->IPInput->setText(settings.value(TCP_SETTINGS_IP).toString());
-    ui->PORTInput->setText(settings.value(TCP_SETTINGS_PORT).toString());
-
     this->setStyleSheet(Main_Widget_Style);
     ui->label_1->setStyleSheet(Titel_Widget_Style);
-    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style);
+    ui->scrollAreaWidgetContents->setStyleSheet(Work_Area_Style + Basic_Text_Style + ToolTip_Style);
     ui->scrollArea->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->console->verticalScrollBar()->setStyleSheet(ScrollBar_Style);
     ui->DownPanel_Widget->setStyleSheet(DownPanel_Widget_Style);
@@ -46,14 +43,21 @@ Connections_Form::Connections_Form(QWidget *parent) :
     ui->PGAMonitor->setStyleSheet(Basic_PushButtons_Style);
     ui->PGAMonitor->setVisible(false);
 
-    ui->btnHandsEnter->setStyleSheet(PushButtons_Style);
-    ui->btnSettings->setStyleSheet(PushButtons_Style);
-    ui->btnNext->setStyleSheet(PushButtons_Style);
+    ui->btnHandsEnter->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->btnSettings->setStyleSheet(PushButtons_Style+ToolTip_Style);
+    ui->btnNext->setStyleSheet(PushButtons_Style+ToolTip_Style);
     ui->Next_Widget->setEnabled(true);
 
     ui->PortNameBox->setStyleSheet(Background_White);
     ui->IPInput->setStyleSheet(Background_White);
     ui->PORTInput->setStyleSheet(Background_White);
+    ui->PortNameBox->setEditable(true);
+    ui->PortNameBox->lineEdit()->setReadOnly(true);
+    ui->PortNameBox->lineEdit()->setAlignment(Qt::AlignCenter);
+    ui->IPInput->lineEdit()->setAlignment(Qt::AlignCenter);
+    ui->PORTInput->lineEdit()->setAlignment(Qt::AlignCenter);
+
+    ui->console->setStyleSheet(ToolTip_Style);
 
     SysInfo              = new QSysInfo;
     QString product_name = SysInfo->prettyProductName();
@@ -128,23 +132,30 @@ Connections_Form::Connections_Form(QWidget *parent) :
     connect(ConnectHandler,    SIGNAL(isRF_RESET()),                   this, SLOT(RF_Reset_Handler()));
 
     connect(ui->btnNext,       SIGNAL(clicked()),                      this, SLOT(Create_And_Show_Open_Connection_Form()));
-    connect(ui->ClearConsole,  SIGNAL(clicked(bool)),                  ui->console, SLOT(clear()));
 
     connect(newParcer,         SIGNAL(PARCE_End()),                    SI4463Config,SLOT(request_Prameters_handling()));
 
     DataLogic->setRepeatNumber(settings.value(CONNECTION_SETTINGS_REPEATE).toInt());
     DataLogic->setRepeatTimeout(settings.value(CONNECTION_SETTINGS_PERIODE).toInt());
 
-    ui->IPInput->setText(settings.value(TCP_SETTINGS_IP).toString());
-    ui->PORTInput->setText(settings.value(TCP_SETTINGS_PORT).toString());
-
     ui->PortNameBox->installEventFilter(this);
+
+    settings.beginGroup(APPLICATION_GEOMETRY);
+    this->resize(settings.value("size", QSize(340, 560)).toSize());
+    this->move(settings.value("pos", QPoint(0, 0)).toPoint());
+    settings.endGroup();
 
     newPort->start();
     newTCP ->start();
 }
+void Connections_Form::on_ClearConsole_clicked(){
+    WriteLogToFile(ui->console);
+    ui->console->clear();
+}
 void Connections_Form::resizeEvent(QResizeEvent *event)
 {
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+
     resize_calculating.set_form_geometry(this->geometry());
 
     int text_size_1 = resize_calculating.get_text_size_1();
@@ -160,20 +171,22 @@ void Connections_Form::resizeEvent(QResizeEvent *event)
     QFont font_1 = ui->label_1->font();    font_1.setPixelSize(text_size_1);
     QFont font_2 = ui->label_2->font();    font_2.setPixelSize(text_size_4);
     QFont font_3 = ui->COMConnect->font(); font_3.setPixelSize(text_size_3);
-    QFont font_4 = ui->label_4->font();    font_4.setPixelSize(text_size_4);
+    QFont font_4 = ui->label_5->font();    font_4.setPixelSize(text_size_4);
     QFont font_5 = ui->console->font();    font_5.setPixelSize(text_size_5);
 
     ui->label_1->setFont(font_1);
     ui->label_2->setFont(font_2);
     ui->label_3->setFont(font_2);
-    ui->label_4->setFont(font_4);
     ui->label_5->setFont(font_4);
     ui->label_6->setFont(font_4);
 
     ui->PortNameBox->setFont(font_3);
+    ui->PortNameBox->lineEdit()->setFont(font_3);
     ui->COMConnect->setFont(font_3);
     ui->IPInput->setFont(font_3);
+    ui->IPInput->lineEdit()->setFont(font_3);
     ui->PORTInput->setFont(font_3);
+    ui->PORTInput->lineEdit()->setFont(font_3);
     ui->TCPConnect->setFont(font_3);
     ui->ClearConsole->setFont(font_3);
     ui->RSSIMonitor->setFont(font_3);
@@ -184,6 +197,28 @@ void Connections_Form::resizeEvent(QResizeEvent *event)
     ui->btnNext->setIconSize(icons_size); ui->btnNext->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnHandsEnter->setIconSize(icons_size); ui->btnHandsEnter->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->btnSettings->setIconSize(icons_size); ui->btnSettings->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->label_1->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+
+    ui->IPInput->clear();
+    ui->PORTInput->clear();
+    QString IP_String, PORT_String;
+    int size = settings.beginReadArray(TCP_SETTINGS_IP);
+    for (int i = 0; i < size; i++) {
+        settings.setArrayIndex(i);
+        IP_String = settings.value("IP").toString();
+        ui->IPInput->addItem(IP_String);
+        ui->IPInput->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
+    }
+    settings.endArray();
+    size = settings.beginReadArray(TCP_SETTINGS_PORT);
+    for (int i = 0; i < size; i++) {
+        settings.setArrayIndex(i);
+        PORT_String = settings.value("PORT").toString();
+        ui->PORTInput->addItem(PORT_String);
+        ui->PORTInput->setItemData(i, Qt::AlignCenter, Qt::TextAlignmentRole);
+    }
+    settings.endArray();
+
 }
 
 bool Connections_Form::eventFilter(QObject *target, QEvent *event)
@@ -193,6 +228,7 @@ bool Connections_Form::eventFilter(QObject *target, QEvent *event)
            ui->PortNameBox->clear();
            foreach (const QSerialPortInfo &info, QSerialPortInfo::availablePorts()){
               ui->PortNameBox->addItem(info.portName());
+              ui->PortNameBox->setItemData(ui->PortNameBox->count()-1, Qt::AlignCenter, Qt::TextAlignmentRole);
               ui->COMConnect->setEnabled(true);
            }
        }
@@ -204,16 +240,75 @@ bool Connections_Form::eventFilter(QObject *target, QEvent *event)
 }
 
 Connections_Form::~Connections_Form(){
+
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+    //settings.setValue(TCP_SETTINGS_IP, ui->IPInput->text());
+    //settings.setValue(TCP_SETTINGS_PORT, ui->PORTInput->text());
+
+    settings.beginGroup(APPLICATION_GEOMETRY);
+    settings.setValue("size", this->size());
+    settings.setValue("pos", this->pos());
+    settings.endGroup();
+
+    settings.sync();
+
     delete ui;
 }
 
 void Connections_Form::on_TCPConnect_clicked(){
     Set_ActiveConsole(ui->console);
 
+    QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
+
     if(ui->TCPConnect->text() == "Подключить"){
         newPort->COM_Close();
-        newTCP->TCP_SetIP(ui->IPInput->text());
-        newTCP->TCP_SetPORT(ui->PORTInput->text().toInt());
+        newTCP->TCP_SetIP(ui->IPInput->lineEdit()->text());
+        newTCP->TCP_SetPORT(ui->PORTInput->lineEdit()->text().toInt());
+
+        QString IP = ui->IPInput->lineEdit()->text();
+
+        for (int i = ui->IPInput->count(); i > 0; i--) {
+            if (ui->IPInput->itemText(i) == IP){
+                ui->IPInput->removeItem(i);
+            }
+        }
+        ui->IPInput->insertItem(0,IP);
+        ui->IPInput->setItemData(0, Qt::AlignCenter, Qt::TextAlignmentRole);
+        ui->IPInput->setCurrentIndex(0);
+
+        while(ui->IPInput->count() > 5){
+            ui->IPInput->removeItem(ui->IPInput->count()-1);
+        }
+
+        QString PORT = ui->PORTInput->lineEdit()->text();
+
+        for (int i = ui->PORTInput->count()-1; i > 0; i--) {
+            if (ui->PORTInput->itemText(i) == PORT){
+                ui->PORTInput->removeItem(i);
+            }
+        }
+        ui->PORTInput->insertItem(0,PORT);
+        ui->PORTInput->setItemData(0, Qt::AlignCenter, Qt::TextAlignmentRole);
+        ui->PORTInput->setCurrentIndex(0);
+
+        while(ui->PORTInput->count() > 5){
+            ui->PORTInput->removeItem(ui->PORTInput->count()-1);
+        }
+
+        settings.beginWriteArray(TCP_SETTINGS_IP);
+        for (int i = 0; i < ui->IPInput->count(); i++) {
+            settings.setArrayIndex(i);
+            settings.setValue("IP", ui->IPInput->itemText(i));
+        }
+        settings.endArray();
+        settings.beginWriteArray(TCP_SETTINGS_PORT);
+        for (int i = 0; i < ui->PORTInput->count(); i++) {
+            settings.setArrayIndex(i);
+            settings.setValue("PORT", ui->PORTInput->itemText(i));
+        }
+        settings.endArray();
+        settings.sync();
+
         newTCP->TCP_Connect();
     }
     else{
@@ -250,8 +345,8 @@ void Connections_Form::start_COM_Init(void){
 }
 void Connections_Form::TCP_IsConnected(void){
     QSettings settings(ORGANIZATION_NAME, APPLICATION_NAME);
-    settings.setValue(TCP_SETTINGS_IP, ui->IPInput->text());
-    settings.setValue(TCP_SETTINGS_PORT, ui->PORTInput->text());
+    //settings.setValue(TCP_SETTINGS_IP, ui->IPInput->text());
+    //settings.setValue(TCP_SETTINGS_PORT, ui->PORTInput->text());
     settings.sync();
 
     ui->TCPConnect->setText("Отключить");
@@ -751,8 +846,8 @@ void Connections_Form::Create_And_Show_Hands_Enter_Form(QWidget *parent){
     connect(hands_enter_form,SIGNAL(ForcedClosed()),                         this,                  SLOT(show()));
     connect(hands_enter_form,SIGNAL(Get_Geometry(QRect)),                    this,                  SLOT(Set_Geometry(QRect)));
 
+    connect(hands_enter_form,SIGNAL(Cancel(QRect)),                          parent,                SLOT(Set_Geometry(QRect)));
     connect(hands_enter_form,SIGNAL(Cancel(QRect)),                          parent,                SLOT(show()));
-    connect(hands_enter_form,SIGNAL(Get_Geometry(QRect)),                    parent,                SLOT(Set_Geometry(QRect)));
     connect(hands_enter_form,SIGNAL(Send_Data(QByteArray,uint)),             DataLogic,             SLOT(SEND_DATA(QByteArray,uint)));
     connect(hands_enter_form,SIGNAL(Get_Console(QPlainTextEdit*)),           this,                  SLOT(Set_ActiveConsole(QPlainTextEdit*)));
     connect(hands_enter_form,SIGNAL(Settings(QWidget*)),                     this,                  SLOT(Create_And_Show_Settings_Form(QWidget*)));
@@ -762,6 +857,7 @@ void Connections_Form::Create_And_Show_Hands_Enter_Form(QWidget *parent){
     hands_enter_form->show();
 }
 void Connections_Form::Create_And_Show_Open_Connection_Form(void){
+    WriteLogToFile(ui->console);
     open_connection_form = new Open_Connection_Form;
 
     connect(this->newPort,       SIGNAL(COM_Error()),                        open_connection_form,  SLOT(ForceClose()));
@@ -1232,6 +1328,9 @@ void Connections_Form::Print(QByteArray data, uint n)
         ActiveConsole = ui->console;
     }
     if (ActiveConsole != NULL){
+        if(ActiveConsole->blockCount() >= ActiveConsole->maximumBlockCount() - 10){
+            WriteLogToFile(ActiveConsole);
+        }
         ActiveConsole->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
         switch (n){
             case COM_TX:{
@@ -1254,6 +1353,9 @@ void Connections_Form::Print_Log(QString data, uint n){
         ActiveConsole = ui->console;
     }
     if (ActiveConsole != NULL){
+        if(ActiveConsole->blockCount() >= ActiveConsole->maximumBlockCount() - 10){
+            WriteLogToFile(ActiveConsole);
+        }
         ActiveConsole->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);
         ActiveConsole->textCursor().insertText(data); // Вывод текста в консоль
         ActiveConsole->moveCursor(QTextCursor::End, QTextCursor::MoveAnchor);  // Scroll
@@ -1269,20 +1371,23 @@ void Connections_Form::on_btnSettings_clicked(){
     Create_And_Show_Settings_Form(this);
 }
 void Connections_Form::on_btnHandsEnter_clicked(){
+    WriteLogToFile(ui->console);
     Create_And_Show_Hands_Enter_Form(this);
 }
 void Connections_Form::on_RSSIMonitor_clicked(){
+    WriteLogToFile(ui->console);
     Create_And_Show_RSSIMonitor_Form(RSSI_MODE_FORM, this);
 }
 void Connections_Form::on_PGAMonitor_clicked(){
+    WriteLogToFile(ui->console);
     Create_And_Show_RSSIMonitor_Form(PGA_MODE_FORM, this);
 }
 
-void Connections_Form::on_IPInput_textEdited(const QString &arg1){
+void Connections_Form::on_IPInput_editTextChanged(const QString &arg1){
     QList<uint> Ints;
     uchar Ints_number = 0;
 
-    ui->IPInput->setStyleSheet(Background_Red);
+    ui->IPInput->lineEdit()->setStyleSheet(Background_Red);
     ui->TCPConnect->setEnabled(false);
     //ui->btnHandsEnter->setEnabled(false);
     //ui->btnNext->setEnabled(false);
@@ -1299,22 +1404,22 @@ void Connections_Form::on_IPInput_textEdited(const QString &arg1){
     if ((Ints_number == 4)&&(Ints.at(0) <= 255)&&(Ints.at(1) <= 255)&&
                             (Ints.at(2) <= 255)&&(Ints.at(3) <= 255)
        ){
-       int cursorPosition = ui->IPInput->cursorPosition();
-       ui->IPInput->setText(QString::number(Ints.at(0))+"."+QString::number(Ints.at(1))+"."+
+       int cursorPosition = ui->IPInput->lineEdit()->cursorPosition();
+       ui->IPInput->lineEdit()->setText(QString::number(Ints.at(0))+"."+QString::number(Ints.at(1))+"."+
                             QString::number(Ints.at(2))+"."+QString::number(Ints.at(3)));
-       ui->IPInput->setCursorPosition(cursorPosition);
-       ui->IPInput->setStyleSheet(Background_White);
+       ui->IPInput->lineEdit()->setCursorPosition(cursorPosition);
+       ui->IPInput->lineEdit()->setStyleSheet(Background_White);
        ui->TCPConnect->setEnabled(true);
        //ui->btnHandsEnter->setEnabled(true);
        //ui->btnNext->setEnabled(true);
     }
 }
 
-void Connections_Form::on_PORTInput_textChanged(const QString &arg1){
+void Connections_Form::on_PORTInput_editTextChanged(const QString &arg1){
     QList<uint> Ints;
     uchar Ints_number = 0;
 
-    ui->PORTInput->setStyleSheet(Background_Red);
+    ui->PORTInput->lineEdit()->setStyleSheet(Background_Red);
     ui->TCPConnect->setEnabled(false);
     //ui->btnHandsEnter->setEnabled(false);
     //ui->btnNext->setEnabled(false);
@@ -1330,13 +1435,46 @@ void Connections_Form::on_PORTInput_textChanged(const QString &arg1){
     }
     if ((Ints_number == 1)&&(Ints.at(0) <= 0xFFFF)
        ){
-       int cursorPosition = ui->IPInput->cursorPosition();
-       ui->PORTInput->setText(QString::number(Ints.at(0)));
-       ui->PORTInput->setCursorPosition(cursorPosition);
-       ui->PORTInput->setStyleSheet(Background_White);
+       int cursorPosition = ui->IPInput->lineEdit()->cursorPosition();
+       ui->PORTInput->lineEdit()->setText(QString::number(Ints.at(0)));
+       ui->PORTInput->lineEdit()->setCursorPosition(cursorPosition);
+       ui->PORTInput->lineEdit()->setStyleSheet(Background_White);
        ui->TCPConnect->setEnabled(true);
        //ui->btnHandsEnter->setEnabled(true);
        //ui->btnNext->setEnabled(true);
     }
+}
+
+void WriteLogToFile(QPlainTextEdit *console){
+    QDateTime dt = QDateTime::currentDateTime();
+    QString PlainText = "";
+
+    PlainText = console->toPlainText();
+    if (PlainText.length() > 0){
+
+        QString dir = QDir::current().path();
+        QDir::current().mkdir("Log");
+
+        QString FileName = QString::number(dt.date().day()) + "_" +
+                           QString::number(dt.date().month()) + "_" +
+                           QString::number(dt.date().year()) + "_" +
+                           QString::number(dt.time().hour()) + "h" +
+                           ".txt";
+
+        QFile file;
+        QDir::setCurrent(dir + "/Log");
+        file.setFileName(FileName);
+        if (!file.open(QIODevice::Append | QIODevice::Text))
+            return;
+
+        QTextStream out(&file);
+
+        for (int i = 0; i < PlainText.length(); i++){
+            out << PlainText.at(i);
+        }
+        file.close();
+        QDir::setCurrent(dir);
+    }
+    console->clear();
 }
 

@@ -87,7 +87,26 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Считываем состояние интерфейсов\r"),NONE);
         // Формируем очередь команд
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_INTERFACES_CONTROL;
+        if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version() >= 5.02)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version() >= 5.02)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version_Sniffer() >= 22)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 22))){
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_INTERFACES_CONTROL_NEW;
+        }else{
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_INTERFACES_CONTROL;
+        }
+        break;
+    }
+    case SEND_READ_INTERFACES_CONTROL_NEW:
+    {
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Считываем состояние интерфейсов\r"),NONE);
+        // Формируем очередь команд
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_INTERFACES_CONTROL_NEW;
         break;
     }
     case SEND_READ_ALL_DATA:{
@@ -199,10 +218,24 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
             if (In_Interfaces_Control.Field.RS_EN != INTERFACE_DISABLE){
                 ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_DEBUG_CONTROL;
             }
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_MASK_DESTINATION;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_UPLINK_MODE;
+            if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+                 (In_Firmware_Information->getBootloader_Version() >= 5.02)) ||
+                ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+                 (In_Firmware_Information->getUpgradable_Version() >= 5.02)) ||
+                ((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+                 (In_Firmware_Information->getBootloader_Version_Sniffer() >= 22)) ||
+                ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+                 (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 22))){
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_MASK_DESTINATION_NEW;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_UPLINK_MODE_NEW;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_BROADCASTING_MODE_NEW;
+            }else{
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_MASK_DESTINATION;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_UPLINK_MODE;
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_BROADCASTING_MODE;
+            }
             ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_CRC_CHECK_MODE;
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_BROADCASTING_MODE;
+
             //ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_RX_TIMEOUT;
             //ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_TX_TIMEOUT;
             //ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_SWITCH_TABLE_ELEMENT;
@@ -220,8 +253,30 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Считываем состояние интерфейсов\r"),NONE);
         // Формируем очередь команд
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_INTERFACES_CONTROL;
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_INTERFACES_CONTROL;
+        if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version() >= 5.02)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version() >= 5.02)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version_Sniffer() >= 22)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 22))){
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_INTERFACES_CONTROL_NEW;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_INTERFACES_CONTROL_NEW;
+        }else{
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_INTERFACES_CONTROL;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_INTERFACES_CONTROL;
+        }
+
+        break;
+    }
+    case SEND_WRITE_INTERFACES_CONTROL_NEW:
+    {
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Считываем состояние интерфейсов\r"),NONE);
+        // Формируем очередь команд
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_INTERFACES_CONTROL_NEW;
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_INTERFACES_CONTROL_NEW;
         break;
     }
     case SEND_WRITE_DEBUG_CONTROL:
@@ -348,12 +403,42 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись бита направления Up_Link\r"),NONE);
         // Формируем очередь команд
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_UPLINK_MODE;
+        if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version() >= 5.02)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version() >= 5.02)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version_Sniffer() >= 22)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 22))){
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_UPLINK_MODE_NEW;
+            if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+                 (In_Firmware_Information->getBootloader_Version_Sniffer() >= 9)) ||
+                ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+                 (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 9))){
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_UPLINK_MODE_NEW;
+            }
+        }else{
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_UPLINK_MODE;
+            if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+                 (In_Firmware_Information->getBootloader_Version_Sniffer() >= 9)) ||
+                ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+                 (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 9))){
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_UPLINK_MODE;
+            }
+        }
+        break;
+    }
+    case SEND_WRITE_UPLINK_MODE_NEW:{
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись бита направления Up_Link\r"),NONE);
+        // Формируем очередь команд
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_UPLINK_MODE_NEW;
         if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
              (In_Firmware_Information->getBootloader_Version_Sniffer() >= 9)) ||
             ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
              (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 9))){
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_UPLINK_MODE;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_UPLINK_MODE_NEW;
         }
         break;
     }
@@ -374,12 +459,43 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись режима широковещания\r"),NONE);
         // Формируем очередь команд
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_BROADCASTING_MODE;
+        if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version() >= 5.02)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version() >= 5.02)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version_Sniffer() >= 22)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 22))){
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_BROADCASTING_MODE_NEW;
+            if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+                 (In_Firmware_Information->getBootloader_Version_Sniffer() >= 9)) ||
+                ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+                 (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 9))){
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_BROADCASTING_MODE_NEW;
+            }
+        }else{
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_BROADCASTING_MODE;
+            if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+                 (In_Firmware_Information->getBootloader_Version_Sniffer() >= 9)) ||
+                ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+                 (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 9))){
+                ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_BROADCASTING_MODE;
+            }
+        }
+
+        break;
+    }
+    case SEND_WRITE_BROADCASTING_MODE_NEW:{
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись режима широковещания\r"),NONE);
+        // Формируем очередь команд
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_BROADCASTING_MODE_NEW;
         if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
              (In_Firmware_Information->getBootloader_Version_Sniffer() >= 9)) ||
             ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
              (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 9))){
-            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_BROADCASTING_MODE;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_BROADCASTING_MODE_NEW;
         }
         break;
     }
@@ -387,8 +503,28 @@ void ConnectHandlerClass::StartSendingProcess(uint SelectComandQueue, uint SendM
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись маски назначения\r"),NONE);
         // Формируем очередь команд
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_MASK_DESTINATION;
-        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_MASK_DESTINATION;
+        if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version() >= 5.02)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version() >= 5.02)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+             (In_Firmware_Information->getBootloader_Version_Sniffer() >= 22)) ||
+            ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+             (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 22))){
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_MASK_DESTINATION_NEW;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_MASK_DESTINATION_NEW;
+        }else{
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_MASK_DESTINATION;
+            ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_MASK_DESTINATION;
+        }
+        break;
+    }
+    case SEND_WRITE_MASK_DESTINATION_NEW:{
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись маски назначения\r"),NONE);
+        // Формируем очередь команд
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_WRITE_MASK_DESTINATION_NEW;
+        ConnectHandler.CommandsQueue[ConnectHandler.CommandsNumber++] = SEND_READ_MASK_DESTINATION_NEW;
         break;
     }
     case SEND_WRITE_SWITCH_TABLE_ELEMENT:{
@@ -462,7 +598,19 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode
         emit SendLog(QString::fromUtf8(">> ======= Устройство определено\r"),NONE);
         if ((In_Firmware_Information->getDevice_Name().compare(RF_PLC_MODEM) == 0) ||
             (In_Firmware_Information->getDevice_Name().compare(RF_PLC_SNIFFER) == 0)){
-            StartSendingProcess(SEND_READ_INTERFACES_CONTROL, SendMode);
+            if (((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+                 (In_Firmware_Information->getBootloader_Version() >= 5.02)) ||
+                ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+                 (In_Firmware_Information->getUpgradable_Version() >= 5.02)) ||
+                ((In_Firmware_Information->getCurrent_Firmware_Version() == 0) &&
+                 (In_Firmware_Information->getBootloader_Version_Sniffer() >= 22)) ||
+                ((In_Firmware_Information->getCurrent_Firmware_Version() == 1) &&
+                 (In_Firmware_Information->getUpgradable_Version_Sniffer() >= 22))){
+                StartSendingProcess(SEND_READ_INTERFACES_CONTROL_NEW, SendMode);
+            }else{
+                StartSendingProcess(SEND_READ_INTERFACES_CONTROL, SendMode);
+            }
+
         }
         else{
             StartSendingProcess(SEND_READ_ALL_DATA, SendMode);
@@ -470,6 +618,11 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode
         break;
     }
     case SEND_READ_INTERFACES_CONTROL:{
+        emit SendLog(QString::fromUtf8(">> ======= Состояние интерфейсов считано успешно\r"),NONE);
+        StartSendingProcess(SEND_READ_ALL_DATA, SendMode);
+        break;
+    }
+    case SEND_READ_INTERFACES_CONTROL_NEW:{
         emit SendLog(QString::fromUtf8(">> ======= Состояние интерфейсов считано успешно\r"),NONE);
         StartSendingProcess(SEND_READ_ALL_DATA, SendMode);
         break;
@@ -482,6 +635,15 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode
         break;
     }
     case SEND_WRITE_INTERFACES_CONTROL:
+    {
+        emit Progress(100);
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись интерфейсов прошла успешно\r"),NONE);
+        // Формируем очередь команд
+        emit isINTERFACES_CONTROL();
+        break;
+    }
+    case SEND_WRITE_INTERFACES_CONTROL_NEW:
     {
         emit Progress(100);
         // Выводим сообщение в Лог
@@ -537,7 +699,7 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode
     case SEND_WRITE_SI4432_PARAMETERS:{
         emit Progress(100);
         // Выводим сообщение в Лог
-        emit SendLog(QString::fromUtf8(">> ======= Запись RF-настроек прошла успешно\\r"),NONE);
+        emit SendLog(QString::fromUtf8(">> ======= Запись RF-настроек прошла успешно\r"),NONE);
         emit isRFSI4432_PARAMETERS();
         break;
     }
@@ -583,6 +745,13 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode
         emit isUPLINK_MODE();
         break;
     }
+    case SEND_WRITE_UPLINK_MODE_NEW:{
+        emit Progress(100);
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись бита направления Up_Link прошла успешно\r"),NONE);
+        emit isUPLINK_MODE();
+        break;
+    }
     case SEND_WRITE_CRC_CHECK_MODE:{
         emit Progress(100);
         // Выводим сообщение в Лог
@@ -597,7 +766,21 @@ void ConnectHandlerClass::EmitCurrentSignal(uint SelectComandQueue,uint SendMode
         emit isBROADCASTING_MODE();
         break;
     }
+    case SEND_WRITE_BROADCASTING_MODE_NEW:{
+        emit Progress(100);
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись режима широковещания прошла успешно\r"),NONE);
+        emit isBROADCASTING_MODE();
+        break;
+    }
     case SEND_WRITE_MASK_DESTINATION:{
+        emit Progress(100);
+        // Выводим сообщение в Лог
+        emit SendLog(QString::fromUtf8(">> ======= Запись маски назначения прошла успешно\r"),NONE);
+        emit isMASK_DESTINATION();
+        break;
+    }
+    case SEND_WRITE_MASK_DESTINATION_NEW:{
         emit Progress(100);
         // Выводим сообщение в Лог
         emit SendLog(QString::fromUtf8(">> ======= Запись маски назначения прошла успешно\r"),NONE);

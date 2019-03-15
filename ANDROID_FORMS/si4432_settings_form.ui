@@ -205,6 +205,9 @@
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле ввода байта/ов синхронизации в HEX&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -237,6 +240,9 @@
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле вода заголовка исходящего сообщения в HEX&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true"/>
@@ -308,6 +314,9 @@
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор количества байтов синхронизации&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">border-style: none;
 background-color: rgb(225, 225, 225);</string>
@@ -365,6 +374,9 @@ background-color: rgb(225, 225, 225);</string>
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле вода заголовка входящего сообщения в HEX&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -397,6 +409,9 @@ background-color: rgb(225, 225, 225);</string>
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор количества байт исходящего и входящего заголовков&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">border-style: none;
@@ -608,6 +623,9 @@ background-color: rgb(225, 225, 225);</string>
                    <family>Microsoft YaHei UI</family>
                    <pointsize>7</pointsize>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вывод девиации частоты в Гц&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true"/>
@@ -864,6 +882,9 @@ background-color: rgb(225, 225, 225);</string>
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле ввода несущей частоты&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(225, 225, 225);</string>
                  </property>
@@ -909,6 +930,9 @@ background-color: rgb(225, 225, 225);</string>
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле ввода смещения несущей частоты в значениях настроечного регистра&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(225, 225, 225);</string>
                  </property>
@@ -944,6 +968,9 @@ background-color: rgb(225, 225, 225);</string>
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле ввода девиации частоты в значениях настроечного регистра&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(225, 225, 225);</string>
@@ -1055,6 +1082,9 @@ background-color: rgb(225, 225, 225);</string>
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/Выключить бит удвоения несущей частоты&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -1164,6 +1194,9 @@ background-color: rgb(225, 225, 225);</string>
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор используемого диапазона несущих частот&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(225, 225, 225);</string>
@@ -1322,6 +1355,9 @@ background-color: rgb(225, 225, 225);</string>
                    <pointsize>7</pointsize>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вывод скорости передачи в bps&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -1354,6 +1390,9 @@ background-color: rgb(225, 225, 225);</string>
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле ввода скорости передачи в значениях настроечного регистра&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(225, 225, 225);</string>
@@ -1465,6 +1504,9 @@ background-color: rgb(225, 225, 225);</string>
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить бит делителя скорости передачи данных&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="layoutDirection">
                   <enum>Qt::LeftToRight</enum>
                  </property>
@@ -1541,6 +1583,9 @@ background-color: rgb(225, 225, 225);</string>
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор модуляции&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(225, 225, 225);</string>
                  </property>
@@ -1583,6 +1628,9 @@ background-color: rgb(225, 225, 225);</string>
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор мощности передатчика&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(225, 225, 225);</string>
@@ -1661,6 +1709,9 @@ background-color: rgb(225, 225, 225);</string>
                    <pointsize>7</pointsize>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вывод смещения несущей частоты в кГц&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -1730,6 +1781,9 @@ background-color: rgb(225, 225, 225);</string>
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор полосы пропускания фильтра&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(225, 225, 225);</string>
@@ -2086,6 +2140,9 @@ background-color: rgb(225, 225, 225);</string>
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле ввода нагрузочной емкости в HEX в значениях настроечного регистра&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true"/>
                  </property>
@@ -2122,6 +2179,9 @@ background-color: rgb(225, 225, 225);</string>
                    <family>Microsoft YaHei UI</family>
                    <pointsize>7</pointsize>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Вывод нагрузочной емкости в пФ&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="styleSheet">
                   <string notr="true"/>
@@ -2164,7 +2224,7 @@ background-color: rgb(225, 225, 225);</string>
                   <string notr="true">border-style: none;</string>
                  </property>
                  <property name="text">
-                  <string>[пФ]</string>
+                  <string>[pF]</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -2701,6 +2761,9 @@ background-color: rgb(225, 225, 225);</string>
                 <family>Microsoft YaHei UI</family>
                </font>
               </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Записать RF-Настройки в память устройства&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
                <string>Записать</string>
               </property>
@@ -2728,6 +2791,9 @@ background-color: rgb(225, 225, 225);</string>
                 <family>Microsoft YaHei UI</family>
                </font>
               </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Остановить обмен данными&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
                <string>Стоп</string>
               </property>
@@ -2751,6 +2817,9 @@ background-color: rgb(225, 225, 225);</string>
                <font>
                 <family>Microsoft YaHei UI</family>
                </font>
+              </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Перезагрузить подключенное устройство&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>Modem Reset</string>
@@ -2785,6 +2854,9 @@ background-color: rgb(225, 225, 225);</string>
               <family>Microsoft YaHei UI</family>
              </font>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Очистить поле Лога&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Очистить Лог</string>
             </property>
@@ -2804,8 +2876,14 @@ background-color: rgb(225, 225, 225);</string>
               <pointsize>7</pointsize>
              </font>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле Лога&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">border: none;</string>
+            </property>
+            <property name="maximumBlockCount">
+             <number>5000</number>
             </property>
            </widget>
           </item>
@@ -2856,6 +2934,9 @@ background-color: rgb(225, 225, 225);</string>
             <height>40</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Назад&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -2890,6 +2971,9 @@ background-color: rgb(225, 225, 225);</string>
             <width>16777215</width>
             <height>16777215</height>
            </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Настройки конфигуратора&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
@@ -2946,6 +3030,9 @@ background-color: rgb(225, 225, 225);</string>
                <width>0</width>
                <height>40</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Microsoft YaHei UI';&quot;&gt;Далее&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string/>

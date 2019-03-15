@@ -52,7 +52,7 @@
       </font>
      </property>
      <property name="text">
-      <string>RS485 НАСТРОЙКИ</string>
+      <string>RS485-НАСТРОЙКИ</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -168,6 +168,9 @@
                  <family>Microsoft YaHei UI</family>
                 </font>
                </property>
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор режима работы интерфейса RS485&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               </property>
                <item>
                 <property name="text">
                  <string>Интерфейс связи</string>
@@ -237,6 +240,9 @@
                 <font>
                  <family>Microsoft YaHei UI</family>
                 </font>
+               </property>
+               <property name="toolTip">
+                <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор скорости передачи по интерфейсу RS485&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
                <property name="currentIndex">
                 <number>5</number>
@@ -377,6 +383,9 @@
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить ретрансляцию из RS485 в PLC&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: qradialgradient(spread:pad, cx:0.503114, cy:0.168, radius:0.824, fx:0.497929, fy:0.99116, stop:0.153257 rgba(255, 65, 0, 59), stop:1 rgba(0, 0, 0, 0));</string>
                  </property>
@@ -416,7 +425,7 @@
                   </font>
                  </property>
                  <property name="text">
-                  <string>RS</string>
+                  <string>RS485</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -435,6 +444,9 @@
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить ретрансляцию из RF433 в RS485&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="text">
                   <string/>
@@ -472,7 +484,7 @@
                   </font>
                  </property>
                  <property name="text">
-                  <string>RS</string>
+                  <string>RS485</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -494,6 +506,9 @@
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить ретрансляцию из PLC в RS485&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="text">
                   <string>Х</string>
@@ -529,6 +544,9 @@
                   <font>
                    <family>Microsoft YaHei UI</family>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить ретрансляцию из RS485 в RF433&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="text">
                   <string>Х</string>
@@ -587,7 +605,7 @@
                   </font>
                  </property>
                  <property name="text">
-                  <string>RS</string>
+                  <string>RS485</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -629,7 +647,7 @@
                   </font>
                  </property>
                  <property name="text">
-                  <string>RS</string>
+                  <string>RS485</string>
                  </property>
                  <property name="alignment">
                   <set>Qt::AlignCenter</set>
@@ -655,6 +673,9 @@
                    <bold>false</bold>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор значения бита направления в сообщениях ретранслированных в RF433&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>RS -&gt; RF Set Up_Linc</string>
                  </property>
@@ -674,6 +695,9 @@
                    <weight>50</weight>
                    <bold>false</bold>
                   </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Выбор значения бита направления в сообщениях ретранслированных в PLC&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="text">
                   <string> RS -&gt; PLC Set Up_Linc</string>
@@ -731,6 +755,9 @@
               <layout class="QGridLayout" name="gridLayout_3">
                <item row="3" column="0">
                 <widget class="QCheckBox" name="DebugPLCInititalisation">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>PLC Initialisation</string>
                  </property>
@@ -738,6 +765,9 @@
                </item>
                <item row="7" column="0">
                 <widget class="QCheckBox" name="DebugFlashEnable">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>FLASH Debug Enable</string>
                  </property>
@@ -745,6 +775,9 @@
                </item>
                <item row="5" column="1">
                 <widget class="QCheckBox" name="DebugSI4463Initialisation">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>SI4463 Iitialisation</string>
                  </property>
@@ -752,6 +785,9 @@
                </item>
                <item row="6" column="1">
                 <widget class="QCheckBox" name="DebugHOSTUART">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>HOST UART RX Handling</string>
                  </property>
@@ -759,6 +795,9 @@
                </item>
                <item row="5" column="0">
                 <widget class="QCheckBox" name="DebugRFEnable">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>SI4463 Debug Enable</string>
                  </property>
@@ -766,6 +805,9 @@
                </item>
                <item row="7" column="1">
                 <widget class="QCheckBox" name="DebugFlashFull">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>FLASH Full Data Debug</string>
                  </property>
@@ -773,6 +815,9 @@
                </item>
                <item row="0" column="0">
                 <widget class="QCheckBox" name="DebugGlobalEnable">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>Debug Global Enable</string>
                  </property>
@@ -780,6 +825,9 @@
                </item>
                <item row="4" column="0">
                 <widget class="QCheckBox" name="DebugPLCHandling">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>PLC RX/TX Handling</string>
                  </property>
@@ -787,6 +835,9 @@
                </item>
                <item row="6" column="0">
                 <widget class="QCheckBox" name="DebugSPIEnable">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>SPI Debug Enable</string>
                  </property>
@@ -794,6 +845,9 @@
                </item>
                <item row="3" column="1">
                 <widget class="QCheckBox" name="DebugPLCUART">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>PLC UART</string>
                  </property>
@@ -801,6 +855,9 @@
                </item>
                <item row="1" column="0">
                 <widget class="QCheckBox" name="DebugInterfaceControl">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>Interface Control</string>
                  </property>
@@ -808,6 +865,9 @@
                </item>
                <item row="2" column="0">
                 <widget class="QCheckBox" name="DebugToHostHandling">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>To Host  Handling</string>
                  </property>
@@ -815,6 +875,9 @@
                </item>
                <item row="2" column="1">
                 <widget class="QCheckBox" name="DebugFromHostHandling">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>From Host Handling</string>
                  </property>
@@ -822,6 +885,9 @@
                </item>
                <item row="1" column="1">
                 <widget class="QCheckBox" name="DebugRetranslationHandling">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>Retranslation Handling</string>
                  </property>
@@ -829,6 +895,9 @@
                </item>
                <item row="4" column="1">
                 <widget class="QCheckBox" name="DebugRSEnable">
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Включить/выключить отладочные сообщения&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>RS485 Debug Enable</string>
                  </property>
@@ -930,6 +999,9 @@
                 <family>Microsoft YaHei UI</family>
                </font>
               </property>
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Остановить обмен данными&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
                <string>Стоп</string>
               </property>
@@ -978,6 +1050,9 @@
                    <family>Microsoft YaHei UI</family>
                   </font>
                  </property>
+                 <property name="toolTip">
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Перезагрузить подключенное устройство&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                 </property>
                  <property name="text">
                   <string>Modem Reset</string>
                  </property>
@@ -1021,6 +1096,9 @@
               <pointsize>8</pointsize>
              </font>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Очистить поле Лога&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="text">
              <string>Очистить Лог</string>
             </property>
@@ -1040,8 +1118,14 @@
               <pointsize>7</pointsize>
              </font>
             </property>
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Поле Лога&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
             <property name="styleSheet">
              <string notr="true">border: none;</string>
+            </property>
+            <property name="maximumBlockCount">
+             <number>5000</number>
             </property>
            </widget>
           </item>
@@ -1092,6 +1176,9 @@
             <height>40</height>
            </size>
           </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Назад&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -1126,6 +1213,9 @@
             <width>16777215</width>
             <height>16777215</height>
            </size>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Настройки конфигуратора&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
@@ -1182,6 +1272,9 @@
                <width>0</width>
                <height>40</height>
               </size>
+             </property>
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Microsoft YaHei UI';&quot;&gt;Далее&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
               <string/>

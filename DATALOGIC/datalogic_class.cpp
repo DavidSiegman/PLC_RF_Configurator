@@ -1046,6 +1046,108 @@ qDebug() << s;
         for(int i = 0; i < length; i++){data.append((char)u[i]);}
         break;
     }
+    case SEND_READ_UPLINK_MODE_NEW:{
+#ifdef DATA_LOGIC_DEBUG
+// ====================================
+s = "SEND_READ_UPLINK_MODE";
+qDebug() << s;
+// ====================================
+#endif
+        int u[2] = {0xB7,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_UPLINK_MODE_NEW:{
+#ifdef DATA_LOGIC_DEBUG
+// ====================================
+s = "SEND_WRITE_UPLINK_MODE";
+qDebug() << s;
+// ====================================
+#endif
+        uchar UpLink_Value = Out_Sniffer_Properties->getUpLink_Value();
+        int u[3] = {0xB7,0x01,(int)(UpLink_Value)}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_INTERFACES_CONTROL_NEW:{
+#ifdef DATA_LOGIC_DEBUG
+// ====================================
+s = "SEND_READ_SNIFER_MODE";
+qDebug() << s;
+// ====================================
+#endif
+        int u[2] = {0xB6,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_INTERFACES_CONTROL_NEW:{
+#ifdef DATA_LOGIC_DEBUG
+// ====================================
+s = "SEND_WRITE_INTERFACES_CONTROL_NEW";
+qDebug() << s;
+// ====================================
+#endif
+        Interfaces_Control_Type Interfaces_Control = Out_PLC_RF433_Modem_Properties->getPLC_RF433_Interfaces_Control();
+        int u[6] = {0xB6,0x04,
+                    (int)(Interfaces_Control.Word >> 0)  & 0xFF,
+                    (int)(Interfaces_Control.Word >> 8)  & 0xFF,
+                    (int)(Interfaces_Control.Word >> 16) & 0xFF,
+                    (int)(Interfaces_Control.Word >> 24) & 0xFF
+                   }; length = 6;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_BROADCASTING_MODE_NEW:{
+#ifdef DATA_LOGIC_DEBUG
+// ====================================
+s = "SEND_READ_BROADCASTING_MODE";
+qDebug() << s;
+// ====================================
+#endif
+        int u[2] = {0xB5,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_BROADCASTING_MODE_NEW:{
+#ifdef DATA_LOGIC_DEBUG
+// ====================================
+s = "SEND_WRITE_BROADCASTING_MODE";
+qDebug() << s;
+// ====================================
+#endif
+        uchar Broadcasting = Out_Sniffer_Properties->getBroadcasting();
+        int u[3] = {0xB5,0x01,(int)(Broadcasting)}; length = 3;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_READ_MASK_DESTINATION_NEW:{
+#ifdef DATA_LOGIC_DEBUG
+// ====================================
+s = "SEND_READ_MASK_DESTINATION";
+qDebug() << s;
+// ====================================
+#endif
+        int u[2] = {0xB3,0x00}; length = 2;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
+    case SEND_WRITE_MASK_DESTINATION_NEW:{
+#ifdef DATA_LOGIC_DEBUG
+// ====================================
+s = "SEND_WRITE_MASK_DESTINATION";
+qDebug() << s;
+// ====================================
+#endif
+        uint Sniffer_Level_Destination =  Out_Sniffer_Properties->getSniffer_Level_Destination();
+        int u[6] = {0xB3,0x04,
+                   (int)(Sniffer_Level_Destination >> 0)  &0xFF,
+                   (int)(Sniffer_Level_Destination >> 8)  &0xFF,
+                   (int)(Sniffer_Level_Destination >> 16) &0xFF,
+                   (int)(Sniffer_Level_Destination >> 24) &0xFF,
+                   }; length = 6;
+        for(int i = 0; i < length; i++){data.append((char)u[i]);}
+        break;
+    }
     case SEND_CHOICE_MAIN_MODULE:{
 #ifdef DATA_LOGIC_DEBUG
 // ====================================
@@ -1135,7 +1237,7 @@ qDebug() << s;
             }
             /* Старая преамбула
             s.clear();
-            s.append("Длинна пакета: " + QString::number(RF_Preamble.Field.Msg_Length) + "\r");
+            s.append("Длина пакета: " + QString::number(RF_Preamble.Field.Msg_Length) + "\r");
             s.append("Номер сообщения: " + QString::number(RF_Preamble.Field.Msg_Uniq_Number) + "\r");
             s.append("Уровень сети: " + QString::number(RF_Preamble.Field.Retranslator_Level) + "\r");
             s.append("Уровень сети опрашиваемого прибора: " + QString::number(RF_Preamble.Field.Finish_Retranslator_Level) + "\r");
@@ -1150,7 +1252,7 @@ qDebug() << s;
             */
 
             s.clear();
-            s.append("Длинна пакета: "   + QString::number(RF_Preamble_new.Field.Msg_Length) + "\r");
+            s.append("Длина пакета: "   + QString::number(RF_Preamble_new.Field.Msg_Length) + "\r");
             s.append("Номер сообщения: " + QString::number(RF_Preamble_new.Field.Msg_Uniq_Number) + "\r");
             s.append("Уровень сети: "    + QString::number(RF_Preamble_new.Field.Retranslator_Level) + "\r");
             s.append("Маска сети: "      + QString::number(RF_Preamble_new.Field.Retranslation_MASK_0.Field.LVL0) + "."
@@ -1525,6 +1627,10 @@ qDebug() << s;
                     temp = ((In_Data.at(1) & 0xFF) << 16)|((In_Data.at(0) & 0xFF) << 8)|((ComandState & 0xFF) << 0);
                     In_ST750_PLC_Config->setST750_HIGHF(temp);
                 }
+
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+
                 if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL))
                 {
                     PLCConf->ChangedIn_ST750_PLC_Config();
@@ -1541,7 +1647,7 @@ s = "Comande = 0xED - Записть параметров PLC Модедма";
 qDebug() << s;
 // ====================================
 #endif
-            if (ComandState == 1)
+            if ((ComandState == 1)||(ComandState == 2))
             {
                 Repeat_Counter = Repeat_Number;
                 timerRepeat->stop();
@@ -2309,6 +2415,107 @@ qDebug() << s;
           }
           break;
         }
+        case 0xB7:{ // Установить UP_Linc  (только для снифера)
+#ifdef DATA_LOGIC_DEBUG
+// ====================================
+s = "Comande = 0xB7 - Установить UP_Linc";
+qDebug() << s;
+// ====================================
+#endif
+            if (ComandState == 1){
+                if (NumbOfBytes == 3){
+                    if (MODEM->getIn_Sniffer_Properties()->getUpLink_Value() != (uchar)(In_Data.at(0))){
+                        MODEM->getIn_Sniffer_Properties()->setUpLink_Value((uchar)(In_Data.at(0)));
+                        MODEM->ChangedIn_Sniffer_Properties();
+                    }
+                }
+                Repeat_Counter = Repeat_Number;
+                timerRepeat->stop();
+
+                if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
+                    emit outConnect(DataLogicMode,ComandState,SEND_MODE);
+                }
+            }
+            break;
+        }
+            // Режим пропускания сообщений (только для снифера)
+            case 0xB6:{
+    #ifdef DATA_LOGIC_DEBUG
+    // ====================================
+    s = "Comande = 0xD9 - Режим пропускания сообщений";
+    qDebug() << s;
+    // ====================================
+    #endif
+                if (ComandState == 1){
+                    if (NumbOfBytes == 3){
+                        if (MODEM->getIn_Sniffer_Properties()->getSniffer_Mode() != (uchar)(In_Data.at(0))){
+                            MODEM->getIn_Sniffer_Properties()->setSniffer_Mode((uchar)(In_Data.at(0)));
+                            MODEM->ChangedIn_Sniffer_Properties();
+                        }
+                    }
+                    if (NumbOfBytes == 6){
+                        Interfaces_Control_Type In_Interfaces_Control;
+                        In_Interfaces_Control.Word = (((uint)(In_Data.at(0)) &0xFF) << 0)|(((uint)(In_Data.at(1)) &0xFF) << 8)|(((uint)(In_Data.at(2)) &0xFF) << 16)|(((uint)(In_Data.at(3)) &0xFF) << 24);
+                        MODEM->getIn_PLC_RF433_Modem_Properties()->setPLC_RF433_Interfaces_Control(In_Interfaces_Control);
+                        MODEM->ChangedIn_PLC_RF433_Modem_Properties();
+                    }
+                    Repeat_Counter = Repeat_Number;
+                    timerRepeat->stop();
+
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
+                        emit outConnect(DataLogicMode,ComandState,SEND_MODE);
+                    }
+                }
+                break;
+            }
+            // Режим широковещания (только для снифера)
+            case 0xB5:{
+    #ifdef DATA_LOGIC_DEBUG
+    // ====================================
+    s = "Comande = 0xB5 - Режим широковещания";
+    qDebug() << s;
+    // ====================================
+    #endif
+                if (ComandState == 1){
+                    if (NumbOfBytes == 3){
+                        if (MODEM->getIn_Sniffer_Properties()->getBroadcasting() != (uchar)(In_Data.at(0))){
+                            MODEM->getIn_Sniffer_Properties()->setBroadcasting((uchar)(In_Data.at(0)));
+                            MODEM->ChangedIn_Sniffer_Properties();
+                        }
+                    }
+                    Repeat_Counter = Repeat_Number;
+                    timerRepeat->stop();
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
+                        emit outConnect(DataLogicMode,ComandState,SEND_MODE);
+                    }
+                }
+                break;
+            }
+            case 0xB3: // Записать маску назначения (только для снифера)
+            {
+    #ifdef DATA_LOGIC_DEBUG
+    // ====================================
+    s = "Comande = 0xB3 - Записать маску назначения";
+    qDebug() << s;
+    // ====================================
+    #endif
+                if (ComandState == 1){
+                    if (In_Data.length() >= 4){
+                        uint mask = 0;
+                        mask |= *((uint*)(In_Data.data()));
+                        if (MODEM->getIn_Sniffer_Properties()->getSniffer_Level_Destination() != mask){
+                            MODEM->getIn_Sniffer_Properties()->setSniffer_Level_Destination(mask);
+                            MODEM->ChangedIn_Sniffer_Properties();
+                        }
+                    }
+                    Repeat_Counter = Repeat_Number;
+                    timerRepeat->stop();
+                    if ((SEND_MODE != MANUAL_SEND_CONTROL)&&(SEND_MODE != MANUAL_CYCLIC_SEND_CONTROL)){
+                        emit outConnect(DataLogicMode,ComandState,SEND_MODE);
+                    }
+                }
+                break;
+            }
         case 0xB1: // Выбор дополнительного интерфейсного модуля
         {
 #ifdef DATA_LOGIC_DEBUG
@@ -2405,7 +2612,7 @@ qDebug() << s;
         emit OutData(data_to_write);     // Отправка данных в порт
 
         timerRepeat->start(Delay_Time);
-        Repeat_Counter--;
+        //Repeat_Counter--;
         break;
     }
     case CONFIG_SEND_WHITOUT_REPEAT:{
@@ -2486,7 +2693,7 @@ qDebug() << s;
             emit OutData(data);               // Отправка данных в порт
 
             timerManualRepeat->start(Delay_Time);
-            Repeat_Counter--;
+            //Repeat_Counter--;
         }
         else
         {

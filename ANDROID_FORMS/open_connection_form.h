@@ -47,6 +47,7 @@ private slots:
     void on_btnSettings_clicked();
     void on_Reset_clicked();
     void on_Update_clicked();
+    void on_ClearConsole_clicked();
 
     void SetCurrentFitmwareToUI(uchar);
     void SetBootloaderVersionToUI(QString);
@@ -60,6 +61,8 @@ private slots:
     void Clear_Form(void);
 
     void on_ModuleType_currentIndexChanged(int index);
+
+    void on_SN_editTextChanged(const QString &arg1);
 
 private:
     Ui::Open_Connection_Form *ui;

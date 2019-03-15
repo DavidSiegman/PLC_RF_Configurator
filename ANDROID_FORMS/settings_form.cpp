@@ -25,7 +25,7 @@ Settings_Form::Settings_Form(QWidget *parent) :
     ui->btnCOMSettings->setStyleSheet(Basic_PushButtons_Style);
     ui->btnAbout->setStyleSheet(Basic_PushButtons_Style);
 
-    ui->Back->setStyleSheet(PushButtons_Style);
+    ui->Back->setStyleSheet(PushButtons_Style+ToolTip_Style);
     ui->None->setStyleSheet(PushButtons_Style);
     ui->Apply->setStyleSheet(PushButtons_Style);
 
@@ -93,6 +93,7 @@ void Settings_Form::resizeEvent(QResizeEvent *event){
 
     ui->Back->setIconSize(icons_size); ui->Back->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
     ui->Apply->setIconSize(icons_size); ui->Apply->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
+    ui->label_1->setMinimumHeight(icons_size.height() + icons_size.height()*30/100);
 }
 
 void Settings_Form::on_Apply_clicked(){
@@ -101,7 +102,7 @@ void Settings_Form::on_Apply_clicked(){
     settings.setValue(CONNECTION_SETTINGS_PERIODE, ui->Periode->value());
     settings.sync();
 
-    emit GetRepeatNumber(ui->Repeat->value());
+    emit GetRepeatNumber(ui->Repeat->value()-1);
     emit GetRepeatTimeout(ui->Periode->value());
     this->Back_ClickHandler();
     emit Cancel(this->geometry());

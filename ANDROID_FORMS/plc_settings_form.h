@@ -50,6 +50,7 @@ private slots:
     void on_PLC_Power_valueChanged(int value);
     void on_PLC_Power_sliderReleased();
     void on_PLCModulation_currentIndexChanged(int index);
+    void on_ClearConsole_clicked();
 
     void setLOWFToUI(unsigned int);
     void setHIGHFToUI(unsigned int);

@@ -68,3 +68,4 @@ void myFormAbstractClass::Set_ConnectionType(uchar new_value){
 uchar myFormAbstractClass::Get_ConnectionType(void){
     return this->ConnectionType;
 }
+
